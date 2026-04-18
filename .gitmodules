@@ -1,0 +1,16 @@
+[submodule "static"]
+	path = static
+	url = https://github.com/farhnkrnapratma/static
+	branch = main
+[submodule "home"]
+	path = home
+	url = https://github.com/farhnkrnapratma/home
+	branch = main
+[submodule "blog"]
+	path = blog
+	url = https://github.com/farhnkrnapratma/blog
+	branch = main
+[submodule "draft"]
+	path = draft
+	url = https://github.com/farhnkrnapratma/draft
+	branch = main
