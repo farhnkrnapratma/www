@@ -1,5 +1,9 @@
 <script lang="ts">
 	import LinkListSection from '$lib/LinkListSection.svelte';
+	import type { Project } from './+page.server';
+
+	let { data } = $props();
+
 	type Section = 'home' | 'blogs' | 'contacts' | 'cv' | 'projects' | 'funding';
 
 	interface NavItem {
@@ -16,6 +20,7 @@
 	interface Contact {
 		label: string;
 		value: string;
+		shortValue?: string;
 		href: string;
 		icon: string;
 	}
@@ -33,15 +38,6 @@
 		faculty: string;
 		university: string;
 		period: string;
-	}
-
-	interface Project {
-		name: string;
-		desc: string;
-		tags: string[];
-		url: string;
-		lang: string;
-		stars: number;
 	}
 
 	const name = 'Farhan Kurnia Pratama';
@@ -91,18 +87,21 @@
 		{
 			label: 'GitHub',
 			value: 'github.com/farhnkrnapratma',
+			shortValue: '@farhnkrnapratma',
 			href: 'https://github.com/farhnkrnapratma',
 			icon: 'bi-github'
 		},
 		{
 			label: 'LinkedIn',
 			value: 'linkedin.com/in/farhnkrnapratma',
+			shortValue: '@farhnkrnapratma',
 			href: 'https://linkedin.com/in/farhnkrnapratma',
 			icon: 'bi-linkedin'
 		},
 		{
 			label: 'YouTube',
 			value: 'youtube.com/@farhnkrnapratma',
+			shortValue: '@farhnkrnapratma',
 			href: 'https://youtube.com/@farhnkrnapratma',
 			icon: 'bi-youtube'
 		}
@@ -132,6 +131,7 @@
 	interface FundingPlatform {
 		label: string;
 		value: string;
+		shortValue?: string;
 		href: string;
 		icon: string;
 		color: string;
@@ -141,6 +141,7 @@
 		{
 			label: 'GitHub Sponsors',
 			value: 'github.com/sponsors/farhnkrnapratma',
+			shortValue: '@farhnkrnapratma',
 			href: 'https://github.com/sponsors/farhnkrnapratma',
 			icon: 'bi-heart-fill',
 			color: 'text-rose-500'
@@ -148,6 +149,7 @@
 		{
 			label: 'Ko-fi',
 			value: 'ko-fi.com/farhnkrnapratma',
+			shortValue: '@farhnkrnapratma',
 			href: 'https://ko-fi.com/farhnkrnapratma',
 			icon: 'bi-cup-hot-fill',
 			color: 'text-amber-500'
@@ -155,6 +157,7 @@
 		{
 			label: 'Open Collective',
 			value: 'opencollective.com/farhnkrnapratma',
+			shortValue: '@farhnkrnapratma',
 			href: 'https://opencollective.com/farhnkrnapratma',
 			icon: 'bi-people-fill',
 			color: 'text-blue-500'
@@ -167,35 +170,14 @@
 		Svelte: 'bg-red-100 text-red-700',
 		Go: 'bg-sky-100 text-sky-700',
 		Python: 'bg-yellow-100 text-yellow-700',
-		TypeScript: 'bg-indigo-100 text-indigo-700'
+		TypeScript: 'bg-indigo-100 text-indigo-700',
+		Shell: 'bg-emerald-100 text-emerald-700',
+		JavaScript: 'bg-amber-100 text-amber-700',
+		CSS: 'bg-purple-100 text-purple-700',
+		HTML: 'bg-pink-100 text-pink-700'
 	};
 
-	const projects: Project[] = [
-		{
-			name: 'nixos',
-			desc: 'NixOS flake for declarative, reproducible system environments — fully managed via Nix with home-manager and modular configuration.',
-			tags: ['NixOS', 'Flake', 'Configuration'],
-			url: 'https://github.com/farhnkrnapratma/nixos',
-			lang: 'Nix',
-			stars: 1
-		},
-		{
-			name: 'boogeyman',
-			desc: 'A simple and blazingly fast unit conversion API powered by Rust — built for performance and correctness.',
-			tags: ['REST API', 'Unit Converter'],
-			url: 'https://github.com/farhnkrnapratma/boogeyman',
-			lang: 'Rust',
-			stars: 1
-		},
-		{
-			name: 'www',
-			desc: 'Source code for my official website — built with SvelteKit, TailwindCSS v4, and deployed on Cloudflare Pages.',
-			tags: ['SvelteKit', 'TailwindCSS', 'Cloudflare'],
-			url: 'https://github.com/farhnkrnapratma/www',
-			lang: 'Svelte',
-			stars: 1
-		}
-	];
+	const projects = $derived(data.projects);
 
 	type Theme = 'auto' | 'dark' | 'light';
 

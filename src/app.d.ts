@@ -1,5 +1,11 @@
 declare global {
-	namespace App {}
+	namespace App {
+		interface Platform {
+			env: {
+				GITHUB_TOKEN: string;
+			};
+		}
+	}
 }
 
 export {};

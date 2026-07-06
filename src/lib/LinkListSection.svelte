@@ -2,6 +2,7 @@
 	interface ListItem {
 		label: string;
 		value: string;
+		shortValue?: string;
 		href: string;
 		icon: string;
 		color?: string;
@@ -24,22 +25,24 @@
 				target="_blank"
 				rel="noopener noreferrer"
 				title="Opens in a new tab"
-				class="action-row group flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between"
+				class="action-row group flex items-center justify-between gap-3"
 			>
-				<div class="flex items-center gap-4">
+				<div class="flex items-center gap-4 min-w-0 shrink-0">
 					<i
 						class="bi {item.icon} text-lg {item.color ||
 							'text-adwaita-subtitle'} transition-colors group-hover:text-adwaita-blue"
 						aria-hidden="true"
 					></i>
-					<span class="text-sm font-semibold text-adwaita-text">{item.label}</span>
-				</div>
-				<div class="flex items-center justify-between sm:justify-end gap-3 w-full sm:w-auto">
-					<span class="text-sm font-medium text-adwaita-subtitle break-all sm:break-normal"
-						>{item.value}</span
+					<span class="text-sm font-semibold text-adwaita-text whitespace-nowrap">{item.label}</span
 					>
+				</div>
+				<div class="flex items-center justify-end gap-3 min-w-0">
+					<span class="text-sm font-medium text-adwaita-subtitle truncate">
+						<span class="sm:hidden">{item.shortValue ?? item.value}</span>
+						<span class="hidden sm:inline">{item.value}</span>
+					</span>
 					<i
-						class="bi bi-chevron-right text-sm text-zinc-400 opacity-80 transition-all group-hover:translate-x-0.5 group-hover:text-adwaita-blue"
+						class="bi bi-chevron-right text-sm text-zinc-400 opacity-80 transition-all group-hover:translate-x-0.5 group-hover:text-adwaita-blue shrink-0"
 						aria-hidden="true"
 					></i>
 				</div>
