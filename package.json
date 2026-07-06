@@ -7,6 +7,7 @@
 		"@sveltejs/package": "^2.5.8",
 		"@sveltejs/vite-plugin-svelte": "^7.1.2",
 		"@tailwindcss/vite": "^4.3.2",
+		"@types/marked": "^6.0.0",
 		"@types/node": "^26.1.0",
 		"prettier": "^3.9.4",
 		"prettier-plugin-svelte": "^4.1.1",
@@ -53,6 +54,8 @@
 	"type": "module",
 	"types": "./dist/index.d.ts",
 	"dependencies": {
-		"bootstrap-icons": "^1.13.1"
+		"@supabase/supabase-js": "^2.110.0",
+		"bootstrap-icons": "^1.13.1",
+		"marked": "^18.0.5"
 	}
 }

@@ -1,6 +1,7 @@
 <script lang="ts">
 	import LinkListSection from '$lib/LinkListSection.svelte';
 	import type { Project } from './+page.server';
+	import { goto } from '$app/navigation';
 
 	let { data } = $props();
 
@@ -56,7 +57,7 @@
 		{ id: 'funding', label: 'Funding' }
 	];
 
-	const posts: Post[] = [
+	const fallbackPosts: Post[] = [
 		{
 			title: 'Hardening Linux with SELinux and AppArmor',
 			date: 'June 12, 2025',
@@ -76,6 +77,19 @@
 				'Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo. Quisque sit amet est et sapien ullamcorper pharetra.'
 		}
 	];
+
+	const posts = $derived(data.posts && data.posts.length > 0 ? data.posts : fallbackPosts);
+
+	function getPostDate(post: any) {
+		if (post.created_at) {
+			return new Date(post.created_at).toLocaleDateString('en-US', {
+				year: 'numeric',
+				month: 'long',
+				day: 'numeric'
+			});
+		}
+		return post.date || '';
+	}
 
 	const contacts: Contact[] = [
 		{
@@ -202,6 +216,10 @@
 	let themeDropdownOpen = $state(false);
 
 	function navigate(section: Section) {
+		if (section === 'blogs') {
+			goto('/blog');
+			return;
+		}
 		activeSection = section;
 		menuOpen = false;
 	}
@@ -527,13 +545,12 @@
 				<h3 class="text-lg font-bold text-adwaita-text tracking-tight mb-4">Recent Blog Posts</h3>
 				<div class="boxed-list text-left">
 					{#each posts.slice(0, 2) as post (post.title)}
-						<button
-							onclick={() => navigate('blogs')}
-							type="button"
-							class="action-row w-full text-left group cursor-pointer"
+						<a
+							href={post.slug ? `/blog/${post.slug}` : '/blog'}
+							class="action-row w-full text-left group cursor-pointer flex items-center justify-between"
 						>
-							<div class="flex flex-col gap-1 pr-6">
-								<p class="text-xs font-semibold text-adwaita-subtitle">{post.date}</p>
+							<div class="flex flex-col gap-1 pr-6 font-sans">
+								<p class="text-xs font-semibold text-adwaita-subtitle">{getPostDate(post)}</p>
 								<h4
 									class="text-base font-bold text-adwaita-text group-hover:text-adwaita-blue transition-colors leading-tight"
 								>
@@ -545,7 +562,7 @@
 								class="bi bi-chevron-right text-sm text-zinc-400 group-hover:text-adwaita-blue transition-all group-hover:translate-x-0.5"
 								aria-hidden="true"
 							></i>
-						</button>
+						</a>
 					{/each}
 					<button
 						onclick={() => navigate('blogs')}
