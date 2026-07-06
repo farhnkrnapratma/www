@@ -126,7 +126,22 @@
 		}
 	];
 
-	const skills: string[] = ['Linux', 'Rust', 'Python', 'Networking', 'Cybersecurity', 'Git', 'AI'];
+	interface SkillGroup {
+		category: string;
+		items: string[];
+	}
+
+	const skills: SkillGroup[] = [
+		{ category: 'Linux', items: ['Debian', 'Ubuntu', 'Fedora', 'openSUSE', 'NixOS'] },
+		{ category: 'Unix', items: ['FreeBSD', 'OmniOS', 'OpenBSD'] },
+		{ category: 'Programming Languages', items: ['Rust', 'Python'] },
+		{ category: 'DevOps & Tooling', items: ['Docker', 'Kubernetes', 'CI/CD', 'Nix'] },
+		{ category: 'Shell Scripting', items: ['Bash', 'Nu'] },
+		{ category: 'Database', items: ['PostgreSQL', 'SurrealDB'] },
+		{ category: 'Version Control', items: ['Git', 'Jujutsu'] },
+		{ category: 'Artificial Intelligence', items: ['Prompt Engineering', 'LLMs', 'RAG'] },
+		{ category: 'Cybersecurity', items: ['GRC', 'IAM'] }
+	];
 
 	interface FundingPlatform {
 		label: string;
@@ -738,76 +753,14 @@
 			<div class="mt-10">
 				<h2 class="text-xs font-bold uppercase tracking-widest text-adwaita-subtitle">Skills</h2>
 				<div class="mt-4 flex flex-wrap gap-2">
-					{#each skills as skill (skill)}
+					{#each skills as group (group.category)}
 						<span
 							class="cursor-default rounded-full bg-adwaita-border/40 px-3.5 py-1.5 text-xs font-bold text-adwaita-text hover:bg-adwaita-border/60 transition-colors"
 						>
-							{skill}
+							{group.category}
+							<span class="font-normal opacity-85">({group.items.join(', ')})</span>
 						</span>
 					{/each}
-				</div>
-			</div>
-
-			<div class="mt-10">
-				<h2 class="text-xs font-bold uppercase tracking-widest text-adwaita-subtitle">
-					Design System
-				</h2>
-				<div class="mt-4 boxed-list">
-					<div class="px-5 py-4 flex flex-col gap-3">
-						<p class="text-sm text-adwaita-subtitle leading-relaxed">
-							This website uses a custom analogous color palette with a modern, high-contrast
-							primary accent based on the GNOME Human Interface Guidelines (HIG):
-						</p>
-						<div class="flex items-center gap-2 flex-wrap mt-1">
-							<div
-								class="flex items-center gap-1.5 bg-adwaita-bg border border-adwaita-border rounded-full pl-1.5 pr-3 py-1"
-							>
-								<span
-									class="w-5 h-3 rounded-xs border border-zinc-400/15 shrink-0"
-									style="background-color: #00B8A9;"
-								></span>
-								<span class="text-[11px] font-mono font-bold text-adwaita-text"
-									>#00B8A9 (Primary Accent)</span
-								>
-							</div>
-							<div
-								class="flex items-center gap-1.5 bg-adwaita-bg border border-adwaita-border rounded-full pl-1.5 pr-3 py-1"
-							>
-								<span
-									class="w-5 h-3 rounded-xs border border-zinc-400/15 shrink-0"
-									style="background-color: #00B86A;"
-								></span>
-								<span class="text-[11px] font-mono font-bold text-adwaita-text">#00B86A</span>
-							</div>
-							<div
-								class="flex items-center gap-1.5 bg-adwaita-bg border border-adwaita-border rounded-full pl-1.5 pr-3 py-1"
-							>
-								<span
-									class="w-5 h-3 rounded-xs border border-zinc-400/15 shrink-0"
-									style="background-color: #008CB8;"
-								></span>
-								<span class="text-[11px] font-mono font-bold text-adwaita-text">#008CB8</span>
-							</div>
-							<div
-								class="flex items-center gap-1.5 bg-adwaita-bg border border-adwaita-border rounded-full pl-1.5 pr-3 py-1"
-							>
-								<span
-									class="w-5 h-3 rounded-xs border border-zinc-400/15 shrink-0"
-									style="background-color: #00B82C;"
-								></span>
-								<span class="text-[11px] font-mono font-bold text-adwaita-text">#00B82C</span>
-							</div>
-							<div
-								class="flex items-center gap-1.5 bg-adwaita-bg border border-adwaita-border rounded-full pl-1.5 pr-3 py-1"
-							>
-								<span
-									class="w-5 h-3 rounded-xs border border-zinc-400/15 shrink-0"
-									style="background-color: #0052B8;"
-								></span>
-								<span class="text-[11px] font-mono font-bold text-adwaita-text">#0052B8</span>
-							</div>
-						</div>
-					</div>
 				</div>
 			</div>
 		</section>
