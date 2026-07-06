@@ -2,6 +2,7 @@
 	import LinkListSection from '$lib/LinkListSection.svelte';
 	import type { Project } from './+page.server';
 	import { goto } from '$app/navigation';
+	import { onMount } from 'svelte';
 
 	let { data } = $props();
 
@@ -223,8 +224,6 @@
 		activeSection = section;
 		menuOpen = false;
 	}
-
-	import { onMount } from 'svelte';
 
 	function applyTheme(newTheme: Theme) {
 		theme = newTheme;
