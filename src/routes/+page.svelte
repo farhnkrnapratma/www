@@ -239,8 +239,8 @@
 	></button>
 {/if}
 
-<nav class="fixed top-0 z-40 flex h-15 w-full items-center justify-between bg-zinc-50 px-5 font-sans ring-1 ring-zinc-950/8">
-	<button onclick={() => navigate('home')} class="cursor-pointer text-base font-semibold text-zinc-950">
+<nav class="fixed top-0 z-40 flex h-15 w-full items-center justify-between bg-adwaita-card px-5 font-sans border-b border-adwaita-border shadow-xs">
+	<button onclick={() => navigate('home')} class="cursor-pointer text-base font-bold text-adwaita-text tracking-tight hover:opacity-80">
 		{name}
 	</button>
 
@@ -251,12 +251,12 @@
 		aria-expanded={menuOpen}
 		aria-controls="mobile-menu"
 	>
-		<i class="bi {menuOpen ? 'bi-x-lg' : 'bi-list'} text-zinc-950" aria-hidden="true"></i>
+		<i class="bi {menuOpen ? 'bi-x-lg' : 'bi-list'} text-adwaita-text" aria-hidden="true"></i>
 	</button>
 
 	<ul
 		id="mobile-menu"
-		class="fixed right-0 top-0 z-40 flex h-full w-64 flex-col items-start gap-1 bg-zinc-50 px-4 pt-4 shadow-xl ring-1 ring-zinc-950/8 transition-transform duration-300 ease-in-out md:static md:h-auto md:w-auto md:translate-x-0 md:flex-row md:items-center md:gap-1 md:bg-transparent md:px-0 md:pt-0 md:shadow-none md:ring-0"
+		class="fixed right-0 top-0 z-40 flex h-full w-64 flex-col items-start gap-1 bg-adwaita-card px-4 pt-4 shadow-xl border-l border-adwaita-border transition-transform duration-300 ease-in-out md:static md:h-auto md:w-auto md:translate-x-0 md:flex-row md:items-center md:bg-zinc-200/50 md:p-1 md:rounded-lg md:border md:border-adwaita-border md:gap-0.5 md:shadow-none"
 		class:translate-x-full={!menuOpen}
 		class:translate-x-0={menuOpen}
 	>
@@ -266,7 +266,7 @@
 				aria-label="Close menu"
 				class="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full text-xl transition-colors hover:bg-zinc-950/8"
 			>
-				<i class="bi bi-x-lg text-zinc-950" aria-hidden="true"></i>
+				<i class="bi bi-x-lg text-adwaita-text" aria-hidden="true"></i>
 			</button>
 		</li>
 
@@ -274,7 +274,7 @@
 			<li class="w-full md:w-auto">
 				<button
 					onclick={() => navigate(item.id)}
-					class="flex w-full cursor-pointer whitespace-nowrap items-center justify-start md:justify-center rounded-lg border-0 px-4 h-11 text-sm font-medium leading-none outline-none focus:outline-none active:outline-none transition-colors md:rounded-md md:px-3 md:h-9 {activeSection === item.id ? 'bg-zinc-950 text-zinc-50 hover:bg-zinc-800' : 'text-zinc-950 hover:bg-zinc-950/5 md:text-zinc-500 md:hover:text-zinc-950 md:hover:bg-zinc-950/5'}"
+					class="flex w-full cursor-pointer whitespace-nowrap items-center justify-start md:justify-center rounded-lg border-0 px-4 h-11 text-sm font-medium leading-none outline-none focus:outline-none active:outline-none transition-all md:rounded-md md:px-3.5 md:h-7.5 {activeSection === item.id ? 'bg-zinc-950 text-zinc-50 hover:bg-zinc-800 md:bg-white md:text-adwaita-text md:shadow-xs md:hover:bg-white' : 'text-adwaita-text hover:bg-zinc-950/5 md:text-adwaita-subtitle md:hover:text-adwaita-text md:hover:bg-white/45'}"
 				>
 					{item.label}
 				</button>
@@ -289,27 +289,27 @@
 			<img
 				src="/android-chrome-512x512.png"
 				alt="Farhan Kurnia Pratama"
-				class="mb-6 h-28 w-28 rounded-full object-cover object-top ring-2 ring-zinc-950/10"
+				class="mb-6 h-28 w-28 rounded-full object-cover object-top border border-adwaita-border shadow-xs"
 			/>
-			<h1 class="text-4xl font-bold text-zinc-950 md:text-5xl lg:text-6xl">{name}</h1>
-			<p class="mt-3 text-lg font-medium text-zinc-500">{headline}</p>
-			<p class="mt-4 max-w-xl text-base text-zinc-600">{desc}</p>
+			<h1 class="text-4xl font-bold text-adwaita-text md:text-5xl lg:text-6xl tracking-tight">{name}</h1>
+			<p class="mt-3 text-lg font-medium text-adwaita-subtitle">{headline}</p>
+			<p class="mt-4 max-w-xl text-base text-adwaita-subtitle/90 leading-relaxed">{desc}</p>
 			<div class="mt-8 flex flex-wrap justify-center gap-3">
 				<button
 					onclick={() => navigate('cv')}
-					class="cursor-pointer rounded-lg bg-zinc-950 px-5 py-2.5 text-sm font-medium text-zinc-50 transition-colors hover:bg-zinc-800"
+					class="cursor-pointer rounded-lg bg-adwaita-blue px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-blue-600 focus:outline-none"
 				>
 					Curriculum Vitae
 				</button>
 				<button
 					onclick={() => navigate('projects')}
-					class="cursor-pointer rounded-lg px-5 py-2.5 text-sm font-medium text-zinc-950 ring-1 ring-zinc-950/20 transition-colors hover:bg-zinc-950/5"
+					class="cursor-pointer rounded-lg bg-white border border-adwaita-border px-5 py-2.5 text-sm font-semibold text-adwaita-text transition-colors hover:bg-zinc-950/[0.02] focus:outline-none"
 				>
 					Projects
 				</button>
 				<button
 					onclick={() => navigate('contacts')}
-					class="cursor-pointer rounded-lg px-5 py-2.5 text-sm font-medium text-zinc-950 ring-1 ring-zinc-950/20 transition-colors hover:bg-zinc-950/5"
+					class="cursor-pointer rounded-lg bg-white border border-adwaita-border px-5 py-2.5 text-sm font-semibold text-adwaita-text transition-colors hover:bg-zinc-950/[0.02] focus:outline-none"
 				>
 					Get in Touch
 				</button>
@@ -319,17 +319,17 @@
 
 	{#if activeSection === 'blogs'}
 		<section class="mx-auto max-w-2xl px-6 py-20">
-			<h1 class="text-3xl font-bold text-zinc-950">Blogs</h1>
-			<p class="mt-2 text-sm text-zinc-500">Thoughts on Linux, security, and open source.</p>
-			<div class="mt-10 flex flex-col gap-6">
+			<h1 class="text-3xl font-bold text-adwaita-text tracking-tight">Blogs</h1>
+			<p class="mt-2 text-sm text-adwaita-subtitle">Thoughts on Linux, security, and open source.</p>
+			<div class="mt-10 boxed-list">
 				{#each posts as post (post.title)}
-					<article class="rounded-xl p-5 ring-1 ring-zinc-950/8 transition-colors hover:bg-zinc-950/[0.02]">
-						<p class="text-xs font-medium text-zinc-400">{post.date}</p>
-						<h2 class="mt-1 text-lg font-semibold text-zinc-950">{post.title}</h2>
-						<p class="mt-2 text-sm text-zinc-600">{post.excerpt}</p>
-						<button class="mt-3 inline-flex items-center gap-1.5 cursor-pointer text-sm font-medium text-zinc-950 underline-offset-2 hover:underline">
-							Read more <i class="bi bi-arrow-right text-xs" aria-hidden="true"></i>
-						</button>
+					<article class="action-row group cursor-pointer">
+						<div class="flex flex-col gap-1 pr-6">
+							<p class="text-xs font-semibold text-adwaita-subtitle">{post.date}</p>
+							<h2 class="text-base font-bold text-adwaita-text group-hover:text-adwaita-blue transition-colors">{post.title}</h2>
+							<p class="mt-1.5 text-sm text-adwaita-subtitle line-clamp-2">{post.excerpt}</p>
+						</div>
+						<i class="bi bi-chevron-right text-sm text-zinc-400 group-hover:text-adwaita-blue transition-all group-hover:translate-x-0.5" aria-hidden="true"></i>
 					</article>
 				{/each}
 			</div>
@@ -338,26 +338,28 @@
 
 	{#if activeSection === 'contacts'}
 		<section class="mx-auto max-w-2xl px-6 py-20">
-			<h1 class="text-3xl font-bold text-zinc-950">Contacts</h1>
-			<p class="mt-2 text-sm text-zinc-500">Feel free to reach out via any of the channels below.</p>
-			<div class="mt-10 flex flex-col gap-3">
+			<h1 class="text-3xl font-bold text-adwaita-text tracking-tight">Contacts</h1>
+			<p class="mt-2 text-sm text-adwaita-subtitle">Feel free to reach out via any of the channels below.</p>
+			<div class="mt-10 boxed-list">
 				{#each contacts as contact (contact.label)}
 					<a
 						href={contact.href}
 						target="_blank"
 						rel="noopener noreferrer"
 						title="Opens in a new tab"
-						class="group flex items-center gap-4 rounded-xl px-5 py-4 ring-1 ring-zinc-950/8 transition-all hover:bg-zinc-950/[0.03] hover:ring-zinc-950/20"
+						class="action-row group"
 					>
-						<i class="bi {contact.icon} text-lg text-zinc-500 transition-colors group-hover:text-zinc-950" aria-hidden="true"></i>
-						<div class="flex flex-1 items-center justify-between gap-4">
-							<span class="text-sm font-medium text-zinc-950">{contact.label}</span>
-							<span class="text-sm font-medium text-zinc-500">{contact.value}</span>
+						<div class="flex items-center gap-4">
+							<i class="bi {contact.icon} text-lg text-adwaita-subtitle transition-colors group-hover:text-adwaita-blue" aria-hidden="true"></i>
+							<span class="text-sm font-semibold text-adwaita-text">{contact.label}</span>
 						</div>
-						<i
-							class="bi bi-box-arrow-up-right translate-x-0 text-xs text-zinc-400 opacity-0 transition-all group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:opacity-100"
-							aria-hidden="true"
-						></i>
+						<div class="flex items-center gap-2">
+							<span class="text-sm font-medium text-adwaita-subtitle">{contact.value}</span>
+							<i
+								class="bi bi-chevron-right text-sm text-zinc-400 opacity-80 transition-all group-hover:translate-x-0.5 group-hover:text-adwaita-blue"
+								aria-hidden="true"
+							></i>
+						</div>
 					</a>
 				{/each}
 			</div>
@@ -368,13 +370,13 @@
 		<section class="mx-auto max-w-2xl px-6 py-20">
 			<div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
 				<div>
-					<h1 class="text-3xl font-bold text-zinc-950">Curriculum Vitae</h1>
-					<p class="mt-2 text-sm text-zinc-500">Security-focused Software Engineer.</p>
+					<h1 class="text-3xl font-bold text-adwaita-text tracking-tight">Curriculum Vitae</h1>
+					<p class="mt-2 text-sm text-adwaita-subtitle">Security-focused Software Engineer.</p>
 				</div>
 				<a
 					href="/cv.pdf"
 					download="Farhan_Kurnia_Pratama_CV.pdf"
-					class="inline-flex items-center justify-center gap-2 rounded-lg bg-zinc-950 px-4 py-2.5 text-sm font-medium text-zinc-50 transition-colors hover:bg-zinc-800 focus:outline-none"
+					class="inline-flex items-center justify-center gap-2 rounded-lg bg-adwaita-blue px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-blue-600 focus:outline-none"
 				>
 					<i class="bi bi-download" aria-hidden="true"></i>
 					Download PDF
@@ -382,35 +384,35 @@
 			</div>
 
 			<div class="mt-10">
-				<h2 class="text-xs font-semibold uppercase tracking-widest text-zinc-400">Experience</h2>
-				<div class="mt-4 flex flex-col gap-5">
+				<h2 class="text-xs font-bold uppercase tracking-widest text-adwaita-subtitle">Experience</h2>
+				<div class="mt-4 boxed-list">
 					{#each experiences as exp (exp.role)}
-						<div class="rounded-xl p-5 ring-1 ring-zinc-950/8">
+						<div class="px-5 py-4 flex flex-col gap-1.5 hover:bg-zinc-950/[0.015] transition-all">
 							<div class="flex items-start justify-between gap-4">
 								<div>
-									<p class="text-base font-semibold text-zinc-950">{exp.role}</p>
-									<p class="text-sm text-zinc-500">{exp.company}</p>
+									<h3 class="text-base font-bold text-adwaita-text">{exp.role}</h3>
+									<p class="text-sm font-medium text-adwaita-subtitle">{exp.company}</p>
 								</div>
-								<p class="shrink-0 text-xs text-zinc-400">{exp.period}</p>
+								<p class="shrink-0 text-xs font-semibold text-adwaita-subtitle">{exp.period}</p>
 							</div>
-							<p class="mt-3 text-sm text-zinc-600">{exp.desc}</p>
+							<p class="mt-1.5 text-sm text-adwaita-subtitle leading-relaxed">{exp.desc}</p>
 						</div>
 					{/each}
 				</div>
 			</div>
 
 			<div class="mt-10">
-				<h2 class="text-xs font-semibold uppercase tracking-widest text-zinc-400">Education</h2>
-				<div class="mt-4 flex flex-col gap-4">
+				<h2 class="text-xs font-bold uppercase tracking-widest text-adwaita-subtitle">Education</h2>
+				<div class="mt-4 boxed-list">
 					{#each education as edu (`${edu.degree}-${edu.university}`)}
-						<div class="rounded-xl p-5 ring-1 ring-zinc-950/8">
+						<div class="px-5 py-4 flex flex-col gap-1 hover:bg-zinc-950/[0.015] transition-all">
 							<div class="flex items-start justify-between gap-4">
 								<div>
-									<p class="text-base font-semibold text-zinc-950">{edu.degree} in {edu.major}</p>
-									<p class="text-sm text-zinc-500">{edu.faculty}</p>
-									<p class="text-sm font-medium text-zinc-700">{edu.university}</p>
+									<h3 class="text-base font-bold text-adwaita-text">{edu.degree} in {edu.major}</h3>
+									<p class="text-sm text-adwaita-subtitle">{edu.faculty}</p>
+									<p class="text-sm font-semibold text-adwaita-text mt-1">{edu.university}</p>
 								</div>
-								<p class="shrink-0 text-xs text-zinc-400">{edu.period}</p>
+								<p class="shrink-0 text-xs font-semibold text-adwaita-subtitle">{edu.period}</p>
 							</div>
 						</div>
 					{/each}
@@ -418,10 +420,10 @@
 			</div>
 
 			<div class="mt-10">
-				<h2 class="text-xs font-semibold uppercase tracking-widest text-zinc-400">Skills</h2>
+				<h2 class="text-xs font-bold uppercase tracking-widest text-adwaita-subtitle">Skills</h2>
 				<div class="mt-4 flex flex-wrap gap-2">
 					{#each skills as skill (skill)}
-						<span class="cursor-default rounded-lg bg-white px-3.5 py-2 text-sm font-medium text-zinc-800 ring-1 ring-zinc-950/8 transition-all hover:bg-zinc-50 hover:ring-zinc-950/20">
+						<span class="cursor-default rounded-full bg-zinc-200/60 px-3.5 py-1.5 text-xs font-bold text-adwaita-text hover:bg-zinc-200/80 transition-colors">
 							{skill}
 						</span>
 					{/each}
@@ -432,38 +434,40 @@
 
 	{#if activeSection === 'projects'}
 		<section class="mx-auto max-w-2xl px-6 py-20">
-			<h1 class="text-3xl font-bold text-zinc-950">Projects</h1>
-			<p class="mt-2 text-sm text-zinc-500">Open source work on GitHub.</p>
-			<div class="mt-10 flex flex-col gap-5">
+			<h1 class="text-3xl font-bold text-adwaita-text tracking-tight">Projects</h1>
+			<p class="mt-2 text-sm text-adwaita-subtitle">Open source work on GitHub.</p>
+			<div class="mt-10 boxed-list">
 				{#each projects as project (project.name)}
 					<a
 						href={project.url}
 						target="_blank"
 						rel="noopener noreferrer"
 						title="Opens in a new tab"
-						class="group block rounded-xl p-5 ring-1 ring-zinc-950/8 transition-all hover:bg-zinc-950/[0.03] hover:ring-zinc-950/20"
+						class="action-row group"
 					>
-						<div class="flex items-start justify-between gap-4">
+						<div class="flex flex-col gap-1.5 pr-6">
 							<div class="flex items-center gap-2">
-								<p class="text-base font-semibold text-zinc-950">{project.name}</p>
-								<i
-									class="bi bi-box-arrow-up-right translate-x-0 text-xs text-zinc-400 opacity-0 transition-all group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:opacity-100"
-									aria-hidden="true"
-								></i>
+								<h3 class="text-base font-bold text-adwaita-text group-hover:text-adwaita-blue transition-colors">{project.name}</h3>
+								{#if langColors[project.lang]}
+									<span class="rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider {langColors[project.lang]}">{project.lang}</span>
+								{/if}
 							</div>
-							<div class="flex shrink-0 items-center gap-1 text-xs text-zinc-400">
-								<i class="bi bi-star-fill text-amber-400" style="font-size:12px" aria-hidden="true"></i>
-								{project.stars}
+							<p class="text-sm text-adwaita-subtitle leading-relaxed">{project.desc}</p>
+							<div class="mt-1 flex flex-wrap items-center gap-1.5">
+								{#each project.tags as tag (tag)}
+									<span class="rounded bg-zinc-200/50 px-2 py-0.5 text-[11px] font-medium text-adwaita-subtitle">{tag}</span>
+								{/each}
 							</div>
 						</div>
-						<p class="mt-1.5 text-sm text-zinc-600">{project.desc}</p>
-						<div class="mt-3 flex flex-wrap items-center gap-2">
-							{#if langColors[project.lang]}
-								<span class="rounded-full px-2.5 py-0.5 text-xs font-medium {langColors[project.lang]}">{project.lang}</span>
-							{/if}
-							{#each project.tags as tag (tag)}
-								<span class="rounded px-2 py-0.5 text-xs font-medium text-zinc-500 ring-1 ring-zinc-950/12">{tag}</span>
-							{/each}
+						<div class="flex items-center gap-3">
+							<div class="flex items-center gap-1 text-xs font-semibold text-adwaita-subtitle">
+								<i class="bi bi-star-fill text-amber-500" style="font-size:12px" aria-hidden="true"></i>
+								{project.stars}
+							</div>
+							<i
+								class="bi bi-chevron-right text-sm text-zinc-400 opacity-80 transition-all group-hover:translate-x-0.5 group-hover:text-adwaita-blue"
+								aria-hidden="true"
+							></i>
 						</div>
 					</a>
 				{/each}
@@ -473,33 +477,35 @@
 
 	{#if activeSection === 'funding'}
 		<section class="mx-auto max-w-2xl px-6 py-20">
-			<h1 class="text-3xl font-bold text-zinc-950">Supporting & Funding</h1>
-			<p class="mt-2 text-sm text-zinc-500">If you find my open-source work helpful, consider supporting me through these platforms.</p>
-			<div class="mt-10 flex flex-col gap-3">
+			<h1 class="text-3xl font-bold text-adwaita-text tracking-tight">Supporting & Funding</h1>
+			<p class="mt-2 text-sm text-adwaita-subtitle">If you find my open-source work helpful, consider supporting me through these platforms.</p>
+			<div class="mt-10 boxed-list">
 				{#each fundingPlatforms as platform (platform.name)}
 					<a
 						href={platform.href}
 						target="_blank"
 						rel="noopener noreferrer"
 						title="Opens in a new tab"
-						class="group flex items-center gap-4 rounded-xl px-5 py-4 ring-1 ring-zinc-950/8 transition-all hover:bg-zinc-950/[0.03] hover:ring-zinc-950/20"
+						class="action-row group"
 					>
-						<i class="bi {platform.icon} text-lg {platform.color}" aria-hidden="true"></i>
-						<div class="flex flex-1 items-center justify-between gap-4">
-							<span class="text-sm font-medium text-zinc-950">{platform.name}</span>
-							<span class="text-sm font-medium text-zinc-500">{platform.value}</span>
+						<div class="flex items-center gap-4">
+							<i class="bi {platform.icon} text-lg {platform.color}" aria-hidden="true"></i>
+							<span class="text-sm font-semibold text-adwaita-text">{platform.name}</span>
 						</div>
-						<i
-							class="bi bi-box-arrow-up-right translate-x-0 text-xs text-zinc-400 opacity-0 transition-all group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:opacity-100"
-							aria-hidden="true"
-						></i>
+						<div class="flex items-center gap-2">
+							<span class="text-sm font-medium text-adwaita-subtitle">{platform.value}</span>
+							<i
+								class="bi bi-chevron-right text-sm text-zinc-400 opacity-80 transition-all group-hover:translate-x-0.5 group-hover:text-adwaita-blue"
+								aria-hidden="true"
+							></i>
+						</div>
 					</a>
 				{/each}
 			</div>
 		</section>
 	{/if}
 
-	<footer class="mx-auto w-full max-w-2xl px-6 py-8 mt-auto text-center text-xs text-zinc-400 border-t border-zinc-950/8">
+	<footer class="mx-auto w-full max-w-2xl px-6 py-8 mt-auto text-center text-xs text-adwaita-subtitle/75 border-t border-adwaita-border">
 		<p>&copy; {new Date().getFullYear()} {name}. All rights reserved.</p>
 	</footer>
 </main>
