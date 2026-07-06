@@ -478,7 +478,7 @@
 						name="name"
 						required
 						placeholder="Linus Torvalds"
-						class="w-full sm:w-3/4 px-3 py-1.5 text-sm bg-adwaita-bg border border-adwaita-border rounded-lg text-adwaita-text focus:outline-none focus:border-adwaita-blue transition-colors"
+						class="w-full sm:w-3/4 px-3 py-1.5 text-sm bg-adwaita-bg border border-adwaita-border rounded-lg text-adwaita-text placeholder:text-adwaita-subtitle/70 focus:outline-none focus:border-adwaita-blue transition-colors"
 					/>
 				</div>
 
@@ -494,7 +494,7 @@
 						name="email"
 						required
 						placeholder="torvalds@linux-foundation.org"
-						class="w-full sm:w-3/4 px-3 py-1.5 text-sm bg-adwaita-bg border border-adwaita-border rounded-lg text-adwaita-text focus:outline-none focus:border-adwaita-blue transition-colors"
+						class="w-full sm:w-3/4 px-3 py-1.5 text-sm bg-adwaita-bg border border-adwaita-border rounded-lg text-adwaita-text placeholder:text-adwaita-subtitle/70 focus:outline-none focus:border-adwaita-blue transition-colors"
 					/>
 				</div>
 
@@ -511,7 +511,7 @@
 						required
 						rows="3"
 						placeholder="Write your message here..."
-						class="w-full sm:w-3/4 px-3 py-1.5 text-sm bg-adwaita-bg border border-adwaita-border rounded-lg text-adwaita-text focus:outline-none focus:border-adwaita-blue transition-colors resize-none"
+						class="w-full sm:w-3/4 px-3 py-1.5 text-sm bg-adwaita-bg border border-adwaita-border rounded-lg text-adwaita-text placeholder:text-adwaita-subtitle/70 focus:outline-none focus:border-adwaita-blue transition-colors resize-none"
 					></textarea>
 				</div>
 
