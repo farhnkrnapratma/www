@@ -1,4 +1,5 @@
 <script lang="ts">
+	import LinkListSection from '$lib/LinkListSection.svelte';
 	type Section = 'home' | 'blogs' | 'contacts' | 'cv' | 'projects' | 'funding';
 
 	interface NavItem {
@@ -33,8 +34,6 @@
 		university: string;
 		period: string;
 	}
-
-
 
 	interface Project {
 		name: string;
@@ -83,10 +82,30 @@
 	];
 
 	const contacts: Contact[] = [
-		{ label: 'Email', value: 'contact@fkp.my.id', href: 'mailto:contact@fkp.my.id', icon: 'bi-envelope' },
-		{ label: 'GitHub', value: 'github.com/farhnkrnapratma', href: 'https://github.com/farhnkrnapratma', icon: 'bi-github' },
-		{ label: 'LinkedIn', value: 'linkedin.com/in/farhnkrnapratma', href: 'https://linkedin.com/in/farhnkrnapratma', icon: 'bi-linkedin' },
-		{ label: 'YouTube', value: 'youtube.com/@farhnkrnapratma', href: 'https://youtube.com/@farhnkrnapratma', icon: 'bi-youtube' }
+		{
+			label: 'Email',
+			value: 'contact@fkp.my.id',
+			href: 'mailto:contact@fkp.my.id',
+			icon: 'bi-envelope'
+		},
+		{
+			label: 'GitHub',
+			value: 'github.com/farhnkrnapratma',
+			href: 'https://github.com/farhnkrnapratma',
+			icon: 'bi-github'
+		},
+		{
+			label: 'LinkedIn',
+			value: 'linkedin.com/in/farhnkrnapratma',
+			href: 'https://linkedin.com/in/farhnkrnapratma',
+			icon: 'bi-linkedin'
+		},
+		{
+			label: 'YouTube',
+			value: 'youtube.com/@farhnkrnapratma',
+			href: 'https://youtube.com/@farhnkrnapratma',
+			icon: 'bi-youtube'
+		}
 	];
 
 	const experiences: Experience[] = [
@@ -108,20 +127,10 @@
 		}
 	];
 
-	const skills: string[] = [
-		'Linux',
-		'Rust',
-		'Python',
-		'Network Security',
-		'Cybersecurity (GRC, Network, Linux)',
-		'Git',
-		'Unix',
-		'FOSS',
-		'AI'
-	];
+	const skills: string[] = ['Linux', 'Rust', 'Python', 'Networking', 'Cybersecurity', 'Git', 'AI'];
 
 	interface FundingPlatform {
-		name: string;
+		label: string;
 		value: string;
 		href: string;
 		icon: string;
@@ -130,21 +139,21 @@
 
 	const fundingPlatforms: FundingPlatform[] = [
 		{
-			name: 'GitHub Sponsors',
+			label: 'GitHub Sponsors',
 			value: 'github.com/sponsors/farhnkrnapratma',
 			href: 'https://github.com/sponsors/farhnkrnapratma',
 			icon: 'bi-heart-fill',
 			color: 'text-rose-500'
 		},
 		{
-			name: 'Ko-fi',
+			label: 'Ko-fi',
 			value: 'ko-fi.com/farhnkrnapratma',
 			href: 'https://ko-fi.com/farhnkrnapratma',
 			icon: 'bi-cup-hot-fill',
 			color: 'text-amber-500'
 		},
 		{
-			name: 'Open Collective',
+			label: 'Open Collective',
 			value: 'opencollective.com/farhnkrnapratma',
 			href: 'https://opencollective.com/farhnkrnapratma',
 			icon: 'bi-people-fill',
@@ -188,13 +197,48 @@
 		}
 	];
 
+	type Theme = 'auto' | 'dark' | 'light';
+
 	let activeSection = $state<Section>('home');
 	let menuOpen = $state(false);
+	let theme = $state<Theme>('auto');
+	let themeDropdownOpen = $state(false);
 
 	function navigate(section: Section) {
 		activeSection = section;
 		menuOpen = false;
 	}
+
+	import { onMount } from 'svelte';
+
+	function applyTheme(newTheme: Theme) {
+		theme = newTheme;
+		if (typeof window !== 'undefined') {
+			localStorage.setItem('theme', newTheme);
+			const isDark =
+				newTheme === 'dark' ||
+				(newTheme === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+			if (isDark) {
+				document.documentElement.classList.add('dark');
+			} else {
+				document.documentElement.classList.remove('dark');
+			}
+		}
+	}
+
+	onMount(() => {
+		const saved = localStorage.getItem('theme') as Theme;
+		applyTheme(saved || 'auto');
+
+		const media = window.matchMedia('(prefers-color-scheme: dark)');
+		const listener = () => {
+			if (theme === 'auto') {
+				applyTheme('auto');
+			}
+		};
+		media.addEventListener('change', listener);
+		return () => media.removeEventListener('change', listener);
+	});
 </script>
 
 <svelte:head>
@@ -239,97 +283,407 @@
 	></button>
 {/if}
 
-<nav class="fixed top-0 z-40 flex h-15 w-full items-center justify-between bg-adwaita-card px-5 font-sans border-b border-adwaita-border shadow-xs">
-	<button onclick={() => navigate('home')} class="cursor-pointer text-base font-bold text-adwaita-text tracking-tight hover:opacity-80">
+<div
+	class="fixed top-0 left-0 z-50 flex h-8 w-full items-center justify-center border-b border-amber-200 bg-amber-100/75 text-xs font-bold text-amber-800 backdrop-blur-md transition-colors duration-300 dark:border-amber-900/30 dark:bg-amber-950/45 dark:text-amber-300 select-none"
+>
+	<i class="bi bi-exclamation-triangle-fill" style="margin-right: 6px;" aria-hidden="true"></i>
+	Development Preview
+</div>
+
+<nav
+	class="fixed top-8 z-40 flex h-15 w-full items-center justify-between bg-adwaita-card px-5 font-sans border-b border-adwaita-border shadow-xs transition-colors duration-300"
+>
+	<button
+		onclick={() => navigate('home')}
+		class="cursor-pointer text-base font-bold text-adwaita-text tracking-tight hover:text-adwaita-blue transition-colors"
+	>
 		{name}
 	</button>
 
-	<button
-		class="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full text-xl transition-colors hover:bg-zinc-950/8 md:hidden"
-		onclick={() => (menuOpen = !menuOpen)}
-		aria-label={menuOpen ? 'Close menu' : 'Open menu'}
-		aria-expanded={menuOpen}
-		aria-controls="mobile-menu"
-	>
-		<i class="bi {menuOpen ? 'bi-x-lg' : 'bi-list'} text-adwaita-text" aria-hidden="true"></i>
-	</button>
-
-	<ul
-		id="mobile-menu"
-		class="fixed right-0 top-0 z-40 flex h-full w-64 flex-col items-start gap-1 bg-adwaita-card px-4 pt-4 shadow-xl border-l border-adwaita-border transition-transform duration-300 ease-in-out md:static md:h-auto md:w-auto md:translate-x-0 md:flex-row md:items-center md:bg-zinc-200/50 md:p-1 md:rounded-lg md:border md:border-adwaita-border md:gap-0.5 md:shadow-none"
-		class:translate-x-full={!menuOpen}
-		class:translate-x-0={menuOpen}
-	>
-		<li class="mb-2 flex w-full items-center justify-end md:hidden">
-			<button
-				onclick={() => (menuOpen = false)}
-				aria-label="Close menu"
-				class="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full text-xl transition-colors hover:bg-zinc-950/8"
-			>
-				<i class="bi bi-x-lg text-adwaita-text" aria-hidden="true"></i>
-			</button>
-		</li>
-
-		{#each navItems as item (item.id)}
-			<li class="w-full md:w-auto">
+	<div class="flex items-center gap-3">
+		<ul
+			id="mobile-menu"
+			class="fixed right-0 top-0 z-40 flex h-full w-64 flex-col items-start gap-1 bg-adwaita-card px-4 pt-4 shadow-xl border-l border-adwaita-border transition-transform duration-300 ease-in-out md:static md:h-auto md:w-auto md:translate-x-0 md:flex-row md:items-center md:bg-adwaita-switcher-bg md:p-1 md:rounded-lg md:border md:border-adwaita-border md:gap-0.5 md:shadow-none"
+			class:translate-x-full={!menuOpen}
+			class:translate-x-0={menuOpen}
+		>
+			<li class="mb-2 flex w-full items-center justify-end md:hidden">
 				<button
-					onclick={() => navigate(item.id)}
-					class="flex w-full cursor-pointer whitespace-nowrap items-center justify-start md:justify-center rounded-lg border-0 px-4 h-11 text-sm font-medium leading-none outline-none focus:outline-none active:outline-none transition-all md:rounded-md md:px-3.5 md:h-7.5 {activeSection === item.id ? 'bg-zinc-950 text-zinc-50 hover:bg-zinc-800 md:bg-white md:text-adwaita-text md:shadow-xs md:hover:bg-white' : 'text-adwaita-text hover:bg-zinc-950/5 md:text-adwaita-subtitle md:hover:text-adwaita-text md:hover:bg-white/45'}"
+					onclick={() => (menuOpen = false)}
+					aria-label="Close menu"
+					class="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full text-xl transition-colors hover:bg-adwaita-hover"
 				>
-					{item.label}
+					<i class="bi bi-x-lg text-adwaita-text" aria-hidden="true"></i>
 				</button>
 			</li>
-		{/each}
-	</ul>
+
+			{#each navItems as item (item.id)}
+				<li class="w-full md:w-auto">
+					<button
+						onclick={() => navigate(item.id)}
+						class="flex w-full cursor-pointer whitespace-nowrap items-center justify-start md:justify-center rounded-lg border-0 px-4 h-11 text-sm font-medium leading-none outline-none focus:outline-none active:outline-none transition-all md:rounded-md md:px-3.5 md:h-7.5 {activeSection ===
+						item.id
+							? 'bg-adwaita-blue text-white hover:bg-adwaita-blue/90 md:bg-adwaita-switcher-active md:text-adwaita-blue md:shadow-xs md:hover:bg-adwaita-switcher-active font-semibold'
+							: 'text-adwaita-text hover:bg-adwaita-hover md:text-adwaita-subtitle md:hover:text-adwaita-text md:hover:bg-adwaita-hover'}"
+					>
+						{item.label}
+					</button>
+				</li>
+			{/each}
+		</ul>
+
+		<div class="relative">
+			<button
+				onclick={() => (themeDropdownOpen = !themeDropdownOpen)}
+				class="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full text-lg text-adwaita-text transition-colors hover:bg-adwaita-hover focus:outline-none"
+				aria-label="Change theme"
+				aria-haspopup="true"
+				aria-expanded={themeDropdownOpen}
+			>
+				{#if theme === 'auto'}
+					<i class="bi bi-circle-half" aria-hidden="true"></i>
+				{:else}
+					<i class="bi {theme === 'dark' ? 'bi-moon-stars-fill' : 'bi-sun-fill'}" aria-hidden="true"
+					></i>
+				{/if}
+			</button>
+
+			{#if themeDropdownOpen}
+				<button
+					class="fixed inset-0 z-40 cursor-default"
+					onclick={() => (themeDropdownOpen = false)}
+					aria-label="Close theme menu"
+				></button>
+				<div
+					class="absolute right-0 top-12 z-50 flex min-w-[125px] flex-col rounded-xl border border-adwaita-border bg-adwaita-card py-1.5 shadow-lg"
+				>
+					<button
+						onclick={() => {
+							applyTheme('auto');
+							themeDropdownOpen = false;
+						}}
+						class="flex w-full cursor-pointer items-center gap-3 px-4 py-2.5 text-left text-xs font-bold transition-colors hover:bg-adwaita-hover {theme ===
+						'auto'
+							? 'text-adwaita-blue'
+							: 'text-adwaita-text'}"
+					>
+						<i class="bi bi-circle-half text-sm" aria-hidden="true"></i>
+						Auto
+					</button>
+					<button
+						onclick={() => {
+							applyTheme('light');
+							themeDropdownOpen = false;
+						}}
+						class="flex w-full cursor-pointer items-center gap-3 px-4 py-2.5 text-left text-xs font-bold transition-colors hover:bg-adwaita-hover {theme ===
+						'light'
+							? 'text-adwaita-blue'
+							: 'text-adwaita-text'}"
+					>
+						<i class="bi bi-sun-fill text-sm" aria-hidden="true"></i>
+						Light
+					</button>
+					<button
+						onclick={() => {
+							applyTheme('dark');
+							themeDropdownOpen = false;
+						}}
+						class="flex w-full cursor-pointer items-center gap-3 px-4 py-2.5 text-left text-xs font-bold transition-colors hover:bg-adwaita-hover {theme ===
+						'dark'
+							? 'text-adwaita-blue'
+							: 'text-adwaita-text'}"
+					>
+						<i class="bi bi-moon-stars-fill text-sm" aria-hidden="true"></i>
+						Dark
+					</button>
+				</div>
+			{/if}
+		</div>
+
+		<button
+			class="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full text-xl transition-colors hover:bg-adwaita-hover md:hidden"
+			onclick={() => (menuOpen = !menuOpen)}
+			aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+			aria-expanded={menuOpen}
+			aria-controls="mobile-menu"
+		>
+			<i class="bi {menuOpen ? 'bi-x-lg' : 'bi-list'} text-adwaita-text" aria-hidden="true"></i>
+		</button>
+	</div>
 </nav>
 
-<main class="pt-15 font-sans flex flex-col min-h-[calc(100vh-3.75rem)]">
+<main class="pt-[92px] font-sans flex flex-col min-h-[calc(100vh-5.75rem)]">
 	{#if activeSection === 'home'}
-		<section class="mx-auto max-w-2xl px-6 py-20 flex min-h-[calc(100vh-8.75rem)] flex-col items-center justify-center text-center">
-			<img
-				src="/android-chrome-512x512.png"
-				alt="Farhan Kurnia Pratama"
-				class="mb-6 h-28 w-28 rounded-full object-cover object-top border border-adwaita-border shadow-xs"
-			/>
-			<h1 class="text-4xl font-bold text-adwaita-text md:text-5xl lg:text-6xl tracking-tight">{name}</h1>
-			<p class="mt-3 text-lg font-medium text-adwaita-subtitle">{headline}</p>
-			<p class="mt-4 max-w-xl text-base text-adwaita-subtitle/90 leading-relaxed">{desc}</p>
-			<div class="mt-8 flex flex-wrap justify-center gap-3">
-				<button
-					onclick={() => navigate('cv')}
-					class="cursor-pointer rounded-lg bg-adwaita-blue px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-blue-600 focus:outline-none"
+		<section class="mx-auto max-w-3xl px-6 py-12 md:py-20 flex flex-col gap-12">
+			<div class="flex flex-col items-center justify-center text-center">
+				<img
+					src="/android-chrome-512x512.png"
+					alt="Farhan Kurnia Pratama"
+					class="mb-6 h-28 w-28 rounded-full object-cover object-top border border-adwaita-border shadow-xs"
+				/>
+				<h1 class="text-4xl font-bold text-adwaita-text md:text-5xl lg:text-6xl tracking-tight">
+					{name}
+				</h1>
+				<p class="mt-3 text-lg font-medium text-adwaita-subtitle">{headline}</p>
+				<p class="mt-4 max-w-xl text-base text-adwaita-subtitle/90 leading-relaxed">{desc}</p>
+				<div class="mt-8 flex flex-wrap justify-center gap-3">
+					<a
+						href="/cv.pdf"
+						download="Farhan_Kurnia_Pratama_CV.pdf"
+						class="inline-flex items-center justify-center gap-2 cursor-pointer rounded-lg bg-adwaita-blue px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#009c8f] focus:outline-none"
+					>
+						<i class="bi bi-download" aria-hidden="true"></i>
+						Download CV
+					</a>
+					<button
+						onclick={() => navigate('projects')}
+						class="cursor-pointer rounded-lg bg-adwaita-card border border-adwaita-border px-5 py-2.5 text-sm font-semibold text-adwaita-text transition-colors hover:bg-adwaita-hover focus:outline-none"
+					>
+						Projects
+					</button>
+					<button
+						onclick={() => navigate('contacts')}
+						class="cursor-pointer rounded-lg bg-adwaita-card border border-adwaita-border px-5 py-2.5 text-sm font-semibold text-adwaita-text transition-colors hover:bg-adwaita-hover focus:outline-none"
+					>
+						Get in Touch
+					</button>
+				</div>
+			</div>
+
+			<form
+				action="https://formsubmit.co/contact@fkp.my.id"
+				method="POST"
+				class="w-full boxed-list text-left shadow-xs"
+			>
+				<input type="hidden" name="_subject" value="New message from portfolio website!" />
+				<input type="hidden" name="_template" value="table" />
+				<input type="hidden" name="_captcha" value="true" />
+
+				<div class="px-5 py-4 border-b border-adwaita-border">
+					<h2 class="text-lg font-bold text-adwaita-text">Send a Message</h2>
+					<p class="text-xs text-adwaita-subtitle mt-0.5">
+						Feel free to drop me a line. I'll get back to you as soon as possible.
+					</p>
+				</div>
+
+				<div
+					class="px-5 py-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-4"
 				>
-					Curriculum Vitae
-				</button>
-				<button
-					onclick={() => navigate('projects')}
-					class="cursor-pointer rounded-lg bg-white border border-adwaita-border px-5 py-2.5 text-sm font-semibold text-adwaita-text transition-colors hover:bg-zinc-950/[0.02] focus:outline-none"
+					<label for="form-name" class="text-sm font-semibold text-adwaita-text sm:w-1/4 shrink-0"
+						>Name</label
+					>
+					<input
+						type="text"
+						id="form-name"
+						name="name"
+						required
+						placeholder="Linus Torvalds"
+						class="w-full sm:w-3/4 px-3 py-1.5 text-sm bg-adwaita-bg border border-adwaita-border rounded-lg text-adwaita-text focus:outline-none focus:border-adwaita-blue transition-colors"
+					/>
+				</div>
+
+				<div
+					class="px-5 py-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-4"
 				>
-					Projects
-				</button>
-				<button
-					onclick={() => navigate('contacts')}
-					class="cursor-pointer rounded-lg bg-white border border-adwaita-border px-5 py-2.5 text-sm font-semibold text-adwaita-text transition-colors hover:bg-zinc-950/[0.02] focus:outline-none"
+					<label for="form-email" class="text-sm font-semibold text-adwaita-text sm:w-1/4 shrink-0"
+						>Email Address</label
+					>
+					<input
+						type="email"
+						id="form-email"
+						name="email"
+						required
+						placeholder="torvalds@linux-foundation.org"
+						class="w-full sm:w-3/4 px-3 py-1.5 text-sm bg-adwaita-bg border border-adwaita-border rounded-lg text-adwaita-text focus:outline-none focus:border-adwaita-blue transition-colors"
+					/>
+				</div>
+
+				<div
+					class="px-5 py-3.5 flex flex-col sm:flex-row items-start justify-between gap-2 sm:gap-4"
 				>
-					Get in Touch
-				</button>
+					<label
+						for="form-message"
+						class="text-sm font-semibold text-adwaita-text sm:w-1/4 shrink-0 mt-1.5">Message</label
+					>
+					<textarea
+						id="form-message"
+						name="message"
+						required
+						rows="3"
+						placeholder="Write your message here..."
+						class="w-full sm:w-3/4 px-3 py-1.5 text-sm bg-adwaita-bg border border-adwaita-border rounded-lg text-adwaita-text focus:outline-none focus:border-adwaita-blue transition-colors resize-none"
+					></textarea>
+				</div>
+
+				<div class="px-5 py-3.5 flex items-center justify-end bg-adwaita-hover/30">
+					<button
+						type="submit"
+						class="inline-flex items-center justify-center gap-2 cursor-pointer rounded-lg bg-adwaita-blue px-5 py-2 text-sm font-semibold text-white transition-colors hover:bg-[#009c8f] focus:outline-none"
+					>
+						<i class="bi bi-send-fill text-xs" aria-hidden="true"></i>
+						Send Message
+					</button>
+				</div>
+			</form>
+
+			<div>
+				<h3 class="text-lg font-bold text-adwaita-text tracking-tight mb-4">Recent Blog Posts</h3>
+				<div class="boxed-list text-left">
+					{#each posts.slice(0, 2) as post (post.title)}
+						<button
+							onclick={() => navigate('blogs')}
+							type="button"
+							class="action-row w-full text-left group cursor-pointer"
+						>
+							<div class="flex flex-col gap-1 pr-6">
+								<p class="text-xs font-semibold text-adwaita-subtitle">{post.date}</p>
+								<h4
+									class="text-base font-bold text-adwaita-text group-hover:text-adwaita-blue transition-colors leading-tight"
+								>
+									{post.title}
+								</h4>
+								<p class="mt-1.5 text-sm text-adwaita-subtitle line-clamp-2">{post.excerpt}</p>
+							</div>
+							<i
+								class="bi bi-chevron-right text-sm text-zinc-400 group-hover:text-adwaita-blue transition-all group-hover:translate-x-0.5"
+								aria-hidden="true"
+							></i>
+						</button>
+					{/each}
+					<button
+						onclick={() => navigate('blogs')}
+						class="action-row w-full text-left group cursor-pointer flex items-center justify-between"
+					>
+						<span class="text-sm font-bold text-adwaita-blue group-hover:underline"
+							>Read more...</span
+						>
+						<i
+							class="bi bi-chevron-right text-sm text-adwaita-blue group-hover:translate-x-0.5 transition-transform"
+							aria-hidden="true"
+						></i>
+					</button>
+				</div>
+			</div>
+
+			<div>
+				<h3 class="text-lg font-bold text-adwaita-text tracking-tight mb-4">Top Projects</h3>
+				<div class="boxed-list text-left">
+					{#each projects.slice(0, 2) as project (project.name)}
+						<a
+							href={project.url}
+							target="_blank"
+							rel="noopener noreferrer"
+							title="Opens in a new tab"
+							class="action-row group flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between"
+						>
+							<div class="flex flex-col gap-1.5 pr-0 sm:pr-6">
+								<div class="flex items-center gap-2">
+									<h4
+										class="text-base font-bold text-adwaita-text group-hover:text-adwaita-blue transition-colors leading-none"
+									>
+										{project.name}
+									</h4>
+									{#if langColors[project.lang]}
+										<span
+											class="inline-flex items-center justify-center rounded-full px-2 h-4.5 text-[9px] font-bold uppercase tracking-wider leading-none {langColors[
+												project.lang
+											]}">{project.lang}</span
+										>
+									{/if}
+								</div>
+								<p class="text-sm text-adwaita-subtitle leading-relaxed">{project.desc}</p>
+								<div class="mt-1.5 flex flex-wrap items-center gap-1.5">
+									{#each project.tags as tag (tag)}
+										<span
+											class="rounded bg-adwaita-border/40 px-2 py-0.5 text-[11px] font-medium text-adwaita-subtitle"
+											>{tag}</span
+										>
+									{/each}
+								</div>
+							</div>
+							<div
+								class="flex items-center justify-between sm:justify-end gap-3 w-full sm:w-auto shrink-0 border-t border-adwaita-border/40 pt-3 sm:border-t-0 sm:pt-0"
+							>
+								<div class="flex items-center gap-1 text-xs font-semibold text-adwaita-subtitle">
+									<i
+										class="bi bi-star-fill text-amber-500"
+										style="font-size:12px"
+										aria-hidden="true"
+									></i>
+									{project.stars}
+								</div>
+								<i
+									class="bi bi-chevron-right text-sm text-zinc-400 opacity-80 transition-all group-hover:translate-x-0.5 group-hover:text-adwaita-blue"
+									aria-hidden="true"
+								></i>
+							</div>
+						</a>
+					{/each}
+					<button
+						onclick={() => navigate('projects')}
+						class="action-row w-full text-left group cursor-pointer flex items-center justify-between"
+					>
+						<span class="text-sm font-bold text-adwaita-blue group-hover:underline"
+							>View all projects...</span
+						>
+						<i
+							class="bi bi-chevron-right text-sm text-adwaita-blue group-hover:translate-x-0.5 transition-transform"
+							aria-hidden="true"
+						></i>
+					</button>
+				</div>
+			</div>
+
+			<div class="boxed-list text-left border-adwaita-blue/30 bg-adwaita-blue/5">
+				<div class="px-5 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+					<div class="flex items-start gap-4">
+						<i
+							class="bi bi-heart-fill text-2xl text-adwaita-blue shrink-0 mt-0.5"
+							aria-hidden="true"
+						></i>
+						<div>
+							<h4 class="text-sm font-bold text-adwaita-text">Support My Open Source Work</h4>
+							<p class="text-xs text-adwaita-subtitle mt-0.5 leading-relaxed">
+								If you find my open-source projects and tools helpful, please consider supporting
+								me. Your backing directly contributes to the development and maintenance of these
+								works.
+							</p>
+						</div>
+					</div>
+					<button
+						onclick={() => navigate('funding')}
+						class="inline-flex items-center justify-center gap-2 cursor-pointer rounded-lg bg-adwaita-blue px-4 py-2 text-xs font-semibold text-white transition-colors hover:bg-[#009c8f] focus:outline-none shrink-0"
+					>
+						Become a Sponsor
+						<i class="bi bi-arrow-right" aria-hidden="true"></i>
+					</button>
+				</div>
 			</div>
 		</section>
 	{/if}
 
 	{#if activeSection === 'blogs'}
-		<section class="mx-auto max-w-2xl px-6 py-20">
+		<section class="mx-auto max-w-3xl px-6 py-20">
 			<h1 class="text-3xl font-bold text-adwaita-text tracking-tight">Blogs</h1>
-			<p class="mt-2 text-sm text-adwaita-subtitle">Thoughts on Linux, security, and open source.</p>
+			<p class="mt-2 text-sm text-adwaita-subtitle">
+				Thoughts on Linux, security, and open source.
+			</p>
 			<div class="mt-10 boxed-list">
 				{#each posts as post (post.title)}
 					<article class="action-row group cursor-pointer">
 						<div class="flex flex-col gap-1 pr-6">
 							<p class="text-xs font-semibold text-adwaita-subtitle">{post.date}</p>
-							<h2 class="text-base font-bold text-adwaita-text group-hover:text-adwaita-blue transition-colors">{post.title}</h2>
+							<h2
+								class="text-base font-bold text-adwaita-text group-hover:text-adwaita-blue transition-colors"
+							>
+								{post.title}
+							</h2>
 							<p class="mt-1.5 text-sm text-adwaita-subtitle line-clamp-2">{post.excerpt}</p>
 						</div>
-						<i class="bi bi-chevron-right text-sm text-zinc-400 group-hover:text-adwaita-blue transition-all group-hover:translate-x-0.5" aria-hidden="true"></i>
+						<i
+							class="bi bi-chevron-right text-sm text-zinc-400 group-hover:text-adwaita-blue transition-all group-hover:translate-x-0.5"
+							aria-hidden="true"
+						></i>
 					</article>
 				{/each}
 			</div>
@@ -337,37 +691,15 @@
 	{/if}
 
 	{#if activeSection === 'contacts'}
-		<section class="mx-auto max-w-2xl px-6 py-20">
-			<h1 class="text-3xl font-bold text-adwaita-text tracking-tight">Contacts</h1>
-			<p class="mt-2 text-sm text-adwaita-subtitle">Feel free to reach out via any of the channels below.</p>
-			<div class="mt-10 boxed-list">
-				{#each contacts as contact (contact.label)}
-					<a
-						href={contact.href}
-						target="_blank"
-						rel="noopener noreferrer"
-						title="Opens in a new tab"
-						class="action-row group"
-					>
-						<div class="flex items-center gap-4">
-							<i class="bi {contact.icon} text-lg text-adwaita-subtitle transition-colors group-hover:text-adwaita-blue" aria-hidden="true"></i>
-							<span class="text-sm font-semibold text-adwaita-text">{contact.label}</span>
-						</div>
-						<div class="flex items-center gap-2">
-							<span class="text-sm font-medium text-adwaita-subtitle">{contact.value}</span>
-							<i
-								class="bi bi-chevron-right text-sm text-zinc-400 opacity-80 transition-all group-hover:translate-x-0.5 group-hover:text-adwaita-blue"
-								aria-hidden="true"
-							></i>
-						</div>
-					</a>
-				{/each}
-			</div>
-		</section>
+		<LinkListSection
+			title="Contacts"
+			subtitle="Feel free to reach out via any of the channels below."
+			items={contacts}
+		/>
 	{/if}
 
 	{#if activeSection === 'cv'}
-		<section class="mx-auto max-w-2xl px-6 py-20">
+		<section class="mx-auto max-w-3xl px-6 py-20">
 			<div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
 				<div>
 					<h1 class="text-3xl font-bold text-adwaita-text tracking-tight">Curriculum Vitae</h1>
@@ -376,7 +708,7 @@
 				<a
 					href="/cv.pdf"
 					download="Farhan_Kurnia_Pratama_CV.pdf"
-					class="inline-flex items-center justify-center gap-2 rounded-lg bg-adwaita-blue px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-blue-600 focus:outline-none"
+					class="inline-flex items-center justify-center gap-2 rounded-lg bg-adwaita-blue px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#009c8f] focus:outline-none"
 				>
 					<i class="bi bi-download" aria-hidden="true"></i>
 					Download PDF
@@ -384,7 +716,9 @@
 			</div>
 
 			<div class="mt-10">
-				<h2 class="text-xs font-bold uppercase tracking-widest text-adwaita-subtitle">Experience</h2>
+				<h2 class="text-xs font-bold uppercase tracking-widest text-adwaita-subtitle">
+					Experience
+				</h2>
 				<div class="mt-4 boxed-list">
 					{#each experiences as exp (exp.role)}
 						<div class="px-5 py-4 flex flex-col gap-1.5 hover:bg-zinc-950/[0.015] transition-all">
@@ -405,7 +739,7 @@
 				<h2 class="text-xs font-bold uppercase tracking-widest text-adwaita-subtitle">Education</h2>
 				<div class="mt-4 boxed-list">
 					{#each education as edu (`${edu.degree}-${edu.university}`)}
-						<div class="px-5 py-4 flex flex-col gap-1 hover:bg-zinc-950/[0.015] transition-all">
+						<div class="px-5 py-4 flex flex-col gap-1 hover:bg-zinc-950/1.5 transition-all">
 							<div class="flex items-start justify-between gap-4">
 								<div>
 									<h3 class="text-base font-bold text-adwaita-text">{edu.degree} in {edu.major}</h3>
@@ -423,17 +757,82 @@
 				<h2 class="text-xs font-bold uppercase tracking-widest text-adwaita-subtitle">Skills</h2>
 				<div class="mt-4 flex flex-wrap gap-2">
 					{#each skills as skill (skill)}
-						<span class="cursor-default rounded-full bg-zinc-200/60 px-3.5 py-1.5 text-xs font-bold text-adwaita-text hover:bg-zinc-200/80 transition-colors">
+						<span
+							class="cursor-default rounded-full bg-adwaita-border/40 px-3.5 py-1.5 text-xs font-bold text-adwaita-text hover:bg-adwaita-border/60 transition-colors"
+						>
 							{skill}
 						</span>
 					{/each}
+				</div>
+			</div>
+
+			<div class="mt-10">
+				<h2 class="text-xs font-bold uppercase tracking-widest text-adwaita-subtitle">
+					Design System
+				</h2>
+				<div class="mt-4 boxed-list">
+					<div class="px-5 py-4 flex flex-col gap-3">
+						<p class="text-sm text-adwaita-subtitle leading-relaxed">
+							This website uses a custom analogous color palette with a modern, high-contrast
+							primary accent based on the GNOME Human Interface Guidelines (HIG):
+						</p>
+						<div class="flex items-center gap-2 flex-wrap mt-1">
+							<div
+								class="flex items-center gap-1.5 bg-adwaita-bg border border-adwaita-border rounded-full pl-1.5 pr-3 py-1"
+							>
+								<span
+									class="w-5 h-3 rounded-xs border border-zinc-400/15 shrink-0"
+									style="background-color: #00B8A9;"
+								></span>
+								<span class="text-[11px] font-mono font-bold text-adwaita-text"
+									>#00B8A9 (Primary Accent)</span
+								>
+							</div>
+							<div
+								class="flex items-center gap-1.5 bg-adwaita-bg border border-adwaita-border rounded-full pl-1.5 pr-3 py-1"
+							>
+								<span
+									class="w-5 h-3 rounded-xs border border-zinc-400/15 shrink-0"
+									style="background-color: #00B86A;"
+								></span>
+								<span class="text-[11px] font-mono font-bold text-adwaita-text">#00B86A</span>
+							</div>
+							<div
+								class="flex items-center gap-1.5 bg-adwaita-bg border border-adwaita-border rounded-full pl-1.5 pr-3 py-1"
+							>
+								<span
+									class="w-5 h-3 rounded-xs border border-zinc-400/15 shrink-0"
+									style="background-color: #008CB8;"
+								></span>
+								<span class="text-[11px] font-mono font-bold text-adwaita-text">#008CB8</span>
+							</div>
+							<div
+								class="flex items-center gap-1.5 bg-adwaita-bg border border-adwaita-border rounded-full pl-1.5 pr-3 py-1"
+							>
+								<span
+									class="w-5 h-3 rounded-xs border border-zinc-400/15 shrink-0"
+									style="background-color: #00B82C;"
+								></span>
+								<span class="text-[11px] font-mono font-bold text-adwaita-text">#00B82C</span>
+							</div>
+							<div
+								class="flex items-center gap-1.5 bg-adwaita-bg border border-adwaita-border rounded-full pl-1.5 pr-3 py-1"
+							>
+								<span
+									class="w-5 h-3 rounded-xs border border-zinc-400/15 shrink-0"
+									style="background-color: #0052B8;"
+								></span>
+								<span class="text-[11px] font-mono font-bold text-adwaita-text">#0052B8</span>
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
 		</section>
 	{/if}
 
 	{#if activeSection === 'projects'}
-		<section class="mx-auto max-w-2xl px-6 py-20">
+		<section class="mx-auto max-w-3xl px-6 py-20">
 			<h1 class="text-3xl font-bold text-adwaita-text tracking-tight">Projects</h1>
 			<p class="mt-2 text-sm text-adwaita-subtitle">Open source work on GitHub.</p>
 			<div class="mt-10 boxed-list">
@@ -443,25 +842,39 @@
 						target="_blank"
 						rel="noopener noreferrer"
 						title="Opens in a new tab"
-						class="action-row group"
+						class="action-row group flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between"
 					>
-						<div class="flex flex-col gap-1.5 pr-6">
+						<div class="flex flex-col gap-1.5 pr-0 sm:pr-6">
 							<div class="flex items-center gap-2">
-								<h3 class="text-base font-bold text-adwaita-text group-hover:text-adwaita-blue transition-colors">{project.name}</h3>
+								<h3
+									class="text-base font-bold text-adwaita-text group-hover:text-adwaita-blue transition-colors leading-none"
+								>
+									{project.name}
+								</h3>
 								{#if langColors[project.lang]}
-									<span class="rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider {langColors[project.lang]}">{project.lang}</span>
+									<span
+										class="inline-flex items-center justify-center rounded-full px-2 h-4.5 text-[9px] font-bold uppercase tracking-wider leading-none {langColors[
+											project.lang
+										]}">{project.lang}</span
+									>
 								{/if}
 							</div>
 							<p class="text-sm text-adwaita-subtitle leading-relaxed">{project.desc}</p>
-							<div class="mt-1 flex flex-wrap items-center gap-1.5">
+							<div class="mt-1.5 flex flex-wrap items-center gap-1.5">
 								{#each project.tags as tag (tag)}
-									<span class="rounded bg-zinc-200/50 px-2 py-0.5 text-[11px] font-medium text-adwaita-subtitle">{tag}</span>
+									<span
+										class="rounded bg-adwaita-border/40 px-2 py-0.5 text-[11px] font-medium text-adwaita-subtitle"
+										>{tag}</span
+									>
 								{/each}
 							</div>
 						</div>
-						<div class="flex items-center gap-3">
+						<div
+							class="flex items-center justify-between sm:justify-end gap-3 w-full sm:w-auto shrink-0 border-t border-adwaita-border/40 pt-3 sm:border-t-0 sm:pt-0"
+						>
 							<div class="flex items-center gap-1 text-xs font-semibold text-adwaita-subtitle">
-								<i class="bi bi-star-fill text-amber-500" style="font-size:12px" aria-hidden="true"></i>
+								<i class="bi bi-star-fill text-amber-500" style="font-size:12px" aria-hidden="true"
+								></i>
 								{project.stars}
 							</div>
 							<i
@@ -476,36 +889,16 @@
 	{/if}
 
 	{#if activeSection === 'funding'}
-		<section class="mx-auto max-w-2xl px-6 py-20">
-			<h1 class="text-3xl font-bold text-adwaita-text tracking-tight">Supporting & Funding</h1>
-			<p class="mt-2 text-sm text-adwaita-subtitle">If you find my open-source work helpful, consider supporting me through these platforms.</p>
-			<div class="mt-10 boxed-list">
-				{#each fundingPlatforms as platform (platform.name)}
-					<a
-						href={platform.href}
-						target="_blank"
-						rel="noopener noreferrer"
-						title="Opens in a new tab"
-						class="action-row group"
-					>
-						<div class="flex items-center gap-4">
-							<i class="bi {platform.icon} text-lg {platform.color}" aria-hidden="true"></i>
-							<span class="text-sm font-semibold text-adwaita-text">{platform.name}</span>
-						</div>
-						<div class="flex items-center gap-2">
-							<span class="text-sm font-medium text-adwaita-subtitle">{platform.value}</span>
-							<i
-								class="bi bi-chevron-right text-sm text-zinc-400 opacity-80 transition-all group-hover:translate-x-0.5 group-hover:text-adwaita-blue"
-								aria-hidden="true"
-							></i>
-						</div>
-					</a>
-				{/each}
-			</div>
-		</section>
+		<LinkListSection
+			title="Supporting & Funding"
+			subtitle="If you find my open-source work helpful, consider supporting me through these platforms."
+			items={fundingPlatforms}
+		/>
 	{/if}
 
-	<footer class="mx-auto w-full max-w-2xl px-6 py-8 mt-auto text-center text-xs text-adwaita-subtitle/75 border-t border-adwaita-border">
+	<footer
+		class="mx-auto w-full max-w-3xl px-6 py-8 mt-auto text-center text-xs text-adwaita-subtitle/75 border-t border-adwaita-border"
+	>
 		<p>&copy; {new Date().getFullYear()} {name}. All rights reserved.</p>
 	</footer>
 </main>

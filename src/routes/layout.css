@@ -3,18 +3,18 @@
 
 @layer base {
 	body {
-		@apply m-0 bg-adwaita-bg p-0 text-adwaita-text;
+		@apply m-0 bg-adwaita-bg p-0 text-adwaita-text transition-colors duration-300;
 		font-family: 'Anthropic Sans Text', ui-sans-serif, system-ui, sans-serif;
 		overflow-x: hidden;
 		scrollbar-gutter: stable;
 	}
 
 	.boxed-list {
-		@apply bg-adwaita-card rounded-2xl border border-adwaita-border overflow-hidden divide-y divide-adwaita-border shadow-xs;
+		@apply divide-y divide-adwaita-border overflow-hidden rounded-2xl border border-adwaita-border bg-adwaita-card shadow-xs transition-colors duration-300;
 	}
 
 	.action-row {
-		@apply flex items-center justify-between px-5 py-4 transition-all hover:bg-zinc-950/[0.015];
+		@apply flex items-center justify-between px-5 py-4 transition-all hover:bg-adwaita-hover;
 	}
 }
 
@@ -374,7 +374,6 @@
 	font-display: swap;
 }
 
-/* ─── Tailwind v4 Theme ───────────────────────────────────────── */
 @theme {
 	--font-sans: 'Anthropic Sans', ui-sans-serif, system-ui, sans-serif;
 	--font-sans-text: 'Anthropic Sans Text', ui-sans-serif, system-ui, sans-serif;
@@ -384,7 +383,21 @@
 	--color-adwaita-bg: #f6f5f4;
 	--color-adwaita-card: #ffffff;
 	--color-adwaita-border: #e1dfdd;
-	--color-adwaita-blue: #3584e4;
+	--color-adwaita-blue: #00b8a9;
 	--color-adwaita-text: #2e3436;
 	--color-adwaita-subtitle: #5e6c70;
+	--color-adwaita-switcher-bg: rgba(225, 223, 221, 0.5);
+	--color-adwaita-switcher-active: #ffffff;
+	--color-adwaita-hover: rgba(0, 0, 0, 0.015);
+}
+
+:root.dark {
+	--color-adwaita-bg: #242424;
+	--color-adwaita-card: #1e1e1e;
+	--color-adwaita-border: #303030;
+	--color-adwaita-text: #ffffff;
+	--color-adwaita-subtitle: #a0a0a0;
+	--color-adwaita-switcher-bg: rgba(48, 48, 48, 0.5);
+	--color-adwaita-switcher-active: #303030;
+	--color-adwaita-hover: rgba(255, 255, 255, 0.03);
 }
