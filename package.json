@@ -3,7 +3,7 @@
 	"version": "0.0.1",
 	"devDependencies": {
 		"@sveltejs/adapter-cloudflare": "^7.2.9",
-		"@sveltejs/kit": "^2.69.0",
+		"@sveltejs/kit": "^2.69.1",
 		"@sveltejs/package": "^2.5.8",
 		"@sveltejs/vite-plugin-svelte": "^7.1.2",
 		"@tailwindcss/vite": "^4.3.2",
@@ -51,5 +51,8 @@
 	],
 	"svelte": "./dist/index.js",
 	"type": "module",
-	"types": "./dist/index.d.ts"
+	"types": "./dist/index.d.ts",
+	"dependencies": {
+		"bootstrap-icons": "^1.13.1"
+	}
 }
