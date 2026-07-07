@@ -176,6 +176,7 @@
 	let menuOpen = $state(false);
 	let theme = $state<Theme>('auto');
 	let themeDropdownOpen = $state(false);
+	let formMessage = $state('');
 
 	function navigate(section: Section) {
 		activeSection = section;
@@ -508,7 +509,7 @@
 						name="name"
 						required
 						placeholder="Linus Torvalds"
-						class="w-full sm:w-3/4 bg-transparent border-0 px-0 py-1 text-sm text-adwaita-text placeholder:text-adwaita-subtitle/50 focus:outline-none focus:ring-0 text-left"
+						class="w-full sm:w-3/4 bg-transparent border-0 px-2 py-1 text-sm text-adwaita-text placeholder:text-adwaita-subtitle/50 rounded-md focus:outline-none focus:ring-2 focus:ring-adwaita-blue/50 transition-all text-left"
 					/>
 				</div>
 
@@ -524,7 +525,7 @@
 						name="email"
 						required
 						placeholder="torvalds@linux-foundation.org"
-						class="w-full sm:w-3/4 bg-transparent border-0 px-0 py-1 text-sm text-adwaita-text placeholder:text-adwaita-subtitle/50 focus:outline-none focus:ring-0 text-left"
+						class="w-full sm:w-3/4 bg-transparent border-0 px-2 py-1 text-sm text-adwaita-text placeholder:text-adwaita-subtitle/50 rounded-md focus:outline-none focus:ring-2 focus:ring-adwaita-blue/50 transition-all text-left"
 					/>
 				</div>
 
@@ -535,14 +536,43 @@
 						for="form-message"
 						class="text-sm font-semibold text-adwaita-text sm:w-1/4 shrink-0 mt-1">Message</label
 					>
-					<textarea
-						id="form-message"
-						name="message"
-						required
-						rows="3"
-						placeholder="Write your message here..."
-						class="w-full sm:w-3/4 bg-transparent border-0 px-0 py-1 text-sm text-adwaita-text placeholder:text-adwaita-subtitle/50 focus:outline-none focus:ring-0 resize-none text-left"
-					></textarea>
+					<div class="relative w-full sm:w-3/4">
+						<textarea
+							id="form-message"
+							name="message"
+							required
+							rows="3"
+							placeholder="Write your message here..."
+							maxlength="1000"
+							bind:value={formMessage}
+							class="w-full bg-transparent border-0 px-2 py-1 pr-8 text-sm text-adwaita-text placeholder:text-adwaita-subtitle/50 focus:outline-none focus:ring-2 focus:ring-adwaita-blue/50 rounded-md transition-all resize-none text-left"
+						></textarea>
+						<div class="absolute right-3 bottom-2.5 flex items-center gap-1.5 pointer-events-none select-none z-10">
+							<span class="text-[10px] text-adwaita-subtitle/80 font-mono">
+								{1000 - formMessage.length}
+							</span>
+							<svg class="w-4 h-4" class:animate-[spin_3s_linear_infinite]={formMessage.length < 1000} viewBox="0 0 20 20">
+								<circle
+									cx="10"
+									cy="10"
+									r="8"
+									class="stroke-adwaita-border/40 fill-none"
+									stroke-width="2"
+								/>
+								<circle
+									cx="10"
+									cy="10"
+									r="8"
+									class="stroke-adwaita-blue fill-none transition-[stroke-dashoffset] duration-150"
+									stroke-width="2"
+									stroke-dasharray="50.26"
+									stroke-dashoffset={50.26 - (50.26 * Math.min(formMessage.length, 1000)) / 1000}
+									stroke-linecap="round"
+									transform="rotate(-90 10 10)"
+								/>
+							</svg>
+						</div>
+					</div>
 				</div>
 
 				<div class="px-5 py-3.5 flex items-center justify-end bg-adwaita-hover/30">
