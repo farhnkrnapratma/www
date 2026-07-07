@@ -408,3 +408,11 @@
 	--color-adwaita-switcher-active: #303030;
 	--color-adwaita-hover: rgba(255, 255, 255, 0.03);
 }
+
+.no-scrollbar::-webkit-scrollbar {
+	display: none;
+}
+.no-scrollbar {
+	-ms-overflow-style: none;
+	scrollbar-width: none;
+}
