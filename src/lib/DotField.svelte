@@ -4,10 +4,10 @@
 	let {
 		dotRadius = 1.5,
 		dotSpacing = 14,
-		cursorRadius = 500,
+		cursorRadius = 120,
 		cursorForce = 0.1,
 		bulgeOnly = true,
-		bulgeStrength = 67,
+		bulgeStrength = 30,
 		glowRadius = 160,
 		sparkle = false,
 		waveAmplitude = 0,

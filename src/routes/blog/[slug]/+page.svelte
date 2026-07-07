@@ -139,7 +139,7 @@
 </svelte:head>
 
 <nav
-	class="fixed top-0 z-40 flex h-15 w-full items-center justify-between bg-adwaita-card/85 backdrop-blur-md px-5 font-sans border-b border-adwaita-border shadow-xs transition-colors duration-300"
+	class="fixed top-0 z-40 flex h-15 w-full items-center justify-between bg-adwaita-card/60 backdrop-blur-lg px-5 font-sans border-b border-adwaita-border shadow-xs transition-colors duration-300"
 >
 	<a
 		href="/#blogs"
