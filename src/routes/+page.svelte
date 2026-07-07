@@ -642,13 +642,9 @@
 								<div
 									class="flex flex-wrap items-center gap-3 sm:justify-end shrink-0 relative z-20"
 								>
-
 									{#if project.licenseName}
-										<a
-											href={project.licenseUrl}
-											target="_blank"
-											rel="noopener noreferrer"
-											class="flex items-center gap-1 px-2 py-0.5 text-[11px] font-semibold text-adwaita-subtitle bg-adwaita-card border border-adwaita-border rounded-lg transition-colors hover:bg-adwaita-hover hover:text-adwaita-blue whitespace-nowrap shadow-xs"
+										<div
+											class="flex items-center gap-1 px-2 py-0.5 text-[11px] font-semibold text-adwaita-subtitle bg-adwaita-card border border-adwaita-border rounded-lg whitespace-nowrap shadow-xs"
 											title="License: {project.licenseName}"
 										>
 											<span
@@ -656,7 +652,7 @@
 												aria-hidden="true">license</span
 											>
 											<span>{project.licenseName} License</span>
-										</a>
+										</div>
 									{/if}
 
 									<div class="flex items-center gap-1 text-xs font-semibold text-adwaita-subtitle">
@@ -880,13 +876,9 @@
 							</div>
 
 							<div class="flex flex-wrap items-center gap-2 sm:justify-end shrink-0 relative z-20">
-
 								{#if project.licenseName}
-									<a
-										href={project.licenseUrl}
-										target="_blank"
-										rel="noopener noreferrer"
-										class="flex items-center gap-1 px-2 py-0.5 text-[11px] font-semibold text-adwaita-subtitle bg-adwaita-card border border-adwaita-border rounded-lg transition-colors hover:bg-adwaita-hover hover:text-adwaita-blue whitespace-nowrap shadow-xs"
+									<div
+										class="flex items-center gap-1 px-2 py-0.5 text-[11px] font-semibold text-adwaita-subtitle bg-adwaita-card border border-adwaita-border rounded-lg whitespace-nowrap shadow-xs"
 										title="License: {project.licenseName}"
 									>
 										<span
@@ -894,7 +886,7 @@
 											aria-hidden="true">license</span
 										>
 										<span>{project.licenseName} License</span>
-									</a>
+									</div>
 								{/if}
 
 								<div class="flex items-center gap-1 text-xs font-semibold text-adwaita-subtitle">
