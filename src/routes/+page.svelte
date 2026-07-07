@@ -403,7 +403,6 @@
 			<DotField
 				gradientFrom="rgba(120, 101, 217, 0.55)"
 				gradientTo="rgba(120, 101, 217, 0.2)"
-				glowColor="#7865d9"
 			/>
 		</div>
 

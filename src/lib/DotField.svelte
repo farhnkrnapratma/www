@@ -34,16 +34,13 @@
 	}>();
 
 	const TWO_PI = Math.PI * 2;
-	const glowId = `dot-field-glow-${Math.random().toString(36).slice(2, 9)}`;
 
 	let canvasRef = $state<HTMLCanvasElement | null>(null);
-	let glowRef = $state<SVGCircleElement | null>(null);
 
 	let dots: any[] = [];
 	let mouse = { x: -9999, y: -9999, prevX: -9999, prevY: -9999, speed: 0 };
 	let raf: number;
 	let size = { w: 0, h: 0, offsetX: 0, offsetY: 0 };
-	let glowOpacity = 0;
 	let engagement = 0;
 	let frameCount = 0;
 
@@ -74,7 +71,6 @@
 
 	onMount(() => {
 		const canvas = canvasRef;
-		const glowEl = glowRef;
 		if (!canvas) return;
 
 		const ctx = canvas.getContext('2d', { alpha: true });
@@ -141,15 +137,6 @@
 			const targetEngagement = mouseActive ? Math.min(0.2 + mouse.speed / 4, 1) : 0;
 			engagement += (targetEngagement - engagement) * 0.06;
 			if (engagement < 0.001) engagement = 0;
-
-			const targetGlowOpacity = mouseActive ? Math.min(0.3 + mouse.speed / 6, 0.7) : 0;
-			glowOpacity += (targetGlowOpacity - glowOpacity) * 0.08;
-
-			if (glowEl) {
-				glowEl.setAttribute('cx', mouse.x.toString());
-				glowEl.setAttribute('cy', mouse.y.toString());
-				glowEl.style.opacity = glowOpacity.toString();
-			}
 
 			ctx.clearRect(0, 0, w, h);
 
@@ -242,25 +229,6 @@
 <div class="dot-field-container {className}" {...restProps}>
 	<canvas bind:this={canvasRef} style="position: absolute; inset: 0; width: 100%; height: 100%;"
 	></canvas>
-	<svg
-		style="position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none;"
-		aria-hidden="true"
-	>
-		<defs>
-			<radialGradient id={glowId}>
-				<stop offset="0%" stop-color={glowColor} />
-				<stop offset="100%" stop-color="transparent" />
-			</radialGradient>
-		</defs>
-		<circle
-			bind:this={glowRef}
-			cx="-9999"
-			cy="-9999"
-			r={glowRadius}
-			fill="url(#{glowId})"
-			style="opacity: 0; will-change: opacity;"
-		/>
-	</svg>
 </div>
 
 <style>
