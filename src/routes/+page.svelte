@@ -430,7 +430,7 @@
 						<StarBorder
 							as="button"
 							onclick={() => navigate('projects')}
-							color="#6e6c7a"
+							color="#7865d9"
 							speed="3.5s"
 							thickness={2}
 							class="w-full sm:w-48"
@@ -440,7 +440,7 @@
 						<StarBorder
 							as="button"
 							onclick={() => navigate('contacts')}
-							color="#6e6c7a"
+							color="#7865d9"
 							speed="4s"
 							thickness={2}
 							class="w-full sm:w-48"
