@@ -576,55 +576,64 @@
 					<h3 class="text-lg font-bold text-adwaita-text tracking-tight mb-4">Top Projects</h3>
 					<div class="boxed-list text-left">
 						{#each projects.slice(0, 3) as project (project.name)}
-							<a
-								href={project.url}
-								target="_blank"
-								rel="noopener noreferrer"
-								title="Opens in a new tab"
-								class="action-row group flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between"
-							>
-								<div class="flex flex-col gap-1.5 pr-0 sm:pr-6">
-									<div class="flex items-center gap-2">
+							<div class="relative group">
+								<a
+									href={project.url}
+									target="_blank"
+									rel="noopener noreferrer"
+									title="Opens in a new tab"
+									class="action-row flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between text-left"
+								>
+									<div class="flex flex-col gap-1.5 pr-0 sm:pr-24">
 										<h4
 											class="text-base font-bold text-adwaita-text group-hover:text-adwaita-blue transition-colors leading-none"
 										>
 											{project.name}
 										</h4>
-										{#if langColors[project.lang]}
-											<span
-												class="inline-flex items-center justify-center rounded-full px-2 h-4.5 text-[9px] font-bold uppercase tracking-wider leading-none {langColors[
-													project.lang
-												]}">{project.lang}</span
-											>
-										{/if}
+										<p class="text-sm text-adwaita-subtitle leading-relaxed">{project.desc}</p>
+										<div class="mt-1.5 flex flex-wrap items-center gap-1.5">
+											{#if langColors[project.lang]}
+												<span class="rounded bg-adwaita-blue/15 px-2 py-0.5 text-[11px] font-semibold text-adwaita-blue">{project.lang}</span>
+											{/if}
+											{#each project.tags as tag (tag)}
+												<span
+													class="rounded bg-adwaita-border/40 px-2 py-0.5 text-[11px] font-medium text-adwaita-subtitle"
+													>{tag}</span
+												>
+											{/each}
+										</div>
 									</div>
-									<p class="text-sm text-adwaita-subtitle leading-relaxed">{project.desc}</p>
-									<div class="mt-1.5 flex flex-wrap items-center gap-1.5">
-										{#each project.tags as tag (tag)}
-											<span
-												class="rounded bg-adwaita-border/40 px-2 py-0.5 text-[11px] font-medium text-adwaita-subtitle"
-												>{tag}</span
-											>
-										{/each}
-									</div>
-								</div>
-								<div
-									class="flex items-center justify-between sm:justify-end gap-3 w-full sm:w-auto shrink-0 border-t border-adwaita-border/40 pt-3 sm:border-t-0 sm:pt-0"
-								>
-									<div class="flex items-center gap-1 text-xs font-semibold text-adwaita-subtitle">
+									<div
+										class="flex items-center justify-between sm:justify-end gap-3 w-full sm:w-auto shrink-0 border-t border-adwaita-border/40 pt-3 sm:border-t-0 sm:pt-0"
+									>
+										<div class="flex items-center gap-1 text-xs font-semibold text-adwaita-subtitle pr-24 sm:pr-8">
+											<i
+												class="bi bi-star-fill text-amber-500"
+												style="font-size:12px"
+												aria-hidden="true"
+											></i>
+											{project.stars}
+										</div>
 										<i
-											class="bi bi-star-fill text-amber-500"
-											style="font-size:12px"
+											class="bi bi-chevron-right text-sm text-zinc-400 opacity-80 transition-all group-hover:translate-x-0.5 group-hover:text-adwaita-blue"
 											aria-hidden="true"
 										></i>
-										{project.stars}
 									</div>
-									<i
-										class="bi bi-chevron-right text-sm text-zinc-400 opacity-80 transition-all group-hover:translate-x-0.5 group-hover:text-adwaita-blue"
-										aria-hidden="true"
-									></i>
-								</div>
-							</a>
+								</a>
+
+								{#if project.licenseName}
+									<a
+										href={project.licenseUrl}
+										target="_blank"
+										rel="noopener noreferrer"
+										class="absolute right-14 bottom-[18px] sm:bottom-auto sm:top-1/2 sm:-translate-y-1/2 z-20 flex items-center gap-1 text-xs font-semibold text-adwaita-subtitle hover:text-adwaita-blue transition-colors"
+										title="License: {project.licenseName}"
+									>
+										<i class="bi bi-file-earmark-text text-zinc-400 dark:text-zinc-500" style="font-size:12px" aria-hidden="true"></i>
+										{project.licenseName}
+									</a>
+								{/if}
+							</div>
 						{/each}
 						<button
 							onclick={() => navigate('projects')}
@@ -797,52 +806,61 @@
 			<p class="mt-2 text-sm text-adwaita-subtitle">Open source work on GitHub.</p>
 			<div class="mt-10 boxed-list">
 				{#each projects as project (project.name)}
-					<a
-						href={project.url}
-						target="_blank"
-						rel="noopener noreferrer"
-						title="Opens in a new tab"
-						class="action-row group flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between"
-					>
-						<div class="flex flex-col gap-1.5 pr-0 sm:pr-6">
-							<div class="flex items-center gap-2">
+					<div class="relative group">
+						<a
+							href={project.url}
+							target="_blank"
+							rel="noopener noreferrer"
+							title="Opens in a new tab"
+							class="action-row flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between text-left"
+						>
+							<div class="flex flex-col gap-1.5 pr-0 sm:pr-24">
 								<h3
 									class="text-base font-bold text-adwaita-text group-hover:text-adwaita-blue transition-colors leading-none"
 								>
 									{project.name}
 								</h3>
-								{#if langColors[project.lang]}
-									<span
-										class="inline-flex items-center justify-center rounded-full px-2 h-4.5 text-[9px] font-bold uppercase tracking-wider leading-none {langColors[
-											project.lang
-										]}">{project.lang}</span
-									>
-								{/if}
+								<p class="text-sm text-adwaita-subtitle leading-relaxed">{project.desc}</p>
+								<div class="mt-1.5 flex flex-wrap items-center gap-1.5">
+									{#if langColors[project.lang]}
+										<span class="rounded bg-adwaita-blue/15 px-2 py-0.5 text-[11px] font-semibold text-adwaita-blue">{project.lang}</span>
+									{/if}
+									{#each project.tags as tag (tag)}
+										<span
+											class="rounded bg-adwaita-border/40 px-2 py-0.5 text-[11px] font-medium text-adwaita-subtitle"
+											>{tag}</span
+										>
+									{/each}
+								</div>
 							</div>
-							<p class="text-sm text-adwaita-subtitle leading-relaxed">{project.desc}</p>
-							<div class="mt-1.5 flex flex-wrap items-center gap-1.5">
-								{#each project.tags as tag (tag)}
-									<span
-										class="rounded bg-adwaita-border/40 px-2 py-0.5 text-[11px] font-medium text-adwaita-subtitle"
-										>{tag}</span
-									>
-								{/each}
-							</div>
-						</div>
-						<div
-							class="flex items-center justify-between sm:justify-end gap-3 w-full sm:w-auto shrink-0 border-t border-adwaita-border/40 pt-3 sm:border-t-0 sm:pt-0"
-						>
-							<div class="flex items-center gap-1 text-xs font-semibold text-adwaita-subtitle">
-								<i class="bi bi-star-fill text-amber-500" style="font-size:12px" aria-hidden="true"
+							<div
+								class="flex items-center justify-between sm:justify-end gap-3 w-full sm:w-auto shrink-0 border-t border-adwaita-border/40 pt-3 sm:border-t-0 sm:pt-0"
+							>
+								<div class="flex items-center gap-1 text-xs font-semibold text-adwaita-subtitle pr-24 sm:pr-8">
+									<i class="bi bi-star-fill text-amber-500" style="font-size:12px" aria-hidden="true"
+									></i>
+									{project.stars}
+								</div>
+								<i
+									class="bi bi-chevron-right text-sm text-zinc-400 opacity-80 transition-all group-hover:translate-x-0.5 group-hover:text-adwaita-blue"
+									aria-hidden="true"
 								></i>
-								{project.stars}
 							</div>
-							<i
-								class="bi bi-chevron-right text-sm text-zinc-400 opacity-80 transition-all group-hover:translate-x-0.5 group-hover:text-adwaita-blue"
-								aria-hidden="true"
-							></i>
-						</div>
-					</a>
+						</a>
+
+						{#if project.licenseName}
+							<a
+								href={project.licenseUrl}
+								target="_blank"
+								rel="noopener noreferrer"
+								class="absolute right-14 bottom-[18px] sm:bottom-auto sm:top-1/2 sm:-translate-y-1/2 z-20 flex items-center gap-1 text-xs font-semibold text-adwaita-subtitle hover:text-adwaita-blue transition-colors"
+								title="License: {project.licenseName}"
+							>
+								<i class="bi bi-file-earmark-text text-zinc-400 dark:text-zinc-500" style="font-size:12px" aria-hidden="true"></i>
+								{project.licenseName}
+							</a>
+						{/if}
+					</div>
 				{/each}
 			</div>
 		</section>
