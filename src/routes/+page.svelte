@@ -266,12 +266,6 @@
 	<meta name="twitter:title" content="{name} — {headline}" />
 	<meta name="twitter:description" content={desc} />
 	<meta name="twitter:image" content="{siteUrl}hero.png" />
-	<link
-		rel="alternate"
-		type="application/rss+xml"
-		title="{name} — {headline}"
-		href="{siteUrl}/blog/rss.xml"
-	/>
 </svelte:head>
 
 {#if menuOpen}
