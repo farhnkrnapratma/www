@@ -11,7 +11,6 @@
 		comments = [...data.comments];
 	});
 
-	// Form state
 	let authorName = $state('');
 	let commentContent = $state('');
 	let isSubmitting = $state(false);
@@ -52,7 +51,6 @@
 			}
 
 			if (result.is_approved) {
-				// Instantly add approved comment to list
 				comments = [...comments, result.comment];
 				feedbackMessage = {
 					type: 'success',
@@ -100,7 +98,6 @@
 
 <main class="pt-[92px] font-sans flex flex-col min-h-[calc(100vh-5.75rem)]">
 	<article class="mx-auto w-full max-w-3xl px-6 py-12 md:py-20 flex-1">
-		<!-- Header -->
 		<header class="mb-8 border-b border-adwaita-border pb-6">
 			<p class="text-xs font-semibold text-adwaita-subtitle mb-2">{formatDate(post.created_at)}</p>
 			<h1
@@ -110,16 +107,13 @@
 			</h1>
 		</header>
 
-		<!-- Content -->
 		<div class="prose-custom w-full">
 			{@html html}
 		</div>
 
-		<!-- Comments section -->
 		<section class="mt-16 border-t border-adwaita-border pt-10">
 			<h2 class="text-xl font-bold text-adwaita-text tracking-tight mb-6">Comments</h2>
 
-			<!-- Add comment form -->
 			<div class="boxed-list p-5 mb-8 text-left bg-zinc-950/[0.01]">
 				<h3 class="text-sm font-bold text-adwaita-text mb-4">Leave a Comment</h3>
 
@@ -180,7 +174,6 @@
 				</form>
 			</div>
 
-			<!-- Comments list -->
 			{#if comments.length === 0}
 				<div class="boxed-list p-6 text-center text-adwaita-subtitle">
 					No comments yet. Be the first to share your thoughts!

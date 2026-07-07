@@ -28,18 +28,15 @@
 	}
 
 	onMount(async () => {
-		// Read theme from localStorage
 		const saved = localStorage.getItem('theme') as Theme;
 		theme = saved || 'auto';
 
-		// 1. Authenticate user session
 		const { data } = await supabase.auth.getSession();
 		if (!data.session) {
 			window.location.href = '/admin/login';
 			return;
 		}
 
-		// 2. Fetch all posts and comments from DB
 		await Promise.all([fetchPosts(), fetchComments()]);
 		isLoading = false;
 	});
@@ -89,7 +86,6 @@
 	async function deletePost(post: any) {
 		if (!confirm(`Are you sure you want to delete "${post.title}"?`)) return;
 
-		// 1. Delete .md file from Storage
 		const { error: storageError } = await supabase.storage
 			.from('blog-posts')
 			.remove([post.storage_path]);
@@ -98,7 +94,6 @@
 			console.warn('Storage deletion warning:', storageError);
 		}
 
-		// 2. Delete metadata from DB
 		const { error: dbError } = await supabase.from('posts').delete().eq('id', post.id);
 
 		if (!dbError) {
@@ -143,7 +138,6 @@
 	}
 </script>
 
-<!-- Header bar -->
 <nav
 	class="fixed top-0 z-40 flex h-15 w-full items-center justify-between bg-adwaita-card px-5 font-sans border-b border-adwaita-border shadow-xs transition-colors duration-300"
 >
@@ -250,7 +244,6 @@
 				Loading dashboard data...
 			</div>
 		{:else}
-			<!-- Tabs selection switcher -->
 			<div class="flex border-b border-adwaita-border mb-8">
 				<button
 					onclick={() => (activeTab = 'posts')}
@@ -270,7 +263,6 @@
 				</button>
 			</div>
 
-			<!-- Blog posts tab content -->
 			{#if activeTab === 'posts'}
 				{#if posts.length === 0}
 					<div class="boxed-list p-8 text-center text-adwaita-subtitle">
@@ -327,7 +319,6 @@
 					</div>
 				{/if}
 			{:else}
-				<!-- Comments tab content -->
 				{#if comments.length === 0}
 					<div class="boxed-list p-8 text-center text-adwaita-subtitle">
 						<i class="bi bi-chat-left-dots text-3xl block mb-2 opacity-60" aria-hidden="true"></i>

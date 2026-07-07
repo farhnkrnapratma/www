@@ -3,6 +3,7 @@ declare global {
 		interface Platform {
 			env: {
 				GITHUB_TOKEN: string;
+				AI?: any;
 			};
 		}
 	}

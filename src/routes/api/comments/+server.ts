@@ -2,7 +2,6 @@ import { json } from '@sveltejs/kit';
 import { supabase } from '$lib/supabase';
 import type { RequestHandler } from './$types';
 
-// Simple regex fallback filter for local development or if Cloudflare Workers AI is unavailable
 const FORBIDDEN_WORDS = [
 	/anj\w+/i,
 	/baf\w+/i,
@@ -28,10 +27,10 @@ const FORBIDDEN_WORDS = [
 function localModerate(content: string): boolean {
 	for (const pattern of FORBIDDEN_WORDS) {
 		if (pattern.test(content)) {
-			return false; // Blocked
+			return false;
 		}
 	}
-	return true; // Safe
+	return true;
 }
 
 export const POST: RequestHandler = async ({ request, platform }) => {
@@ -45,14 +44,12 @@ export const POST: RequestHandler = async ({ request, platform }) => {
 		let isApproved = true;
 		let moderationSource = 'local_fallback';
 
-		// 1. Content Moderation using Cloudflare Workers AI if available
 		if (platform?.env?.AI) {
 			try {
 				const ai = platform.env.AI;
 				const systemPrompt = `You are a content moderation AI. Analyze the following comment for hate speech, severe insults, harassment, threats, explicit content, or obvious spam.
 Respond with exactly one word: "SAFE" if the comment is clean and allowed, or "BLOCKED" if it contains forbidden content. Do not include any other words, punctuation, or explanations.`;
 
-				// Call Llama 3 8B Instruct model
 				const response = await ai.run('@cf/meta/llama-3-8b-instruct', {
 					messages: [
 						{ role: 'system', content: systemPrompt },
@@ -66,7 +63,6 @@ Respond with exactly one word: "SAFE" if the comment is clean and allowed, or "B
 				} else if (aiText.includes('SAFE')) {
 					isApproved = true;
 				} else {
-					// If response is ambiguous, use local filter as fallback
 					isApproved = localModerate(content);
 				}
 				moderationSource = 'cloudflare_workers_ai';
@@ -75,11 +71,9 @@ Respond with exactly one word: "SAFE" if the comment is clean and allowed, or "B
 				isApproved = localModerate(content);
 			}
 		} else {
-			// Fallback for local development
 			isApproved = localModerate(content);
 		}
 
-		// If blocked, return early to user (do not save to DB)
 		if (!isApproved) {
 			return json(
 				{
@@ -90,14 +84,13 @@ Respond with exactly one word: "SAFE" if the comment is clean and allowed, or "B
 			);
 		}
 
-		// 2. Save approved comment to Supabase database
 		const { data: comment, error } = await supabase
 			.from('comments')
 			.insert({
 				post_id: postId,
 				author_name: authorName,
 				content: content,
-				is_approved: true // Since we blocked early, any saved comment here is approved
+				is_approved: true
 			})
 			.select()
 			.single();

@@ -46,7 +46,6 @@
 		isCheckingAuth = false;
 	});
 
-	// Auto-generate slug from title
 	$effect(() => {
 		if (title) {
 			slug = title
@@ -58,7 +57,6 @@
 		}
 	});
 
-	// Generate markdown preview
 	$effect(() => {
 		if (markdownContent) {
 			Promise.resolve(marked.parse(markdownContent)).then((html) => {
@@ -81,11 +79,9 @@
 			const fileName = `${slug}.md`;
 			const storagePath = `${fileName}`;
 
-			// 1. Create a markdown File blob
 			const mdBlob = new Blob([markdownContent], { type: 'text/markdown' });
 			const mdFile = new File([mdBlob], fileName, { type: 'text/markdown' });
 
-			// 2. Upload file to Supabase Storage
 			const { error: uploadError } = await supabase.storage
 				.from('blog-posts')
 				.upload(storagePath, mdFile, {
@@ -97,7 +93,6 @@
 				throw new Error(`Storage upload failed: ${uploadError.message}`);
 			}
 
-			// 3. Save post metadata to database
 			const { error: dbError } = await supabase.from('posts').insert({
 				title: title.trim(),
 				slug: slug.trim(),
@@ -107,12 +102,10 @@
 			});
 
 			if (dbError) {
-				// Clean up the storage file if db insert fails
 				await supabase.storage.from('blog-posts').remove([storagePath]);
 				throw dbError;
 			}
 
-			// 4. Redirect back to admin dashboard
 			window.location.href = '/admin';
 		} catch (err: any) {
 			console.error('Error creating post:', err);
@@ -228,7 +221,6 @@
 			{/if}
 
 			<form onsubmit={handleSubmit} class="flex flex-col gap-6">
-				<!-- Metadata Inputs Card -->
 				<div class="boxed-list p-5 text-left bg-zinc-950/[0.01]">
 					<h2 class="text-sm font-bold text-adwaita-text mb-4">Post Settings</h2>
 					<div class="flex flex-col gap-4">
@@ -287,7 +279,6 @@
 					</div>
 				</div>
 
-				<!-- Markdown Editor/Preview Card -->
 				<div class="boxed-list overflow-hidden text-left flex flex-col min-h-[400px]">
 					<div class="flex border-b border-adwaita-border bg-adwaita-hover/30 px-3 py-1">
 						<button
@@ -329,7 +320,6 @@
 					{/if}
 				</div>
 
-				<!-- Submit action bar -->
 				<div class="flex justify-end gap-3 mt-4 mb-10">
 					<a
 						href="/admin"

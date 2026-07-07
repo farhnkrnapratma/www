@@ -20,11 +20,9 @@
 	}
 
 	onMount(() => {
-		// Read theme from localStorage on mount and apply
 		const saved = (localStorage.getItem('theme') as Theme) || 'auto';
 		applyTheme(saved);
 
-		// Watch system theme changes
 		const media = window.matchMedia('(prefers-color-scheme: dark)');
 		const listener = () => {
 			const current = (localStorage.getItem('theme') as Theme) || 'auto';
@@ -33,7 +31,6 @@
 			}
 		};
 
-		// Synchronize theme changes from other tabs/pages
 		const storageListener = (e: StorageEvent) => {
 			if (e.key === 'theme') {
 				applyTheme((e.newValue as Theme) || 'auto');

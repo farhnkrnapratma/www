@@ -28,7 +28,6 @@ export const load: PageServerLoad = async ({ fetch, platform }) => {
 	let projects: Project[] = [];
 	let dbPosts: any[] = [];
 
-	// Fetch projects
 	try {
 		const headers: Record<string, string> = {
 			Accept: 'application/vnd.github.v3+json',
@@ -65,7 +64,6 @@ export const load: PageServerLoad = async ({ fetch, platform }) => {
 		projects = getFallbackProjects();
 	}
 
-	// Fetch latest 2 posts from Supabase DB
 	try {
 		const { data, error } = await supabase
 			.from('posts')

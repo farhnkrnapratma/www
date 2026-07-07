@@ -8,7 +8,6 @@
 	let errorMessage = $state<string | null>(null);
 
 	onMount(async () => {
-		// If user is already logged in, redirect to admin dashboard
 		const { data } = await supabase.auth.getSession();
 		if (data.session) {
 			window.location.href = '/admin';
@@ -32,7 +31,6 @@
 				throw error;
 			}
 
-			// Redirect to admin dashboard
 			window.location.href = '/admin';
 		} catch (err: any) {
 			console.error('Login failed:', err);
