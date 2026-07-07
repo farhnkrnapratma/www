@@ -430,9 +430,9 @@
 						<StarBorder
 							as="button"
 							onclick={() => navigate('projects')}
-							color="#7865d9"
+							color="#6e6c7a"
 							speed="3.5s"
-							thickness={1}
+							thickness={2}
 							class="w-full sm:w-48"
 						>
 							Browse Projects
@@ -442,7 +442,7 @@
 							onclick={() => navigate('contacts')}
 							color="#6e6c7a"
 							speed="4s"
-							thickness={1}
+							thickness={2}
 							class="w-full sm:w-48"
 						>
 							Get in Touch
@@ -456,6 +456,7 @@
 					action="https://formsubmit.co/contact@fkp.my.id"
 					method="POST"
 					class="w-full boxed-list text-left shadow-xs"
+					autocomplete="off"
 				>
 					<input type="hidden" name="_subject" value="New message from portfolio website!" />
 					<input type="hidden" name="_template" value="table" />
