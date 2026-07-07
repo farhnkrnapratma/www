@@ -643,16 +643,12 @@
 									class="flex flex-wrap items-center gap-3 sm:justify-end shrink-0 relative z-20"
 								>
 									{#if project.licenseName}
-										<div
-											class="flex items-center gap-1 px-2 py-0.5 text-[11px] font-semibold text-adwaita-subtitle bg-adwaita-card border border-adwaita-border rounded-lg whitespace-nowrap shadow-xs"
+										<span
+											class="text-xs font-semibold text-adwaita-subtitle whitespace-nowrap"
 											title="License: {project.licenseName}"
 										>
-											<span
-												class="material-symbols-rounded text-[12px] leading-none select-none align-middle"
-												aria-hidden="true">license</span
-											>
-											<span>{project.licenseName} License</span>
-										</div>
+											{project.licenseName} License
+										</span>
 									{/if}
 
 									<div class="flex items-center gap-1 text-xs font-semibold text-adwaita-subtitle">
@@ -877,16 +873,12 @@
 
 							<div class="flex flex-wrap items-center gap-2 sm:justify-end shrink-0 relative z-20">
 								{#if project.licenseName}
-									<div
-										class="flex items-center gap-1 px-2 py-0.5 text-[11px] font-semibold text-adwaita-subtitle bg-adwaita-card border border-adwaita-border rounded-lg whitespace-nowrap shadow-xs"
+									<span
+										class="text-xs font-semibold text-adwaita-subtitle whitespace-nowrap"
 										title="License: {project.licenseName}"
 									>
-										<span
-											class="material-symbols-rounded text-[12px] leading-none select-none align-middle"
-											aria-hidden="true">license</span
-										>
-										<span>{project.licenseName} License</span>
-									</div>
+										{project.licenseName} License
+									</span>
 								{/if}
 
 								<div class="flex items-center gap-1 text-xs font-semibold text-adwaita-subtitle">
