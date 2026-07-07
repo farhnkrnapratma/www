@@ -508,7 +508,7 @@
 						name="name"
 						required
 						placeholder="Linus Torvalds"
-						class="w-full sm:w-3/4 bg-transparent border-0 px-0 py-1 text-sm text-adwaita-text placeholder:text-adwaita-subtitle/50 focus:outline-none focus:ring-0 text-left sm:text-right"
+						class="w-full sm:w-3/4 bg-transparent border-0 px-0 py-1 text-sm text-adwaita-text placeholder:text-adwaita-subtitle/50 focus:outline-none focus:ring-0 text-left"
 					/>
 				</div>
 
@@ -524,7 +524,7 @@
 						name="email"
 						required
 						placeholder="torvalds@linux-foundation.org"
-						class="w-full sm:w-3/4 bg-transparent border-0 px-0 py-1 text-sm text-adwaita-text placeholder:text-adwaita-subtitle/50 focus:outline-none focus:ring-0 text-left sm:text-right"
+						class="w-full sm:w-3/4 bg-transparent border-0 px-0 py-1 text-sm text-adwaita-text placeholder:text-adwaita-subtitle/50 focus:outline-none focus:ring-0 text-left"
 					/>
 				</div>
 
@@ -541,7 +541,7 @@
 						required
 						rows="3"
 						placeholder="Write your message here..."
-						class="w-full sm:w-3/4 bg-transparent border-0 px-0 py-1 text-sm text-adwaita-text placeholder:text-adwaita-subtitle/50 focus:outline-none focus:ring-0 resize-none text-left sm:text-right"
+						class="w-full sm:w-3/4 bg-transparent border-0 px-0 py-1 text-sm text-adwaita-text placeholder:text-adwaita-subtitle/50 focus:outline-none focus:ring-0 resize-none text-left"
 					></textarea>
 				</div>
 
@@ -605,29 +605,31 @@
 					{#each projects.slice(0, 3) as project (project.name)}
 						<div class="relative action-row group flex flex-col items-stretch gap-2 text-left">
 							<div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-								<h4
-									class="text-base font-bold text-adwaita-text group-hover:text-adwaita-blue transition-colors leading-none"
-								>
-									<a
-										href={project.url}
-										target="_blank"
-										rel="noopener noreferrer"
-										title="Opens in a new tab"
-										class="after:absolute after:inset-0 after:z-10"
+								<div class="flex items-center gap-2">
+									<h4
+										class="text-base font-bold text-adwaita-text group-hover:text-adwaita-blue transition-colors leading-none"
 									>
-										{project.name}
-									</a>
-								</h4>
-
-								<div
-									class="flex flex-wrap items-center gap-3 sm:justify-end shrink-0 relative z-20"
-								>
+										<a
+											href={project.url}
+											target="_blank"
+											rel="noopener noreferrer"
+											title="Opens in a new tab"
+											class="after:absolute after:inset-0 after:z-10"
+										>
+											{project.name}
+										</a>
+									</h4>
 									{#if langColors[project.lang]}
 										<span
 											class="rounded bg-adwaita-blue/15 px-2 py-0.5 text-[11px] font-semibold text-adwaita-blue"
 											title="Language: {project.lang}">{project.lang}</span
 										>
 									{/if}
+								</div>
+
+								<div
+									class="flex flex-wrap items-center gap-3 sm:justify-end shrink-0 relative z-20"
+								>
 
 									{#if project.licenseName}
 										<a
@@ -843,27 +845,29 @@
 				{#each projects as project (project.name)}
 					<div class="relative action-row group flex flex-col items-stretch gap-2 text-left">
 						<div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-							<h3
-								class="text-base font-bold text-adwaita-text group-hover:text-adwaita-blue transition-colors leading-none"
-							>
-								<a
-									href={project.url}
-									target="_blank"
-									rel="noopener noreferrer"
-									title="Opens in a new tab"
-									class="after:absolute after:inset-0 after:z-10"
+							<div class="flex items-center gap-2">
+								<h3
+									class="text-base font-bold text-adwaita-text group-hover:text-adwaita-blue transition-colors leading-none"
 								>
-									{project.name}
-								</a>
-							</h3>
-
-							<div class="flex flex-wrap items-center gap-2 sm:justify-end shrink-0 relative z-20">
+									<a
+										href={project.url}
+										target="_blank"
+										rel="noopener noreferrer"
+										title="Opens in a new tab"
+										class="after:absolute after:inset-0 after:z-10"
+									>
+										{project.name}
+									</a>
+								</h3>
 								{#if langColors[project.lang]}
 									<span
 										class="rounded bg-adwaita-blue/15 px-2 py-0.5 text-[11px] font-semibold text-adwaita-blue"
 										title="Language: {project.lang}">{project.lang}</span
 									>
 								{/if}
+							</div>
+
+							<div class="flex flex-wrap items-center gap-2 sm:justify-end shrink-0 relative z-20">
 
 								{#if project.licenseName}
 									<a
