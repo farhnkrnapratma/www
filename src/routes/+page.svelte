@@ -731,7 +731,7 @@
 				<div class="mt-4 flex flex-wrap gap-2">
 					{#each skills as group (group.category)}
 						<span
-							class="cursor-default rounded-full bg-adwaita-border/40 px-3.5 py-1.5 text-xs font-bold text-adwaita-text hover:bg-adwaita-border/60 transition-colors"
+							class="cursor-default rounded-full bg-adwaita-border/40 px-4 py-2 text-sm font-bold text-adwaita-text hover:bg-adwaita-border/60 transition-colors"
 						>
 							{group.category}
 							<span class="font-normal opacity-85">({group.items.join(', ')})</span>
