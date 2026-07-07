@@ -12,12 +12,6 @@
 		label: string;
 	}
 
-	interface Post {
-		title: string;
-		date: string;
-		excerpt: string;
-	}
-
 	interface Contact {
 		label: string;
 		value: string;
@@ -57,38 +51,14 @@
 		{ id: 'funding', label: 'Funding' }
 	];
 
-	const fallbackPosts: Post[] = [
-		{
-			title: 'Hardening Linux with SELinux and AppArmor',
-			date: 'June 12, 2025',
-			excerpt:
-				'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation.'
-		},
-		{
-			title: 'Why I Switched My Entire Workflow to FOSS',
-			date: 'May 3, 2025',
-			excerpt:
-				'Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante.'
-		},
-		{
-			title: 'Understanding LUKS Full-Disk Encryption',
-			date: 'March 28, 2025',
-			excerpt:
-				'Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo. Quisque sit amet est et sapien ullamcorper pharetra.'
-		}
-	];
-
-	const posts = $derived(data.posts && data.posts.length > 0 ? data.posts : fallbackPosts);
+	const posts = $derived(data.posts || []);
 
 	function getPostDate(post: any) {
-		if (post.created_at) {
-			return new Date(post.created_at).toLocaleDateString('en-US', {
-				year: 'numeric',
-				month: 'long',
-				day: 'numeric'
-			});
-		}
-		return post.date || '';
+		return new Date(post.created_at).toLocaleDateString('en-US', {
+			year: 'numeric',
+			month: 'long',
+			day: 'numeric'
+		});
 	}
 
 	const contacts: Contact[] = [
@@ -124,9 +94,9 @@
 	const experiences: Experience[] = [
 		{
 			role: 'Software Engineer',
-			company: 'Lorem Ipsum Corp',
+			company: 'PT Secure Modern Technology Indonesia',
 			period: '2024 – Present',
-			desc: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.'
+			desc: 'Designed and developed highly secure, performant, and reliable software systems. Built secure APIs and backend services using Rust and Python. Automated system deployments and container orchestration, ensuring alignment with cybersecurity standards and robust access control guidelines.'
 		}
 	];
 
@@ -542,38 +512,44 @@
 			<div>
 				<h3 class="text-lg font-bold text-adwaita-text tracking-tight mb-4">Recent Blog Posts</h3>
 				<div class="boxed-list text-left">
-					{#each posts.slice(0, 2) as post (post.title)}
-						<a
-							href={post.slug ? `/blog/${post.slug}` : '/blog'}
+					{#if posts.length === 0}
+						<div class="p-6 text-center text-sm text-adwaita-subtitle">
+							No blog posts published yet.
+						</div>
+					{:else}
+						{#each posts.slice(0, 2) as post (post.title)}
+							<a
+								href="/blog/{post.slug}"
+								class="action-row w-full text-left group cursor-pointer flex items-center justify-between"
+							>
+								<div class="flex flex-col gap-1 pr-6 font-sans">
+									<p class="text-xs font-semibold text-adwaita-subtitle">{getPostDate(post)}</p>
+									<h4
+										class="text-base font-bold text-adwaita-text group-hover:text-adwaita-blue transition-colors leading-tight"
+									>
+										{post.title}
+									</h4>
+									<p class="mt-1.5 text-sm text-adwaita-subtitle line-clamp-2">{post.excerpt}</p>
+								</div>
+								<i
+									class="bi bi-chevron-right text-sm text-zinc-400 group-hover:text-adwaita-blue transition-all group-hover:translate-x-0.5"
+									aria-hidden="true"
+								></i>
+							</a>
+						{/each}
+						<button
+							onclick={() => navigate('blogs')}
 							class="action-row w-full text-left group cursor-pointer flex items-center justify-between"
 						>
-							<div class="flex flex-col gap-1 pr-6 font-sans">
-								<p class="text-xs font-semibold text-adwaita-subtitle">{getPostDate(post)}</p>
-								<h4
-									class="text-base font-bold text-adwaita-text group-hover:text-adwaita-blue transition-colors leading-tight"
-								>
-									{post.title}
-								</h4>
-								<p class="mt-1.5 text-sm text-adwaita-subtitle line-clamp-2">{post.excerpt}</p>
-							</div>
+							<span class="text-sm font-bold text-adwaita-blue group-hover:underline"
+								>Read more...</span
+							>
 							<i
-								class="bi bi-chevron-right text-sm text-zinc-400 group-hover:text-adwaita-blue transition-all group-hover:translate-x-0.5"
+								class="bi bi-chevron-right text-sm text-adwaita-blue group-hover:translate-x-0.5 transition-transform"
 								aria-hidden="true"
 							></i>
-						</a>
-					{/each}
-					<button
-						onclick={() => navigate('blogs')}
-						class="action-row w-full text-left group cursor-pointer flex items-center justify-between"
-					>
-						<span class="text-sm font-bold text-adwaita-blue group-hover:underline"
-							>Read more...</span
-						>
-						<i
-							class="bi bi-chevron-right text-sm text-adwaita-blue group-hover:translate-x-0.5 transition-transform"
-							aria-hidden="true"
-						></i>
-					</button>
+						</button>
+					{/if}
 				</div>
 			</div>
 
@@ -670,34 +646,6 @@
 						<i class="bi bi-arrow-right" aria-hidden="true"></i>
 					</button>
 				</div>
-			</div>
-		</section>
-	{/if}
-
-	{#if activeSection === 'blogs'}
-		<section class="mx-auto max-w-3xl px-6 py-20">
-			<h1 class="text-3xl font-bold text-adwaita-text tracking-tight">Blogs</h1>
-			<p class="mt-2 text-sm text-adwaita-subtitle">
-				Thoughts on Linux, security, and open source.
-			</p>
-			<div class="mt-10 boxed-list">
-				{#each posts as post (post.title)}
-					<article class="action-row group cursor-pointer">
-						<div class="flex flex-col gap-1 pr-6">
-							<p class="text-xs font-semibold text-adwaita-subtitle">{post.date}</p>
-							<h2
-								class="text-base font-bold text-adwaita-text group-hover:text-adwaita-blue transition-colors"
-							>
-								{post.title}
-							</h2>
-							<p class="mt-1.5 text-sm text-adwaita-subtitle line-clamp-2">{post.excerpt}</p>
-						</div>
-						<i
-							class="bi bi-chevron-right text-sm text-zinc-400 group-hover:text-adwaita-blue transition-all group-hover:translate-x-0.5"
-							aria-hidden="true"
-						></i>
-					</article>
-				{/each}
 			</div>
 		</section>
 	{/if}
