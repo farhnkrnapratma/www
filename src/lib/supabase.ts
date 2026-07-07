@@ -7,7 +7,11 @@ if (!PUBLIC_SUPABASE_URL || !PUBLIC_SUPABASE_ANON_KEY) {
 	);
 }
 
-export const supabase = createClient(
-	PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co',
-	PUBLIC_SUPABASE_ANON_KEY || 'placeholder-key'
-);
+let supabaseUrl = PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co';
+
+// Sanitize URL: strip trailing /rest/v1/ if user accidentally copied the REST API endpoint URL
+if (supabaseUrl.endsWith('/rest/v1') || supabaseUrl.endsWith('/rest/v1/')) {
+	supabaseUrl = supabaseUrl.replace(/\/rest\/v1\/?$/, '');
+}
+
+export const supabase = createClient(supabaseUrl, PUBLIC_SUPABASE_ANON_KEY || 'placeholder-key');
