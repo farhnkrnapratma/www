@@ -22,7 +22,6 @@
 	}
 }
 
-/* ─── Anthropic Sans Display ──────────────────────────────────── */
 @font-face {
 	font-family: 'Anthropic Sans';
 	src: url('/fonts/AnthropicSans-Display-Light-Static.otf') format('opentype');
@@ -103,7 +102,6 @@
 	font-display: swap;
 }
 
-/* ─── Anthropic Sans Text ─────────────────────────────────────── */
 @font-face {
 	font-family: 'Anthropic Sans Text';
 	src: url('/fonts/AnthropicSans-Text-Light-Static.otf') format('opentype');
@@ -184,7 +182,6 @@
 	font-display: swap;
 }
 
-/* ─── Anthropic Serif Display ─────────────────────────────────── */
 @font-face {
 	font-family: 'Anthropic Serif';
 	src: url('/fonts/AnthropicSerif-Display-Light-Static.otf') format('opentype');
@@ -281,7 +278,6 @@
 	font-display: swap;
 }
 
-/* ─── Anthropic Serif Text ────────────────────────────────────── */
 @font-face {
 	font-family: 'Anthropic Serif Text';
 	src: url('/fonts/AnthropicSerif-Text-Light-Static.otf') format('opentype');

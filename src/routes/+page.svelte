@@ -401,7 +401,6 @@
 		<section
 			class="mx-auto w-full md:w-[45%] md:max-w-none px-6 pt-10 pb-24 md:pt-14 md:pb-28 flex flex-col gap-8 relative z-10"
 		>
-			<!-- Soft radial background glow behind profile -->
 			<div
 				class="absolute top-[50px] left-[50%] -translate-x-[50%] w-[320px] h-[320px] rounded-full bg-adwaita-blue/10 blur-[80px] pointer-events-none z-0"
 			></div>
@@ -579,9 +578,7 @@
 				<h3 class="text-lg font-bold text-adwaita-text tracking-tight mb-4">Top Projects</h3>
 				<div class="boxed-list text-left">
 					{#each projects.slice(0, 3) as project (project.name)}
-						<div
-							class="relative action-row group flex flex-col items-stretch gap-2 text-left"
-						>
+						<div class="relative action-row group flex flex-col items-stretch gap-2 text-left">
 							<div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
 								<h4
 									class="text-base font-bold text-adwaita-text group-hover:text-adwaita-blue transition-colors leading-none"
@@ -824,9 +821,7 @@
 			<p class="mt-2 text-sm text-adwaita-subtitle">Open source work on GitHub.</p>
 			<div class="mt-10 boxed-list">
 				{#each projects as project (project.name)}
-					<div
-						class="relative action-row group flex flex-col items-stretch gap-2 text-left"
-					>
+					<div class="relative action-row group flex flex-col items-stretch gap-2 text-left">
 						<div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
 							<h3
 								class="text-base font-bold text-adwaita-text group-hover:text-adwaita-blue transition-colors leading-none"

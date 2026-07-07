@@ -4,9 +4,26 @@
 
 	let isLoading = $state(true);
 	let posts = $state<any[]>([]);
-	let comments = $state<any[]>([]);
-	let activeTab = $state<'posts' | 'comments'>('posts');
 	let isLoggingOut = $state(false);
+
+	interface AdminComment {
+		id: string;
+		post_id: string;
+		parent_id: string | null;
+		author_name: string;
+		content: string;
+		is_anonymous?: boolean;
+		is_approved: boolean;
+		created_at: string;
+		posts?: { title: string };
+	}
+
+	interface ThreadedAdminComment extends AdminComment {
+		children: ThreadedAdminComment[];
+		depth: number;
+	}
+
+	let comments = $state<AdminComment[]>([]);
 
 	type Theme = 'auto' | 'dark' | 'light';
 	let theme = $state<Theme>('auto');
@@ -56,7 +73,7 @@
 		const { data, error } = await supabase
 			.from('comments')
 			.select('*, posts(title)')
-			.order('created_at', { ascending: false });
+			.order('created_at', { ascending: true });
 
 		if (!error && data) {
 			comments = data;
@@ -98,6 +115,7 @@
 
 		if (!dbError) {
 			posts = posts.filter((p) => p.id !== post.id);
+			comments = comments.filter((comment) => comment.post_id !== post.id);
 		} else {
 			alert('Failed to delete post from database.');
 		}
@@ -123,7 +141,8 @@
 		const { error } = await supabase.from('comments').delete().eq('id', id);
 
 		if (!error) {
-			comments = comments.filter((c) => c.id !== id);
+			const deletedIds = getDescendantCommentIds(id, comments);
+			comments = comments.filter((c) => !deletedIds.has(c.id));
 		} else {
 			alert('Failed to delete comment.');
 		}
@@ -136,6 +155,71 @@
 			day: 'numeric'
 		});
 	}
+
+	function getPostComments(postId: string) {
+		return comments.filter((comment) => comment.post_id === postId);
+	}
+
+	function buildCommentTree(items: AdminComment[]) {
+		const nodes = new Map<string, ThreadedAdminComment>();
+		const roots: ThreadedAdminComment[] = [];
+
+		for (const comment of items) {
+			nodes.set(comment.id, { ...comment, children: [], depth: 0 });
+		}
+
+		for (const comment of [...nodes.values()].sort(
+			(a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+		)) {
+			if (comment.parent_id && nodes.has(comment.parent_id)) {
+				nodes.get(comment.parent_id)?.children.push(comment);
+			} else {
+				roots.push(comment);
+			}
+		}
+
+		return roots;
+	}
+
+	function flattenCommentTree(nodes: ThreadedAdminComment[], depth = 0): ThreadedAdminComment[] {
+		return nodes.flatMap((node) => {
+			const current = { ...node, depth };
+			return [current, ...flattenCommentTree(node.children, depth + 1)];
+		});
+	}
+
+	function getPostThreadItems(postId: string) {
+		return flattenCommentTree(buildCommentTree(getPostComments(postId)));
+	}
+
+	function getDescendantCommentIds(commentId: string, items: AdminComment[]) {
+		const deletedIds = new Set([commentId]);
+		let changed = true;
+
+		while (changed) {
+			changed = false;
+			for (const comment of items) {
+				if (comment.parent_id && deletedIds.has(comment.parent_id) && !deletedIds.has(comment.id)) {
+					deletedIds.add(comment.id);
+					changed = true;
+				}
+			}
+		}
+
+		return deletedIds;
+	}
+
+	function getCommentAuthor(comment: AdminComment) {
+		return comment.is_anonymous ? 'Anonymous User' : comment.author_name;
+	}
+
+	function getCommentIcon(comment: AdminComment) {
+		return comment.is_anonymous ? 'domino_mask' : 'person';
+	}
+
+	function getCommentIndent(depth: number) {
+		return `${Math.min(depth, 4) * 1.25}rem`;
+	}
 </script>
 
 <nav
@@ -146,14 +230,6 @@
 	</div>
 
 	<div class="flex items-center gap-2">
-		<a
-			href="/admin/new"
-			class="inline-flex h-9 items-center justify-center rounded-lg bg-adwaita-blue px-4 text-xs font-semibold text-white transition-colors hover:bg-adwaita-blue-hover focus:outline-none"
-		>
-			<i class="bi bi-plus-lg mr-1.5" aria-hidden="true"></i>
-			New Post
-		</a>
-
 		<div class="relative">
 			<button
 				onclick={() => (themeDropdownOpen = !themeDropdownOpen)}
@@ -244,39 +320,35 @@
 				Loading dashboard data...
 			</div>
 		{:else}
-			<div class="flex border-b border-adwaita-border mb-8">
-				<button
-					onclick={() => (activeTab = 'posts')}
-					class="px-4 py-2 text-sm font-bold border-b-2 transition-colors {activeTab === 'posts'
-						? 'border-adwaita-blue text-adwaita-blue'
-						: 'border-transparent text-adwaita-subtitle hover:text-adwaita-text'}"
+			<div class="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+				<div>
+					<h1 class="text-3xl font-bold text-adwaita-text tracking-tight">Blog Posts</h1>
+					<p class="mt-2 text-sm text-adwaita-subtitle">
+						Manage posts and review comments from one list.
+					</p>
+				</div>
+				<a
+					href="/admin/new"
+					class="inline-flex h-9 items-center justify-center rounded-lg bg-adwaita-blue px-4 text-xs font-semibold text-white transition-colors hover:bg-adwaita-blue-hover focus:outline-none"
 				>
-					Blog Posts ({posts.length})
-				</button>
-				<button
-					onclick={() => (activeTab = 'comments')}
-					class="px-4 py-2 text-sm font-bold border-b-2 transition-colors {activeTab === 'comments'
-						? 'border-adwaita-blue text-adwaita-blue'
-						: 'border-transparent text-adwaita-subtitle hover:text-adwaita-text'}"
-				>
-					Comments ({comments.length})
-				</button>
+					New Post
+				</a>
 			</div>
 
-			{#if activeTab === 'posts'}
-				{#if posts.length === 0}
-					<div class="boxed-list p-8 text-center text-adwaita-subtitle">
-						<i class="bi bi-journal-plus text-3xl block mb-2 opacity-60" aria-hidden="true"></i>
-						No posts found. Write your first blog post by clicking the "New Post" button above.
-					</div>
-				{:else}
-					<div class="boxed-list text-left">
-						{#each posts as post (post.id)}
-							<div
-								class="action-row group flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 py-4"
-							>
-								<div class="flex flex-col gap-1 pr-6">
-									<div class="flex items-center gap-2">
+			{#if posts.length === 0}
+				<div class="boxed-list p-8 text-center text-adwaita-subtitle">
+					<i class="bi bi-journal-plus text-3xl block mb-2 opacity-60" aria-hidden="true"></i>
+					No posts found.
+				</div>
+			{:else}
+				<div class="boxed-list text-left">
+					{#each posts as post (post.id)}
+						{@const postComments = getPostComments(post.id)}
+						{@const postThreadItems = getPostThreadItems(post.id)}
+						<div class="action-row group flex flex-col gap-4 py-4">
+							<div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+								<div class="flex min-w-0 flex-col gap-1 pr-0 sm:pr-6">
+									<div class="flex flex-wrap items-center gap-2">
 										<span class="text-xs font-semibold text-adwaita-subtitle"
 											>{formatDate(post.created_at)}</span
 										>
@@ -292,100 +364,114 @@
 											>
 										{/if}
 									</div>
-									<h3 class="text-base font-bold text-adwaita-text">{post.title}</h3>
+									<h2 class="text-base font-bold text-adwaita-text">{post.title}</h2>
 									<p class="text-xs text-adwaita-subtitle font-mono line-clamp-1">
 										{post.storage_path}
 									</p>
 								</div>
 
-								<div
-									class="flex items-center gap-2 w-full sm:w-auto shrink-0 justify-end border-t border-adwaita-border/40 pt-3 sm:border-t-0 sm:pt-0"
-								>
-									<button
-										onclick={() => togglePublish(post)}
-										class="inline-flex h-8 items-center justify-center rounded-lg bg-adwaita-card border border-adwaita-border px-3 text-xs font-semibold text-adwaita-text transition-colors hover:bg-adwaita-hover"
-									>
-										{post.published ? 'Unpublish' : 'Publish'}
-									</button>
-									<a
-										href="/admin/new?id={post.id}"
-										class="inline-flex h-8 items-center justify-center rounded-lg bg-adwaita-card border border-adwaita-border px-3 text-xs font-semibold text-adwaita-text transition-colors hover:bg-adwaita-hover"
-									>
-										Edit
-									</a>
-									<button
-										onclick={() => deletePost(post)}
-										class="inline-flex h-8 items-center justify-center rounded-lg bg-palette-coral/10 border border-palette-coral/30 px-3 text-xs font-semibold text-palette-coral transition-colors hover:bg-palette-coral/20"
-									>
-										Delete
-									</button>
-								</div>
-							</div>
-						{/each}
-					</div>
-				{/if}
-			{:else}
-				{#if comments.length === 0}
-					<div class="boxed-list p-8 text-center text-adwaita-subtitle">
-						<i class="bi bi-chat-left-dots text-3xl block mb-2 opacity-60" aria-hidden="true"></i>
-						No comments submitted yet.
-					</div>
-				{:else}
-					<div class="boxed-list text-left">
-						{#each comments as comment (comment.id)}
-							<div class="action-row group flex flex-col gap-3 py-4">
-								<div class="flex flex-col gap-1 w-full">
-									<div class="flex items-center justify-between gap-4">
-										<div class="flex items-center gap-2">
-											<h4 class="text-sm font-bold text-adwaita-text">{comment.author_name}</h4>
-											{#if comment.is_approved}
-												<span
-													class="rounded bg-emerald-100 dark:bg-emerald-950/20 px-2 py-0.5 text-[9px] font-bold text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-900/30"
-													>Approved</span
-												>
-											{:else}
-												<span
-													class="rounded bg-red-100 dark:bg-red-950/20 px-2 py-0.5 text-[9px] font-bold text-red-700 dark:text-red-400 border border-red-200 dark:border-red-900/30"
-													>Flagged/Hidden</span
-												>
-											{/if}
+								<div class="flex shrink-0 flex-col items-end gap-3">
+									{#if postComments.length > 0}
+										<div
+											class="inline-flex items-center gap-1.5 rounded bg-adwaita-border/40 px-2 py-0.5 text-xs font-semibold text-adwaita-subtitle"
+											title="{postComments.length} comments"
+										>
+											<i class="bi bi-chat-left-text-fill text-[11px]" aria-hidden="true"></i>
+											{postComments.length}
 										</div>
-										<span class="text-[10px] font-semibold text-adwaita-subtitle"
-											>{formatDate(comment.created_at)}</span
-										>
-									</div>
-									<p class="text-xs text-adwaita-subtitle mt-0.5">
-										Post: <strong class="text-adwaita-text"
-											>{comment.posts?.title || 'Unknown Post'}</strong
-										>
-									</p>
-									<p
-										class="text-sm text-adwaita-subtitle mt-2 bg-zinc-950/[0.015] border border-adwaita-border/40 p-2.5 rounded-lg"
-									>
-										{comment.content}
-									</p>
-								</div>
+									{/if}
 
-								<div
-									class="flex items-center justify-end gap-2 border-t border-adwaita-border/40 pt-3"
-								>
-									<button
-										onclick={() => toggleCommentApproval(comment)}
-										class="inline-flex h-8 items-center justify-center rounded-lg bg-adwaita-card border border-adwaita-border px-3 text-xs font-semibold text-adwaita-text transition-colors hover:bg-adwaita-hover"
-									>
-										{comment.is_approved ? 'Hide' : 'Approve'}
-									</button>
-									<button
-										onclick={() => deleteComment(comment.id)}
-										class="inline-flex h-8 items-center justify-center rounded-lg bg-palette-coral/10 border border-palette-coral/30 px-3 text-xs font-semibold text-palette-coral transition-colors hover:bg-palette-coral/20"
-									>
-										Delete
-									</button>
+									<div class="flex flex-wrap items-center justify-end gap-2">
+										<button
+											onclick={() => togglePublish(post)}
+											class="inline-flex h-8 items-center justify-center rounded-lg bg-adwaita-card border border-adwaita-border px-3 text-xs font-semibold text-adwaita-text transition-colors hover:bg-adwaita-hover"
+										>
+											{post.published ? 'Unpublish' : 'Publish'}
+										</button>
+										<a
+											href="/admin/new?id={post.id}"
+											class="inline-flex h-8 items-center justify-center rounded-lg bg-adwaita-card border border-adwaita-border px-3 text-xs font-semibold text-adwaita-text transition-colors hover:bg-adwaita-hover"
+										>
+											Edit
+										</a>
+										<button
+											onclick={() => deletePost(post)}
+											class="inline-flex h-8 items-center justify-center rounded-lg bg-palette-coral/10 border border-palette-coral/30 px-3 text-xs font-semibold text-palette-coral transition-colors hover:bg-palette-coral/20"
+										>
+											Delete
+										</button>
+									</div>
 								</div>
 							</div>
-						{/each}
-					</div>
-				{/if}
+
+							{#if postComments.length > 0}
+								<div
+									class="relative z-20 rounded-lg border border-adwaita-border/60 bg-adwaita-bg/60"
+								>
+									{#each postThreadItems as comment (comment.id)}
+										<div
+											class="border-b border-adwaita-border/50 p-3 last:border-b-0 {comment.depth >
+											0
+												? 'border-l border-l-adwaita-border/70'
+												: ''}"
+											style:margin-left={getCommentIndent(comment.depth)}
+										>
+											<div
+												class="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between"
+											>
+												<div class="min-w-0">
+													<div class="flex flex-wrap items-center gap-2">
+														<h3
+															class="inline-flex min-w-0 items-center gap-1.5 text-sm font-bold text-adwaita-text"
+														>
+															<span
+																class="material-symbols-rounded text-base text-adwaita-subtitle"
+																aria-hidden="true">{getCommentIcon(comment)}</span
+															>
+															<span class="truncate">{getCommentAuthor(comment)}</span>
+														</h3>
+														{#if comment.is_approved}
+															<span
+																class="rounded bg-palette-green/15 px-2 py-0.5 text-[10px] font-bold text-palette-green border border-palette-green/30"
+																>Approved</span
+															>
+														{:else}
+															<span
+																class="rounded bg-palette-yellow/15 px-2 py-0.5 text-[10px] font-bold text-palette-yellow border border-palette-yellow/30"
+																>Hidden</span
+															>
+														{/if}
+													</div>
+													<p class="mt-1 text-xs font-semibold text-adwaita-subtitle">
+														{formatDate(comment.created_at)}
+													</p>
+												</div>
+
+												<div class="flex shrink-0 items-center gap-2">
+													<button
+														onclick={() => toggleCommentApproval(comment)}
+														class="inline-flex h-8 items-center justify-center rounded-lg bg-adwaita-card border border-adwaita-border px-3 text-xs font-semibold text-adwaita-text transition-colors hover:bg-adwaita-hover"
+													>
+														{comment.is_approved ? 'Hide' : 'Approve'}
+													</button>
+													<button
+														onclick={() => deleteComment(comment.id)}
+														class="inline-flex h-8 items-center justify-center rounded-lg bg-palette-coral/10 border border-palette-coral/30 px-3 text-xs font-semibold text-palette-coral transition-colors hover:bg-palette-coral/20"
+													>
+														Delete
+													</button>
+												</div>
+											</div>
+											<p class="mt-2 text-sm text-adwaita-subtitle leading-relaxed">
+												{comment.content}
+											</p>
+										</div>
+									{/each}
+								</div>
+							{/if}
+						</div>
+					{/each}
+				</div>
 			{/if}
 		{/if}
 	</section>

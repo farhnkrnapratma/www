@@ -9,7 +9,23 @@
 	const post = $derived(data.post);
 	const html = $derived(data.html);
 
-	let comments = $state<any[]>([]);
+	interface BlogComment {
+		id: string;
+		post_id: string;
+		parent_id: string | null;
+		author_name: string;
+		content: string;
+		is_anonymous?: boolean;
+		is_approved: boolean;
+		created_at: string;
+	}
+
+	interface ThreadedComment extends BlogComment {
+		children: ThreadedComment[];
+		depth: number;
+	}
+
+	let comments = $state<BlogComment[]>([]);
 	let isDark = $state(false);
 
 	type Theme = 'auto' | 'dark' | 'light';
@@ -63,9 +79,12 @@
 	});
 
 	let authorName = $state('');
+	let isAnonymous = $state(false);
 	let commentContent = $state('');
+	let replyTo = $state<BlogComment | null>(null);
 	let isSubmitting = $state(false);
 	let feedbackMessage = $state<{ type: 'success' | 'error'; text: string } | null>(null);
+	const threadedComments = $derived(flattenCommentTree(buildCommentTree(comments)));
 
 	function formatDate(dateStr: string) {
 		return new Date(dateStr).toLocaleDateString('en-US', {
@@ -75,9 +94,55 @@
 		});
 	}
 
-	async function handleSubmit(e: SubmitEvent) {
+	function buildCommentTree(items: BlogComment[]) {
+		const nodes = new Map<string, ThreadedComment>();
+		const roots: ThreadedComment[] = [];
+
+		for (const comment of items) {
+			nodes.set(comment.id, { ...comment, children: [], depth: 0 });
+		}
+
+		for (const comment of [...nodes.values()].sort(
+			(a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+		)) {
+			if (comment.parent_id && nodes.has(comment.parent_id)) {
+				nodes.get(comment.parent_id)?.children.push(comment);
+			} else if (!comment.parent_id) {
+				roots.push(comment);
+			}
+		}
+
+		return roots;
+	}
+
+	function flattenCommentTree(nodes: ThreadedComment[], depth = 0): ThreadedComment[] {
+		return nodes.flatMap((node) => {
+			const current = { ...node, depth };
+			return [current, ...flattenCommentTree(node.children, depth + 1)];
+		});
+	}
+
+	function getCommentAuthor(comment: BlogComment) {
+		return comment.is_anonymous ? 'Anonymous User' : comment.author_name;
+	}
+
+	function getCommentIcon(comment: BlogComment) {
+		return comment.is_anonymous ? 'domino_mask' : 'person';
+	}
+
+	function getCommentIndent(depth: number) {
+		return `${Math.min(depth, 4) * 1.25}rem`;
+	}
+
+	function cancelReply() {
+		replyTo = null;
+		commentContent = '';
+		feedbackMessage = null;
+	}
+
+	async function handleSubmit(e: SubmitEvent, parentId: string | null = null) {
 		e.preventDefault();
-		if (!authorName.trim() || !commentContent.trim()) return;
+		if ((!isAnonymous && !authorName.trim()) || !commentContent.trim()) return;
 
 		isSubmitting = true;
 		feedbackMessage = null;
@@ -90,7 +155,9 @@
 				},
 				body: JSON.stringify({
 					postId: post.id,
+					parentId,
 					authorName: authorName.trim(),
+					isAnonymous,
 					content: commentContent.trim()
 				})
 			});
@@ -105,9 +172,10 @@
 				comments = [...comments, result.comment];
 				feedbackMessage = {
 					type: 'success',
-					text: 'Your comment has been posted successfully!'
+					text: parentId ? 'Your reply has been posted.' : 'Your comment has been posted.'
 				};
 				commentContent = '';
+				replyTo = null;
 			} else {
 				feedbackMessage = {
 					type: 'error',
@@ -245,81 +313,182 @@
 		<section class="mt-16 border-t border-adwaita-border pt-10">
 			<h2 class="text-xl font-bold text-adwaita-text tracking-tight mb-6">Comments</h2>
 
-			<div class="boxed-list p-5 mb-8 text-left bg-zinc-950/[0.01]">
-				<h3 class="text-sm font-bold text-adwaita-text mb-4">Leave a Comment</h3>
+			{#if feedbackMessage}
+				<div
+					class="mb-6 rounded-lg p-3 text-sm font-semibold {feedbackMessage.type === 'success'
+						? 'bg-palette-green/10 text-palette-green border border-palette-green/30'
+						: 'bg-palette-coral/10 text-palette-coral border border-palette-coral/30'}"
+				>
+					{feedbackMessage.text}
+				</div>
+			{/if}
 
-				{#if feedbackMessage}
-					<div
-						class="p-3 mb-4 rounded-lg text-sm font-semibold {feedbackMessage.type === 'success'
-							? 'bg-palette-green/10 text-palette-green border border-palette-green/30'
-							: 'bg-palette-coral/10 text-palette-coral border border-palette-coral/30'}"
-					>
-						{feedbackMessage.text}
-					</div>
-				{/if}
+			{#if !replyTo}
+				<div class="boxed-list p-5 mb-8 text-left bg-zinc-950/[0.01]">
+					<h3 class="text-sm font-bold text-adwaita-text mb-4">Leave a Comment</h3>
 
-				<form onsubmit={handleSubmit} class="flex flex-col gap-4">
-					<div class="flex flex-col sm:flex-row sm:items-center gap-2">
-						<label
-							for="comment-author"
-							class="text-xs font-bold text-adwaita-subtitle w-20 shrink-0">Name</label
-						>
-						<input
-							type="text"
-							id="comment-author"
-							required
-							placeholder="Linus Torvalds"
-							bind:value={authorName}
-							class="w-full px-3 py-1.5 text-sm bg-adwaita-bg border border-adwaita-border rounded-lg text-adwaita-text placeholder:text-adwaita-subtitle/70 focus:outline-none focus:border-adwaita-blue transition-colors"
-						/>
-					</div>
-					<div class="flex flex-col items-start gap-2">
-						<label
-							for="comment-msg"
-							class="text-xs font-bold text-adwaita-subtitle w-20 shrink-0 mt-1">Message</label
-						>
-						<textarea
-							id="comment-msg"
-							required
-							rows="3"
-							placeholder="Write your comment here..."
-							bind:value={commentContent}
-							class="w-full px-3 py-1.5 text-sm bg-adwaita-bg border border-adwaita-border rounded-lg text-adwaita-text placeholder:text-adwaita-subtitle/70 focus:outline-none focus:border-adwaita-blue transition-colors resize-none"
-						></textarea>
-					</div>
-					<div class="flex justify-end mt-2">
-						<button
-							type="submit"
-							disabled={isSubmitting}
-							class="inline-flex items-center justify-center gap-2 cursor-pointer rounded-lg bg-adwaita-blue px-5 py-2 text-sm font-semibold text-white transition-colors hover:bg-adwaita-blue-hover focus:outline-none disabled:opacity-55 disabled:cursor-not-allowed"
-						>
-							{#if isSubmitting}
-								<i class="bi bi-hourglass-split text-xs animate-spin" aria-hidden="true"></i>
-								Validating...
-							{:else}
-								<i class="bi bi-chat-left-text-fill text-xs" aria-hidden="true"></i>
-								Post Comment
-							{/if}
-						</button>
-					</div>
-				</form>
-			</div>
+					<form onsubmit={(e) => handleSubmit(e)} class="flex flex-col gap-4">
+						<label class="flex items-center gap-2 text-xs font-bold text-adwaita-subtitle">
+							<input
+								type="checkbox"
+								bind:checked={isAnonymous}
+								class="h-4 w-4 rounded border-adwaita-border text-adwaita-blue focus:ring-adwaita-blue"
+							/>
+							Comment anonymously
+						</label>
+						<div class="flex flex-col sm:flex-row sm:items-center gap-2">
+							<label
+								for="comment-author"
+								class="text-xs font-bold text-adwaita-subtitle w-20 shrink-0">Name</label
+							>
+							<input
+								type="text"
+								id="comment-author"
+								required={!isAnonymous}
+								disabled={isAnonymous}
+								placeholder={isAnonymous ? 'Anonymous User' : 'Linus Torvalds'}
+								bind:value={authorName}
+								class="w-full px-3 py-1.5 text-sm bg-adwaita-bg border border-adwaita-border rounded-lg text-adwaita-text placeholder:text-adwaita-subtitle/70 focus:outline-none focus:border-adwaita-blue transition-colors disabled:opacity-60"
+							/>
+						</div>
+						<div class="flex flex-col items-start gap-2">
+							<label
+								for="comment-msg"
+								class="text-xs font-bold text-adwaita-subtitle w-20 shrink-0 mt-1">Message</label
+							>
+							<textarea
+								id="comment-msg"
+								required
+								rows="3"
+								maxlength="2000"
+								placeholder="Write your comment here..."
+								bind:value={commentContent}
+								class="w-full px-3 py-1.5 text-sm bg-adwaita-bg border border-adwaita-border rounded-lg text-adwaita-text placeholder:text-adwaita-subtitle/70 focus:outline-none focus:border-adwaita-blue transition-colors resize-none"
+							></textarea>
+						</div>
+						<div class="flex justify-end mt-2">
+							<button
+								type="submit"
+								disabled={isSubmitting}
+								class="inline-flex cursor-pointer items-center justify-center rounded-lg bg-adwaita-blue px-5 py-2 text-sm font-semibold text-white transition-colors hover:bg-adwaita-blue-hover focus:outline-none disabled:cursor-not-allowed disabled:opacity-55"
+							>
+								{isSubmitting ? 'Validating...' : 'Post Comment'}
+							</button>
+						</div>
+					</form>
+				</div>
+			{/if}
 
 			{#if comments.length === 0}
-				<div class="boxed-list p-6 text-center text-adwaita-subtitle">
-					No comments yet. Be the first to share your thoughts!
-				</div>
+				<div class="boxed-list p-6 text-center text-adwaita-subtitle">No comments yet.</div>
 			{:else}
 				<div class="boxed-list text-left">
-					{#each comments as comment (comment.id)}
-						<div class="px-5 py-4 border-b border-adwaita-border/40 last:border-b-0">
+					{#each threadedComments as comment (comment.id)}
+						<div
+							class="border-b border-adwaita-border/40 px-5 py-4 last:border-b-0 {comment.depth > 0
+								? 'border-l border-l-adwaita-border/70'
+								: ''}"
+							style:margin-left={getCommentIndent(comment.depth)}
+						>
 							<div class="flex items-center justify-between gap-4 mb-1">
-								<h4 class="text-sm font-bold text-adwaita-text">{comment.author_name}</h4>
+								<h4
+									class="inline-flex min-w-0 items-center gap-1.5 text-sm font-bold text-adwaita-text"
+								>
+									<span
+										class="material-symbols-rounded text-base text-adwaita-subtitle"
+										aria-hidden="true">{getCommentIcon(comment)}</span
+									>
+									<span class="truncate">{getCommentAuthor(comment)}</span>
+								</h4>
 								<span class="text-[10px] font-semibold meta-text">
 									{formatDate(comment.created_at)}
 								</span>
 							</div>
 							<p class="text-sm leading-relaxed secondary-text">{comment.content}</p>
+							<div class="mt-3 flex justify-end">
+								<button
+									type="button"
+									onclick={() => {
+										replyTo = comment;
+										feedbackMessage = null;
+										commentContent = '';
+									}}
+									class="inline-flex h-8 items-center justify-center rounded-lg border border-adwaita-border bg-adwaita-card px-3 text-xs font-semibold text-adwaita-text transition-colors hover:bg-adwaita-hover"
+								>
+									Reply
+								</button>
+							</div>
+
+							{#if replyTo?.id === comment.id}
+								<form
+									onsubmit={(e) => handleSubmit(e, comment.id)}
+									class="mt-4 rounded-lg border border-adwaita-border bg-adwaita-bg/60 p-4"
+								>
+									<div class="mb-3 flex items-center justify-between gap-3">
+										<p class="text-xs font-semibold text-adwaita-subtitle">
+											Replying to {getCommentAuthor(comment)}
+										</p>
+										<button
+											type="button"
+											onclick={cancelReply}
+											class="inline-flex h-8 items-center justify-center rounded-lg border border-adwaita-border bg-adwaita-card px-3 text-xs font-semibold text-adwaita-text transition-colors hover:bg-adwaita-hover"
+										>
+											Cancel
+										</button>
+									</div>
+
+									<div class="flex flex-col gap-4">
+										<label class="flex items-center gap-2 text-xs font-bold text-adwaita-subtitle">
+											<input
+												type="checkbox"
+												bind:checked={isAnonymous}
+												class="h-4 w-4 rounded border-adwaita-border text-adwaita-blue focus:ring-adwaita-blue"
+											/>
+											Comment anonymously
+										</label>
+										<div class="flex flex-col sm:flex-row sm:items-center gap-2">
+											<label
+												for="reply-author-{comment.id}"
+												class="text-xs font-bold text-adwaita-subtitle w-20 shrink-0">Name</label
+											>
+											<input
+												type="text"
+												id="reply-author-{comment.id}"
+												required={!isAnonymous}
+												disabled={isAnonymous}
+												placeholder={isAnonymous ? 'Anonymous User' : 'Linus Torvalds'}
+												bind:value={authorName}
+												class="w-full px-3 py-1.5 text-sm bg-adwaita-bg border border-adwaita-border rounded-lg text-adwaita-text placeholder:text-adwaita-subtitle/70 focus:outline-none focus:border-adwaita-blue transition-colors disabled:opacity-60"
+											/>
+										</div>
+										<div class="flex flex-col items-start gap-2">
+											<label
+												for="reply-msg-{comment.id}"
+												class="text-xs font-bold text-adwaita-subtitle w-20 shrink-0 mt-1"
+												>Message</label
+											>
+											<textarea
+												id="reply-msg-{comment.id}"
+												required
+												rows="3"
+												maxlength="2000"
+												placeholder="Write your reply here..."
+												bind:value={commentContent}
+												class="w-full px-3 py-1.5 text-sm bg-adwaita-bg border border-adwaita-border rounded-lg text-adwaita-text placeholder:text-adwaita-subtitle/70 focus:outline-none focus:border-adwaita-blue transition-colors resize-none"
+											></textarea>
+										</div>
+										<div class="flex justify-end">
+											<button
+												type="submit"
+												disabled={isSubmitting}
+												class="inline-flex cursor-pointer items-center justify-center rounded-lg bg-adwaita-blue px-5 py-2 text-sm font-semibold text-white transition-colors hover:bg-adwaita-blue-hover focus:outline-none disabled:cursor-not-allowed disabled:opacity-55"
+											>
+												{isSubmitting ? 'Validating...' : 'Post Reply'}
+											</button>
+										</div>
+									</div>
+								</form>
+							{/if}
 						</div>
 					{/each}
 				</div>

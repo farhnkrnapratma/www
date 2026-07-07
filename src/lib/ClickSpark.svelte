@@ -67,11 +67,13 @@
 		const ro = new ResizeObserver(handleResize);
 		ro.observe(parent);
 		resizeCanvas();
+		parent.addEventListener('click', handleClick);
 
 		const ctx = canvas.getContext('2d');
 		if (!ctx) {
 			return () => {
 				ro.disconnect();
+				parent.removeEventListener('click', handleClick);
 				clearTimeout(resizeTimeout);
 			};
 		}
@@ -116,6 +118,7 @@
 
 		return () => {
 			ro.disconnect();
+			parent.removeEventListener('click', handleClick);
 			clearTimeout(resizeTimeout);
 			cancelAnimationFrame(animationId);
 		};
@@ -140,12 +143,9 @@
 	}
 </script>
 
-<!-- svelte-ignore a11y_no_static_element_interactions -->
-<!-- svelte-ignore a11y_click_events_have_key_events -->
 <div
 	class="click-spark-container {className}"
 	style="position: relative; width: 100%; height: 100%;"
-	onclick={handleClick}
 	{...restProps}
 >
 	<canvas
