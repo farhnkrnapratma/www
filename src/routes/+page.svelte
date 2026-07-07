@@ -819,6 +819,18 @@
 							></i>
 						</a>
 					{/each}
+					<button
+						onclick={() => navigate('blogs')}
+						class="action-row w-full text-left group cursor-pointer flex items-center justify-between"
+					>
+						<span class="text-sm font-bold text-adwaita-blue group-hover:underline"
+							>View all posts</span
+						>
+						<i
+							class="bi bi-chevron-right text-sm text-adwaita-blue group-hover:translate-x-0.5 transition-transform"
+							aria-hidden="true"
+						></i>
+					</button>
 				{/if}
 			</div>
 		</section>
