@@ -1,6 +1,5 @@
 <script lang="ts">
 	import LinkListSection from '$lib/LinkListSection.svelte';
-	import type { Project } from './+page.server';
 	import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
 
