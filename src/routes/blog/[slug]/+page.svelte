@@ -2,6 +2,7 @@
 	import { onMount } from 'svelte';
 	import type { PageProps } from './$types';
 	import hljs from 'highlight.js';
+	import DotField from '$lib/DotField.svelte';
 
 	let { data }: PageProps = $props();
 	const post = $derived(data.post);
@@ -138,7 +139,7 @@
 </svelte:head>
 
 <nav
-	class="fixed top-0 z-40 flex h-15 w-full items-center justify-between bg-adwaita-card px-5 font-sans border-b border-adwaita-border shadow-xs transition-colors duration-300"
+	class="fixed top-0 z-40 flex h-15 w-full items-center justify-between bg-adwaita-card/85 backdrop-blur-md px-5 font-sans border-b border-adwaita-border shadow-xs transition-colors duration-300"
 >
 	<a
 		href="/#blogs"
@@ -224,8 +225,15 @@
 	</div>
 </nav>
 
-<main class="pt-15 font-sans flex flex-col min-h-[calc(100vh-3.75rem)]">
-	<article class="mx-auto w-full md:w-[45%] md:max-w-none px-6 py-16 md:py-28 flex-1">
+<main class="pt-15 font-sans flex flex-col min-h-[calc(100vh-3.75rem)] relative overflow-hidden">
+	<div class="absolute inset-0 z-0 pointer-events-none select-none">
+		<DotField
+			gradientFrom="rgba(120, 101, 217, 0.55)"
+			gradientTo="rgba(120, 101, 217, 0.2)"
+		/>
+	</div>
+
+	<article class="mx-auto w-full md:w-[45%] md:max-w-none px-6 py-16 md:py-28 flex-1 relative z-10">
 		<header class="mb-8 border-b border-adwaita-border pb-6">
 			<p class="text-xs font-semibold mb-2 meta-text">{formatDate(post.created_at)}</p>
 			<h1

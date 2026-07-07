@@ -15,7 +15,7 @@
 	}>();
 </script>
 
-<section class="mx-auto w-full md:w-[45%] md:max-w-none px-6 py-24">
+<section class="mx-auto w-full md:w-[45%] md:max-w-none px-6 py-24 relative z-10">
 	<h1 class="text-3xl font-bold text-adwaita-text tracking-tight">{title}</h1>
 	<p class="mt-2 text-sm text-adwaita-subtitle">{subtitle}</p>
 	<div class="mt-10 boxed-list">
