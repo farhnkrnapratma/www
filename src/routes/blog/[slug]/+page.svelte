@@ -10,15 +10,41 @@
 	let comments = $state<any[]>([]);
 	let isDark = $state(false);
 
+	type Theme = 'auto' | 'dark' | 'light';
+	let theme = $state<Theme>('auto');
+	let themeDropdownOpen = $state(false);
+
+	function applyTheme(newTheme: Theme) {
+		theme = newTheme;
+		if (typeof window !== 'undefined') {
+			localStorage.setItem('theme', newTheme);
+			const isDarkVal =
+				newTheme === 'dark' ||
+				(newTheme === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+			isDark = isDarkVal;
+			if (isDarkVal) {
+				document.documentElement.classList.add('dark');
+			} else {
+				document.documentElement.classList.remove('dark');
+			}
+		}
+	}
+
 	$effect(() => {
 		comments = [...data.comments];
 	});
 
 	onMount(() => {
+		const saved = localStorage.getItem('theme') as Theme;
+		theme = saved || 'auto';
 		isDark = document.documentElement.classList.contains('dark');
 
 		const observer = new MutationObserver(() => {
 			isDark = document.documentElement.classList.contains('dark');
+			const currentSaved = localStorage.getItem('theme') as Theme;
+			if (currentSaved) {
+				theme = currentSaved;
+			}
 			setTimeout(() => {
 				hljs.highlightAll();
 			}, 50);
@@ -122,7 +148,79 @@
 		Back to Blog
 	</a>
 	<div class="flex items-center gap-3">
-		<span class="text-sm font-bold text-adwaita-subtitle">Read Post</span>
+		<span class="text-sm font-bold text-adwaita-subtitle hidden sm:inline">Read Post</span>
+
+		<div class="relative">
+			<button
+				type="button"
+				onclick={() => (themeDropdownOpen = !themeDropdownOpen)}
+				class="flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg border border-adwaita-border bg-adwaita-card text-sm text-adwaita-text transition-colors hover:bg-adwaita-hover focus:outline-none"
+				aria-label="Change theme"
+				aria-haspopup="true"
+				aria-expanded={themeDropdownOpen}
+			>
+				{#if theme === 'auto'}
+					<i class="bi bi-circle-half" aria-hidden="true"></i>
+				{:else}
+					<i class="bi {theme === 'dark' ? 'bi-moon-stars-fill' : 'bi-sun-fill'}" aria-hidden="true"
+					></i>
+				{/if}
+			</button>
+
+			{#if themeDropdownOpen}
+				<button
+					class="fixed inset-0 z-40 cursor-default"
+					onclick={() => (themeDropdownOpen = false)}
+					aria-label="Close theme menu"
+				></button>
+				<div
+					class="absolute right-0 top-11 z-50 flex min-w-[125px] flex-col rounded-xl border border-adwaita-border bg-adwaita-card py-1.5 shadow-lg"
+				>
+					<button
+						type="button"
+						onclick={() => {
+							applyTheme('auto');
+							themeDropdownOpen = false;
+						}}
+						class="flex w-full cursor-pointer items-center gap-3 px-4 py-2.5 text-left text-xs font-bold transition-colors hover:bg-adwaita-hover {theme ===
+						'auto'
+							? 'text-adwaita-blue'
+							: 'text-adwaita-text'}"
+					>
+						<i class="bi bi-circle-half text-sm" aria-hidden="true"></i>
+						Auto
+					</button>
+					<button
+						type="button"
+						onclick={() => {
+							applyTheme('light');
+							themeDropdownOpen = false;
+						}}
+						class="flex w-full cursor-pointer items-center gap-3 px-4 py-2.5 text-left text-xs font-bold transition-colors hover:bg-adwaita-hover {theme ===
+						'light'
+							? 'text-adwaita-blue'
+							: 'text-adwaita-text'}"
+					>
+						<i class="bi bi-sun-fill text-sm" aria-hidden="true"></i>
+						Light
+					</button>
+					<button
+						type="button"
+						onclick={() => {
+							applyTheme('dark');
+							themeDropdownOpen = false;
+						}}
+						class="flex w-full cursor-pointer items-center gap-3 px-4 py-2.5 text-left text-xs font-bold transition-colors hover:bg-adwaita-hover {theme ===
+						'dark'
+							? 'text-adwaita-blue'
+							: 'text-adwaita-text'}"
+					>
+						<i class="bi bi-moon-stars-fill text-sm" aria-hidden="true"></i>
+						Dark
+					</button>
+				</div>
+			{/if}
+		</div>
 	</div>
 </nav>
 
@@ -239,9 +337,9 @@
 		color: var(--color-body);
 	}
 	:global(.dark .prose-custom) {
-		--color-heading: #f5f5f5;
-		--color-body: #e4e4e7;
-		--color-secondary: #a1a1aa;
+		--color-heading: #d4d4d8;
+		--color-body: #b8b8bc;
+		--color-secondary: #8e8e93;
 		--color-link: #60a5fa;
 		--color-link-hover: #93c5fd;
 	}
@@ -326,12 +424,12 @@
 		color: #7a7a7a;
 	}
 	:global(.dark) .meta-text {
-		color: #8a8a8a;
+		color: #7c7c80;
 	}
 	.secondary-text {
 		color: #5f6368;
 	}
 	:global(.dark) .secondary-text {
-		color: #a1a1aa;
+		color: #8e8e93;
 	}
 </style>
