@@ -237,7 +237,7 @@
 </nav>
 
 <main class="pt-15 font-sans flex flex-col min-h-[calc(100vh-3.75rem)]">
-	<section class="mx-auto w-full md:w-[50%] md:max-w-none px-6 py-10 flex-1">
+	<section class="mx-auto w-full md:w-[40%] md:max-w-none px-6 py-10 flex-1">
 		{#if isLoading}
 			<div class="flex flex-col items-center justify-center py-20 text-adwaita-subtitle">
 				<i class="bi bi-hourglass-split text-3xl animate-spin mb-3" aria-hidden="true"></i>

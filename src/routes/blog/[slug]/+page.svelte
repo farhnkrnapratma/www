@@ -225,7 +225,7 @@
 </nav>
 
 <main class="pt-15 font-sans flex flex-col min-h-[calc(100vh-3.75rem)]">
-	<article class="mx-auto w-full md:w-[50%] md:max-w-none px-6 py-12 md:py-20 flex-1">
+	<article class="mx-auto w-full md:w-[40%] md:max-w-none px-6 py-12 md:py-20 flex-1">
 		<header class="mb-8 border-b border-adwaita-border pb-6">
 			<p class="text-xs font-semibold mb-2 meta-text">{formatDate(post.created_at)}</p>
 			<h1
