@@ -2,7 +2,6 @@
 	import './layout.css';
 	import { onMount } from 'svelte';
 
-	import ClickSpark from '$lib/ClickSpark.svelte';
 	const { children } = $props();
 
 	type Theme = 'auto' | 'dark' | 'light';
@@ -48,6 +47,4 @@
 	});
 </script>
 
-<ClickSpark sparkColor="#7865d9" sparkSize={12} sparkRadius={30} sparkCount={10} duration={400}>
-	{@render children()}
-</ClickSpark>
+{@render children()}

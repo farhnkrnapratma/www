@@ -1,6 +1,5 @@
 <script lang="ts">
 	import LinkListSection from '$lib/LinkListSection.svelte';
-	import DotField from '$lib/DotField.svelte';
 	import StarBorder from '$lib/StarBorder.svelte';
 	import ShinyText from '$lib/ShinyText.svelte';
 	import { goto } from '$app/navigation';
@@ -392,11 +391,7 @@
 	</div>
 </nav>
 
-<main class="pt-15 font-sans flex flex-col min-h-[calc(100vh-3.75rem)] relative overflow-hidden">
-	<div class="absolute inset-0 z-0 pointer-events-none select-none">
-		<DotField gradientFrom="rgba(120, 101, 217, 0.55)" gradientTo="rgba(120, 101, 217, 0.2)" />
-	</div>
-
+<main class="pt-15 font-sans flex flex-col min-h-[calc(100vh-3.75rem)]">
 	{#if activeSection === 'home'}
 		<section
 			class="mx-auto w-full md:w-[45%] md:max-w-none px-6 pt-10 pb-24 md:pt-14 md:pb-28 flex flex-col gap-8 relative z-10"
