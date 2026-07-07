@@ -146,8 +146,8 @@
 		as="a"
 		href="/#blogs"
 		color="#7865d9"
-		speed="5s"
-		thickness={2}
+		speed="3.5s"
+		thickness={1}
 	>
 		<i class="bi bi-arrow-left" style="margin-right: 8px;" aria-hidden="true"></i>
 		Back to Blog

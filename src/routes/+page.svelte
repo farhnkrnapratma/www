@@ -434,8 +434,8 @@
 							as="button"
 							onclick={() => navigate('projects')}
 							color="#7865d9"
-							speed="5s"
-							thickness={2}
+							speed="3.5s"
+							thickness={1}
 						>
 							Projects
 						</StarBorder>
@@ -443,8 +443,8 @@
 							as="button"
 							onclick={() => navigate('contacts')}
 							color="#7865d9"
-							speed="5s"
-							thickness={2}
+							speed="3.5s"
+							thickness={1}
 						>
 							Get in Touch
 						</StarBorder>
