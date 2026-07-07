@@ -48,12 +48,6 @@
 	});
 </script>
 
-<ClickSpark
-	sparkColor="#7865d9"
-	sparkSize={12}
-	sparkRadius={30}
-	sparkCount={10}
-	duration={400}
->
+<ClickSpark sparkColor="#7865d9" sparkSize={12} sparkRadius={30} sparkCount={10} duration={400}>
 	{@render children()}
 </ClickSpark>

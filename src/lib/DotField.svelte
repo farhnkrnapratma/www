@@ -210,7 +210,12 @@
 					d.y = d.ay + d.vy;
 					const diffX = d.x - d.sx;
 					const diffY = d.y - d.sy;
-					if (Math.abs(diffX) > 0.01 || Math.abs(diffY) > 0.01 || Math.abs(d.vx) > 0.01 || Math.abs(d.vy) > 0.01) {
+					if (
+						Math.abs(diffX) > 0.01 ||
+						Math.abs(diffY) > 0.01 ||
+						Math.abs(d.vx) > 0.01 ||
+						Math.abs(d.vy) > 0.01
+					) {
 						d.sx += diffX * 0.1;
 						d.sy += diffY * 0.1;
 						needsRender = true;
