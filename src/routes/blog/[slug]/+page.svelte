@@ -258,6 +258,7 @@
 		.prose-custom h5,
 		.prose-custom h6
 	) {
+		font-family: 'Anthropic Sans', ui-sans-serif, system-ui, sans-serif;
 		color: var(--color-heading);
 	}
 	:global(.prose-custom h1) {
