@@ -229,7 +229,7 @@
 
 <style>
 	:global(.prose-custom) {
-		font-family: 'Anthropic Sans', ui-sans-serif, system-ui, sans-serif;
+		font-family: 'Anthropic Serif Text', 'Anthropic Serif', ui-serif, Georgia, serif;
 		line-height: 1.7;
 		--color-heading: #111111;
 		--color-body: #222222;
