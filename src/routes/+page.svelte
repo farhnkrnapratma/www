@@ -634,22 +634,20 @@
 											href={project.licenseUrl}
 											target="_blank"
 											rel="noopener noreferrer"
-											class="flex items-center gap-1 text-xs font-semibold text-adwaita-subtitle hover:text-adwaita-blue transition-colors"
+											class="flex items-center gap-1.5 text-xs font-semibold text-adwaita-subtitle hover:text-adwaita-blue transition-colors"
 											title="License: {project.licenseName}"
 										>
 											<span
-												class="material-symbols-rounded text-zinc-400 dark:text-zinc-500"
-												style="font-size:14px; line-height:1"
-												aria-hidden="true">balance</span
+												class="material-symbols-rounded text-zinc-400 dark:text-zinc-500 text-[16px] leading-none select-none align-middle"
+												aria-hidden="true">license</span
 											>
-											{project.licenseName}
+											<span>{project.licenseName} License</span>
 										</a>
 									{/if}
 
 									<div class="flex items-center gap-1 text-xs font-semibold text-adwaita-subtitle">
 										<i
-											class="bi bi-star-fill text-amber-500"
-											style="font-size:12px"
+											class="bi bi-star-fill text-amber-600 text-[12px]"
 											aria-hidden="true"
 										></i>
 										{project.stars}
@@ -862,7 +860,7 @@
 								</a>
 							</h3>
 
-							<div class="flex flex-wrap items-center gap-3 sm:justify-end shrink-0 relative z-20">
+							<div class="flex flex-wrap items-center gap-2 sm:justify-end shrink-0 relative z-20">
 								{#if langColors[project.lang]}
 									<span
 										class="rounded bg-adwaita-blue/15 px-2 py-0.5 text-[11px] font-semibold text-adwaita-blue"
@@ -875,22 +873,20 @@
 										href={project.licenseUrl}
 										target="_blank"
 										rel="noopener noreferrer"
-										class="flex items-center gap-1 text-xs font-semibold text-adwaita-subtitle hover:text-adwaita-blue transition-colors"
+										class="flex items-center gap-1.5 text-xs font-semibold text-adwaita-subtitle hover:text-adwaita-blue transition-colors"
 										title="License: {project.licenseName}"
 									>
 										<span
-											class="material-symbols-rounded text-zinc-400 dark:text-zinc-500"
-											style="font-size:14px; line-height:1"
-											aria-hidden="true">balance</span
+											class="material-symbols-rounded text-zinc-400 dark:text-zinc-500 text-[16px] leading-none select-none align-middle"
+											aria-hidden="true">license</span
 										>
-										{project.licenseName}
+										<span>{project.licenseName} License</span>
 									</a>
 								{/if}
 
 								<div class="flex items-center gap-1 text-xs font-semibold text-adwaita-subtitle">
 									<i
-										class="bi bi-star-fill text-amber-500"
-										style="font-size:12px"
+										class="bi bi-star-fill text-amber-600 text-[12px]"
 										aria-hidden="true"
 									></i>
 									{project.stars}
