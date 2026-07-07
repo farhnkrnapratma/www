@@ -2,6 +2,10 @@
 @import 'bootstrap-icons/font/bootstrap-icons.css';
 
 @layer base {
+	html {
+		font-size: 108%;
+	}
+
 	body {
 		@apply m-0 bg-adwaita-bg p-0 text-adwaita-text transition-colors duration-300;
 		font-family: 'Anthropic Sans Text', ui-sans-serif, system-ui, sans-serif;
@@ -14,7 +18,7 @@
 	}
 
 	.action-row {
-		@apply flex items-center justify-between px-5 py-4 transition-all hover:bg-adwaita-hover;
+		@apply flex items-center justify-between px-6 py-5 transition-all hover:bg-adwaita-hover;
 	}
 }
 

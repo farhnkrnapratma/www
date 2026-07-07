@@ -399,7 +399,7 @@
 <main class="pt-15 font-sans flex flex-col min-h-[calc(100vh-3.75rem)]">
 	{#if activeSection === 'home'}
 		<section
-			class="mx-auto w-full md:w-[40%] md:max-w-none px-6 py-12 md:py-20 flex flex-col gap-12"
+			class="mx-auto w-full md:w-[45%] md:max-w-none px-6 py-16 md:py-28 flex flex-col gap-16"
 		>
 			<div class="flex flex-col items-center justify-center text-center">
 				<img
@@ -662,7 +662,7 @@
 	{/if}
 
 	{#if activeSection === 'cv'}
-		<section class="mx-auto w-full md:w-[40%] md:max-w-none px-6 py-20">
+		<section class="mx-auto w-full md:w-[45%] md:max-w-none px-6 py-24">
 			<div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
 				<div>
 					<h1 class="text-3xl font-bold text-adwaita-text tracking-tight">Curriculum Vitae</h1>
@@ -684,7 +684,7 @@
 				</h2>
 				<div class="mt-4 boxed-list">
 					{#each experiences as exp (exp.role)}
-						<div class="px-5 py-4 flex flex-col gap-1.5 hover:bg-zinc-950/[0.015] transition-all">
+						<div class="px-6 py-5 flex flex-col gap-2 hover:bg-zinc-950/[0.015] transition-all">
 							<div class="flex items-start justify-between gap-4">
 								<div>
 									<h3 class="text-base font-bold text-adwaita-text">{exp.role}</h3>
@@ -702,7 +702,7 @@
 				<h2 class="text-xs font-bold uppercase tracking-widest text-adwaita-subtitle">Education</h2>
 				<div class="mt-4 boxed-list">
 					{#each education as edu (`${edu.degree}-${edu.university}`)}
-						<div class="px-5 py-4 flex flex-col gap-1 hover:bg-zinc-950/1.5 transition-all">
+						<div class="px-6 py-5 flex flex-col gap-1.5 hover:bg-zinc-950/1.5 transition-all">
 							<div class="flex items-start justify-between gap-4">
 								<div>
 									<h3 class="text-base font-bold text-adwaita-text">{edu.degree} in {edu.major}</h3>
@@ -733,7 +733,7 @@
 	{/if}
 
 	{#if activeSection === 'blogs'}
-		<section class="mx-auto w-full md:w-[40%] md:max-w-none px-6 py-20">
+		<section class="mx-auto w-full md:w-[45%] md:max-w-none px-6 py-24">
 			<h1 class="text-3xl font-bold text-adwaita-text tracking-tight">Blogs</h1>
 			<p class="mt-2 text-sm text-adwaita-subtitle">
 				Thoughts on Linux, security, and open source.
@@ -773,7 +773,7 @@
 	{/if}
 
 	{#if activeSection === 'projects'}
-		<section class="mx-auto w-full md:w-[40%] md:max-w-none px-6 py-20">
+		<section class="mx-auto w-full md:w-[45%] md:max-w-none px-6 py-24">
 			<h1 class="text-3xl font-bold text-adwaita-text tracking-tight">Projects</h1>
 			<p class="mt-2 text-sm text-adwaita-subtitle">Open source work on GitHub.</p>
 			<div class="mt-10 boxed-list">
@@ -838,7 +838,7 @@
 	{/if}
 
 	<footer
-		class="mx-auto w-full md:w-[40%] md:max-w-none px-6 py-8 mt-auto text-center text-xs text-adwaita-subtitle/75 border-t border-adwaita-border"
+		class="mx-auto w-full md:w-[45%] md:max-w-none px-6 py-12 mt-auto text-center text-xs text-adwaita-subtitle/75 border-t border-adwaita-border"
 	>
 		<p>&copy; {new Date().getFullYear()} {name}. All rights reserved.</p>
 	</footer>
