@@ -1,5 +1,6 @@
 <script lang="ts">
 	import LinkListSection from '$lib/LinkListSection.svelte';
+	import DotField from '$lib/DotField.svelte';
 	import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
 
@@ -398,256 +399,262 @@
 
 <main class="pt-15 font-sans flex flex-col min-h-[calc(100vh-3.75rem)]">
 	{#if activeSection === 'home'}
-		<section
-			class="mx-auto w-full md:w-[45%] md:max-w-none px-6 py-16 md:py-28 flex flex-col gap-16"
-		>
-			<div class="flex flex-col items-center justify-center text-center">
-				<img
-					src="/android-chrome-512x512.png"
-					alt="Farhan Kurnia Pratama"
-					class="mb-6 h-28 w-28 rounded-full object-cover object-top border border-adwaita-border shadow-xs"
-				/>
-				<h1 class="text-4xl font-bold text-adwaita-text md:text-5xl lg:text-6xl tracking-tight">
-					{name}
-				</h1>
-				<p class="mt-3 text-lg font-medium text-adwaita-subtitle">{headline}</p>
-				<p class="mt-4 max-w-xl text-base text-adwaita-subtitle/90 leading-relaxed">{desc}</p>
-				<div class="mt-8 flex flex-wrap justify-center gap-3">
-					<a
-						href="/cv.pdf"
-						download="Farhan_Kurnia_Pratama_CV.pdf"
-						class="inline-flex items-center justify-center gap-2 cursor-pointer rounded-lg bg-adwaita-blue px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-adwaita-blue-hover focus:outline-none"
-					>
-						<i class="bi bi-download" aria-hidden="true"></i>
-						Download CV
-					</a>
-					<button
-						onclick={() => navigate('projects')}
-						class="cursor-pointer rounded-lg bg-adwaita-card border border-adwaita-border px-5 py-2.5 text-sm font-semibold text-adwaita-text transition-colors hover:bg-adwaita-hover focus:outline-none"
-					>
-						Projects
-					</button>
-					<button
-						onclick={() => navigate('contacts')}
-						class="cursor-pointer rounded-lg bg-adwaita-card border border-adwaita-border px-5 py-2.5 text-sm font-semibold text-adwaita-text transition-colors hover:bg-adwaita-hover focus:outline-none"
-					>
-						Get in Touch
-					</button>
-				</div>
+		<section class="mx-auto w-full md:w-[45%] md:max-w-none px-6 py-16 md:py-28 relative">
+			<div class="absolute inset-0 z-0 pointer-events-none opacity-60 select-none">
+				<DotField />
 			</div>
 
-			<form
-				action="https://formsubmit.co/contact@fkp.my.id"
-				method="POST"
-				class="w-full boxed-list text-left shadow-xs"
-			>
-				<input type="hidden" name="_subject" value="New message from portfolio website!" />
-				<input type="hidden" name="_template" value="table" />
-				<input type="hidden" name="_captcha" value="true" />
-
-				<div class="px-5 py-4 border-b border-adwaita-border">
-					<h2 class="text-lg font-bold text-adwaita-text">Send a Message</h2>
-					<p class="text-xs text-adwaita-subtitle mt-0.5">
-						Feel free to drop me a line. I'll get back to you as soon as possible.
-					</p>
-				</div>
-
-				<div
-					class="px-5 py-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-4"
-				>
-					<label for="form-name" class="text-sm font-semibold text-adwaita-text sm:w-1/4 shrink-0"
-						>Name</label
-					>
-					<input
-						type="text"
-						id="form-name"
-						name="name"
-						required
-						placeholder="Linus Torvalds"
-						class="w-full sm:w-3/4 px-3 py-1.5 text-sm bg-adwaita-bg border border-adwaita-border rounded-lg text-adwaita-text placeholder:text-adwaita-subtitle/70 focus:outline-none focus:border-adwaita-blue transition-colors"
+			<div class="relative z-10 flex flex-col gap-16 w-full">
+				<div class="flex flex-col items-center justify-center text-center">
+					<img
+						src="/android-chrome-512x512.png"
+						alt="Farhan Kurnia Pratama"
+						class="mb-6 h-28 w-28 rounded-full object-cover object-top border border-adwaita-border shadow-xs"
 					/>
+					<h1 class="text-4xl font-bold text-adwaita-text md:text-5xl lg:text-6xl tracking-tight">
+						{name}
+					</h1>
+					<p class="mt-3 text-lg font-medium text-adwaita-subtitle">{headline}</p>
+					<p class="mt-4 max-w-xl text-base text-adwaita-subtitle/90 leading-relaxed">{desc}</p>
+					<div class="mt-8 flex flex-wrap justify-center gap-3">
+						<a
+							href="/cv.pdf"
+							download="Farhan_Kurnia_Pratama_CV.pdf"
+							class="inline-flex items-center justify-center gap-2 cursor-pointer rounded-lg bg-adwaita-blue px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-adwaita-blue-hover focus:outline-none"
+						>
+							<i class="bi bi-download" aria-hidden="true"></i>
+							Download CV
+						</a>
+						<button
+							onclick={() => navigate('projects')}
+							class="cursor-pointer rounded-lg bg-adwaita-card border border-adwaita-border px-5 py-2.5 text-sm font-semibold text-adwaita-text transition-colors hover:bg-adwaita-hover focus:outline-none"
+						>
+							Projects
+						</button>
+						<button
+							onclick={() => navigate('contacts')}
+							class="cursor-pointer rounded-lg bg-adwaita-card border border-adwaita-border px-5 py-2.5 text-sm font-semibold text-adwaita-text transition-colors hover:bg-adwaita-hover focus:outline-none"
+						>
+							Get in Touch
+						</button>
+					</div>
 				</div>
 
-				<div
-					class="px-5 py-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-4"
+				<form
+					action="https://formsubmit.co/contact@fkp.my.id"
+					method="POST"
+					class="w-full boxed-list text-left shadow-xs"
 				>
-					<label for="form-email" class="text-sm font-semibold text-adwaita-text sm:w-1/4 shrink-0"
-						>Email Address</label
-					>
-					<input
-						type="email"
-						id="form-email"
-						name="email"
-						required
-						placeholder="torvalds@linux-foundation.org"
-						class="w-full sm:w-3/4 px-3 py-1.5 text-sm bg-adwaita-bg border border-adwaita-border rounded-lg text-adwaita-text placeholder:text-adwaita-subtitle/70 focus:outline-none focus:border-adwaita-blue transition-colors"
-					/>
-				</div>
+					<input type="hidden" name="_subject" value="New message from portfolio website!" />
+					<input type="hidden" name="_template" value="table" />
+					<input type="hidden" name="_captcha" value="true" />
 
-				<div
-					class="px-5 py-3.5 flex flex-col sm:flex-row items-start justify-between gap-2 sm:gap-4"
-				>
-					<label
-						for="form-message"
-						class="text-sm font-semibold text-adwaita-text sm:w-1/4 shrink-0 mt-1.5">Message</label
-					>
-					<textarea
-						id="form-message"
-						name="message"
-						required
-						rows="3"
-						placeholder="Write your message here..."
-						class="w-full sm:w-3/4 px-3 py-1.5 text-sm bg-adwaita-bg border border-adwaita-border rounded-lg text-adwaita-text placeholder:text-adwaita-subtitle/70 focus:outline-none focus:border-adwaita-blue transition-colors resize-none"
-					></textarea>
-				</div>
+					<div class="px-5 py-4 border-b border-adwaita-border">
+						<h2 class="text-lg font-bold text-adwaita-text">Send a Message</h2>
+						<p class="text-xs text-adwaita-subtitle mt-0.5">
+							Feel free to drop me a line. I'll get back to you as soon as possible.
+						</p>
+					</div>
 
-				<div class="px-5 py-3.5 flex items-center justify-end bg-adwaita-hover/30">
-					<button
-						type="submit"
-						class="inline-flex items-center justify-center gap-2 cursor-pointer rounded-lg bg-adwaita-blue px-5 py-2 text-sm font-semibold text-white transition-colors hover:bg-adwaita-blue-hover focus:outline-none"
+					<div
+						class="px-5 py-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-4"
 					>
-						<i class="bi bi-send-fill text-xs" aria-hidden="true"></i>
-						Send Message
-					</button>
-				</div>
-			</form>
+						<label for="form-name" class="text-sm font-semibold text-adwaita-text sm:w-1/4 shrink-0"
+							>Name</label
+						>
+						<input
+							type="text"
+							id="form-name"
+							name="name"
+							required
+							placeholder="Linus Torvalds"
+							class="w-full sm:w-3/4 px-3 py-1.5 text-sm bg-adwaita-bg border border-adwaita-border rounded-lg text-adwaita-text placeholder:text-adwaita-subtitle/70 focus:outline-none focus:border-adwaita-blue transition-colors"
+						/>
+					</div>
 
-			<div>
-				<h3 class="text-lg font-bold text-adwaita-text tracking-tight mb-4">Recent Blog Posts</h3>
-				<div class="boxed-list text-left">
-					{#if posts.length === 0}
-						<div class="p-6 text-center text-sm text-adwaita-subtitle">
-							No blog posts published yet.
-						</div>
-					{:else}
-						{#each posts.slice(0, 2) as post (post.title)}
-							<a
-								href="/blog/{post.slug}"
+					<div
+						class="px-5 py-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-4"
+					>
+						<label
+							for="form-email"
+							class="text-sm font-semibold text-adwaita-text sm:w-1/4 shrink-0">Email Address</label
+						>
+						<input
+							type="email"
+							id="form-email"
+							name="email"
+							required
+							placeholder="torvalds@linux-foundation.org"
+							class="w-full sm:w-3/4 px-3 py-1.5 text-sm bg-adwaita-bg border border-adwaita-border rounded-lg text-adwaita-text placeholder:text-adwaita-subtitle/70 focus:outline-none focus:border-adwaita-blue transition-colors"
+						/>
+					</div>
+
+					<div
+						class="px-5 py-3.5 flex flex-col sm:flex-row items-start justify-between gap-2 sm:gap-4"
+					>
+						<label
+							for="form-message"
+							class="text-sm font-semibold text-adwaita-text sm:w-1/4 shrink-0 mt-1.5"
+							>Message</label
+						>
+						<textarea
+							id="form-message"
+							name="message"
+							required
+							rows="3"
+							placeholder="Write your message here..."
+							class="w-full sm:w-3/4 px-3 py-1.5 text-sm bg-adwaita-bg border border-adwaita-border rounded-lg text-adwaita-text placeholder:text-adwaita-subtitle/70 focus:outline-none focus:border-adwaita-blue transition-colors resize-none"
+						></textarea>
+					</div>
+
+					<div class="px-5 py-3.5 flex items-center justify-end bg-adwaita-hover/30">
+						<button
+							type="submit"
+							class="inline-flex items-center justify-center gap-2 cursor-pointer rounded-lg bg-adwaita-blue px-5 py-2 text-sm font-semibold text-white transition-colors hover:bg-adwaita-blue-hover focus:outline-none"
+						>
+							<i class="bi bi-send-fill text-xs" aria-hidden="true"></i>
+							Send Message
+						</button>
+					</div>
+				</form>
+
+				<div>
+					<h3 class="text-lg font-bold text-adwaita-text tracking-tight mb-4">Recent Blog Posts</h3>
+					<div class="boxed-list text-left">
+						{#if posts.length === 0}
+							<div class="p-6 text-center text-sm text-adwaita-subtitle">
+								No blog posts published yet.
+							</div>
+						{:else}
+							{#each posts.slice(0, 2) as post (post.title)}
+								<a
+									href="/blog/{post.slug}"
+									class="action-row w-full text-left group cursor-pointer flex items-center justify-between"
+								>
+									<div class="flex flex-col gap-1 pr-6 font-sans">
+										<p class="text-xs font-semibold text-adwaita-subtitle">{getPostDate(post)}</p>
+										<h4
+											class="text-base font-bold text-adwaita-text group-hover:text-adwaita-blue transition-colors leading-tight"
+										>
+											{post.title}
+										</h4>
+										<p class="mt-1.5 text-sm text-adwaita-subtitle line-clamp-2">{post.excerpt}</p>
+									</div>
+									<i
+										class="bi bi-chevron-right text-sm text-zinc-400 group-hover:text-adwaita-blue transition-all group-hover:translate-x-0.5"
+										aria-hidden="true"
+									></i>
+								</a>
+							{/each}
+							<button
+								onclick={() => navigate('blogs')}
 								class="action-row w-full text-left group cursor-pointer flex items-center justify-between"
 							>
-								<div class="flex flex-col gap-1 pr-6 font-sans">
-									<p class="text-xs font-semibold text-adwaita-subtitle">{getPostDate(post)}</p>
-									<h4
-										class="text-base font-bold text-adwaita-text group-hover:text-adwaita-blue transition-colors leading-tight"
-									>
-										{post.title}
-									</h4>
-									<p class="mt-1.5 text-sm text-adwaita-subtitle line-clamp-2">{post.excerpt}</p>
-								</div>
+								<span class="text-sm font-bold text-adwaita-blue group-hover:underline"
+									>Read more...</span
+								>
 								<i
-									class="bi bi-chevron-right text-sm text-zinc-400 group-hover:text-adwaita-blue transition-all group-hover:translate-x-0.5"
+									class="bi bi-chevron-right text-sm text-adwaita-blue group-hover:translate-x-0.5 transition-transform"
 									aria-hidden="true"
 								></i>
+							</button>
+						{/if}
+					</div>
+				</div>
+
+				<div>
+					<h3 class="text-lg font-bold text-adwaita-text tracking-tight mb-4">Top Projects</h3>
+					<div class="boxed-list text-left">
+						{#each projects.slice(0, 2) as project (project.name)}
+							<a
+								href={project.url}
+								target="_blank"
+								rel="noopener noreferrer"
+								title="Opens in a new tab"
+								class="action-row group flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between"
+							>
+								<div class="flex flex-col gap-1.5 pr-0 sm:pr-6">
+									<div class="flex items-center gap-2">
+										<h4
+											class="text-base font-bold text-adwaita-text group-hover:text-adwaita-blue transition-colors leading-none"
+										>
+											{project.name}
+										</h4>
+										{#if langColors[project.lang]}
+											<span
+												class="inline-flex items-center justify-center rounded-full px-2 h-4.5 text-[9px] font-bold uppercase tracking-wider leading-none {langColors[
+													project.lang
+												]}">{project.lang}</span
+											>
+										{/if}
+									</div>
+									<p class="text-sm text-adwaita-subtitle leading-relaxed">{project.desc}</p>
+									<div class="mt-1.5 flex flex-wrap items-center gap-1.5">
+										{#each project.tags as tag (tag)}
+											<span
+												class="rounded bg-adwaita-border/40 px-2 py-0.5 text-[11px] font-medium text-adwaita-subtitle"
+												>{tag}</span
+											>
+										{/each}
+									</div>
+								</div>
+								<div
+									class="flex items-center justify-between sm:justify-end gap-3 w-full sm:w-auto shrink-0 border-t border-adwaita-border/40 pt-3 sm:border-t-0 sm:pt-0"
+								>
+									<div class="flex items-center gap-1 text-xs font-semibold text-adwaita-subtitle">
+										<i
+											class="bi bi-star-fill text-amber-500"
+											style="font-size:12px"
+											aria-hidden="true"
+										></i>
+										{project.stars}
+									</div>
+									<i
+										class="bi bi-chevron-right text-sm text-zinc-400 opacity-80 transition-all group-hover:translate-x-0.5 group-hover:text-adwaita-blue"
+										aria-hidden="true"
+									></i>
+								</div>
 							</a>
 						{/each}
 						<button
-							onclick={() => navigate('blogs')}
+							onclick={() => navigate('projects')}
 							class="action-row w-full text-left group cursor-pointer flex items-center justify-between"
 						>
 							<span class="text-sm font-bold text-adwaita-blue group-hover:underline"
-								>Read more...</span
+								>View all projects...</span
 							>
 							<i
 								class="bi bi-chevron-right text-sm text-adwaita-blue group-hover:translate-x-0.5 transition-transform"
 								aria-hidden="true"
 							></i>
 						</button>
-					{/if}
-				</div>
-			</div>
-
-			<div>
-				<h3 class="text-lg font-bold text-adwaita-text tracking-tight mb-4">Top Projects</h3>
-				<div class="boxed-list text-left">
-					{#each projects.slice(0, 2) as project (project.name)}
-						<a
-							href={project.url}
-							target="_blank"
-							rel="noopener noreferrer"
-							title="Opens in a new tab"
-							class="action-row group flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between"
-						>
-							<div class="flex flex-col gap-1.5 pr-0 sm:pr-6">
-								<div class="flex items-center gap-2">
-									<h4
-										class="text-base font-bold text-adwaita-text group-hover:text-adwaita-blue transition-colors leading-none"
-									>
-										{project.name}
-									</h4>
-									{#if langColors[project.lang]}
-										<span
-											class="inline-flex items-center justify-center rounded-full px-2 h-4.5 text-[9px] font-bold uppercase tracking-wider leading-none {langColors[
-												project.lang
-											]}">{project.lang}</span
-										>
-									{/if}
-								</div>
-								<p class="text-sm text-adwaita-subtitle leading-relaxed">{project.desc}</p>
-								<div class="mt-1.5 flex flex-wrap items-center gap-1.5">
-									{#each project.tags as tag (tag)}
-										<span
-											class="rounded bg-adwaita-border/40 px-2 py-0.5 text-[11px] font-medium text-adwaita-subtitle"
-											>{tag}</span
-										>
-									{/each}
-								</div>
-							</div>
-							<div
-								class="flex items-center justify-between sm:justify-end gap-3 w-full sm:w-auto shrink-0 border-t border-adwaita-border/40 pt-3 sm:border-t-0 sm:pt-0"
-							>
-								<div class="flex items-center gap-1 text-xs font-semibold text-adwaita-subtitle">
-									<i
-										class="bi bi-star-fill text-amber-500"
-										style="font-size:12px"
-										aria-hidden="true"
-									></i>
-									{project.stars}
-								</div>
-								<i
-									class="bi bi-chevron-right text-sm text-zinc-400 opacity-80 transition-all group-hover:translate-x-0.5 group-hover:text-adwaita-blue"
-									aria-hidden="true"
-								></i>
-							</div>
-						</a>
-					{/each}
-					<button
-						onclick={() => navigate('projects')}
-						class="action-row w-full text-left group cursor-pointer flex items-center justify-between"
-					>
-						<span class="text-sm font-bold text-adwaita-blue group-hover:underline"
-							>View all projects...</span
-						>
-						<i
-							class="bi bi-chevron-right text-sm text-adwaita-blue group-hover:translate-x-0.5 transition-transform"
-							aria-hidden="true"
-						></i>
-					</button>
-				</div>
-			</div>
-
-			<div class="boxed-list text-left border-adwaita-blue/30 bg-adwaita-blue/5">
-				<div class="px-5 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-					<div class="flex items-start gap-4">
-						<i
-							class="bi bi-heart-fill text-2xl text-adwaita-blue shrink-0 mt-0.5"
-							aria-hidden="true"
-						></i>
-						<div>
-							<h4 class="text-sm font-bold text-adwaita-text">Support My Open Source Work</h4>
-							<p class="text-xs text-adwaita-subtitle mt-0.5 leading-relaxed">
-								If you find my open-source projects and tools helpful, please consider supporting
-								me. Your backing directly contributes to the development and maintenance of these
-								works.
-							</p>
-						</div>
 					</div>
-					<button
-						onclick={() => navigate('funding')}
-						class="inline-flex items-center justify-center gap-2 cursor-pointer rounded-lg bg-adwaita-blue px-4 py-2 text-xs font-semibold text-white transition-colors hover:bg-adwaita-blue-hover focus:outline-none shrink-0"
-					>
-						Become a Sponsor
-						<i class="bi bi-arrow-right" aria-hidden="true"></i>
-					</button>
+				</div>
+
+				<div class="boxed-list text-left border-adwaita-blue/30 bg-adwaita-blue/5">
+					<div class="px-5 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+						<div class="flex items-start gap-4">
+							<i
+								class="bi bi-heart-fill text-2xl text-adwaita-blue shrink-0 mt-0.5"
+								aria-hidden="true"
+							></i>
+							<div>
+								<h4 class="text-sm font-bold text-adwaita-text">Support My Open Source Work</h4>
+								<p class="text-xs text-adwaita-subtitle mt-0.5 leading-relaxed">
+									If you find my open-source projects and tools helpful, please consider supporting
+									me. Your backing directly contributes to the development and maintenance of these
+									works.
+								</p>
+							</div>
+						</div>
+						<button
+							onclick={() => navigate('funding')}
+							class="inline-flex items-center justify-center gap-2 cursor-pointer rounded-lg bg-adwaita-blue px-4 py-2 text-xs font-semibold text-white transition-colors hover:bg-adwaita-blue-hover focus:outline-none shrink-0"
+						>
+							Become a Sponsor
+							<i class="bi bi-arrow-right" aria-hidden="true"></i>
+						</button>
+					</div>
 				</div>
 			</div>
 		</section>
