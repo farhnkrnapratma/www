@@ -547,30 +547,10 @@
 							bind:value={formMessage}
 							class="w-full bg-transparent border-0 px-2 py-1 pr-8 text-sm text-adwaita-text placeholder:text-adwaita-subtitle/50 focus:outline-none focus:ring-2 focus:ring-adwaita-blue/50 rounded-md transition-all resize-none text-left"
 						></textarea>
-						<div class="absolute right-3 bottom-2.5 flex items-center gap-1.5 pointer-events-none select-none z-10">
+						<div class="absolute right-3 bottom-2.5 pointer-events-none select-none z-10">
 							<span class="text-[10px] text-adwaita-subtitle/80 font-mono">
 								{1000 - formMessage.length}
 							</span>
-							<svg class="w-4 h-4" class:animate-[spin_3s_linear_infinite]={formMessage.length < 1000} viewBox="0 0 20 20">
-								<circle
-									cx="10"
-									cy="10"
-									r="8"
-									class="stroke-adwaita-border/40 fill-none"
-									stroke-width="2"
-								/>
-								<circle
-									cx="10"
-									cy="10"
-									r="8"
-									class="stroke-adwaita-blue fill-none transition-[stroke-dashoffset] duration-150"
-									stroke-width="2"
-									stroke-dasharray="50.26"
-									stroke-dashoffset={50.26 - (50.26 * Math.min(formMessage.length, 1000)) / 1000}
-									stroke-linecap="round"
-									transform="rotate(-90 10 10)"
-								/>
-							</svg>
 						</div>
 					</div>
 				</div>
