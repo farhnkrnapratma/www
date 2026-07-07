@@ -136,11 +136,14 @@
 			const len = dots.length;
 			const t = frameCount * 0.02;
 
-			const targetEngagement = Math.min(mouse.speed / 5, 1);
+			const mouseActive = mouse.x > -9000 && mouse.y > -9000;
+
+			const targetEngagement = mouseActive ? Math.min(0.2 + mouse.speed / 4, 1) : 0;
 			engagement += (targetEngagement - engagement) * 0.06;
 			if (engagement < 0.001) engagement = 0;
 
-			glowOpacity += (engagement - glowOpacity) * 0.08;
+			const targetGlowOpacity = mouseActive ? Math.min(0.3 + mouse.speed / 6, 0.7) : 0;
+			glowOpacity += (targetGlowOpacity - glowOpacity) * 0.08;
 
 			if (glowEl) {
 				glowEl.setAttribute('cx', mouse.x.toString());
@@ -166,11 +169,11 @@
 				const dy = mouse.y - d.ay;
 				const distSq = dx * dx + dy * dy;
 
-				if (distSq < crSq && engagement > 0.01) {
+				if (distSq < crSq && mouseActive) {
 					const dist = Math.sqrt(distSq);
 					if (bulgeOnly) {
 						const factor = 1 - dist / cursorRadius;
-						const push = factor * factor * bulgeStrength * engagement;
+						const push = factor * factor * bulgeStrength;
 						const angle = Math.atan2(dy, dx);
 						d.sx += (d.ax - Math.cos(angle) * push - d.sx) * 0.15;
 						d.sy += (d.ay - Math.sin(angle) * push - d.sy) * 0.15;

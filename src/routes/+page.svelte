@@ -397,15 +397,20 @@
 	</div>
 </nav>
 
-<main class="pt-15 font-sans flex flex-col min-h-[calc(100vh-3.75rem)]">
+<main class="pt-15 font-sans flex flex-col min-h-[calc(100vh-3.75rem)] relative overflow-hidden">
 	{#if activeSection === 'home'}
-		<section class="mx-auto w-full md:w-[45%] md:max-w-none px-6 py-16 md:py-28 relative">
-			<div class="absolute inset-0 z-0 pointer-events-none opacity-60 select-none">
-				<DotField />
-			</div>
+		<div class="absolute inset-0 z-0 pointer-events-none select-none">
+			<DotField
+				gradientFrom="rgba(120, 101, 217, 0.55)"
+				gradientTo="rgba(120, 101, 217, 0.2)"
+				glowColor="#7865d9"
+			/>
+		</div>
 
-			<div class="relative z-10 flex flex-col gap-16 w-full">
-				<div class="flex flex-col items-center justify-center text-center">
+		<section
+			class="mx-auto w-full md:w-[45%] md:max-w-none px-6 py-16 md:py-28 flex flex-col gap-16 relative z-10"
+		>
+			<div class="flex flex-col items-center justify-center text-center">
 					<img
 						src="/android-chrome-512x512.png"
 						alt="Farhan Kurnia Pratama"
@@ -654,7 +659,6 @@
 							Become a Sponsor
 							<i class="bi bi-arrow-right" aria-hidden="true"></i>
 						</button>
-					</div>
 				</div>
 			</div>
 		</section>
