@@ -599,18 +599,7 @@
 									></i>
 								</a>
 							{/each}
-							<button
-								onclick={() => navigate('blogs')}
-								class="action-row w-full text-left group cursor-pointer flex items-center justify-between"
-							>
-								<span class="text-sm font-bold text-adwaita-blue group-hover:underline"
-									>Read more...</span
-								>
-								<i
-									class="bi bi-chevron-right text-sm text-adwaita-blue group-hover:translate-x-0.5 transition-transform"
-									aria-hidden="true"
-								></i>
-							</button>
+
 						{/if}
 					</div>
 				</div>
@@ -674,7 +663,7 @@
 							class="action-row w-full text-left group cursor-pointer flex items-center justify-between"
 						>
 							<span class="text-sm font-bold text-adwaita-blue group-hover:underline"
-								>View all projects...</span
+								>View all projects</span
 							>
 							<i
 								class="bi bi-chevron-right text-sm text-adwaita-blue group-hover:translate-x-0.5 transition-transform"
@@ -694,25 +683,22 @@
 							<div>
 								<h4 class="text-sm font-bold">
 									<ShinyText
-										text="Support My Open Source Work"
+										text="Support Open Source Work"
 										color="#7865d9"
 										shineColor="#ffffff"
 										speed={1.5}
 									/>
 								</h4>
 								<p class="text-xs text-adwaita-subtitle mt-0.5 leading-relaxed">
-									If you find my open-source projects and tools helpful, please consider supporting
-									me. Your backing directly contributes to the development and maintenance of these
-									works.
+									Your support helps maintain and improve these open-source projects
 								</p>
 							</div>
 						</div>
 						<button
 							onclick={() => navigate('funding')}
-							class="inline-flex items-center justify-center gap-2 cursor-pointer rounded-lg bg-adwaita-blue px-4 py-2 text-xs font-semibold text-white transition-colors hover:bg-adwaita-blue-hover focus:outline-none shrink-0"
+							class="inline-flex items-center justify-center cursor-pointer rounded-lg bg-adwaita-blue px-4 py-2 text-xs font-semibold text-white transition-colors hover:bg-adwaita-blue-hover focus:outline-none shrink-0"
 						>
 							Become a Sponsor
-							<i class="bi bi-arrow-right" aria-hidden="true"></i>
 						</button>
 				</div>
 			</div>
@@ -906,6 +892,6 @@
 	<footer
 		class="mx-auto w-full md:w-[45%] md:max-w-none px-6 py-12 mt-auto text-center text-xs text-adwaita-subtitle/75 border-t border-adwaita-border relative z-10"
 	>
-		<p>&copy; {new Date().getFullYear()} {name}. All rights reserved.</p>
+		<p>&copy; {new Date().getFullYear()} {name}. All rights reserved</p>
 	</footer>
 </main>
