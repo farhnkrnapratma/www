@@ -3,7 +3,7 @@
 
 @layer base {
 	html {
-		font-size: 108%;
+		font-size: 122%;
 	}
 
 	body {
@@ -14,7 +14,7 @@
 	}
 
 	.boxed-list {
-		@apply divide-y divide-adwaita-border overflow-hidden rounded-2xl border border-adwaita-border bg-adwaita-card shadow-xs transition-colors duration-300;
+		@apply divide-y divide-adwaita-border overflow-hidden rounded-2xl border border-adwaita-border bg-adwaita-card/45 shadow-xs backdrop-blur-lg transition-colors duration-300;
 	}
 
 	.action-row {
@@ -22,7 +22,6 @@
 	}
 }
 
-/* ─── Anthropic Sans Display ──────────────────────────────────── */
 @font-face {
 	font-family: 'Anthropic Sans';
 	src: url('/fonts/AnthropicSans-Display-Light-Static.otf') format('opentype');
@@ -103,7 +102,6 @@
 	font-display: swap;
 }
 
-/* ─── Anthropic Sans Text ─────────────────────────────────────── */
 @font-face {
 	font-family: 'Anthropic Sans Text';
 	src: url('/fonts/AnthropicSans-Text-Light-Static.otf') format('opentype');
@@ -184,7 +182,6 @@
 	font-display: swap;
 }
 
-/* ─── Anthropic Serif Display ─────────────────────────────────── */
 @font-face {
 	font-family: 'Anthropic Serif';
 	src: url('/fonts/AnthropicSerif-Display-Light-Static.otf') format('opentype');
@@ -281,7 +278,6 @@
 	font-display: swap;
 }
 
-/* ─── Anthropic Serif Text ────────────────────────────────────── */
 @font-face {
 	font-family: 'Anthropic Serif Text';
 	src: url('/fonts/AnthropicSerif-Text-Light-Static.otf') format('opentype');
@@ -407,7 +403,7 @@
 	--color-adwaita-card: #1e1e1e;
 	--color-adwaita-border: #303030;
 	--color-adwaita-text: #ffffff;
-	--color-adwaita-subtitle: #a0a0a0;
+	--color-adwaita-subtitle: #b8b8bc;
 	--color-adwaita-switcher-bg: rgba(48, 48, 48, 0.5);
 	--color-adwaita-switcher-active: #303030;
 	--color-adwaita-hover: rgba(255, 255, 255, 0.03);
