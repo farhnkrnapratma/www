@@ -634,11 +634,11 @@
 											href={project.licenseUrl}
 											target="_blank"
 											rel="noopener noreferrer"
-											class="flex items-center gap-1.5 text-xs font-semibold text-adwaita-subtitle hover:text-adwaita-blue transition-colors"
+											class="flex items-center gap-1.5 px-2.5 py-1 text-xs font-semibold text-adwaita-text bg-adwaita-card border border-adwaita-border rounded-lg transition-colors hover:bg-adwaita-hover hover:text-adwaita-blue whitespace-nowrap shadow-xs"
 											title="License: {project.licenseName}"
 										>
 											<span
-												class="material-symbols-rounded text-zinc-400 dark:text-zinc-500 text-[16px] leading-none select-none align-middle"
+												class="material-symbols-rounded text-[16px] leading-none select-none align-middle"
 												aria-hidden="true">license</span
 											>
 											<span>{project.licenseName} License</span>
@@ -646,10 +646,7 @@
 									{/if}
 
 									<div class="flex items-center gap-1 text-xs font-semibold text-adwaita-subtitle">
-										<i
-											class="bi bi-star-fill text-amber-600 text-[12px]"
-											aria-hidden="true"
-										></i>
+										<i class="bi bi-star-fill text-amber-600 text-[12px]" aria-hidden="true"></i>
 										{project.stars}
 									</div>
 									<i
@@ -873,11 +870,11 @@
 										href={project.licenseUrl}
 										target="_blank"
 										rel="noopener noreferrer"
-										class="flex items-center gap-1.5 text-xs font-semibold text-adwaita-subtitle hover:text-adwaita-blue transition-colors"
+										class="flex items-center gap-1.5 px-2.5 py-1 text-xs font-semibold text-adwaita-text bg-adwaita-card border border-adwaita-border rounded-lg transition-colors hover:bg-adwaita-hover hover:text-adwaita-blue whitespace-nowrap shadow-xs"
 										title="License: {project.licenseName}"
 									>
 										<span
-											class="material-symbols-rounded text-zinc-400 dark:text-zinc-500 text-[16px] leading-none select-none align-middle"
+											class="material-symbols-rounded text-[16px] leading-none select-none align-middle"
 											aria-hidden="true">license</span
 										>
 										<span>{project.licenseName} License</span>
@@ -885,10 +882,7 @@
 								{/if}
 
 								<div class="flex items-center gap-1 text-xs font-semibold text-adwaita-subtitle">
-									<i
-										class="bi bi-star-fill text-amber-600 text-[12px]"
-										aria-hidden="true"
-									></i>
+									<i class="bi bi-star-fill text-amber-600 text-[12px]" aria-hidden="true"></i>
 									{project.stars}
 								</div>
 								<i
