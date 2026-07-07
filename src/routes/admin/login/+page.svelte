@@ -43,14 +43,7 @@
 	}
 </script>
 
-<div
-	class="fixed top-0 left-0 z-50 flex h-8 w-full items-center justify-center border-b border-amber-200 bg-amber-100/75 text-xs font-bold text-amber-800 backdrop-blur-md transition-colors duration-300 dark:border-amber-900/30 dark:bg-amber-950/45 dark:text-amber-300 select-none"
->
-	<i class="bi bi-exclamation-triangle-fill" style="margin-right: 6px;" aria-hidden="true"></i>
-	Development Preview
-</div>
-
-<main class="pt-[92px] font-sans flex items-center justify-center min-h-[calc(100vh-5.75rem)]">
+<main class="pt-15 font-sans flex items-center justify-center min-h-[calc(100vh-3.75rem)]">
 	<div class="w-full max-w-sm px-6">
 		<div class="boxed-list p-6 bg-zinc-950/[0.01]">
 			<div class="text-center mb-6">

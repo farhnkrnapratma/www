@@ -15,7 +15,29 @@
 	let activeTab = $state<'editor' | 'preview'>('editor');
 	let previewHtml = $state('');
 
+	type Theme = 'auto' | 'dark' | 'light';
+	let theme = $state<Theme>('auto');
+	let themeDropdownOpen = $state(false);
+
+	function applyTheme(newTheme: Theme) {
+		theme = newTheme;
+		if (typeof window !== 'undefined') {
+			localStorage.setItem('theme', newTheme);
+			const isDark =
+				newTheme === 'dark' ||
+				(newTheme === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+			if (isDark) {
+				document.documentElement.classList.add('dark');
+			} else {
+				document.documentElement.classList.remove('dark');
+			}
+		}
+	}
+
 	onMount(async () => {
+		const saved = localStorage.getItem('theme') as Theme;
+		theme = saved || 'auto';
+
 		const { data } = await supabase.auth.getSession();
 		if (!data.session) {
 			window.location.href = '/admin/login';
@@ -101,15 +123,8 @@
 	}
 </script>
 
-<div
-	class="fixed top-0 left-0 z-50 flex h-8 w-full items-center justify-center border-b border-amber-200 bg-amber-100/75 text-xs font-bold text-amber-800 backdrop-blur-md transition-colors duration-300 dark:border-amber-900/30 dark:bg-amber-950/45 dark:text-amber-300 select-none"
->
-	<i class="bi bi-exclamation-triangle-fill" style="margin-right: 6px;" aria-hidden="true"></i>
-	Development Preview
-</div>
-
 <nav
-	class="fixed top-8 z-40 flex h-15 w-full items-center justify-between bg-adwaita-card px-5 font-sans border-b border-adwaita-border shadow-xs transition-colors duration-300"
+	class="fixed top-0 z-40 flex h-15 w-full items-center justify-between bg-adwaita-card px-5 font-sans border-b border-adwaita-border shadow-xs transition-colors duration-300"
 >
 	<a
 		href="/admin"
@@ -118,12 +133,85 @@
 		<i class="bi bi-arrow-left" style="margin-right: 8px;" aria-hidden="true"></i>
 		Cancel
 	</a>
+
 	<div class="flex items-center gap-3">
 		<span class="text-sm font-bold text-adwaita-subtitle">Write New Post</span>
+
+		<div class="relative">
+			<button
+				type="button"
+				onclick={() => (themeDropdownOpen = !themeDropdownOpen)}
+				class="flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg border border-adwaita-border bg-adwaita-card text-sm text-adwaita-text transition-colors hover:bg-adwaita-hover focus:outline-none"
+				aria-label="Change theme"
+				aria-haspopup="true"
+				aria-expanded={themeDropdownOpen}
+			>
+				{#if theme === 'auto'}
+					<i class="bi bi-circle-half" aria-hidden="true"></i>
+				{:else}
+					<i class="bi {theme === 'dark' ? 'bi-moon-stars-fill' : 'bi-sun-fill'}" aria-hidden="true"
+					></i>
+				{/if}
+			</button>
+
+			{#if themeDropdownOpen}
+				<button
+					class="fixed inset-0 z-40 cursor-default"
+					onclick={() => (themeDropdownOpen = false)}
+					aria-label="Close theme menu"
+				></button>
+				<div
+					class="absolute right-0 top-11 z-50 flex min-w-[125px] flex-col rounded-xl border border-adwaita-border bg-adwaita-card py-1.5 shadow-lg"
+				>
+					<button
+						type="button"
+						onclick={() => {
+							applyTheme('auto');
+							themeDropdownOpen = false;
+						}}
+						class="flex w-full cursor-pointer items-center gap-3 px-4 py-2.5 text-left text-xs font-bold transition-colors hover:bg-adwaita-hover {theme ===
+						'auto'
+							? 'text-adwaita-blue'
+							: 'text-adwaita-text'}"
+					>
+						<i class="bi bi-circle-half text-sm" aria-hidden="true"></i>
+						Auto
+					</button>
+					<button
+						type="button"
+						onclick={() => {
+							applyTheme('light');
+							themeDropdownOpen = false;
+						}}
+						class="flex w-full cursor-pointer items-center gap-3 px-4 py-2.5 text-left text-xs font-bold transition-colors hover:bg-adwaita-hover {theme ===
+						'light'
+							? 'text-adwaita-blue'
+							: 'text-adwaita-text'}"
+					>
+						<i class="bi bi-sun-fill text-sm" aria-hidden="true"></i>
+						Light
+					</button>
+					<button
+						type="button"
+						onclick={() => {
+							applyTheme('dark');
+							themeDropdownOpen = false;
+						}}
+						class="flex w-full cursor-pointer items-center gap-3 px-4 py-2.5 text-left text-xs font-bold transition-colors hover:bg-adwaita-hover {theme ===
+						'dark'
+							? 'text-adwaita-blue'
+							: 'text-adwaita-text'}"
+					>
+						<i class="bi bi-moon-stars-fill text-sm" aria-hidden="true"></i>
+						Dark
+					</button>
+				</div>
+			{/if}
+		</div>
 	</div>
 </nav>
 
-<main class="pt-[92px] font-sans flex flex-col min-h-[calc(100vh-5.75rem)]">
+<main class="pt-15 font-sans flex flex-col min-h-[calc(100vh-3.75rem)]">
 	{#if isCheckingAuth}
 		<div class="flex flex-col items-center justify-center py-20 text-adwaita-subtitle flex-1">
 			<i class="bi bi-hourglass-split text-3xl animate-spin mb-3" aria-hidden="true"></i>
