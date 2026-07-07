@@ -2,7 +2,6 @@
 	import { onMount } from 'svelte';
 	import type { PageProps } from './$types';
 	import hljs from 'highlight.js';
-	import StarBorder from '$lib/StarBorder.svelte';
 
 	let { data }: PageProps = $props();
 	const post = $derived(data.post);
@@ -209,10 +208,13 @@
 <nav
 	class="fixed top-0 z-40 flex h-15 w-full items-center justify-between bg-adwaita-card/60 backdrop-blur-lg px-5 font-sans border-b border-adwaita-border shadow-xs transition-colors duration-300"
 >
-	<StarBorder as="a" href="/#blogs" color="#7865d9" speed="3.5s" thickness={1}>
+	<a
+		href="/#blogs"
+		class="inline-flex h-9 items-center justify-center rounded-lg border border-adwaita-border bg-adwaita-card px-4 text-xs font-semibold text-adwaita-text transition-colors hover:bg-adwaita-hover focus:outline-none"
+	>
 		<i class="bi bi-arrow-left" style="margin-right: 8px;" aria-hidden="true"></i>
 		Back to Blog
-	</StarBorder>
+	</a>
 	<div class="flex items-center gap-3">
 		<span class="text-sm font-bold text-adwaita-subtitle hidden sm:inline">Read Post</span>
 
@@ -292,7 +294,7 @@
 
 <main class="pt-15 font-sans flex flex-col min-h-[calc(100vh-3.75rem)]">
 	<article
-		class="mx-auto w-full md:w-[45%] md:max-w-none px-6 pt-10 pb-16 md:pt-14 md:pb-28 flex-1"
+		class="mx-auto w-full md:w-[70%] lg:w-[45%] md:max-w-none px-6 pt-10 pb-16 md:pt-14 md:pb-28 flex-1"
 	>
 		<header class="mb-8 border-b border-adwaita-border pb-6">
 			<p class="text-xs font-semibold mb-2 meta-text">{formatDate(post.created_at)}</p>

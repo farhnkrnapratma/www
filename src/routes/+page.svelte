@@ -1,6 +1,5 @@
 <script lang="ts">
 	import LinkListSection from '$lib/LinkListSection.svelte';
-	import StarBorder from '$lib/StarBorder.svelte';
 	import ShinyText from '$lib/ShinyText.svelte';
 	import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
@@ -201,6 +200,16 @@
 		}
 	}
 
+	function getThemeIcon(selectedTheme = theme) {
+		if (selectedTheme === 'dark') return 'bi-moon-stars-fill';
+		if (selectedTheme === 'light') return 'bi-sun-fill';
+		return 'bi-circle-half';
+	}
+
+	function getThemeLabel(selectedTheme = theme) {
+		return selectedTheme.charAt(0).toUpperCase() + selectedTheme.slice(1);
+	}
+
 	onMount(() => {
 		const saved = localStorage.getItem('theme') as Theme;
 		applyTheme(saved || 'auto');
@@ -274,16 +283,16 @@
 {/if}
 
 <nav
-	class="fixed top-0 z-40 flex h-15 w-full items-center justify-between bg-adwaita-card md:bg-adwaita-card/60 backdrop-blur-lg px-5 font-sans border-b border-adwaita-border shadow-xs transition-colors duration-300"
+	class="fixed top-0 z-40 flex h-15 w-full items-center justify-between bg-adwaita-card md:bg-adwaita-card/60 backdrop-blur-lg px-3 sm:px-5 font-sans border-b border-adwaita-border shadow-xs transition-colors duration-300"
 >
 	<button
 		onclick={() => navigate('home')}
-		class="cursor-pointer text-base font-bold text-adwaita-text tracking-tight hover:text-adwaita-blue transition-colors"
+		class="min-w-0 max-w-[calc(100vw-5rem)] cursor-pointer truncate text-left text-base font-bold text-adwaita-text tracking-tight hover:text-adwaita-blue transition-colors sm:max-w-none"
 	>
 		{name}
 	</button>
 
-	<div class="flex items-center gap-3">
+	<div class="flex items-center gap-2 sm:gap-3">
 		<ul
 			id="mobile-menu"
 			class="fixed right-5 top-16 z-40 flex w-56 flex-col items-start gap-1 bg-adwaita-card p-2 rounded-xl border border-adwaita-border shadow-lg transition-all duration-200 origin-top-right md:static md:h-auto md:w-auto md:translate-x-0 md:flex-row md:items-center md:bg-adwaita-switcher-bg md:p-1 md:rounded-lg md:border md:border-adwaita-border md:gap-0.5 md:shadow-none md:opacity-100 md:pointer-events-auto md:scale-100"
@@ -293,6 +302,46 @@
 			class:opacity-100={menuOpen}
 			class:scale-100={menuOpen}
 		>
+			<li class="w-full md:hidden">
+				<div class="relative w-full">
+					<button
+						onclick={() => (themeDropdownOpen = !themeDropdownOpen)}
+						class="flex h-11 w-full cursor-pointer items-center justify-between rounded-lg px-4 text-sm font-semibold text-adwaita-text transition-colors hover:bg-adwaita-hover focus:outline-none"
+						aria-label="Change theme"
+						aria-haspopup="true"
+						aria-expanded={themeDropdownOpen}
+					>
+						<span class="inline-flex items-center gap-3">
+							<i class="bi {getThemeIcon()} text-sm" aria-hidden="true"></i>
+							{getThemeLabel()}
+						</span>
+						<i class="bi bi-chevron-down text-xs text-adwaita-subtitle" aria-hidden="true"></i>
+					</button>
+
+					{#if themeDropdownOpen}
+						<div
+							class="absolute left-0 right-0 top-12 z-50 flex w-full flex-col rounded-lg border border-adwaita-border bg-adwaita-card p-1 shadow-lg"
+						>
+							{#each ['auto', 'light', 'dark'] as themeOption}
+								<button
+									onclick={() => {
+										applyTheme(themeOption as Theme);
+										themeDropdownOpen = false;
+									}}
+									class="flex h-9 w-full cursor-pointer items-center gap-3 rounded-md px-3 text-left text-xs font-bold transition-colors hover:bg-adwaita-hover {theme ===
+									themeOption
+										? 'text-adwaita-blue'
+										: 'text-adwaita-text'}"
+								>
+									<i class="bi {getThemeIcon(themeOption as Theme)} text-sm" aria-hidden="true"></i>
+									{getThemeLabel(themeOption as Theme)}
+								</button>
+							{/each}
+						</div>
+					{/if}
+				</div>
+			</li>
+
 			{#each navItems as item (item.id)}
 				<li class="w-full md:w-auto">
 					<button
@@ -314,27 +363,22 @@
 		<div class="relative">
 			<button
 				onclick={() => (themeDropdownOpen = !themeDropdownOpen)}
-				class="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full text-lg text-adwaita-text transition-colors hover:bg-adwaita-hover focus:outline-none"
+				class="hidden h-10 w-10 cursor-pointer items-center justify-center rounded-full text-lg text-adwaita-text transition-colors hover:bg-adwaita-hover focus:outline-none md:flex"
 				aria-label="Change theme"
 				aria-haspopup="true"
 				aria-expanded={themeDropdownOpen}
 			>
-				{#if theme === 'auto'}
-					<i class="bi bi-circle-half" aria-hidden="true"></i>
-				{:else}
-					<i class="bi {theme === 'dark' ? 'bi-moon-stars-fill' : 'bi-sun-fill'}" aria-hidden="true"
-					></i>
-				{/if}
+				<i class="bi {getThemeIcon()}" aria-hidden="true"></i>
 			</button>
 
 			{#if themeDropdownOpen}
 				<button
-					class="fixed inset-0 z-40 cursor-default"
+					class="fixed inset-0 z-40 hidden cursor-default md:block"
 					onclick={() => (themeDropdownOpen = false)}
 					aria-label="Close theme menu"
 				></button>
 				<div
-					class="absolute right-0 top-12 z-50 flex min-w-[125px] flex-col rounded-xl border border-adwaita-border bg-adwaita-card py-1.5 shadow-lg"
+					class="absolute right-0 top-12 z-50 hidden min-w-[125px] flex-col rounded-xl border border-adwaita-border bg-adwaita-card py-1.5 shadow-lg md:flex"
 				>
 					<button
 						onclick={() => {
@@ -394,7 +438,7 @@
 <main class="pt-15 font-sans flex flex-col min-h-[calc(100vh-3.75rem)]">
 	{#if activeSection === 'home'}
 		<section
-			class="mx-auto w-full md:w-[45%] md:max-w-none px-6 pt-10 pb-24 md:pt-14 md:pb-28 flex flex-col gap-8 relative z-10"
+			class="mx-auto w-full md:w-[80%] lg:w-[55%] md:max-w-none px-6 pt-10 pb-24 md:pt-14 md:pb-28 flex flex-col gap-8 relative z-10"
 		>
 			<div
 				class="absolute top-[50px] left-[50%] -translate-x-[50%] w-[320px] h-[320px] rounded-full bg-adwaita-blue/10 blur-[80px] pointer-events-none z-0"
@@ -417,35 +461,27 @@
 				</p>
 
 				<div
-					class="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4 relative z-10 w-full"
+					class="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 relative z-10 w-full"
 				>
 					<a
 						href="/cv.pdf"
 						download="Farhan_Kurnia_Pratama_CV.pdf"
-						class="w-full sm:w-48 inline-flex items-center justify-center cursor-pointer rounded-lg bg-adwaita-blue py-2 text-sm font-semibold text-white transition-colors hover:bg-adwaita-blue-hover focus:outline-none"
+						class="w-full sm:w-48 inline-flex items-center justify-center cursor-pointer rounded-lg bg-adwaita-blue py-2 text-xs sm:text-sm font-semibold text-white transition-colors hover:bg-adwaita-blue-hover focus:outline-none whitespace-nowrap"
 					>
 						Download CV
 					</a>
-					<StarBorder
-						as="button"
+					<button
 						onclick={() => navigate('projects')}
-						color="#7865d9"
-						speed="3.5s"
-						thickness={2}
-						class="w-full sm:w-48"
+						class="w-full sm:w-48 inline-flex items-center justify-center cursor-pointer rounded-lg border border-adwaita-border bg-adwaita-card py-2 text-xs sm:text-sm font-semibold text-adwaita-text transition-colors hover:bg-adwaita-hover focus:outline-none whitespace-nowrap"
 					>
 						Browse Projects
-					</StarBorder>
-					<StarBorder
-						as="button"
+					</button>
+					<button
 						onclick={() => navigate('contacts')}
-						color="#7865d9"
-						speed="4s"
-						thickness={2}
-						class="w-full sm:w-48"
+						class="w-full sm:mt-0 sm:w-48 inline-flex items-center justify-center cursor-pointer rounded-lg border border-adwaita-border bg-adwaita-card py-2 text-xs sm:text-sm font-semibold text-adwaita-text transition-colors hover:bg-adwaita-hover focus:outline-none whitespace-nowrap"
 					>
 						Get in Touch
-					</StarBorder>
+					</button>
 				</div>
 			</div>
 
@@ -698,7 +734,7 @@
 
 	{#if activeSection === 'cv'}
 		<section
-			class="mx-auto w-full md:w-[45%] md:max-w-none px-6 pt-10 pb-24 md:pt-14 md:pb-28 relative z-10"
+			class="mx-auto w-full md:w-[80%] lg:w-[55%] md:max-w-none px-6 pt-10 pb-24 md:pt-14 md:pb-28 relative z-10"
 		>
 			<div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
 				<div>
@@ -768,7 +804,7 @@
 
 	{#if activeSection === 'blogs'}
 		<section
-			class="mx-auto w-full md:w-[45%] md:max-w-none px-6 pt-10 pb-24 md:pt-14 md:pb-28 relative z-10"
+			class="mx-auto w-full md:w-[80%] lg:w-[55%] md:max-w-none px-6 pt-10 pb-24 md:pt-14 md:pb-28 relative z-10"
 		>
 			<h1 class="text-3xl font-bold text-adwaita-text tracking-tight">Blogs</h1>
 			<p class="mt-2 text-sm text-adwaita-subtitle">
@@ -810,7 +846,7 @@
 
 	{#if activeSection === 'projects'}
 		<section
-			class="mx-auto w-full md:w-[45%] md:max-w-none px-6 pt-10 pb-24 md:pt-14 md:pb-28 relative z-10"
+			class="mx-auto w-full md:w-[80%] lg:w-[55%] md:max-w-none px-6 pt-10 pb-24 md:pt-14 md:pb-28 relative z-10"
 		>
 			<h1 class="text-3xl font-bold text-adwaita-text tracking-tight">Projects</h1>
 			<p class="mt-2 text-sm text-adwaita-subtitle">Open source work on GitHub.</p>
@@ -895,7 +931,7 @@
 	{/if}
 
 	<footer
-		class="mx-auto w-full md:w-[45%] md:max-w-none px-6 py-12 mt-auto text-center text-xs text-adwaita-subtitle/75 border-t border-adwaita-border relative z-10"
+		class="mx-auto w-full md:w-[80%] lg:w-[55%] md:max-w-none px-6 py-12 mt-auto text-center text-xs text-adwaita-subtitle/75 border-t border-adwaita-border relative z-10"
 	>
 		<p>&copy; {new Date().getFullYear()} {name}. All rights reserved</p>
 	</footer>

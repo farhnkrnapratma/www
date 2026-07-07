@@ -16,7 +16,7 @@
 </script>
 
 <section
-	class="mx-auto w-full md:w-[45%] md:max-w-none px-6 pt-10 pb-24 md:pt-14 md:pb-28 relative z-10"
+	class="mx-auto w-full md:w-[70%] lg:w-[45%] md:max-w-none px-6 pt-10 pb-24 md:pt-14 md:pb-28 relative z-10"
 >
 	<h1 class="text-3xl font-bold text-adwaita-text tracking-tight">{title}</h1>
 	<p class="mt-2 text-sm text-adwaita-subtitle">{subtitle}</p>
@@ -39,9 +39,8 @@
 					>
 				</div>
 				<div class="flex items-center justify-end gap-3 min-w-0">
-					<span class="text-sm font-medium text-adwaita-subtitle truncate">
-						<span class="sm:hidden">{item.shortValue ?? item.value}</span>
-						<span class="hidden sm:inline">{item.value}</span>
+					<span class="hidden text-sm font-medium text-adwaita-subtitle truncate sm:inline">
+						{item.value}
 					</span>
 					<i
 						class="bi bi-chevron-right text-sm text-zinc-400 opacity-80 transition-all group-hover:translate-x-0.5 group-hover:text-adwaita-blue shrink-0"

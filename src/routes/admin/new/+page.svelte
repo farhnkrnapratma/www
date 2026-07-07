@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { supabase } from '$lib/supabase';
 	import { onMount } from 'svelte';
-	import StarBorder from '$lib/StarBorder.svelte';
 	import { marked } from 'marked';
 
 	let isCheckingAuth = $state(true);
@@ -193,10 +192,13 @@
 <nav
 	class="fixed top-0 z-40 flex h-15 w-full items-center justify-between bg-adwaita-card/60 backdrop-blur-lg px-5 font-sans border-b border-adwaita-border shadow-xs transition-colors duration-300"
 >
-	<StarBorder as="a" href="/admin" color="#7865d9" speed="3.5s" thickness={1}>
+	<a
+		href="/admin"
+		class="inline-flex h-9 items-center justify-center rounded-lg border border-adwaita-border bg-adwaita-card px-4 text-xs font-semibold text-adwaita-text transition-colors hover:bg-adwaita-hover focus:outline-none"
+	>
 		<i class="bi bi-arrow-left" style="margin-right: 8px;" aria-hidden="true"></i>
 		Cancel
-	</StarBorder>
+	</a>
 
 	<div class="flex items-center gap-3">
 		<span class="text-sm font-bold text-adwaita-subtitle"
