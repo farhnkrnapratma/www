@@ -51,7 +51,7 @@
 
 			{#if errorMessage}
 				<div
-					class="p-3 mb-4 rounded-lg text-xs font-semibold bg-red-50 dark:bg-red-950/20 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-900/30"
+					class="p-3 mb-4 rounded-lg text-xs font-semibold bg-palette-coral/10 text-palette-coral border border-palette-coral/30"
 				>
 					{errorMessage}
 				</div>
@@ -86,7 +86,7 @@
 				<button
 					type="submit"
 					disabled={isSubmitting}
-					class="w-full inline-flex items-center justify-center gap-2 cursor-pointer rounded-lg bg-adwaita-blue px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#009c8f] focus:outline-none disabled:opacity-55"
+					class="w-full inline-flex items-center justify-center gap-2 cursor-pointer rounded-lg bg-adwaita-blue px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-adwaita-blue-hover focus:outline-none disabled:opacity-55"
 				>
 					{#if isSubmitting}
 						<i class="bi bi-hourglass-split text-xs animate-spin" aria-hidden="true"></i>

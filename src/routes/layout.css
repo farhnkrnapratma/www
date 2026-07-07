@@ -383,12 +383,19 @@
 	--color-adwaita-bg: #f6f5f4;
 	--color-adwaita-card: #ffffff;
 	--color-adwaita-border: #e1dfdd;
-	--color-adwaita-blue: #00b8a9;
+	--color-adwaita-blue: #7865d9;
+	--color-adwaita-blue-hover: #614ebf;
 	--color-adwaita-text: #2e3436;
 	--color-adwaita-subtitle: #5e6c70;
 	--color-adwaita-switcher-bg: rgba(225, 223, 221, 0.5);
 	--color-adwaita-switcher-active: #ffffff;
 	--color-adwaita-hover: rgba(0, 0, 0, 0.015);
+
+	--color-palette-primary: #7865d9;
+	--color-palette-green: #66d9a2;
+	--color-palette-yellow: #d9ca65;
+	--color-palette-coral: #c97a6d;
+	--color-palette-slate: #6e6c7a;
 }
 
 :root.dark {

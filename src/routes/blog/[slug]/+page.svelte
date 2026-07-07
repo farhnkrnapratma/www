@@ -248,8 +248,8 @@
 				{#if feedbackMessage}
 					<div
 						class="p-3 mb-4 rounded-lg text-sm font-semibold {feedbackMessage.type === 'success'
-							? 'bg-emerald-50 dark:bg-emerald-950/20 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-900/30'
-							: 'bg-red-50 dark:bg-red-950/20 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-900/30'}"
+							? 'bg-palette-green/10 text-palette-green border border-palette-green/30'
+							: 'bg-palette-coral/10 text-palette-coral border border-palette-coral/30'}"
 					>
 						{feedbackMessage.text}
 					</div>
@@ -288,7 +288,7 @@
 						<button
 							type="submit"
 							disabled={isSubmitting}
-							class="inline-flex items-center justify-center gap-2 cursor-pointer rounded-lg bg-adwaita-blue px-5 py-2 text-sm font-semibold text-white transition-colors hover:bg-[#009c8f] focus:outline-none disabled:opacity-55 disabled:cursor-not-allowed"
+							class="inline-flex items-center justify-center gap-2 cursor-pointer rounded-lg bg-adwaita-blue px-5 py-2 text-sm font-semibold text-white transition-colors hover:bg-adwaita-blue-hover focus:outline-none disabled:opacity-55 disabled:cursor-not-allowed"
 						>
 							{#if isSubmitting}
 								<i class="bi bi-hourglass-split text-xs animate-spin" aria-hidden="true"></i>
@@ -332,16 +332,16 @@
 		--color-heading: #111111;
 		--color-body: #222222;
 		--color-secondary: #5f6368;
-		--color-link: #2563eb;
-		--color-link-hover: #1d4ed8;
+		--color-link: #7865d9;
+		--color-link-hover: #614ebf;
 		color: var(--color-body);
 	}
 	:global(.dark .prose-custom) {
 		--color-heading: #d4d4d8;
 		--color-body: #b8b8bc;
 		--color-secondary: #8e8e93;
-		--color-link: #60a5fa;
-		--color-link-hover: #93c5fd;
+		--color-link: #9f91eb;
+		--color-link-hover: #b0a5f0;
 	}
 	:global(.prose-custom p) {
 		margin-top: 1.25rem;

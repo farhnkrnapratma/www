@@ -422,7 +422,7 @@
 					<a
 						href="/cv.pdf"
 						download="Farhan_Kurnia_Pratama_CV.pdf"
-						class="inline-flex items-center justify-center gap-2 cursor-pointer rounded-lg bg-adwaita-blue px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#009c8f] focus:outline-none"
+						class="inline-flex items-center justify-center gap-2 cursor-pointer rounded-lg bg-adwaita-blue px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-adwaita-blue-hover focus:outline-none"
 					>
 						<i class="bi bi-download" aria-hidden="true"></i>
 						Download CV
@@ -510,7 +510,7 @@
 				<div class="px-5 py-3.5 flex items-center justify-end bg-adwaita-hover/30">
 					<button
 						type="submit"
-						class="inline-flex items-center justify-center gap-2 cursor-pointer rounded-lg bg-adwaita-blue px-5 py-2 text-sm font-semibold text-white transition-colors hover:bg-[#009c8f] focus:outline-none"
+						class="inline-flex items-center justify-center gap-2 cursor-pointer rounded-lg bg-adwaita-blue px-5 py-2 text-sm font-semibold text-white transition-colors hover:bg-adwaita-blue-hover focus:outline-none"
 					>
 						<i class="bi bi-send-fill text-xs" aria-hidden="true"></i>
 						Send Message
@@ -649,7 +649,7 @@
 					</div>
 					<button
 						onclick={() => navigate('funding')}
-						class="inline-flex items-center justify-center gap-2 cursor-pointer rounded-lg bg-adwaita-blue px-4 py-2 text-xs font-semibold text-white transition-colors hover:bg-[#009c8f] focus:outline-none shrink-0"
+						class="inline-flex items-center justify-center gap-2 cursor-pointer rounded-lg bg-adwaita-blue px-4 py-2 text-xs font-semibold text-white transition-colors hover:bg-adwaita-blue-hover focus:outline-none shrink-0"
 					>
 						Become a Sponsor
 						<i class="bi bi-arrow-right" aria-hidden="true"></i>
@@ -677,7 +677,7 @@
 				<a
 					href="/cv.pdf"
 					download="Farhan_Kurnia_Pratama_CV.pdf"
-					class="inline-flex items-center justify-center gap-2 rounded-lg bg-adwaita-blue px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#009c8f] focus:outline-none"
+					class="inline-flex items-center justify-center gap-2 rounded-lg bg-adwaita-blue px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-adwaita-blue-hover focus:outline-none"
 				>
 					<i class="bi bi-download" aria-hidden="true"></i>
 					Download PDF

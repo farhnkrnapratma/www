@@ -148,7 +148,7 @@
 	<div class="flex items-center gap-2">
 		<a
 			href="/admin/new"
-			class="inline-flex h-9 items-center justify-center rounded-lg bg-adwaita-blue px-4 text-xs font-semibold text-white transition-colors hover:bg-[#009c8f] focus:outline-none"
+			class="inline-flex h-9 items-center justify-center rounded-lg bg-adwaita-blue px-4 text-xs font-semibold text-white transition-colors hover:bg-adwaita-blue-hover focus:outline-none"
 		>
 			<i class="bi bi-plus-lg mr-1.5" aria-hidden="true"></i>
 			New Post
@@ -282,12 +282,12 @@
 										>
 										{#if post.published}
 											<span
-												class="rounded bg-emerald-100 dark:bg-emerald-950/20 px-2 py-0.5 text-[10px] font-bold text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-900/30"
+												class="rounded bg-palette-green/15 px-2 py-0.5 text-[10px] font-bold text-palette-green border border-palette-green/30"
 												>Published</span
 											>
 										{:else}
 											<span
-												class="rounded bg-amber-100 dark:bg-amber-950/20 px-2 py-0.5 text-[10px] font-bold text-amber-700 dark:text-amber-400 border border-amber-200 dark:border-amber-900/30"
+												class="rounded bg-palette-yellow/15 px-2 py-0.5 text-[10px] font-bold text-palette-yellow border border-palette-yellow/30"
 												>Draft</span
 											>
 										{/if}
@@ -315,7 +315,7 @@
 									</a>
 									<button
 										onclick={() => deletePost(post)}
-										class="inline-flex h-8 items-center justify-center rounded-lg bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-900/30 px-3 text-xs font-semibold text-red-600 dark:text-red-400 transition-colors hover:bg-red-100/50 dark:hover:bg-red-950/40"
+										class="inline-flex h-8 items-center justify-center rounded-lg bg-palette-coral/10 border border-palette-coral/30 px-3 text-xs font-semibold text-palette-coral transition-colors hover:bg-palette-coral/20"
 									>
 										Delete
 									</button>
@@ -377,7 +377,7 @@
 									</button>
 									<button
 										onclick={() => deleteComment(comment.id)}
-										class="inline-flex h-8 items-center justify-center rounded-lg bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-900/30 px-3 text-xs font-semibold text-red-600 dark:text-red-400 transition-colors hover:bg-red-100/50 dark:hover:bg-red-950/40"
+										class="inline-flex h-8 items-center justify-center rounded-lg bg-palette-coral/10 border border-palette-coral/30 px-3 text-xs font-semibold text-palette-coral transition-colors hover:bg-palette-coral/20"
 									>
 										Delete
 									</button>
