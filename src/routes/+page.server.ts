@@ -10,6 +10,12 @@ interface GitHubRepo {
 	topics: string[];
 	fork: boolean;
 	archived: boolean;
+	license: {
+		key: string;
+		name: string;
+		spdx_id: string;
+		url: string;
+	} | null;
 }
 
 export interface Project {
@@ -19,6 +25,8 @@ export interface Project {
 	url: string;
 	lang: string;
 	stars: number;
+	licenseName: string | null;
+	licenseUrl: string | null;
 }
 
 const GITHUB_USERNAME = 'farhnkrnapratma';
@@ -53,7 +61,9 @@ export const load: PageServerLoad = async ({ fetch, platform }) => {
 					tags: repo.topics.length > 0 ? repo.topics : [],
 					url: repo.html_url,
 					lang: repo.language ?? 'Unknown',
-					stars: repo.stargazers_count
+					stars: repo.stargazers_count,
+					licenseName: repo.license?.spdx_id ?? null,
+					licenseUrl: repo.license ? `${repo.html_url}/blob/main/LICENSE` : null
 				}));
 		} else {
 			console.error(`GitHub API error: ${res.status} ${res.statusText}`);
@@ -70,7 +80,7 @@ export const load: PageServerLoad = async ({ fetch, platform }) => {
 			.select('*')
 			.eq('published', true)
 			.order('created_at', { ascending: false })
-			.limit(2);
+			.limit(3);
 		if (!error && data) {
 			dbPosts = data;
 		}
@@ -89,7 +99,9 @@ function getFallbackProjects(): Project[] {
 			tags: ['NixOS', 'Flake', 'Configuration'],
 			url: 'https://github.com/farhnkrnapratma/nixos',
 			lang: 'Nix',
-			stars: 0
+			stars: 0,
+			licenseName: 'MIT',
+			licenseUrl: 'https://github.com/farhnkrnapratma/nixos/blob/main/LICENSE'
 		},
 		{
 			name: 'boogeyman',
@@ -97,7 +109,9 @@ function getFallbackProjects(): Project[] {
 			tags: ['REST API', 'Unit Converter'],
 			url: 'https://github.com/farhnkrnapratma/boogeyman',
 			lang: 'Rust',
-			stars: 0
+			stars: 0,
+			licenseName: 'MIT',
+			licenseUrl: 'https://github.com/farhnkrnapratma/boogeyman/blob/main/LICENSE'
 		},
 		{
 			name: 'www',
@@ -105,7 +119,9 @@ function getFallbackProjects(): Project[] {
 			tags: ['SvelteKit', 'TailwindCSS', 'Cloudflare'],
 			url: 'https://github.com/farhnkrnapratma/www',
 			lang: 'Svelte',
-			stars: 0
+			stars: 0,
+			licenseName: 'MIT',
+			licenseUrl: 'https://github.com/farhnkrnapratma/www/blob/main/LICENSE'
 		}
 	];
 }

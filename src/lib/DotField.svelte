@@ -108,9 +108,24 @@
 			buildDots(w, h);
 		}
 
+		let isAnimating = true;
+
 		function onMouseMove(e: MouseEvent) {
 			mouse.x = e.pageX - size.offsetX;
 			mouse.y = e.pageY - size.offsetY;
+			if (!isAnimating) {
+				isAnimating = true;
+				raf = requestAnimationFrame(tick);
+			}
+		}
+
+		function onMouseLeave() {
+			mouse.x = -9999;
+			mouse.y = -9999;
+			if (!isAnimating) {
+				isAnimating = true;
+				raf = requestAnimationFrame(tick);
+			}
 		}
 
 		function updateMouseSpeed() {
@@ -133,6 +148,10 @@
 			const t = frameCount * 0.02;
 
 			const mouseActive = mouse.x > -9000 && mouse.y > -9000;
+			let needsRender = false;
+			if (mouseActive) {
+				needsRender = true;
+			}
 
 			const targetEngagement = mouseActive ? Math.min(0.2 + mouse.speed / 4, 1) : 0;
 			engagement += (targetEngagement - engagement) * 0.06;
@@ -170,9 +189,18 @@
 						d.vx += Math.cos(angle) * -move;
 						d.vy += Math.sin(angle) * -move;
 					}
+					needsRender = true;
 				} else if (bulgeOnly) {
-					d.sx += (d.ax - d.sx) * 0.04;
-					d.sy += (d.ay - d.sy) * 0.04;
+					const diffX = d.ax - d.sx;
+					const diffY = d.ay - d.sy;
+					if (Math.abs(diffX) > 0.01 || Math.abs(diffY) > 0.01) {
+						d.sx += diffX * 0.04;
+						d.sy += diffY * 0.04;
+						needsRender = true;
+					} else {
+						d.sx = d.ax;
+						d.sy = d.ay;
+					}
 				}
 
 				if (!bulgeOnly) {
@@ -180,8 +208,21 @@
 					d.vy *= 0.9;
 					d.x = d.ax + d.vx;
 					d.y = d.ay + d.vy;
-					d.sx += (d.x - d.sx) * 0.1;
-					d.sy += (d.y - d.sy) * 0.1;
+					const diffX = d.x - d.sx;
+					const diffY = d.y - d.sy;
+					if (
+						Math.abs(diffX) > 0.01 ||
+						Math.abs(diffY) > 0.01 ||
+						Math.abs(d.vx) > 0.01 ||
+						Math.abs(d.vy) > 0.01
+					) {
+						d.sx += diffX * 0.1;
+						d.sy += diffY * 0.1;
+						needsRender = true;
+					} else {
+						d.sx = d.x;
+						d.sy = d.y;
+					}
 				}
 
 				let drawX = d.sx;
@@ -189,6 +230,7 @@
 				if (waveAmplitude > 0) {
 					drawY += Math.sin(d.ax * 0.03 + t) * waveAmplitude;
 					drawX += Math.cos(d.ay * 0.03 + t * 0.7) * waveAmplitude * 0.5;
+					needsRender = true;
 				}
 
 				if (sparkle) {
@@ -200,6 +242,7 @@
 						ctx.moveTo(drawX + rad, drawY);
 						ctx.arc(drawX, drawY, rad, 0, TWO_PI);
 					}
+					needsRender = true;
 				} else {
 					ctx.moveTo(drawX + rad, drawY);
 					ctx.arc(drawX, drawY, rad, 0, TWO_PI);
@@ -208,12 +251,17 @@
 
 			ctx.fill();
 
-			raf = requestAnimationFrame(tick);
+			if (needsRender) {
+				raf = requestAnimationFrame(tick);
+			} else {
+				isAnimating = false;
+			}
 		}
 
 		doResize();
 		window.addEventListener('resize', resize);
 		window.addEventListener('mousemove', onMouseMove, { passive: true });
+		window.addEventListener('mouseleave', onMouseLeave, { passive: true });
 		raf = requestAnimationFrame(tick);
 
 		return () => {
@@ -222,6 +270,7 @@
 			clearTimeout(resizeTimer);
 			window.removeEventListener('resize', resize);
 			window.removeEventListener('mousemove', onMouseMove);
+			window.removeEventListener('mouseleave', onMouseLeave);
 		};
 	});
 </script>

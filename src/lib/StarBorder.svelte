@@ -62,6 +62,8 @@
 		border-radius: 50%;
 		animation: star-movement-bottom linear infinite alternate;
 		z-index: 0;
+		will-change: transform, opacity;
+		transform: translate3d(0, 0, 0);
 	}
 
 	.border-gradient-top {
@@ -74,6 +76,8 @@
 		border-radius: 50%;
 		animation: star-movement-top linear infinite alternate;
 		z-index: 0;
+		will-change: transform, opacity;
+		transform: translate3d(0, 0, 0);
 	}
 
 	.inner-content {
@@ -84,7 +88,7 @@
 		font-size: 0.875rem;
 		font-weight: 600;
 		text-align: center;
-		padding: 10px 20px;
+		padding: 8px 20px;
 		border-radius: 12px;
 		z-index: 1;
 		display: inline-flex;
@@ -94,8 +98,8 @@
 		width: 100%;
 		height: 100%;
 		transition:
-			background-color 0.3s,
-			border-color 0.3s;
+			background-color 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+			border-color 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 	}
 
 	.star-border-container:hover .inner-content {

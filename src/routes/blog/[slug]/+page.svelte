@@ -142,13 +142,7 @@
 <nav
 	class="fixed top-0 z-40 flex h-15 w-full items-center justify-between bg-adwaita-card/60 backdrop-blur-lg px-5 font-sans border-b border-adwaita-border shadow-xs transition-colors duration-300"
 >
-	<StarBorder
-		as="a"
-		href="/#blogs"
-		color="#7865d9"
-		speed="3.5s"
-		thickness={1}
-	>
+	<StarBorder as="a" href="/#blogs" color="#7865d9" speed="3.5s" thickness={1}>
 		<i class="bi bi-arrow-left" style="margin-right: 8px;" aria-hidden="true"></i>
 		Back to Blog
 	</StarBorder>
@@ -231,10 +225,7 @@
 
 <main class="pt-15 font-sans flex flex-col min-h-[calc(100vh-3.75rem)] relative overflow-hidden">
 	<div class="absolute inset-0 z-0 pointer-events-none select-none">
-		<DotField
-			gradientFrom="rgba(120, 101, 217, 0.55)"
-			gradientTo="rgba(120, 101, 217, 0.2)"
-		/>
+		<DotField gradientFrom="rgba(120, 101, 217, 0.55)" gradientTo="rgba(120, 101, 217, 0.2)" />
 	</div>
 
 	<article class="mx-auto w-full md:w-[45%] md:max-w-none px-6 py-16 md:py-28 flex-1 relative z-10">
