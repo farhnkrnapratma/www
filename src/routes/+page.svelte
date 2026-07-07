@@ -1,6 +1,7 @@
 <script lang="ts">
 	import LinkListSection from '$lib/LinkListSection.svelte';
 	import DotField from '$lib/DotField.svelte';
+	import StarBorder from '$lib/StarBorder.svelte';
 	import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
 
@@ -429,18 +430,24 @@
 							<i class="bi bi-download" aria-hidden="true"></i>
 							Download CV
 						</a>
-						<button
+						<StarBorder
+							as="button"
 							onclick={() => navigate('projects')}
-							class="cursor-pointer rounded-lg bg-adwaita-card border border-adwaita-border px-5 py-2.5 text-sm font-semibold text-adwaita-text transition-colors hover:bg-adwaita-hover focus:outline-none"
+							color="#7865d9"
+							speed="5s"
+							thickness={2}
 						>
 							Projects
-						</button>
-						<button
+						</StarBorder>
+						<StarBorder
+							as="button"
 							onclick={() => navigate('contacts')}
-							class="cursor-pointer rounded-lg bg-adwaita-card border border-adwaita-border px-5 py-2.5 text-sm font-semibold text-adwaita-text transition-colors hover:bg-adwaita-hover focus:outline-none"
+							color="#7865d9"
+							speed="5s"
+							thickness={2}
 						>
 							Get in Touch
-						</button>
+						</StarBorder>
 					</div>
 				</div>
 

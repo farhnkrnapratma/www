@@ -3,6 +3,7 @@
 	import type { PageProps } from './$types';
 	import hljs from 'highlight.js';
 	import DotField from '$lib/DotField.svelte';
+	import StarBorder from '$lib/StarBorder.svelte';
 
 	let { data }: PageProps = $props();
 	const post = $derived(data.post);
@@ -141,13 +142,16 @@
 <nav
 	class="fixed top-0 z-40 flex h-15 w-full items-center justify-between bg-adwaita-card/60 backdrop-blur-lg px-5 font-sans border-b border-adwaita-border shadow-xs transition-colors duration-300"
 >
-	<a
+	<StarBorder
+		as="a"
 		href="/#blogs"
-		class="inline-flex h-9 items-center justify-center rounded-lg bg-adwaita-card border border-adwaita-border px-4 text-sm font-semibold text-adwaita-text transition-colors hover:bg-adwaita-hover"
+		color="#7865d9"
+		speed="5s"
+		thickness={2}
 	>
 		<i class="bi bi-arrow-left" style="margin-right: 8px;" aria-hidden="true"></i>
 		Back to Blog
-	</a>
+	</StarBorder>
 	<div class="flex items-center gap-3">
 		<span class="text-sm font-bold text-adwaita-subtitle hidden sm:inline">Read Post</span>
 
