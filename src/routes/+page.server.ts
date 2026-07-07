@@ -70,7 +70,7 @@ export const load: PageServerLoad = async ({ fetch, platform }) => {
 			.select('*')
 			.eq('published', true)
 			.order('created_at', { ascending: false })
-			.limit(2);
+			.limit(3);
 		if (!error && data) {
 			dbPosts = data;
 		}

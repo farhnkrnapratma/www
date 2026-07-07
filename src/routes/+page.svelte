@@ -616,7 +616,7 @@
 				<div>
 					<h3 class="text-lg font-bold text-adwaita-text tracking-tight mb-4">Top Projects</h3>
 					<div class="boxed-list text-left">
-						{#each projects.slice(0, 2) as project (project.name)}
+						{#each projects.slice(0, 3) as project (project.name)}
 							<a
 								href={project.url}
 								target="_blank"
