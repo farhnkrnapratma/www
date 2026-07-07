@@ -541,7 +541,7 @@
 							id="form-message"
 							name="message"
 							required
-							rows="3"
+							rows="4"
 							placeholder="Write your message here..."
 							maxlength="1000"
 							bind:value={formMessage}
