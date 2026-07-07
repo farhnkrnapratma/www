@@ -646,11 +646,11 @@
 											href={project.licenseUrl}
 											target="_blank"
 											rel="noopener noreferrer"
-											class="flex items-center gap-1.5 px-2.5 py-1 text-xs font-semibold text-adwaita-subtitle bg-adwaita-card border border-adwaita-border rounded-lg transition-colors hover:bg-adwaita-hover hover:text-adwaita-blue whitespace-nowrap shadow-xs"
+											class="flex items-center gap-1 px-2 py-0.5 text-[11px] font-semibold text-adwaita-subtitle bg-adwaita-card border border-adwaita-border rounded-lg transition-colors hover:bg-adwaita-hover hover:text-adwaita-blue whitespace-nowrap shadow-xs"
 											title="License: {project.licenseName}"
 										>
 											<span
-												class="material-symbols-rounded text-[14px] leading-none select-none align-middle"
+												class="material-symbols-rounded text-[12px] leading-none select-none align-middle"
 												aria-hidden="true">license</span
 											>
 											<span>{project.licenseName} License</span>
@@ -884,11 +884,11 @@
 										href={project.licenseUrl}
 										target="_blank"
 										rel="noopener noreferrer"
-										class="flex items-center gap-1.5 px-2.5 py-1 text-xs font-semibold text-adwaita-subtitle bg-adwaita-card border border-adwaita-border rounded-lg transition-colors hover:bg-adwaita-hover hover:text-adwaita-blue whitespace-nowrap shadow-xs"
+										class="flex items-center gap-1 px-2 py-0.5 text-[11px] font-semibold text-adwaita-subtitle bg-adwaita-card border border-adwaita-border rounded-lg transition-colors hover:bg-adwaita-hover hover:text-adwaita-blue whitespace-nowrap shadow-xs"
 										title="License: {project.licenseName}"
 									>
 										<span
-											class="material-symbols-rounded text-[14px] leading-none select-none align-middle"
+											class="material-symbols-rounded text-[12px] leading-none select-none align-middle"
 											aria-hidden="true">license</span
 										>
 										<span>{project.licenseName} License</span>
