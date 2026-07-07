@@ -547,11 +547,13 @@
 							bind:value={formMessage}
 							class="w-full bg-transparent border-0 px-2 py-1 pr-8 text-sm text-adwaita-text placeholder:text-adwaita-subtitle/50 focus:outline-none focus:ring-2 focus:ring-adwaita-blue/50 rounded-md transition-all resize-none text-left no-scrollbar"
 						></textarea>
-						<div class="absolute right-3 bottom-2.5 pointer-events-none select-none z-10">
-							<span class="text-[10px] text-adwaita-subtitle/80 font-mono">
-								{1000 - formMessage.length}
-							</span>
-						</div>
+						{#if formMessage.length > 0}
+							<div class="absolute right-3 bottom-2.5 pointer-events-none select-none z-10">
+								<span class="text-[10px] text-adwaita-subtitle/80 font-mono">
+									{1000 - formMessage.length}
+								</span>
+							</div>
+						{/if}
 					</div>
 				</div>
 
