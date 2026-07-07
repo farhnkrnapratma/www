@@ -49,7 +49,7 @@
 		{ id: 'home', label: 'Home' },
 		{ id: 'blogs', label: 'Blogs' },
 		{ id: 'contacts', label: 'Contacts' },
-		{ id: 'cv', label: 'Curriculum Vitae' },
+		{ id: 'cv', label: 'CV' },
 		{ id: 'projects', label: 'Projects' },
 		{ id: 'funding', label: 'Funding' }
 	];
@@ -133,7 +133,7 @@
 		shortValue?: string;
 		href: string;
 		icon: string;
-		color: string;
+		color?: string;
 	}
 
 	const fundingPlatforms: FundingPlatform[] = [
@@ -141,22 +141,19 @@
 			label: 'GitHub Sponsors',
 			value: '@farhnkrnapratma',
 			href: 'https://github.com/sponsors/farhnkrnapratma',
-			icon: 'bi-heart-fill',
-			color: 'text-rose-500'
+			icon: 'bi-heart-fill'
 		},
 		{
 			label: 'Ko-fi',
 			value: '@farhnkrnapratma',
 			href: 'https://ko-fi.com/farhnkrnapratma',
-			icon: 'bi-cup-hot-fill',
-			color: 'text-amber-500'
+			icon: 'bi-cup-hot-fill'
 		},
 		{
 			label: 'Open Collective',
 			value: '@farhnkrnapratma',
 			href: 'https://opencollective.com/farhnkrnapratma',
-			icon: 'bi-people-fill',
-			color: 'text-blue-500'
+			icon: 'bi-people-fill'
 		}
 	];
 
@@ -426,13 +423,12 @@
 					<p class="mt-3 mb-2 text-lg font-medium text-adwaita-subtitle relative z-10">{headline}</p>
 					<p class="mt-4 max-w-xl text-base text-adwaita-subtitle/90 leading-relaxed relative z-10">{desc}</p>
 					
-					<div class="mt-8 flex flex-wrap justify-center gap-3 relative z-10">
+					<div class="mt-8 flex flex-wrap justify-center gap-3 relative z-10 w-full">
 						<a
 							href="/cv.pdf"
 							download="Farhan_Kurnia_Pratama_CV.pdf"
-							class="inline-flex items-center justify-center gap-2 cursor-pointer rounded-lg bg-adwaita-blue px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-adwaita-blue-hover focus:outline-none"
+							class="w-full sm:w-44 inline-flex items-center justify-center cursor-pointer rounded-lg bg-adwaita-blue py-2.5 text-sm font-semibold text-white transition-colors hover:bg-adwaita-blue-hover focus:outline-none"
 						>
-							<i class="bi bi-download" aria-hidden="true"></i>
 							Download CV
 						</a>
 						<StarBorder
@@ -441,9 +437,9 @@
 							color="#7865d9"
 							speed="3.5s"
 							thickness={1}
+							class="w-full sm:w-44"
 						>
-							<i class="bi bi-folder2-open" style="margin-right: 2px;" aria-hidden="true"></i>
-							Projects
+							Browse Projects
 						</StarBorder>
 						<StarBorder
 							as="button"
@@ -451,8 +447,8 @@
 							color="#6e6c7a"
 							speed="4s"
 							thickness={1}
+							class="w-full sm:w-44"
 						>
-							<i class="bi bi-chat-dots-fill" style="margin-right: 2px;" aria-hidden="true"></i>
 							Get in Touch
 						</StarBorder>
 					</div>
@@ -477,7 +473,7 @@
 					</div>
 
 					<div
-						class="px-5 py-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-4"
+						class="px-5 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-4 transition-colors hover:bg-adwaita-hover/5"
 					>
 						<label for="form-name" class="text-sm font-semibold text-adwaita-text sm:w-1/4 shrink-0"
 							>Name</label
@@ -488,12 +484,12 @@
 							name="name"
 							required
 							placeholder="Linus Torvalds"
-							class="w-full sm:w-3/4 px-3 py-1.5 text-sm bg-adwaita-bg border border-adwaita-border rounded-lg text-adwaita-text placeholder:text-adwaita-subtitle/70 focus:outline-none focus:border-adwaita-blue transition-colors"
+							class="w-full sm:w-3/4 bg-transparent border-0 px-0 py-1 text-sm text-adwaita-text placeholder:text-adwaita-subtitle/50 focus:outline-none focus:ring-0 text-left sm:text-right"
 						/>
 					</div>
 
 					<div
-						class="px-5 py-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-4"
+						class="px-5 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-4 transition-colors hover:bg-adwaita-hover/5"
 					>
 						<label
 							for="form-email"
@@ -505,16 +501,16 @@
 							name="email"
 							required
 							placeholder="torvalds@linux-foundation.org"
-							class="w-full sm:w-3/4 px-3 py-1.5 text-sm bg-adwaita-bg border border-adwaita-border rounded-lg text-adwaita-text placeholder:text-adwaita-subtitle/70 focus:outline-none focus:border-adwaita-blue transition-colors"
+							class="w-full sm:w-3/4 bg-transparent border-0 px-0 py-1 text-sm text-adwaita-text placeholder:text-adwaita-subtitle/50 focus:outline-none focus:ring-0 text-left sm:text-right"
 						/>
 					</div>
 
 					<div
-						class="px-5 py-3.5 flex flex-col sm:flex-row items-start justify-between gap-2 sm:gap-4"
+						class="px-5 py-4 flex flex-col sm:flex-row items-start justify-between gap-2 sm:gap-4 transition-colors hover:bg-adwaita-hover/5"
 					>
 						<label
 							for="form-message"
-							class="text-sm font-semibold text-adwaita-text sm:w-1/4 shrink-0 mt-1.5"
+							class="text-sm font-semibold text-adwaita-text sm:w-1/4 shrink-0 mt-1"
 							>Message</label
 						>
 						<textarea
@@ -523,16 +519,15 @@
 							required
 							rows="3"
 							placeholder="Write your message here..."
-							class="w-full sm:w-3/4 px-3 py-1.5 text-sm bg-adwaita-bg border border-adwaita-border rounded-lg text-adwaita-text placeholder:text-adwaita-subtitle/70 focus:outline-none focus:border-adwaita-blue transition-colors resize-none"
+							class="w-full sm:w-3/4 bg-transparent border-0 px-0 py-1 text-sm text-adwaita-text placeholder:text-adwaita-subtitle/50 focus:outline-none focus:ring-0 resize-none text-left sm:text-right"
 						></textarea>
 					</div>
 
 					<div class="px-5 py-3.5 flex items-center justify-end bg-adwaita-hover/30">
 						<button
 							type="submit"
-							class="inline-flex items-center justify-center gap-2 cursor-pointer rounded-lg bg-adwaita-blue px-5 py-2 text-sm font-semibold text-white transition-colors hover:bg-adwaita-blue-hover focus:outline-none"
+							class="inline-flex items-center justify-center cursor-pointer rounded-lg bg-adwaita-blue px-5 py-2 text-sm font-semibold text-white transition-colors hover:bg-adwaita-blue-hover focus:outline-none"
 						>
-							<i class="bi bi-send-fill text-xs" aria-hidden="true"></i>
 							Send Message
 						</button>
 					</div>
@@ -699,15 +694,14 @@
 				<a
 					href="/cv.pdf"
 					download="Farhan_Kurnia_Pratama_CV.pdf"
-					class="inline-flex items-center justify-center gap-2 rounded-lg bg-adwaita-blue px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-adwaita-blue-hover focus:outline-none"
+					class="inline-flex items-center justify-center rounded-lg bg-adwaita-blue px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-adwaita-blue-hover focus:outline-none"
 				>
-					<i class="bi bi-download" aria-hidden="true"></i>
 					Download PDF
 				</a>
 			</div>
 
 			<div class="mt-10">
-				<h2 class="text-xs font-bold uppercase tracking-widest text-adwaita-subtitle">
+				<h2 class="text-sm font-bold text-adwaita-subtitle">
 					Experience
 				</h2>
 				<div class="mt-4 boxed-list">
@@ -727,7 +721,7 @@
 			</div>
 
 			<div class="mt-10">
-				<h2 class="text-xs font-bold uppercase tracking-widest text-adwaita-subtitle">Education</h2>
+				<h2 class="text-sm font-bold text-adwaita-subtitle">Education</h2>
 				<div class="mt-4 boxed-list">
 					{#each education as edu (`${edu.degree}-${edu.university}`)}
 						<div class="px-6 py-5 flex flex-col gap-1.5 hover:bg-zinc-950/1.5 transition-all">
@@ -745,7 +739,7 @@
 			</div>
 
 			<div class="mt-10">
-				<h2 class="text-xs font-bold uppercase tracking-widest text-adwaita-subtitle">Skills</h2>
+				<h2 class="text-sm font-bold text-adwaita-subtitle">Skills</h2>
 				<div class="mt-4 flex flex-wrap gap-2">
 					{#each skills as group (group.category)}
 						<span
@@ -860,7 +854,7 @@
 	{#if activeSection === 'funding'}
 		<LinkListSection
 			title="Supporting & Funding"
-			subtitle="If you find my open-source work helpful, consider supporting me through these platforms."
+			subtitle="Support open-source development and maintenance through these platforms."
 			items={fundingPlatforms}
 		/>
 	{/if}
