@@ -411,18 +411,22 @@
 		<section
 			class="mx-auto w-full md:w-[45%] md:max-w-none px-6 py-16 md:py-28 flex flex-col gap-16 relative z-10"
 		>
-			<div class="flex flex-col items-center justify-center text-center">
+			<!-- Soft radial background glow behind profile -->
+			<div class="absolute top-[50px] left-[50%] -translate-x-[50%] w-[320px] h-[320px] rounded-full bg-adwaita-blue/10 blur-[80px] pointer-events-none z-0"></div>
+
+			<div class="flex flex-col items-center justify-center text-center relative z-10">
 					<img
 						src="/android-chrome-512x512.png"
 						alt="Farhan Kurnia Pratama"
-						class="mb-6 h-28 w-28 rounded-full object-cover object-top border border-adwaita-border shadow-xs"
+						class="mb-6 h-28 w-28 rounded-full object-cover object-top border-2 border-adwaita-blue shadow-[0_0_20px_rgba(120,101,217,0.25)] dark:shadow-[0_0_25px_rgba(120,101,217,0.35)] transition-all duration-300 relative z-10"
 					/>
-					<h1 class="text-4xl font-bold text-adwaita-text md:text-5xl lg:text-6xl tracking-tight">
+					<h1 class="text-4xl font-bold text-adwaita-text md:text-5xl lg:text-6xl tracking-tight md:whitespace-nowrap relative z-10">
 						{name}
 					</h1>
-					<p class="mt-3 text-lg font-medium text-adwaita-subtitle">{headline}</p>
-					<p class="mt-4 max-w-xl text-base text-adwaita-subtitle/90 leading-relaxed">{desc}</p>
-					<div class="mt-8 flex flex-wrap justify-center gap-3">
+					<p class="mt-3 mb-2 text-lg font-medium text-adwaita-subtitle relative z-10">{headline}</p>
+					<p class="mt-4 max-w-xl text-base text-adwaita-subtitle/90 leading-relaxed relative z-10">{desc}</p>
+					
+					<div class="mt-8 flex flex-wrap justify-center gap-3 relative z-10">
 						<a
 							href="/cv.pdf"
 							download="Farhan_Kurnia_Pratama_CV.pdf"
@@ -438,17 +442,54 @@
 							speed="3.5s"
 							thickness={1}
 						>
+							<i class="bi bi-folder2-open" style="margin-right: 2px;" aria-hidden="true"></i>
 							Projects
 						</StarBorder>
 						<StarBorder
 							as="button"
 							onclick={() => navigate('contacts')}
-							color="#7865d9"
-							speed="3.5s"
+							color="#6e6c7a"
+							speed="4s"
 							thickness={1}
 						>
+							<i class="bi bi-chat-dots-fill" style="margin-right: 2px;" aria-hidden="true"></i>
 							Get in Touch
 						</StarBorder>
+					</div>
+
+					<!-- Social Links Row -->
+					<div class="mt-8 flex items-center justify-center gap-6 text-xl relative z-10">
+						<a
+							href="https://github.com/farhnkrnapratma"
+							target="_blank"
+							rel="noopener noreferrer"
+							class="text-adwaita-subtitle hover:text-adwaita-blue transition-colors"
+							aria-label="GitHub Profile"
+						>
+							<i class="bi bi-github" aria-hidden="true"></i>
+						</a>
+						<a
+							href="https://linkedin.com/in/farhnkrnapratma"
+							target="_blank"
+							rel="noopener noreferrer"
+							class="text-adwaita-subtitle hover:text-adwaita-blue transition-colors"
+							aria-label="LinkedIn Profile"
+						>
+							<i class="bi bi-linkedin" aria-hidden="true"></i>
+						</a>
+						<a
+							href="mailto:contact@fkp.my.id"
+							class="text-adwaita-subtitle hover:text-adwaita-blue transition-colors"
+							aria-label="Email Me"
+						>
+							<i class="bi bi-envelope-fill" aria-hidden="true"></i>
+						</a>
+					</div>
+
+					<!-- Animated Scroll Indicator -->
+					<div class="mt-10 flex flex-col items-center justify-center gap-1.5 animate-bounce opacity-75 relative z-10">
+						<span class="text-[9px] font-bold uppercase tracking-widest text-adwaita-subtitle">Scroll Down</span>
+						<i class="bi bi-chevron-down text-xs text-adwaita-subtitle" aria-hidden="true"></i>
 					</div>
 				</div>
 

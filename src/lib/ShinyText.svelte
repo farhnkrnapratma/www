@@ -83,7 +83,7 @@
 		animation-play-state: paused;
 	}
 
-	@keyframes shiny-text-left {
+	@keyframes -global-shiny-text-left {
 		0% {
 			background-position: 150% center;
 		}
@@ -92,7 +92,7 @@
 		}
 	}
 
-	@keyframes shiny-text-right {
+	@keyframes -global-shiny-text-right {
 		0% {
 			background-position: -50% center;
 		}
