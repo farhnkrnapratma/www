@@ -404,7 +404,9 @@
 
 <main class="pt-15 font-sans flex flex-col min-h-[calc(100vh-3.75rem)]">
 	{#if activeSection === 'home'}
-		<section class="mx-auto max-w-3xl px-6 py-12 md:py-20 flex flex-col gap-12">
+		<section
+			class="mx-auto w-full md:w-[60%] md:max-w-none px-6 py-12 md:py-20 flex flex-col gap-12"
+		>
 			<div class="flex flex-col items-center justify-center text-center">
 				<img
 					src="/android-chrome-512x512.png"
@@ -666,7 +668,7 @@
 	{/if}
 
 	{#if activeSection === 'cv'}
-		<section class="mx-auto max-w-3xl px-6 py-20">
+		<section class="mx-auto w-full md:w-[60%] md:max-w-none px-6 py-20">
 			<div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
 				<div>
 					<h1 class="text-3xl font-bold text-adwaita-text tracking-tight">Curriculum Vitae</h1>
@@ -737,7 +739,7 @@
 	{/if}
 
 	{#if activeSection === 'blogs'}
-		<section class="mx-auto max-w-3xl px-6 py-20">
+		<section class="mx-auto w-full md:w-[60%] md:max-w-none px-6 py-20">
 			<h1 class="text-3xl font-bold text-adwaita-text tracking-tight">Blogs</h1>
 			<p class="mt-2 text-sm text-adwaita-subtitle">
 				Thoughts on Linux, security, and open source.
@@ -777,7 +779,7 @@
 	{/if}
 
 	{#if activeSection === 'projects'}
-		<section class="mx-auto max-w-3xl px-6 py-20">
+		<section class="mx-auto w-full md:w-[60%] md:max-w-none px-6 py-20">
 			<h1 class="text-3xl font-bold text-adwaita-text tracking-tight">Projects</h1>
 			<p class="mt-2 text-sm text-adwaita-subtitle">Open source work on GitHub.</p>
 			<div class="mt-10 boxed-list">
@@ -842,7 +844,7 @@
 	{/if}
 
 	<footer
-		class="mx-auto w-full max-w-3xl px-6 py-8 mt-auto text-center text-xs text-adwaita-subtitle/75 border-t border-adwaita-border"
+		class="mx-auto w-full md:w-[60%] md:max-w-none px-6 py-8 mt-auto text-center text-xs text-adwaita-subtitle/75 border-t border-adwaita-border"
 	>
 		<p>&copy; {new Date().getFullYear()} {name}. All rights reserved.</p>
 	</footer>
