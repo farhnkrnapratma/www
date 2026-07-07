@@ -162,8 +162,8 @@
 						const factor = 1 - dist / cursorRadius;
 						const push = factor * factor * bulgeStrength;
 						const angle = Math.atan2(dy, dx);
-						d.sx += (d.ax - Math.cos(angle) * push - d.sx) * 0.15;
-						d.sy += (d.ay - Math.sin(angle) * push - d.sy) * 0.15;
+						d.sx += (d.ax - Math.cos(angle) * push - d.sx) * 0.06;
+						d.sy += (d.ay - Math.sin(angle) * push - d.sy) * 0.06;
 					} else {
 						const angle = Math.atan2(dy, dx);
 						const move = (500 / dist) * (mouse.speed * cursorForce);
@@ -171,8 +171,8 @@
 						d.vy += Math.sin(angle) * -move;
 					}
 				} else if (bulgeOnly) {
-					d.sx += (d.ax - d.sx) * 0.1;
-					d.sy += (d.ay - d.sy) * 0.1;
+					d.sx += (d.ax - d.sx) * 0.04;
+					d.sy += (d.ay - d.sy) * 0.04;
 				}
 
 				if (!bulgeOnly) {
