@@ -406,7 +406,7 @@
 
 	{#if activeSection === 'home'}
 		<section
-			class="mx-auto w-full md:w-[45%] md:max-w-none px-6 py-16 md:py-28 flex flex-col gap-8 relative z-10"
+			class="mx-auto w-full md:w-[45%] md:max-w-none px-6 pt-10 pb-24 md:pt-14 md:pb-28 flex flex-col gap-8 relative z-10"
 		>
 			<!-- Soft radial background glow behind profile -->
 			<div class="absolute top-[50px] left-[50%] -translate-x-[50%] w-[320px] h-[320px] rounded-full bg-adwaita-blue/10 blur-[80px] pointer-events-none z-0"></div>
@@ -685,7 +685,7 @@
 	{/if}
 
 	{#if activeSection === 'cv'}
-		<section class="mx-auto w-full md:w-[45%] md:max-w-none px-6 py-24 relative z-10">
+		<section class="mx-auto w-full md:w-[45%] md:max-w-none px-6 pt-10 pb-24 md:pt-14 md:pb-28 relative z-10">
 			<div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
 				<div>
 					<h1 class="text-3xl font-bold text-adwaita-text tracking-tight">Curriculum Vitae</h1>
@@ -755,7 +755,7 @@
 	{/if}
 
 	{#if activeSection === 'blogs'}
-		<section class="mx-auto w-full md:w-[45%] md:max-w-none px-6 py-24 relative z-10">
+		<section class="mx-auto w-full md:w-[45%] md:max-w-none px-6 pt-10 pb-24 md:pt-14 md:pb-28 relative z-10">
 			<h1 class="text-3xl font-bold text-adwaita-text tracking-tight">Blogs</h1>
 			<p class="mt-2 text-sm text-adwaita-subtitle">
 				Thoughts on Linux, security, and open source.
@@ -795,7 +795,7 @@
 	{/if}
 
 	{#if activeSection === 'projects'}
-		<section class="mx-auto w-full md:w-[45%] md:max-w-none px-6 py-24 relative z-10">
+		<section class="mx-auto w-full md:w-[45%] md:max-w-none px-6 pt-10 pb-24 md:pt-14 md:pb-28 relative z-10">
 			<h1 class="text-3xl font-bold text-adwaita-text tracking-tight">Projects</h1>
 			<p class="mt-2 text-sm text-adwaita-subtitle">Open source work on GitHub.</p>
 			<div class="mt-10 boxed-list">
