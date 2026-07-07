@@ -268,14 +268,14 @@
 
 {#if menuOpen}
 	<button
-		class="fixed inset-0 z-30 bg-zinc-950/20 backdrop-blur-xs md:hidden"
+		class="fixed inset-0 z-30 bg-transparent md:hidden"
 		onclick={() => (menuOpen = false)}
 		aria-label="Close menu"
 	></button>
 {/if}
 
 <nav
-	class="fixed top-0 z-40 flex h-15 w-full items-center justify-between bg-adwaita-card/60 backdrop-blur-lg px-5 font-sans border-b border-adwaita-border shadow-xs transition-colors duration-300"
+	class="fixed top-0 z-40 flex h-15 w-full items-center justify-between bg-adwaita-card md:bg-adwaita-card/60 backdrop-blur-lg px-5 font-sans border-b border-adwaita-border shadow-xs transition-colors duration-300"
 >
 	<button
 		onclick={() => navigate('home')}
@@ -287,24 +287,20 @@
 	<div class="flex items-center gap-3">
 		<ul
 			id="mobile-menu"
-			class="fixed right-0 top-0 z-40 flex h-full w-64 flex-col items-start gap-1 bg-adwaita-card px-4 pt-4 shadow-xl border-l border-adwaita-border transition-transform duration-300 ease-in-out md:static md:h-auto md:w-auto md:translate-x-0 md:flex-row md:items-center md:bg-adwaita-switcher-bg md:p-1 md:rounded-lg md:border md:border-adwaita-border md:gap-0.5 md:shadow-none"
-			class:translate-x-full={!menuOpen}
-			class:translate-x-0={menuOpen}
+			class="fixed right-5 top-16 z-40 flex w-56 flex-col items-start gap-1 bg-adwaita-card p-2 rounded-xl border border-adwaita-border shadow-lg transition-all duration-200 origin-top-right md:static md:h-auto md:w-auto md:translate-x-0 md:flex-row md:items-center md:bg-adwaita-switcher-bg md:p-1 md:rounded-lg md:border md:border-adwaita-border md:gap-0.5 md:shadow-none"
+			class:opacity-0={!menuOpen}
+			class:scale-95={!menuOpen}
+			class:pointer-events-none={!menuOpen}
+			class:opacity-100={menuOpen}
+			class:scale-100={menuOpen}
 		>
-			<li class="mb-2 flex w-full items-center justify-end md:hidden">
-				<button
-					onclick={() => (menuOpen = false)}
-					aria-label="Close menu"
-					class="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full text-xl transition-colors hover:bg-adwaita-hover"
-				>
-					<i class="bi bi-x-lg text-adwaita-text" aria-hidden="true"></i>
-				</button>
-			</li>
-
 			{#each navItems as item (item.id)}
 				<li class="w-full md:w-auto">
 					<button
-						onclick={() => navigate(item.id)}
+						onclick={() => {
+							navigate(item.id);
+							menuOpen = false;
+						}}
 						class="flex w-full cursor-pointer whitespace-nowrap items-center justify-start md:justify-center rounded-lg border-0 px-4 h-11 text-sm font-medium leading-none outline-none focus:outline-none active:outline-none transition-all md:rounded-md md:px-3.5 md:h-7.5 {activeSection ===
 						item.id
 							? 'bg-adwaita-blue text-white hover:bg-adwaita-blue/90 md:bg-adwaita-switcher-active md:text-adwaita-blue md:shadow-xs md:hover:bg-adwaita-switcher-active font-semibold'
@@ -423,7 +419,7 @@
 					<p class="mt-3 mb-2 text-lg font-medium text-adwaita-subtitle relative z-10">{headline}</p>
 					<p class="mt-4 max-w-xl text-base text-adwaita-subtitle/90 leading-relaxed relative z-10">{desc}</p>
 					
-					<div class="mt-8 flex flex-wrap justify-center gap-3 relative z-10 w-full">
+					<div class="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4 relative z-10 w-full">
 						<a
 							href="/cv.pdf"
 							download="Farhan_Kurnia_Pratama_CV.pdf"
