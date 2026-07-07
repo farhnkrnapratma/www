@@ -88,7 +88,7 @@
 		font-size: 0.875rem;
 		font-weight: 600;
 		text-align: center;
-		padding: 10px 20px;
+		padding: 8px 20px;
 		border-radius: 12px;
 		z-index: 1;
 		display: inline-flex;

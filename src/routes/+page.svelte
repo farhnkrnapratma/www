@@ -427,7 +427,7 @@
 						<a
 							href="/cv.pdf"
 							download="Farhan_Kurnia_Pratama_CV.pdf"
-							class="w-full sm:w-44 inline-flex items-center justify-center cursor-pointer rounded-lg bg-adwaita-blue py-2.5 text-sm font-semibold text-white transition-colors hover:bg-adwaita-blue-hover focus:outline-none"
+							class="w-full sm:w-48 inline-flex items-center justify-center cursor-pointer rounded-lg bg-adwaita-blue py-2 text-sm font-semibold text-white transition-colors hover:bg-adwaita-blue-hover focus:outline-none"
 						>
 							Download CV
 						</a>
@@ -437,7 +437,7 @@
 							color="#7865d9"
 							speed="3.5s"
 							thickness={1}
-							class="w-full sm:w-44"
+							class="w-full sm:w-48"
 						>
 							Browse Projects
 						</StarBorder>
@@ -447,7 +447,7 @@
 							color="#6e6c7a"
 							speed="4s"
 							thickness={1}
-							class="w-full sm:w-44"
+							class="w-full sm:w-48"
 						>
 							Get in Touch
 						</StarBorder>
