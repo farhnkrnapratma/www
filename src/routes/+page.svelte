@@ -186,12 +186,11 @@
 	let themeDropdownOpen = $state(false);
 
 	function navigate(section: Section) {
-		if (section === 'blogs') {
-			goto('/blog');
-			return;
-		}
 		activeSection = section;
 		menuOpen = false;
+		if (typeof window !== 'undefined') {
+			window.location.hash = section === 'home' ? '' : section;
+		}
 	}
 
 	function applyTheme(newTheme: Theme) {
@@ -220,7 +219,22 @@
 			}
 		};
 		media.addEventListener('change', listener);
-		return () => media.removeEventListener('change', listener);
+
+		const handleHashChange = () => {
+			if (typeof window !== 'undefined' && window.location.hash) {
+				const hash = window.location.hash.substring(1) as Section;
+				if (['home', 'blogs', 'contacts', 'cv', 'projects', 'funding'].includes(hash)) {
+					activeSection = hash;
+				}
+			}
+		};
+		handleHashChange();
+		window.addEventListener('hashchange', handleHashChange);
+
+		return () => {
+			media.removeEventListener('change', listener);
+			window.removeEventListener('hashchange', handleHashChange);
+		};
 	});
 </script>
 
@@ -266,15 +280,8 @@
 	></button>
 {/if}
 
-<div
-	class="fixed top-0 left-0 z-50 flex h-8 w-full items-center justify-center border-b border-amber-200 bg-amber-100/75 text-xs font-bold text-amber-800 backdrop-blur-md transition-colors duration-300 dark:border-amber-900/30 dark:bg-amber-950/45 dark:text-amber-300 select-none"
->
-	<i class="bi bi-exclamation-triangle-fill" style="margin-right: 6px;" aria-hidden="true"></i>
-	Development Preview
-</div>
-
 <nav
-	class="fixed top-8 z-40 flex h-15 w-full items-center justify-between bg-adwaita-card px-5 font-sans border-b border-adwaita-border shadow-xs transition-colors duration-300"
+	class="fixed top-0 z-40 flex h-15 w-full items-center justify-between bg-adwaita-card px-5 font-sans border-b border-adwaita-border shadow-xs transition-colors duration-300"
 >
 	<button
 		onclick={() => navigate('home')}
@@ -395,7 +402,7 @@
 	</div>
 </nav>
 
-<main class="pt-[92px] font-sans flex flex-col min-h-[calc(100vh-5.75rem)]">
+<main class="pt-15 font-sans flex flex-col min-h-[calc(100vh-3.75rem)]">
 	{#if activeSection === 'home'}
 		<section class="mx-auto max-w-3xl px-6 py-12 md:py-20 flex flex-col gap-12">
 			<div class="flex flex-col items-center justify-center text-center">
@@ -725,6 +732,46 @@
 						</span>
 					{/each}
 				</div>
+			</div>
+		</section>
+	{/if}
+
+	{#if activeSection === 'blogs'}
+		<section class="mx-auto max-w-3xl px-6 py-20">
+			<h1 class="text-3xl font-bold text-adwaita-text tracking-tight">Blogs</h1>
+			<p class="mt-2 text-sm text-adwaita-subtitle">
+				Thoughts on Linux, security, and open source.
+			</p>
+			<div class="mt-10 boxed-list">
+				{#if posts.length === 0}
+					<div class="p-8 text-center text-adwaita-subtitle">
+						<i class="bi bi-journal-x text-3xl block mb-2 opacity-60" aria-hidden="true"></i>
+						No blog posts published yet.
+					</div>
+				{:else}
+					{#each posts as post (post.id)}
+						<a
+							href="/blog/{post.slug}"
+							class="action-row w-full text-left group cursor-pointer flex items-center justify-between"
+						>
+							<div class="flex flex-col gap-1 pr-6 font-sans">
+								<p class="text-xs font-semibold text-adwaita-subtitle">{getPostDate(post)}</p>
+								<h2
+									class="text-base font-bold text-adwaita-text group-hover:text-adwaita-blue transition-colors"
+								>
+									{post.title}
+								</h2>
+								{#if post.excerpt}
+									<p class="mt-1.5 text-sm text-adwaita-subtitle line-clamp-2">{post.excerpt}</p>
+								{/if}
+							</div>
+							<i
+								class="bi bi-chevron-right text-sm text-zinc-400 group-hover:text-adwaita-blue transition-all group-hover:translate-x-0.5"
+								aria-hidden="true"
+							></i>
+						</a>
+					{/each}
+				{/if}
 			</div>
 		</section>
 	{/if}
