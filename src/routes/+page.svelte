@@ -2,6 +2,7 @@
 	import LinkListSection from '$lib/LinkListSection.svelte';
 	import DotField from '$lib/DotField.svelte';
 	import StarBorder from '$lib/StarBorder.svelte';
+	import ShinyText from '$lib/ShinyText.svelte';
 	import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
 
@@ -650,7 +651,14 @@
 								aria-hidden="true"
 							></i>
 							<div>
-								<h4 class="text-sm font-bold text-adwaita-text">Support My Open Source Work</h4>
+								<h4 class="text-sm font-bold">
+									<ShinyText
+										text="Support My Open Source Work"
+										color="#7865d9"
+										shineColor="#ffffff"
+										speed={1.5}
+									/>
+								</h4>
 								<p class="text-xs text-adwaita-subtitle mt-0.5 leading-relaxed">
 									If you find my open-source projects and tools helpful, please consider supporting
 									me. Your backing directly contributes to the development and maintenance of these
