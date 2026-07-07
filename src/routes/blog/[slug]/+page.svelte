@@ -1,14 +1,37 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
 	import type { PageProps } from './$types';
+	import hljs from 'highlight.js';
 
 	let { data }: PageProps = $props();
 	const post = $derived(data.post);
 	const html = $derived(data.html);
 
 	let comments = $state<any[]>([]);
+	let isDark = $state(false);
 
 	$effect(() => {
 		comments = [...data.comments];
+	});
+
+	onMount(() => {
+		isDark = document.documentElement.classList.contains('dark');
+
+		const observer = new MutationObserver(() => {
+			isDark = document.documentElement.classList.contains('dark');
+			setTimeout(() => {
+				hljs.highlightAll();
+			}, 50);
+		});
+
+		observer.observe(document.documentElement, {
+			attributes: true,
+			attributeFilter: ['class']
+		});
+
+		hljs.highlightAll();
+
+		return () => observer.disconnect();
 	});
 
 	let authorName = $state('');
@@ -74,6 +97,20 @@
 	}
 </script>
 
+<svelte:head>
+	{#if isDark}
+		<link
+			rel="stylesheet"
+			href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css"
+		/>
+	{:else}
+		<link
+			rel="stylesheet"
+			href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css"
+		/>
+	{/if}
+</svelte:head>
+
 <nav
 	class="fixed top-0 z-40 flex h-15 w-full items-center justify-between bg-adwaita-card px-5 font-sans border-b border-adwaita-border shadow-xs transition-colors duration-300"
 >
@@ -92,7 +129,7 @@
 <main class="pt-15 font-sans flex flex-col min-h-[calc(100vh-3.75rem)]">
 	<article class="mx-auto w-full md:w-[50%] md:max-w-none px-6 py-12 md:py-20 flex-1">
 		<header class="mb-8 border-b border-adwaita-border pb-6">
-			<p class="text-xs font-semibold text-adwaita-subtitle mb-2">{formatDate(post.created_at)}</p>
+			<p class="text-xs font-semibold mb-2 meta-text">{formatDate(post.created_at)}</p>
 			<h1
 				class="text-3xl font-extrabold text-adwaita-text md:text-4xl tracking-tight leading-tight"
 			>
@@ -177,11 +214,11 @@
 						<div class="px-5 py-4 border-b border-adwaita-border/40 last:border-b-0">
 							<div class="flex items-center justify-between gap-4 mb-1">
 								<h4 class="text-sm font-bold text-adwaita-text">{comment.author_name}</h4>
-								<span class="text-[10px] font-semibold text-adwaita-subtitle">
+								<span class="text-[10px] font-semibold meta-text">
 									{formatDate(comment.created_at)}
 								</span>
 							</div>
-							<p class="text-sm text-adwaita-subtitle leading-relaxed">{comment.content}</p>
+							<p class="text-sm leading-relaxed secondary-text">{comment.content}</p>
 						</div>
 					{/each}
 				</div>
@@ -192,33 +229,54 @@
 
 <style>
 	:global(.prose-custom) {
-		color: var(--color-adwaita-text);
+		font-family: 'Anthropic Sans', ui-sans-serif, system-ui, sans-serif;
 		line-height: 1.7;
+		--color-heading: #111111;
+		--color-body: #222222;
+		--color-secondary: #5f6368;
+		--color-link: #2563eb;
+		--color-link-hover: #1d4ed8;
+		color: var(--color-body);
+	}
+	:global(.dark .prose-custom) {
+		--color-heading: #f5f5f5;
+		--color-body: #e4e4e7;
+		--color-secondary: #a1a1aa;
+		--color-link: #60a5fa;
+		--color-link-hover: #93c5fd;
 	}
 	:global(.prose-custom p) {
 		margin-top: 1.25rem;
 		margin-bottom: 1.25rem;
+		color: var(--color-body);
+	}
+	:global(
+		.prose-custom h1,
+		.prose-custom h2,
+		.prose-custom h3,
+		.prose-custom h4,
+		.prose-custom h5,
+		.prose-custom h6
+	) {
+		color: var(--color-heading);
 	}
 	:global(.prose-custom h1) {
 		font-size: 1.875rem;
 		font-weight: 800;
 		margin-top: 2rem;
 		margin-bottom: 1rem;
-		color: var(--color-adwaita-text);
 	}
 	:global(.prose-custom h2) {
 		font-size: 1.5rem;
 		font-weight: 700;
 		margin-top: 1.75rem;
 		margin-bottom: 0.75rem;
-		color: var(--color-adwaita-text);
 	}
 	:global(.prose-custom h3) {
 		font-size: 1.25rem;
 		font-weight: 600;
 		margin-top: 1.5rem;
 		margin-bottom: 0.5rem;
-		color: var(--color-adwaita-text);
 	}
 	:global(.prose-custom ul) {
 		margin-top: 1rem;
@@ -257,7 +315,22 @@
 		padding: 0;
 	}
 	:global(.prose-custom a) {
-		color: var(--color-adwaita-blue);
+		color: var(--color-link);
 		text-decoration: underline;
+	}
+	:global(.prose-custom a:hover) {
+		color: var(--color-link-hover);
+	}
+	.meta-text {
+		color: #7a7a7a;
+	}
+	:global(.dark) .meta-text {
+		color: #8a8a8a;
+	}
+	.secondary-text {
+		color: #5f6368;
+	}
+	:global(.dark) .secondary-text {
+		color: #a1a1aa;
 	}
 </style>

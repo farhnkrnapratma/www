@@ -307,6 +307,12 @@
 									>
 										{post.published ? 'Unpublish' : 'Publish'}
 									</button>
+									<a
+										href="/admin/new?id={post.id}"
+										class="inline-flex h-8 items-center justify-center rounded-lg bg-adwaita-card border border-adwaita-border px-3 text-xs font-semibold text-adwaita-text transition-colors hover:bg-adwaita-hover"
+									>
+										Edit
+									</a>
 									<button
 										onclick={() => deletePost(post)}
 										class="inline-flex h-8 items-center justify-center rounded-lg bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-900/30 px-3 text-xs font-semibold text-red-600 dark:text-red-400 transition-colors hover:bg-red-100/50 dark:hover:bg-red-950/40"

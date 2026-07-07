@@ -15,6 +15,10 @@
 	let activeTab = $state<'editor' | 'preview'>('editor');
 	let previewHtml = $state('');
 
+	let isEditMode = $state(false);
+	let editId = $state<string | null>(null);
+	let originalSlug = '';
+
 	type Theme = 'auto' | 'dark' | 'light';
 	let theme = $state<Theme>('auto');
 	let themeDropdownOpen = $state(false);
@@ -38,16 +42,53 @@
 		const saved = localStorage.getItem('theme') as Theme;
 		theme = saved || 'auto';
 
-		const { data } = await supabase.auth.getSession();
-		if (!data.session) {
+		const { data: sessionData } = await supabase.auth.getSession();
+		if (!sessionData.session) {
 			window.location.href = '/admin/login';
 			return;
 		}
 		isCheckingAuth = false;
+
+		const params = new URLSearchParams(window.location.search);
+		const id = params.get('id');
+		if (id) {
+			editId = id;
+			isEditMode = true;
+			await loadPostForEdit(id);
+		}
 	});
 
+	async function loadPostForEdit(id: string) {
+		try {
+			const { data: post, error } = await supabase.from('posts').select('*').eq('id', id).single();
+
+			if (error || !post) {
+				throw error || new Error('Post not found');
+			}
+
+			title = post.title;
+			slug = post.slug;
+			originalSlug = post.slug;
+			excerpt = post.excerpt || '';
+			published = post.published;
+
+			const { data: fileData, error: fileError } = await supabase.storage
+				.from('blog-posts')
+				.download(post.storage_path);
+
+			if (fileError) {
+				throw fileError;
+			}
+
+			markdownContent = await fileData.text();
+		} catch (err: any) {
+			console.error('Error loading post for edit:', err);
+			errorMessage = 'Failed to load post data: ' + err.message;
+		}
+	}
+
 	$effect(() => {
-		if (title) {
+		if (title && !isEditMode) {
 			slug = title
 				.toLowerCase()
 				.replace(/[^a-z0-9\s-]/g, '') // remove special chars
@@ -82,33 +123,65 @@
 			const mdBlob = new Blob([markdownContent], { type: 'text/markdown' });
 			const mdFile = new File([mdBlob], fileName, { type: 'text/markdown' });
 
-			const { error: uploadError } = await supabase.storage
-				.from('blog-posts')
-				.upload(storagePath, mdFile, {
-					cacheControl: '3600',
-					upsert: true
+			if (isEditMode && editId) {
+				const { error: uploadError } = await supabase.storage
+					.from('blog-posts')
+					.upload(storagePath, mdFile, {
+						cacheControl: '3600',
+						upsert: true
+					});
+
+				if (uploadError) {
+					throw new Error(`Storage upload failed: ${uploadError.message}`);
+				}
+
+				const { error: dbError } = await supabase
+					.from('posts')
+					.update({
+						title: title.trim(),
+						slug: slug.trim(),
+						excerpt: excerpt.trim() || null,
+						published,
+						storage_path: storagePath
+					})
+					.eq('id', editId);
+
+				if (dbError) {
+					throw dbError;
+				}
+
+				if (originalSlug && originalSlug !== slug) {
+					await supabase.storage.from('blog-posts').remove([`${originalSlug}.md`]);
+				}
+			} else {
+				const { error: uploadError } = await supabase.storage
+					.from('blog-posts')
+					.upload(storagePath, mdFile, {
+						cacheControl: '3600',
+						upsert: true
+					});
+
+				if (uploadError) {
+					throw new Error(`Storage upload failed: ${uploadError.message}`);
+				}
+
+				const { error: dbError } = await supabase.from('posts').insert({
+					title: title.trim(),
+					slug: slug.trim(),
+					excerpt: excerpt.trim() || null,
+					published,
+					storage_path: storagePath
 				});
 
-			if (uploadError) {
-				throw new Error(`Storage upload failed: ${uploadError.message}`);
-			}
-
-			const { error: dbError } = await supabase.from('posts').insert({
-				title: title.trim(),
-				slug: slug.trim(),
-				excerpt: excerpt.trim() || null,
-				published,
-				storage_path: storagePath
-			});
-
-			if (dbError) {
-				await supabase.storage.from('blog-posts').remove([storagePath]);
-				throw dbError;
+				if (dbError) {
+					await supabase.storage.from('blog-posts').remove([storagePath]);
+					throw dbError;
+				}
 			}
 
 			window.location.href = '/admin';
 		} catch (err: any) {
-			console.error('Error creating post:', err);
+			console.error('Error saving post:', err);
 			errorMessage = err.message || 'Failed to save blog post.';
 		} finally {
 			isSubmitting = false;
@@ -128,7 +201,9 @@
 	</a>
 
 	<div class="flex items-center gap-3">
-		<span class="text-sm font-bold text-adwaita-subtitle">Write New Post</span>
+		<span class="text-sm font-bold text-adwaita-subtitle"
+			>{isEditMode ? 'Edit Post' : 'Write New Post'}</span
+		>
 
 		<div class="relative">
 			<button
@@ -337,7 +412,7 @@
 							Saving...
 						{:else}
 							<i class="bi bi-check-lg text-sm" aria-hidden="true"></i>
-							Save Blog Post
+							{isEditMode ? 'Save Changes' : 'Save Blog Post'}
 						{/if}
 					</button>
 				</div>
