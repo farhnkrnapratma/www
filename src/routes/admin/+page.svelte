@@ -5,6 +5,7 @@
 	let isLoading = $state(true);
 	let posts = $state<any[]>([]);
 	let isLoggingOut = $state(false);
+	let openActionMenuId = $state<string | null>(null);
 
 	interface AdminComment {
 		id: string;
@@ -313,7 +314,7 @@
 </nav>
 
 <main class="pt-15 font-sans flex flex-col min-h-[calc(100vh-3.75rem)]">
-	<section class="mx-auto w-full md:w-[70%] lg:w-[45%] md:max-w-none px-6 py-14 flex-1">
+	<section class="mx-auto w-full md:w-[80%] lg:w-[55%] md:max-w-none px-6 py-14 flex-1">
 		{#if isLoading}
 			<div class="flex flex-col items-center justify-center py-20 text-adwaita-subtitle">
 				<i class="bi bi-hourglass-split text-3xl animate-spin mb-3" aria-hidden="true"></i>
@@ -340,9 +341,9 @@
 					{#each posts as post (post.id)}
 						{@const postComments = getPostComments(post.id)}
 						{@const postThreadItems = getPostThreadItems(post.id)}
-						<div class="action-row group flex flex-col gap-4 py-4">
-							<div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-								<div class="flex min-w-0 flex-col gap-1 pr-0 sm:pr-6">
+						<div class="action-row group flex flex-col items-stretch gap-4 py-4">
+							<div class="flex items-start justify-between gap-3">
+								<div class="flex min-w-0 flex-1 flex-col gap-1">
 									<div class="flex flex-wrap items-center gap-2">
 										<span class="text-xs font-semibold text-adwaita-subtitle"
 											>{formatDate(post.created_at)}</span
@@ -358,6 +359,15 @@
 												>Draft</span
 											>
 										{/if}
+										{#if postComments.length > 0}
+											<span
+												class="inline-flex items-center gap-1 rounded bg-adwaita-border/40 px-2 py-0.5 text-[10px] font-semibold text-adwaita-subtitle"
+												title="{postComments.length} comments"
+											>
+												<i class="bi bi-chat-left-text-fill text-[10px]" aria-hidden="true"></i>
+												{postComments.length}
+											</span>
+										{/if}
 									</div>
 									<h2 class="text-base font-bold text-adwaita-text">{post.title}</h2>
 									<p class="text-xs text-adwaita-subtitle font-mono line-clamp-1">
@@ -365,36 +375,62 @@
 									</p>
 								</div>
 
-								<div class="flex shrink-0 flex-col items-end gap-3">
-									{#if postComments.length > 0}
-										<div
-											class="inline-flex items-center gap-1.5 rounded bg-adwaita-border/40 px-2 py-0.5 text-xs font-semibold text-adwaita-subtitle"
-											title="{postComments.length} comments"
-										>
-											<i class="bi bi-chat-left-text-fill text-[11px]" aria-hidden="true"></i>
-											{postComments.length}
-										</div>
-									{/if}
+								<div class="flex shrink-0 items-center gap-2">
+									<a
+										href="/admin/new?id={post.id}"
+										class="inline-flex h-8 items-center justify-center rounded-lg bg-adwaita-card border border-adwaita-border px-3 text-xs font-semibold text-adwaita-text transition-colors hover:bg-adwaita-hover"
+									>
+										Edit
+									</a>
 
-									<div class="flex flex-wrap items-center justify-end gap-2">
+									<div class="relative">
 										<button
-											onclick={() => togglePublish(post)}
-											class="inline-flex h-8 items-center justify-center rounded-lg bg-adwaita-card border border-adwaita-border px-3 text-xs font-semibold text-adwaita-text transition-colors hover:bg-adwaita-hover"
+											onclick={() =>
+												(openActionMenuId = openActionMenuId === post.id ? null : post.id)}
+											class="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border border-adwaita-border bg-adwaita-card text-adwaita-text transition-colors hover:bg-adwaita-hover focus:outline-none"
+											aria-label="More actions"
+											aria-haspopup="true"
+											aria-expanded={openActionMenuId === post.id}
 										>
-											{post.published ? 'Unpublish' : 'Publish'}
+											<i class="bi bi-three-dots-vertical text-sm" aria-hidden="true"></i>
 										</button>
-										<a
-											href="/admin/new?id={post.id}"
-											class="inline-flex h-8 items-center justify-center rounded-lg bg-adwaita-card border border-adwaita-border px-3 text-xs font-semibold text-adwaita-text transition-colors hover:bg-adwaita-hover"
-										>
-											Edit
-										</a>
-										<button
-											onclick={() => deletePost(post)}
-											class="inline-flex h-8 items-center justify-center rounded-lg bg-palette-coral/10 border border-palette-coral/30 px-3 text-xs font-semibold text-palette-coral transition-colors hover:bg-palette-coral/20"
-										>
-											Delete
-										</button>
+
+										{#if openActionMenuId === post.id}
+											<button
+												class="fixed inset-0 z-40 cursor-default"
+												onclick={() => (openActionMenuId = null)}
+												aria-label="Close menu"
+											></button>
+											<div
+												class="absolute right-0 top-9 z-50 flex min-w-36 flex-col rounded-xl border border-adwaita-border bg-adwaita-card py-1.5 shadow-lg"
+											>
+												<button
+													type="button"
+													onclick={() => {
+														togglePublish(post);
+														openActionMenuId = null;
+													}}
+													class="flex w-full cursor-pointer items-center gap-2.5 px-4 py-2.5 text-left text-xs font-bold text-adwaita-text transition-colors hover:bg-adwaita-hover"
+												>
+													<i
+														class="bi {post.published ? 'bi-eye-slash' : 'bi-eye'} text-sm"
+														aria-hidden="true"
+													></i>
+													{post.published ? 'Unpublish' : 'Publish'}
+												</button>
+												<button
+													type="button"
+													onclick={() => {
+														openActionMenuId = null;
+														deletePost(post);
+													}}
+													class="flex w-full cursor-pointer items-center gap-2.5 px-4 py-2.5 text-left text-xs font-bold text-palette-coral transition-colors hover:bg-palette-coral/10"
+												>
+													<i class="bi bi-trash3 text-sm" aria-hidden="true"></i>
+													Delete
+												</button>
+											</div>
+										{/if}
 									</div>
 								</div>
 							</div>

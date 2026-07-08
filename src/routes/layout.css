@@ -7,7 +7,7 @@
 	}
 
 	body {
-		@apply m-0 bg-adwaita-bg p-0 text-adwaita-text transition-colors duration-300 font-sans overflow-x-hidden;
+		@apply m-0 overflow-x-hidden bg-adwaita-bg p-0 font-sans text-adwaita-text transition-colors duration-300;
 		scrollbar-gutter: stable;
 	}
 
@@ -27,21 +27,21 @@
 	--font-serif-text: 'Libertinus Serif', ui-serif, Georgia, serif;
 	--font-mono: 'Fira Code', monospace;
 
-	--color-adwaita-bg: #F2F5F3;
+	--color-adwaita-bg: #f2f5f3;
 	--color-adwaita-card: #ffffff;
-	--color-adwaita-border: #E4EBE6;
-	--color-adwaita-blue: #0FBF3E;
-	--color-adwaita-blue-hover: #08872B;
+	--color-adwaita-border: #e4ebe6;
+	--color-adwaita-blue: #0fbf3e;
+	--color-adwaita-blue-hover: #08872b;
 	--color-adwaita-text: #232925;
 	--color-adwaita-subtitle: #909692;
 	--color-adwaita-switcher-bg: rgba(228, 235, 230, 0.5);
 	--color-adwaita-switcher-active: #ffffff;
 	--color-adwaita-hover: rgba(16, 20, 17, 0.015);
 
-	--color-palette-primary: #0FBF3E;
-	--color-palette-green: #5FED83;
-	--color-palette-yellow: #D8BD0E;
-	--color-palette-coral: #FE4C25;
+	--color-palette-primary: #0fbf3e;
+	--color-palette-green: #5fed83;
+	--color-palette-yellow: #d8bd0e;
+	--color-palette-coral: #fe4c25;
 	--color-palette-slate: #909692;
 }
 
@@ -49,8 +49,8 @@
 	--color-adwaita-bg: #101411;
 	--color-adwaita-card: #232925;
 	--color-adwaita-border: rgba(182, 191, 184, 0.15);
-	--color-adwaita-text: #F2F5F3;
-	--color-adwaita-subtitle: #B6BFB8;
+	--color-adwaita-text: #f2f5f3;
+	--color-adwaita-subtitle: #b6bfb8;
 	--color-adwaita-switcher-bg: rgba(16, 20, 17, 0.5);
 	--color-adwaita-switcher-active: #232925;
 	--color-adwaita-hover: rgba(255, 255, 255, 0.02);
@@ -75,8 +75,8 @@
 }
 
 :root.dark .prose-custom {
-	--color-heading: #F2F5F3;
-	--color-body: #B6BFB8;
+	--color-heading: #f2f5f3;
+	--color-body: #b6bfb8;
 	--color-link: var(--color-adwaita-blue);
 	--color-link-hover: var(--color-adwaita-blue-hover);
 }
@@ -97,23 +97,23 @@
 }
 
 .prose-custom h1 {
-	@apply text-3xl font-extrabold mt-8 mb-4;
+	@apply mt-8 mb-4 text-3xl font-extrabold;
 }
 
 .prose-custom h2 {
-	@apply text-2xl font-bold mt-7 mb-3;
+	@apply mt-7 mb-3 text-2xl font-bold;
 }
 
 .prose-custom h3 {
-	@apply text-xl font-semibold mt-6 mb-2;
+	@apply mt-6 mb-2 text-xl font-semibold;
 }
 
 .prose-custom ul {
-	@apply mt-4 mb-4 pl-6 list-disc;
+	@apply mt-4 mb-4 list-disc pl-6;
 }
 
 .prose-custom ol {
-	@apply mt-4 mb-4 pl-6 list-decimal;
+	@apply mt-4 mb-4 list-decimal pl-6;
 }
 
 .prose-custom li {
@@ -121,11 +121,11 @@
 }
 
 .prose-custom pre {
-	@apply bg-adwaita-hover border border-adwaita-border p-4 rounded-lg overflow-x-auto mt-6 mb-6;
+	@apply mt-6 mb-6 overflow-x-auto rounded-lg border border-adwaita-border bg-adwaita-hover p-4;
 }
 
 .prose-custom code {
-	@apply font-mono text-sm bg-adwaita-hover px-1 py-0.5 rounded;
+	@apply rounded bg-adwaita-hover px-1 py-0.5 font-mono text-sm;
 }
 
 .prose-custom pre code {
@@ -163,7 +163,7 @@
 }
 
 .shiny-text.disabled {
-	@apply bg-none! text-[color:var(--color)]! animate-none!;
+	@apply animate-none! bg-none! text-[color:var(--color)]!;
 }
 
 .shiny-text.pause-on-hover:hover {
