@@ -700,7 +700,7 @@
 							<h4 class="text-sm font-bold">
 								<ShinyText
 									text="Support Open Source Work"
-									color="#7865d9"
+									color="#0FBF3E"
 									shineColor="#ffffff"
 									speed={1.5}
 								/>
