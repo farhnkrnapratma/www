@@ -489,6 +489,7 @@
 				<input type="hidden" name="_subject" value="New message from portfolio website!" />
 				<input type="hidden" name="_template" value="table" />
 				<input type="hidden" name="_captcha" value="true" />
+				<input type="hidden" name="_url" value="https://fkp.my.id/" />
 
 				<div class="px-5 py-4 border-b border-adwaita-border">
 					<h2 class="text-lg font-bold text-adwaita-text">Send a Message</h2>
