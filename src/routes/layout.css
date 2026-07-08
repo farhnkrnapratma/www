@@ -2,87 +2,87 @@
 @import 'bootstrap-icons/font/bootstrap-icons.css';
 
 @layer base {
-	html {
-		@apply text-[122%];
-	}
+  html {
+    @apply text-[122%];
+  }
 
-	body {
-		@apply m-0 overflow-x-hidden bg-adwaita-bg p-0 font-sans text-adwaita-text transition-colors duration-300;
-		scrollbar-gutter: stable;
-	}
+  body {
+    @apply m-0 overflow-x-hidden bg-adwaita-bg p-0 font-sans text-adwaita-text transition-colors duration-300;
+    scrollbar-gutter: stable;
+  }
 
-	.boxed-list {
-		@apply divide-y divide-adwaita-border overflow-hidden rounded-2xl border border-adwaita-border bg-adwaita-card/45 shadow-xs backdrop-blur-lg transition-colors duration-300;
-	}
+  .boxed-list {
+    @apply divide-y divide-adwaita-border overflow-hidden rounded-2xl border border-adwaita-border bg-adwaita-card/45 shadow-xs backdrop-blur-lg transition-colors duration-300;
+  }
 
-	.action-row {
-		@apply flex items-center justify-between px-6 py-5 transition-all hover:bg-adwaita-hover;
-	}
+  .action-row {
+    @apply flex items-center justify-between px-6 py-5 transition-all hover:bg-adwaita-hover;
+  }
 }
 
 @theme {
-	--font-sans: 'Albert Sans', ui-sans-serif, system-ui, sans-serif;
-	--font-sans-text: 'Albert Sans', ui-sans-serif, system-ui, sans-serif;
-	--font-serif: 'Libertinus Serif', ui-serif, Georgia, serif;
-	--font-serif-text: 'Libertinus Serif', ui-serif, Georgia, serif;
-	--font-mono: 'Fira Code', monospace;
+  --font-sans: 'Albert Sans', ui-sans-serif, system-ui, sans-serif;
+  --font-sans-text: 'Albert Sans', ui-sans-serif, system-ui, sans-serif;
+  --font-serif: 'Libertinus Serif', ui-serif, Georgia, serif;
+  --font-serif-text: 'Libertinus Serif', ui-serif, Georgia, serif;
+  --font-mono: 'Fira Code', monospace;
 
-	--color-adwaita-bg: #f2f5f3;
-	--color-adwaita-card: #ffffff;
-	--color-adwaita-border: #e4ebe6;
-	--color-adwaita-blue: #0fbf3e;
-	--color-adwaita-blue-hover: #08872b;
-	--color-adwaita-text: #232925;
-	--color-adwaita-subtitle: #909692;
-	--color-adwaita-switcher-bg: rgba(228, 235, 230, 0.5);
-	--color-adwaita-switcher-active: #ffffff;
-	--color-adwaita-hover: rgba(16, 20, 17, 0.015);
+  --color-adwaita-bg: #f2f5f3;
+  --color-adwaita-card: #ffffff;
+  --color-adwaita-border: #e4ebe6;
+  --color-adwaita-blue: #0fbf3e;
+  --color-adwaita-blue-hover: #08872b;
+  --color-adwaita-text: #232925;
+  --color-adwaita-subtitle: #909692;
+  --color-adwaita-switcher-bg: rgba(228, 235, 230, 0.5);
+  --color-adwaita-switcher-active: #ffffff;
+  --color-adwaita-hover: rgba(16, 20, 17, 0.015);
 
-	--color-palette-primary: #0fbf3e;
-	--color-palette-green: #5fed83;
-	--color-palette-yellow: #d8bd0e;
-	--color-palette-coral: #fe4c25;
-	--color-palette-slate: #909692;
+  --color-palette-primary: #0fbf3e;
+  --color-palette-green: #5fed83;
+  --color-palette-yellow: #d8bd0e;
+  --color-palette-coral: #fe4c25;
+  --color-palette-slate: #909692;
 }
 
 :root.dark {
-	--color-adwaita-bg: #101411;
-	--color-adwaita-card: #232925;
-	--color-adwaita-border: rgba(182, 191, 184, 0.15);
-	--color-adwaita-text: #f2f5f3;
-	--color-adwaita-subtitle: #b6bfb8;
-	--color-adwaita-switcher-bg: rgba(16, 20, 17, 0.5);
-	--color-adwaita-switcher-active: #232925;
-	--color-adwaita-hover: rgba(255, 255, 255, 0.02);
+  --color-adwaita-bg: #101411;
+  --color-adwaita-card: #232925;
+  --color-adwaita-border: rgba(182, 191, 184, 0.15);
+  --color-adwaita-text: #f2f5f3;
+  --color-adwaita-subtitle: #b6bfb8;
+  --color-adwaita-switcher-bg: rgba(16, 20, 17, 0.5);
+  --color-adwaita-switcher-active: #232925;
+  --color-adwaita-hover: rgba(255, 255, 255, 0.02);
 }
 
 .no-scrollbar::-webkit-scrollbar {
-	@apply hidden;
+  @apply hidden;
 }
 .no-scrollbar {
-	-ms-overflow-style: none;
-	scrollbar-width: none;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 .prose-custom {
-	@apply font-serif leading-[1.7];
-	--color-heading: #101411;
-	--color-body: #232925;
-	--color-link: var(--color-adwaita-blue);
-	--color-link-hover: var(--color-adwaita-blue-hover);
-	color: var(--color-body);
+  @apply font-serif leading-[1.7];
+  --color-heading: #101411;
+  --color-body: #232925;
+  --color-link: var(--color-adwaita-blue);
+  --color-link-hover: var(--color-adwaita-blue-hover);
+  color: var(--color-body);
 }
 
 :root.dark .prose-custom {
-	--color-heading: #f2f5f3;
-	--color-body: #b6bfb8;
-	--color-link: var(--color-adwaita-blue);
-	--color-link-hover: var(--color-adwaita-blue-hover);
+  --color-heading: #f2f5f3;
+  --color-body: #b6bfb8;
+  --color-link: var(--color-adwaita-blue);
+  --color-link-hover: var(--color-adwaita-blue-hover);
 }
 
 .prose-custom p {
-	@apply mt-5 mb-5;
-	color: var(--color-body);
+  @apply mt-5 mb-5;
+  color: var(--color-body);
 }
 
 .prose-custom h1,
@@ -91,97 +91,97 @@
 .prose-custom h4,
 .prose-custom h5,
 .prose-custom h6 {
-	@apply font-sans;
-	color: var(--color-heading);
+  @apply font-sans;
+  color: var(--color-heading);
 }
 
 .prose-custom h1 {
-	@apply mt-8 mb-4 text-3xl font-extrabold;
+  @apply mt-8 mb-4 text-3xl font-extrabold;
 }
 
 .prose-custom h2 {
-	@apply mt-7 mb-3 text-2xl font-bold;
+  @apply mt-7 mb-3 text-2xl font-bold;
 }
 
 .prose-custom h3 {
-	@apply mt-6 mb-2 text-xl font-semibold;
+  @apply mt-6 mb-2 text-xl font-semibold;
 }
 
 .prose-custom ul {
-	@apply mt-4 mb-4 list-disc pl-6;
+  @apply mt-4 mb-4 list-disc pl-6;
 }
 
 .prose-custom ol {
-	@apply mt-4 mb-4 list-decimal pl-6;
+  @apply mt-4 mb-4 list-decimal pl-6;
 }
 
 .prose-custom li {
-	@apply mt-1 mb-1;
+  @apply mt-1 mb-1;
 }
 
 .prose-custom pre {
-	@apply mt-6 mb-6 overflow-x-auto rounded-lg border border-adwaita-border bg-adwaita-hover p-4;
+  @apply mt-6 mb-6 overflow-x-auto rounded-lg border border-adwaita-border bg-adwaita-hover p-4;
 }
 
 .prose-custom code {
-	@apply rounded bg-adwaita-hover px-1 py-0.5 font-mono text-sm;
+  @apply rounded bg-adwaita-hover px-1 py-0.5 font-mono text-sm;
 }
 
 .prose-custom pre code {
-	@apply bg-transparent p-0;
+  @apply bg-transparent p-0;
 }
 
 .prose-custom a {
-	@apply underline;
-	color: var(--color-link);
+  @apply underline;
+  color: var(--color-link);
 }
 
 .prose-custom a:hover {
-	color: var(--color-link-hover);
+  color: var(--color-link-hover);
 }
 
 .shiny-text {
-	@apply inline-block bg-clip-text text-transparent;
-	background-image: linear-gradient(
-		var(--spread),
-		var(--color) 0%,
-		var(--color) 35%,
-		var(--shine-color) 50%,
-		var(--color) 65%,
-		var(--color) 100%
-	);
-	background-size: 200% auto;
-	-webkit-background-clip: text;
-	animation-name: var(--anim-name);
-	animation-duration: var(--speed);
-	animation-delay: var(--delay);
-	animation-iteration-count: infinite;
-	animation-timing-function: linear;
-	animation-direction: var(--anim-direction);
+  @apply inline-block bg-clip-text text-transparent;
+  background-image: linear-gradient(
+    var(--spread),
+    var(--color) 0%,
+    var(--color) 35%,
+    var(--shine-color) 50%,
+    var(--color) 65%,
+    var(--color) 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  animation-name: var(--anim-name);
+  animation-duration: var(--speed);
+  animation-delay: var(--delay);
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+  animation-direction: var(--anim-direction);
 }
 
 .shiny-text.disabled {
-	@apply animate-none! bg-none! text-[color:var(--color)]!;
+  @apply animate-none! bg-none! text-[color:var(--color)]!;
 }
 
 .shiny-text.pause-on-hover:hover {
-	animation-play-state: paused;
+  animation-play-state: paused;
 }
 
 @keyframes shiny-text-left {
-	0% {
-		background-position: 150% center;
-	}
-	100% {
-		background-position: -50% center;
-	}
+  0% {
+    background-position: 150% center;
+  }
+  100% {
+    background-position: -50% center;
+  }
 }
 
 @keyframes shiny-text-right {
-	0% {
-		background-position: -50% center;
-	}
-	100% {
-		background-position: 150% center;
-	}
+  0% {
+    background-position: -50% center;
+  }
+  100% {
+    background-position: 150% center;
+  }
 }
