@@ -196,7 +196,7 @@
 		href="/admin"
 		class="inline-flex h-9 items-center justify-center rounded-lg border border-adwaita-border bg-adwaita-card px-4 text-xs font-semibold text-adwaita-text transition-colors hover:bg-adwaita-hover focus:outline-none"
 	>
-		<i class="bi bi-arrow-left" style="margin-right: 8px;" aria-hidden="true"></i>
+		<i class="bi bi-arrow-left mr-2" aria-hidden="true"></i>
 		Cancel
 	</a>
 
@@ -296,7 +296,7 @@
 			{/if}
 
 			<form onsubmit={handleSubmit} class="flex flex-col gap-6">
-				<div class="boxed-list p-5 text-left bg-zinc-950/[0.01]">
+				<div class="boxed-list p-5 text-left bg-zinc-950/1">
 					<h2 class="text-sm font-bold text-adwaita-text mb-4">Post Settings</h2>
 					<div class="flex flex-col gap-4">
 						<div class="flex flex-col sm:flex-row sm:items-center gap-2">
@@ -354,7 +354,7 @@
 					</div>
 				</div>
 
-				<div class="boxed-list overflow-hidden text-left flex flex-col min-h-[400px]">
+				<div class="boxed-list overflow-hidden text-left flex flex-col min-h-100">
 					<div class="flex border-b border-adwaita-border bg-adwaita-hover/30 px-3 py-1">
 						<button
 							type="button"
@@ -382,10 +382,10 @@
 						<textarea
 							required
 							bind:value={markdownContent}
-							class="w-full flex-1 p-5 text-sm font-mono bg-adwaita-bg text-adwaita-text focus:outline-none resize-y min-h-[350px] leading-relaxed"
+							class="w-full flex-1 p-5 text-sm font-mono bg-adwaita-bg text-adwaita-text focus:outline-none resize-y min-h-87.5 leading-relaxed"
 						></textarea>
 					{:else}
-						<div class="prose-custom p-6 w-full overflow-y-auto bg-adwaita-bg min-h-[350px]">
+						<div class="prose-custom p-6 w-full overflow-y-auto bg-adwaita-bg min-h-87.5">
 							{#if previewHtml}
 								{@html previewHtml}
 							{:else}

@@ -212,7 +212,7 @@
 		href="/#blogs"
 		class="inline-flex h-9 items-center justify-center rounded-lg border border-adwaita-border bg-adwaita-card px-4 text-xs font-semibold text-adwaita-text transition-colors hover:bg-adwaita-hover focus:outline-none"
 	>
-		<i class="bi bi-arrow-left" style="margin-right: 8px;" aria-hidden="true"></i>
+		<i class="bi bi-arrow-left mr-2" aria-hidden="true"></i>
 		Back to Blog
 	</a>
 	<div class="flex items-center gap-3">
@@ -323,7 +323,7 @@
 			{/if}
 
 			{#if !replyTo}
-				<div class="boxed-list p-5 mb-8 text-left bg-zinc-950/[0.01]">
+				<div class="boxed-list p-5 mb-8 text-left bg-zinc-950/1">
 					<h3 class="text-sm font-bold text-adwaita-text mb-4">Leave a Comment</h3>
 
 					<form onsubmit={(e) => handleSubmit(e)} class="flex flex-col gap-4">

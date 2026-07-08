@@ -43,7 +43,7 @@
 
 <main class="pt-15 font-sans flex items-center justify-center min-h-[calc(100vh-3.75rem)]">
 	<div class="w-full max-w-sm px-6">
-		<div class="boxed-list p-6 bg-zinc-950/[0.01]">
+		<div class="boxed-list p-6 bg-zinc-950/1">
 			<div class="text-center mb-6">
 				<h1 class="text-xl font-bold text-adwaita-text">CMS Admin Login</h1>
 				<p class="text-xs text-adwaita-subtitle mt-1">Sign in to manage your blog posts</p>
