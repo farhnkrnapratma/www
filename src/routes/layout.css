@@ -64,7 +64,6 @@
 	scrollbar-width: none;
 }
 
-/* Custom typography layout for markdown contents */
 .prose-custom {
 	@apply font-serif leading-[1.7];
 	--color-heading: #101411;
@@ -141,7 +140,6 @@
 	color: var(--color-link-hover);
 }
 
-/* ShinyText animation rules */
 .shiny-text {
 	@apply inline-block bg-clip-text text-transparent;
 	background-image: linear-gradient(

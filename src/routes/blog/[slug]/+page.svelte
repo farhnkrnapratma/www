@@ -385,11 +385,17 @@
 				{:else}
 					{#snippet renderComment(comment: ThreadedComment)}
 						<div class="relative">
-							<!-- Box container for the comment -->
-							<div class="rounded-xl border border-adwaita-border bg-adwaita-card/60 p-5 shadow-xs hover:bg-adwaita-hover/5 transition-colors text-left">
+							<div
+								class="rounded-xl border border-adwaita-border bg-adwaita-card/60 p-5 shadow-xs hover:bg-adwaita-hover/5 transition-colors text-left"
+							>
 								<div class="flex items-center justify-between gap-4 mb-2">
-									<h4 class="inline-flex min-w-0 items-center gap-1.5 text-sm font-bold text-adwaita-text">
-										<span class="material-symbols-rounded text-base text-adwaita-subtitle" aria-hidden="true">
+									<h4
+										class="inline-flex min-w-0 items-center gap-1.5 text-sm font-bold text-adwaita-text"
+									>
+										<span
+											class="material-symbols-rounded text-base text-adwaita-subtitle"
+											aria-hidden="true"
+										>
 											{getCommentIcon(comment)}
 										</span>
 										<span class="truncate">{getCommentAuthor(comment)}</span>
@@ -398,9 +404,11 @@
 										{formatDate(comment.created_at)}
 									</span>
 								</div>
-								
-								<p class="text-sm leading-relaxed text-adwaita-text/90 whitespace-pre-line">{comment.content}</p>
-								
+
+								<p class="text-sm leading-relaxed text-adwaita-text/90 whitespace-pre-line">
+									{comment.content}
+								</p>
+
 								<div class="mt-3 flex justify-end">
 									<button
 										type="button"
@@ -434,7 +442,9 @@
 										</div>
 
 										<div class="flex flex-col gap-4">
-											<label class="flex items-center gap-2 text-xs font-bold text-adwaita-subtitle">
+											<label
+												class="flex items-center gap-2 text-xs font-bold text-adwaita-subtitle"
+											>
 												<input
 													type="checkbox"
 													bind:checked={isAnonymous}
@@ -487,16 +497,17 @@
 								{/if}
 							</div>
 
-							<!-- Replies connection tree/graph -->
 							{#if comment.children && comment.children.length > 0}
 								<div class="relative pl-6 md:pl-10 mt-2">
-									<!-- Vertical connecting line -->
-									<div class="absolute left-3 md:left-5 top-0 bottom-[30px] w-[2px] bg-adwaita-blue/50"></div>
+									<div
+										class="absolute left-3 md:left-5 top-0 bottom-[30px] w-[2px] bg-adwaita-blue/50"
+									></div>
 
 									{#each comment.children as child (child.id)}
 										<div class="relative mt-4">
-											<!-- Horizontal connecting line -->
-											<div class="absolute -left-3 md:-left-5 top-[30px] w-3 md:w-5 h-[2px] bg-adwaita-blue/50"></div>
+											<div
+												class="absolute -left-3 md:-left-5 top-[30px] w-3 md:w-5 h-[2px] bg-adwaita-blue/50"
+											></div>
 											{@render renderComment(child)}
 										</div>
 									{/each}
