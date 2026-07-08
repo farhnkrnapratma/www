@@ -29,12 +29,22 @@ export interface Project {
   licenseUrl: string | null;
 }
 
+export interface BlogPost {
+  id: string;
+  title: string;
+  slug: string;
+  published: boolean;
+  storage_path: string;
+  created_at: string;
+  excerpt?: string | null;
+}
+
 const GITHUB_USERNAME = 'farhnkrnapratma';
 const GITHUB_API_URL = `https://api.github.com/users/${GITHUB_USERNAME}/repos`;
 
 export const load: PageServerLoad = async ({ fetch, platform }) => {
-  let projects: Project[] = [];
-  let dbPosts: any[] = [];
+  let projects: Project[];
+  let dbPosts: BlogPost[] = [];
 
   try {
     const headers: Record<string, string> = {

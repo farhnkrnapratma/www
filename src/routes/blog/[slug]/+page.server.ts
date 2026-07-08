@@ -17,7 +17,7 @@ export const load: PageServerLoad = async ({ params, fetch }) => {
     throw error(404, 'Blog post not found');
   }
 
-  let html = '';
+  let html: string;
   try {
     const { data } = supabase.storage.from('blog-posts').getPublicUrl(post.storage_path);
     const fileRes = await fetch(data.publicUrl);

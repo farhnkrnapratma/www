@@ -1,9 +1,19 @@
 <script lang="ts">
   import { supabase } from '$lib/supabase';
   import { onMount } from 'svelte';
+  import { SvelteMap, SvelteSet } from 'svelte/reactivity';
+
+  interface AdminPost {
+    id: string;
+    title: string;
+    slug: string;
+    published: boolean;
+    storage_path: string;
+    created_at: string;
+  }
 
   let isLoading = $state(true);
-  let posts = $state<any[]>([]);
+  let posts = $state<AdminPost[]>([]);
   let isLoggingOut = $state(false);
   let openActionMenuId = $state<string | null>(null);
 
@@ -87,7 +97,7 @@
     window.location.href = '/admin/login';
   }
 
-  async function togglePublish(post: any) {
+  async function togglePublish(post: AdminPost) {
     const newStatus = !post.published;
     const { error } = await supabase
       .from('posts')
@@ -101,7 +111,7 @@
     }
   }
 
-  async function deletePost(post: any) {
+  async function deletePost(post: AdminPost) {
     if (!confirm(`Are you sure you want to delete "${post.title}"?`)) return;
 
     const { error: storageError } = await supabase.storage
@@ -122,7 +132,7 @@
     }
   }
 
-  async function toggleCommentApproval(comment: any) {
+  async function toggleCommentApproval(comment: AdminComment) {
     const newStatus = !comment.is_approved;
     const { error } = await supabase
       .from('comments')
@@ -162,7 +172,7 @@
   }
 
   function buildCommentTree(items: AdminComment[]) {
-    const nodes = new Map<string, ThreadedAdminComment>();
+    const nodes = new SvelteMap<string, ThreadedAdminComment>();
     const roots: ThreadedAdminComment[] = [];
 
     for (const comment of items) {
@@ -194,7 +204,7 @@
   }
 
   function getDescendantCommentIds(commentId: string, items: AdminComment[]) {
-    const deletedIds = new Set([commentId]);
+    const deletedIds = new SvelteSet([commentId]);
     let changed = true;
 
     while (changed) {

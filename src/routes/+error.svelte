@@ -1,6 +1,3 @@
-<script lang="ts">
-  import { page } from '$app/stores';
-</script>
 
 <main class="grid min-h-[80vh] place-items-center px-6 py-24 sm:py-32 lg:px-8 font-sans">
   <div class="text-center">

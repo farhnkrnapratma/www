@@ -24,7 +24,7 @@
     pauseOnHover?: boolean;
     direction?: 'left' | 'right';
     delay?: number;
-    [key: string]: any;
+    [key: string]: unknown;
   }>();
 </script>
 

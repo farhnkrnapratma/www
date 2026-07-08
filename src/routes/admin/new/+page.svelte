@@ -81,9 +81,10 @@
       }
 
       markdownContent = await fileData.text();
-    } catch (err: any) {
-      console.error('Error loading post for edit:', err);
-      errorMessage = 'Failed to load post data: ' + err.message;
+    } catch (err) {
+      const error = err as Error;
+      console.error('Error loading post for edit:', error);
+      errorMessage = 'Failed to load post data: ' + error.message;
     }
   }
 
@@ -180,9 +181,10 @@
       }
 
       window.location.href = '/admin';
-    } catch (err: any) {
-      console.error('Error saving post:', err);
-      errorMessage = err.message || 'Failed to save blog post.';
+    } catch (err) {
+      const error = err as Error;
+      console.error('Error saving post:', error);
+      errorMessage = error.message || 'Failed to save blog post.';
     } finally {
       isSubmitting = false;
     }

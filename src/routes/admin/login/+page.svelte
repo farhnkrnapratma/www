@@ -32,9 +32,10 @@
       }
 
       window.location.href = '/admin';
-    } catch (err: any) {
-      console.error('Login failed:', err);
-      errorMessage = err.message || 'Invalid email or password.';
+    } catch (err) {
+      const error = err as Error;
+      console.error('Login failed:', error);
+      errorMessage = error.message || 'Invalid email or password.';
     } finally {
       isSubmitting = false;
     }

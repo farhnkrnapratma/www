@@ -1,8 +1,8 @@
 <script lang="ts">
   import LinkListSection from '$lib/LinkListSection.svelte';
   import ShinyText from '$lib/ShinyText.svelte';
-  import { goto } from '$app/navigation';
   import { onMount } from 'svelte';
+  import type { BlogPost } from './+page.server';
 
   let { data } = $props();
 
@@ -54,7 +54,7 @@
 
   const posts = $derived(data.posts || []);
 
-  function getPostDate(post: any) {
+  function getPostDate(post: BlogPost) {
     return new Date(post.created_at).toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'long',
@@ -363,7 +363,7 @@
           {#if themeDropdownOpen}
             <div
               class="absolute left-0 right-0 top-12 z-50 flex w-full flex-col rounded-lg border border-adwaita-border bg-adwaita-card p-1 shadow-lg">
-              {#each ['auto', 'light', 'dark'] as themeOption}
+              {#each ['auto', 'light', 'dark'] as themeOption (themeOption)}
                 <button
                   onclick={() => {
                     applyTheme(themeOption as Theme);

@@ -1,5 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte';
+  import { SvelteMap } from 'svelte/reactivity';
   import type { PageProps } from './$types';
   import hljs from 'highlight.js';
 
@@ -23,7 +24,15 @@
     depth: number;
   }
 
-  let comments = $state<BlogComment[]>([]);
+  let currentPostId = $state<string | null>(null);
+  let addedComments = $state<BlogComment[]>([]);
+  $effect(() => {
+    if (currentPostId !== data.post.id) {
+      currentPostId = data.post.id;
+      addedComments = [];
+    }
+  });
+  const comments = $derived([...data.comments, ...addedComments]);
   let isDark = $state(false);
 
   type Theme = 'auto' | 'dark' | 'light';
@@ -46,9 +55,6 @@
     }
   }
 
-  $effect(() => {
-    comments = [...data.comments];
-  });
 
   onMount(() => {
     const saved = localStorage.getItem('theme') as Theme;
@@ -94,7 +100,7 @@
   }
 
   function buildCommentTree(items: BlogComment[]) {
-    const nodes = new Map<string, ThreadedComment>();
+    const nodes = new SvelteMap<string, ThreadedComment>();
     const roots: ThreadedComment[] = [];
 
     for (const comment of items) {
@@ -157,7 +163,7 @@
       }
 
       if (result.is_approved) {
-        comments = [...comments, result.comment];
+        addedComments = [...addedComments, result.comment];
         feedbackMessage = {
           type: 'success',
           text: parentId ? 'Your reply has been posted.' : 'Your comment has been posted.',
@@ -170,10 +176,11 @@
           text: 'Your comment was blocked by AI content moderation (flagged as inappropriate).',
         };
       }
-    } catch (err: any) {
+    } catch (err) {
+      const error = err as Error;
       feedbackMessage = {
         type: 'error',
-        text: err.message || 'An error occurred while posting your comment.',
+        text: error.message || 'An error occurred while posting your comment.',
       };
     } finally {
       isSubmitting = false;

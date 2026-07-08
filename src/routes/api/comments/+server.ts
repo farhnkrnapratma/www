@@ -134,7 +134,9 @@ export const POST: RequestHandler = async ({ request, platform }) => {
 
     if (platform?.env?.AI) {
       try {
-        const ai = platform.env.AI;
+        const ai = platform.env.AI as {
+          run: (model: string, options: Record<string, unknown>) => Promise<{ response?: string }>;
+        };
         const systemPrompt = `You are a content moderation AI. Analyze the following blog comment submission for hate speech, severe insults, harassment, threats, explicit content, or obvious spam.
 Respond with exactly one word: "SAFE" if the comment is clean and allowed, or "BLOCKED" if it contains forbidden content. Do not include any other words, punctuation, or explanations.`;
 
@@ -195,8 +197,9 @@ Respond with exactly one word: "SAFE" if the comment is clean and allowed, or "B
       comment,
       moderation_source: moderationSource,
     });
-  } catch (err: any) {
-    console.error('Comment API error:', err);
-    return json({ message: err.message || 'Internal server error' }, { status: 500 });
+  } catch (err) {
+    const error = err as Error;
+    console.error('Comment API error:', error);
+    return json({ message: error.message || 'Internal server error' }, { status: 500 });
   }
 };
