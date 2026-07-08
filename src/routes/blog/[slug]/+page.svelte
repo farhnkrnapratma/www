@@ -297,7 +297,7 @@
 		class="mx-auto w-full md:w-[70%] lg:w-[45%] md:max-w-none px-6 pt-10 pb-16 md:pt-14 md:pb-28 flex-1"
 	>
 		<header class="mb-8 border-b border-adwaita-border pb-6">
-			<p class="text-xs font-semibold mb-2 meta-text">{formatDate(post.created_at)}</p>
+			<p class="text-xs font-semibold mb-2 text-adwaita-subtitle">{formatDate(post.created_at)}</p>
 			<h1
 				class="text-3xl font-extrabold text-adwaita-text md:text-4xl tracking-tight leading-tight"
 			>
@@ -399,11 +399,11 @@
 									>
 									<span class="truncate">{getCommentAuthor(comment)}</span>
 								</h4>
-								<span class="text-[10px] font-semibold meta-text">
+								<span class="text-[10px] font-semibold text-adwaita-subtitle">
 									{formatDate(comment.created_at)}
 								</span>
 							</div>
-							<p class="text-sm leading-relaxed secondary-text">{comment.content}</p>
+							<p class="text-sm leading-relaxed text-adwaita-subtitle">{comment.content}</p>
 							<div class="mt-3 flex justify-end">
 								<button
 									type="button"
@@ -496,111 +496,3 @@
 	</article>
 </main>
 
-<style>
-	:global(.prose-custom) {
-		font-family: 'Anthropic Serif Text', 'Anthropic Serif', ui-serif, Georgia, serif;
-		line-height: 1.7;
-		--color-heading: #111111;
-		--color-body: #222222;
-		--color-secondary: #5f6368;
-		--color-link: #7865d9;
-		--color-link-hover: #614ebf;
-		color: var(--color-body);
-	}
-	:global(.dark .prose-custom) {
-		--color-heading: #d4d4d8;
-		--color-body: #b8b8bc;
-		--color-secondary: #8e8e93;
-		--color-link: #9f91eb;
-		--color-link-hover: #b0a5f0;
-	}
-	:global(.prose-custom p) {
-		margin-top: 1.25rem;
-		margin-bottom: 1.25rem;
-		color: var(--color-body);
-	}
-	:global(
-		.prose-custom h1,
-		.prose-custom h2,
-		.prose-custom h3,
-		.prose-custom h4,
-		.prose-custom h5,
-		.prose-custom h6
-	) {
-		font-family: 'Anthropic Sans', ui-sans-serif, system-ui, sans-serif;
-		color: var(--color-heading);
-	}
-	:global(.prose-custom h1) {
-		font-size: 1.875rem;
-		font-weight: 800;
-		margin-top: 2rem;
-		margin-bottom: 1rem;
-	}
-	:global(.prose-custom h2) {
-		font-size: 1.5rem;
-		font-weight: 700;
-		margin-top: 1.75rem;
-		margin-bottom: 0.75rem;
-	}
-	:global(.prose-custom h3) {
-		font-size: 1.25rem;
-		font-weight: 600;
-		margin-top: 1.5rem;
-		margin-bottom: 0.5rem;
-	}
-	:global(.prose-custom ul) {
-		margin-top: 1rem;
-		margin-bottom: 1rem;
-		padding-left: 1.5rem;
-		list-style-type: disc;
-	}
-	:global(.prose-custom ol) {
-		margin-top: 1rem;
-		margin-bottom: 1rem;
-		padding-left: 1.5rem;
-		list-style-type: decimal;
-	}
-	:global(.prose-custom li) {
-		margin-top: 0.25rem;
-		margin-bottom: 0.25rem;
-	}
-	:global(.prose-custom pre) {
-		background-color: var(--color-adwaita-hover);
-		border: 1px solid var(--color-adwaita-border);
-		padding: 1rem;
-		border-radius: 0.5rem;
-		overflow-x: auto;
-		margin-top: 1.5rem;
-		margin-bottom: 1.5rem;
-	}
-	:global(.prose-custom code) {
-		font-family: monospace;
-		font-size: 0.875rem;
-		background-color: var(--color-adwaita-hover);
-		padding: 0.125rem 0.25rem;
-		border-radius: 0.25rem;
-	}
-	:global(.prose-custom pre code) {
-		background-color: transparent;
-		padding: 0;
-	}
-	:global(.prose-custom a) {
-		color: var(--color-link);
-		text-decoration: underline;
-	}
-	:global(.prose-custom a:hover) {
-		color: var(--color-link-hover);
-	}
-	.meta-text {
-		color: #7a7a7a;
-	}
-	:global(.dark) .meta-text {
-		color: #7c7c80;
-	}
-	.secondary-text {
-		color: #5f6368;
-	}
-	:global(.dark) .secondary-text {
-		color: #8e8e93;
-	}
-</style>
