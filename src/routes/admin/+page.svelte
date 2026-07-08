@@ -320,13 +320,8 @@
 				Loading dashboard data...
 			</div>
 		{:else}
-			<div class="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-				<div>
-					<h1 class="text-3xl font-bold text-adwaita-text tracking-tight">Blog Posts</h1>
-					<p class="mt-2 text-sm text-adwaita-subtitle">
-						Manage posts and review comments from one list.
-					</p>
-				</div>
+			<div class="mb-8 flex items-center justify-between">
+				<h1 class="text-3xl font-bold text-adwaita-text tracking-tight">Blog Posts</h1>
 				<a
 					href="/admin/new"
 					class="inline-flex h-9 items-center justify-center rounded-lg bg-adwaita-blue px-4 text-xs font-semibold text-white transition-colors hover:bg-adwaita-blue-hover focus:outline-none"
