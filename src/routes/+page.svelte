@@ -373,7 +373,7 @@
 					aria-label="Close theme menu"
 				></button>
 				<div
-					class="absolute right-0 top-12 z-50 hidden min-w-[125px] flex-col rounded-xl border border-adwaita-border bg-adwaita-card py-1.5 shadow-lg md:flex"
+					class="absolute right-0 top-12 z-50 hidden min-w-31.25 flex-col rounded-xl border border-adwaita-border bg-adwaita-card py-1.5 shadow-lg md:flex"
 				>
 					<button
 						onclick={() => {
@@ -436,7 +436,7 @@
 			class="mx-auto w-full md:w-[80%] lg:w-[55%] md:max-w-none px-6 pt-10 pb-24 md:pt-14 md:pb-28 flex flex-col gap-8 relative z-10"
 		>
 			<div
-				class="absolute top-[50px] left-[50%] -translate-x-[50%] w-[320px] h-[320px] rounded-full bg-adwaita-blue/10 blur-[80px] pointer-events-none z-0"
+				class="absolute top-12.5 left-[50%] translate-x-[-50%] w-[320px] h-80 rounded-full bg-adwaita-blue/10 blur-[80px] pointer-events-none z-0"
 			></div>
 
 			<div class="flex flex-col items-center justify-center text-center relative z-10">
@@ -509,6 +509,7 @@
 						name="name"
 						required
 						placeholder="Linus Torvalds"
+						autocomplete="name"
 						class="w-full sm:w-3/4 bg-transparent border-0 px-2 py-1 text-sm text-adwaita-text placeholder:text-adwaita-subtitle/50 rounded-md focus:outline-none focus:ring-2 focus:ring-adwaita-blue/50 transition-all text-left"
 					/>
 				</div>
@@ -525,6 +526,7 @@
 						name="email"
 						required
 						placeholder="torvalds@linux-foundation.org"
+						autocomplete="email"
 						class="w-full sm:w-3/4 bg-transparent border-0 px-2 py-1 text-sm text-adwaita-text placeholder:text-adwaita-subtitle/50 rounded-md focus:outline-none focus:ring-2 focus:ring-adwaita-blue/50 transition-all text-left"
 					/>
 				</div>
@@ -749,7 +751,7 @@
 				<h2 class="text-sm font-bold text-adwaita-subtitle">Experience</h2>
 				<div class="mt-4 boxed-list">
 					{#each experiences as exp (exp.role)}
-						<div class="px-6 py-5 flex flex-col gap-2 hover:bg-zinc-950/[0.015] transition-all">
+						<div class="px-6 py-5 flex flex-col gap-2 hover:bg-zinc-950/1.5 transition-all">
 							<div class="flex items-start justify-between gap-4">
 								<div>
 									<h3 class="text-base font-bold text-adwaita-text">{exp.role}</h3>

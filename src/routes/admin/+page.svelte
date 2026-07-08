@@ -253,7 +253,7 @@
 					aria-label="Close theme menu"
 				></button>
 				<div
-					class="absolute right-0 top-11 z-50 flex min-w-[125px] flex-col rounded-xl border border-adwaita-border bg-adwaita-card py-1.5 shadow-lg"
+					class="absolute right-0 top-11 z-50 flex min-w-31.25 flex-col rounded-xl border border-adwaita-border bg-adwaita-card py-1.5 shadow-lg"
 				>
 					<button
 						type="button"
