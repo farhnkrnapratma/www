@@ -19,8 +19,8 @@
     created_at: string;
   }
 
-  interface FBComment extends BlogComment {
-    children: FBComment[];
+  interface FlatComment extends BlogComment {
+    children: FlatComment[];
     reply_to_author?: string | null;
   }
 
@@ -97,7 +97,7 @@
     });
   }
 
-  function buildCommentTree(items: BlogComment[]): FBComment[] {
+  function buildCommentTree(items: BlogComment[]): FlatComment[] {
     const commentMap = new SvelteMap<string, BlogComment>();
     for (const item of items) {
       commentMap.set(item.id, item);
@@ -115,8 +115,8 @@
       return { ancestor: current, parent };
     }
 
-    const roots: FBComment[] = [];
-    const rootRepliesMap = new SvelteMap<string, FBComment[]>();
+    const roots: FlatComment[] = [];
+    const rootRepliesMap = new SvelteMap<string, FlatComment[]>();
 
     for (const item of items) {
       if (!item.parent_id) {
@@ -130,7 +130,7 @@
       if (item.parent_id) {
         const { ancestor, parent } = getAncestorAndParent(item);
         if (ancestor.id !== item.id) {
-          const replyObj: FBComment = {
+          const replyObj: FlatComment = {
             ...item,
             children: [],
             reply_to_author: (parent && parent.id !== ancestor.id) ? getCommentAuthor(parent) : null
