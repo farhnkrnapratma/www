@@ -87,7 +87,6 @@
   let replyTo = $state<BlogComment | null>(null);
   let isSubmitting = $state(false);
   let feedbackMessage = $state<{ type: 'success' | 'error'; text: string } | null>(null);
-  let commentsExpanded = $state(false);
   const commentTree = $derived(buildCommentTree(comments));
 
   function formatDate(dateStr: string) {
@@ -124,6 +123,7 @@
   }
 
   function getCommentIcon(comment: BlogComment) {
+    if (comment.author_name === 'Admin') return 'shield_person';
     return comment.is_anonymous ? 'domino_mask' : 'person';
   }
 
@@ -308,20 +308,11 @@
     </div>
 
     <section class="mt-16 border-t border-adwaita-border pt-10">
-      <div class="flex items-center justify-between mb-8">
-        <h2 class="text-xl font-bold text-adwaita-text tracking-tight">
-          Comments ({comments.length})
-        </h2>
-        <button
-          type="button"
-          onclick={() => (commentsExpanded = !commentsExpanded)}
-          class="inline-flex h-9 items-center justify-center cursor-pointer rounded-lg border border-adwaita-border bg-adwaita-card px-4 text-xs font-semibold text-adwaita-text transition-colors hover:bg-adwaita-hover focus:outline-none">
-          {commentsExpanded ? 'Hide Comments' : 'Show Comments'}
-        </button>
-      </div>
+      <h2 class="text-xl font-bold text-adwaita-text tracking-tight mb-8">
+        Comments ({comments.length})
+      </h2>
 
-      {#if commentsExpanded}
-        {#if feedbackMessage}
+      {#if feedbackMessage}
           <div
             class="mb-6 rounded-lg p-3 text-sm font-semibold {feedbackMessage.type === 'success' ?
               'bg-palette-green/10 text-palette-green border border-palette-green/30'
@@ -395,6 +386,7 @@
                     class="inline-flex min-w-0 items-center gap-1.5 text-xs font-bold text-adwaita-text/80">
                     <span
                       class="material-symbols-rounded text-sm text-adwaita-subtitle"
+                      style="font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;"
                       aria-hidden="true">
                       {getCommentIcon(comment)}
                     </span>
@@ -489,13 +481,17 @@
               </div>
 
               {#if comment.children && comment.children.length > 0}
-                <div class="relative pl-6 md:pl-10 mt-2">
+                <div class="relative pl-6 md:pl-10 mt-2 border-l-2 border-adwaita-subtitle/40">
                   {#each comment.children as child, i (child.id)}
                     <div class="relative mt-4">
-                      {#if i < comment.children.length - 1}
-                        <div class="absolute -left-3 md:-left-5 top-0 bottom-0 w-0.5 bg-adwaita-subtitle/40"></div>
+                      <!-- Horizontal line connecting to the card -->
+                      <div class="absolute -left-6 md:-left-10 top-7.5 w-6 md:w-10 h-0.5 bg-adwaita-subtitle/40"></div>
+
+                      <!-- Masking line for the last child's bottom half of the vertical line -->
+                      {#if i === comment.children.length - 1}
+                        <div class="absolute -left-[25px] md:-left-[41px] top-7.5 bottom-0 w-[3px] bg-adwaita-bg"></div>
                       {/if}
-                      <div class="absolute -left-3 md:-left-5 top-0 w-3 md:w-5 h-7.5 border-l-2 border-b-2 rounded-bl-lg border-adwaita-subtitle/40"></div>
+
                       {@render renderComment(child)}
                     </div>
                   {/each}
@@ -510,7 +506,7 @@
             {/each}
           </div>
         {/if}
-      {/if}
+
     </section>
   </article>
 </main>

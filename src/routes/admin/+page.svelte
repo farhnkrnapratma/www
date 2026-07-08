@@ -35,6 +35,9 @@
   }
 
   let comments = $state<AdminComment[]>([]);
+  let replyTo = $state<AdminComment | null>(null);
+  let commentContent = $state('');
+  let isSubmitting = $state(false);
 
   type Theme = 'auto' | 'dark' | 'light';
   let theme = $state<Theme>('auto');
@@ -46,6 +49,48 @@
       expandedPostIds.delete(postId);
     } else {
       expandedPostIds.add(postId);
+    }
+  }
+
+  async function handleAdminSubmit(e: SubmitEvent, parentId: string, postId: string) {
+    e.preventDefault();
+    if (isSubmitting) return;
+
+    const trimmed = commentContent.trim();
+    if (!trimmed) return;
+
+    isSubmitting = true;
+    try {
+      const { data, error } = await supabase
+        .from('comments')
+        .insert({
+          post_id: postId,
+          parent_id: parentId,
+          author_name: 'Admin',
+          content: trimmed,
+          is_anonymous: false,
+          is_approved: true
+        })
+        .select('*')
+        .single();
+
+      if (error) throw error;
+
+      if (data) {
+        const postObj = posts.find(p => p.id === postId);
+        const newComment: AdminComment = {
+          ...data,
+          posts: { title: postObj?.title || '' }
+        };
+        comments = [...comments, newComment];
+        replyTo = null;
+        commentContent = '';
+      }
+    } catch (err) {
+      console.error('Error saving admin reply:', err);
+      alert('Failed to post reply.');
+    } finally {
+      isSubmitting = false;
     }
   }
 
@@ -141,19 +186,6 @@
     }
   }
 
-  async function toggleCommentApproval(comment: AdminComment) {
-    const newStatus = !comment.is_approved;
-    const { error } = await supabase
-      .from('comments')
-      .update({ is_approved: newStatus })
-      .eq('id', comment.id);
-
-    if (!error) {
-      comments = comments.map(c => (c.id === comment.id ? { ...c, is_approved: newStatus } : c));
-    } else {
-      alert('Failed to update comment status.');
-    }
-  }
 
   async function deleteComment(id: string) {
     if (!confirm('Are you sure you want to delete this comment?')) return;
@@ -171,7 +203,7 @@
   function formatDate(dateStr: string) {
     return new Date(dateStr).toLocaleDateString('en-US', {
       year: 'numeric',
-      month: 'short',
+      month: 'long',
       day: 'numeric',
     });
   }
@@ -223,9 +255,14 @@
   }
 
   function getCommentIcon(comment: AdminComment) {
+    if (comment.author_name === 'Admin') return 'shield_person';
     return comment.is_anonymous ? 'domino_mask' : 'person';
   }
 </script>
+
+<svelte:head>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=shield_person" />
+</svelte:head>
 
 <nav
   class="fixed top-0 z-40 flex h-15 w-full items-center justify-between bg-adwaita-card/60 backdrop-blur-lg px-5 font-sans border-b border-adwaita-border shadow-xs transition-colors duration-300">
@@ -452,7 +489,11 @@
                         <div class="min-w-0">
                           <div class="flex flex-wrap items-center gap-2">
                             <h3 class="inline-flex min-w-0 items-center gap-1.5 text-xs font-bold text-adwaita-text/80">
-                              <span class="material-symbols-rounded text-sm text-adwaita-subtitle" aria-hidden="true">
+                              <span
+                                class="material-symbols-rounded text-sm text-adwaita-subtitle"
+                                style="font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;"
+                                aria-hidden="true"
+                              >
                                 {getCommentIcon(comment)}
                               </span>
                               <span class="truncate">{getCommentAuthor(comment)}</span>
@@ -474,10 +515,14 @@
 
                         <div class="flex shrink-0 items-center gap-2">
                           <button
-                            onclick={() => toggleCommentApproval(comment)}
+                            type="button"
+                            onclick={() => {
+                              replyTo = comment;
+                              commentContent = '';
+                            }}
                             class="inline-flex h-8 items-center justify-center cursor-pointer rounded-lg bg-adwaita-card border border-adwaita-border px-3 text-xs font-semibold text-adwaita-text transition-colors hover:bg-adwaita-hover"
                           >
-                            {comment.is_approved ? 'Hide' : 'Approve'}
+                            Reply
                           </button>
                           <button
                             onclick={() => deleteComment(comment.id)}
@@ -491,16 +536,69 @@
                       <p class="mt-2 text-sm text-adwaita-subtitle leading-relaxed whitespace-pre-line">
                         {comment.content}
                       </p>
+
+                      {#if replyTo?.id === comment.id}
+                        <form
+                          onsubmit={e => handleAdminSubmit(e, comment.id, post.id)}
+                          class="mt-4 rounded-lg border border-adwaita-border bg-adwaita-bg/60 p-4"
+                        >
+                          <div class="mb-3 flex items-center justify-between gap-3">
+                            <p class="text-xs font-semibold text-adwaita-subtitle">
+                              Replying as Admin to {getCommentAuthor(comment)}
+                            </p>
+                            <button
+                              type="button"
+                              onclick={() => { replyTo = null; commentContent = ''; }}
+                              class="inline-flex h-8 items-center justify-center cursor-pointer rounded-lg border border-adwaita-border bg-adwaita-card px-3 text-xs font-semibold text-adwaita-text transition-colors hover:bg-adwaita-hover"
+                            >
+                              Cancel
+                            </button>
+                          </div>
+
+                          <div class="flex flex-col gap-4">
+                            <div class="flex flex-col items-start gap-2">
+                              <label
+                                for="reply-msg-{comment.id}"
+                                class="text-xs font-bold text-adwaita-subtitle w-20 shrink-0 mt-1"
+                              >
+                                Message
+                              </label>
+                              <textarea
+                                id="reply-msg-{comment.id}"
+                                required
+                                rows="3"
+                                maxlength="2000"
+                                placeholder="Write your reply here..."
+                                bind:value={commentContent}
+                                class="w-full px-3 py-1.5 text-sm bg-adwaita-bg border border-adwaita-border rounded-lg text-adwaita-text placeholder:text-adwaita-subtitle/70 focus:outline-none focus:border-adwaita-blue transition-colors resize-none"
+                              ></textarea>
+                            </div>
+                            <div class="flex justify-end">
+                              <button
+                                type="submit"
+                                disabled={isSubmitting}
+                                class="inline-flex cursor-pointer items-center justify-center rounded-lg bg-adwaita-blue px-5 py-2 text-sm font-semibold text-white transition-colors hover:bg-adwaita-blue-hover focus:outline-none disabled:cursor-not-allowed disabled:opacity-55"
+                              >
+                                {isSubmitting ? 'Posting...' : 'Post Reply'}
+                              </button>
+                            </div>
+                          </div>
+                        </form>
+                      {/if}
                     </div>
 
                     {#if comment.children && comment.children.length > 0}
-                      <div class="relative pl-6 md:pl-10 mt-2">
+                      <div class="relative pl-6 md:pl-10 mt-2 border-l-2 border-adwaita-subtitle/40">
                         {#each comment.children as child, i (child.id)}
                           <div class="relative mt-4">
-                            {#if i < comment.children.length - 1}
-                              <div class="absolute -left-3 md:-left-5 top-0 bottom-0 w-0.5 bg-adwaita-subtitle/40"></div>
+                            <!-- Horizontal line connecting to the card -->
+                            <div class="absolute -left-6 md:-left-10 top-7.5 w-6 md:w-10 h-0.5 bg-adwaita-subtitle/40"></div>
+
+                            <!-- Masking line for the last child's bottom half of the vertical line -->
+                            {#if i === comment.children.length - 1}
+                              <div class="absolute -left-[25px] md:-left-[41px] top-7.5 bottom-0 w-[3px] bg-adwaita-bg"></div>
                             {/if}
-                            <div class="absolute -left-3 md:-left-5 top-0 w-3 md:w-5 h-7.5 border-l-2 border-b-2 rounded-bl-lg border-adwaita-subtitle/40"></div>
+
                             {@render renderAdminComment(child)}
                           </div>
                         {/each}
