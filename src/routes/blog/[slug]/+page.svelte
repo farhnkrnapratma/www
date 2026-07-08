@@ -492,13 +492,13 @@
               {#if comment.children && comment.children.length > 0}
                 <div class="relative pl-6 md:pl-10 mt-2">
                   <div
-                    class="absolute left-3 md:left-5 top-0 bottom-[30px] w-[2px] bg-adwaita-blue/50">
+                    class="absolute left-3 md:left-5 top-0 bottom-7.5 w-0.5 bg-adwaita-blue/50">
                   </div>
 
                   {#each comment.children as child (child.id)}
                     <div class="relative mt-4">
                       <div
-                        class="absolute -left-3 md:-left-5 top-[30px] w-3 md:w-5 h-[2px] bg-adwaita-blue/50">
+                        class="absolute -left-3 md:-left-5 top-7.5 w-3 md:w-5 h-0.5 bg-adwaita-blue/50">
                       </div>
                       {@render renderComment(child)}
                     </div>
