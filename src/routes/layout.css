@@ -29,33 +29,33 @@
 	--font-serif-text: 'Libertinus Serif', ui-serif, Georgia, serif;
 	--font-mono: 'Fira Code', monospace;
 
-	--color-adwaita-bg: #f6f5f4;
+	--color-adwaita-bg: #F2F5F3;
 	--color-adwaita-card: #ffffff;
-	--color-adwaita-border: #e1dfdd;
-	--color-adwaita-blue: #7865d9;
-	--color-adwaita-blue-hover: #614ebf;
-	--color-adwaita-text: #2e3436;
-	--color-adwaita-subtitle: #5e6c70;
-	--color-adwaita-switcher-bg: rgba(225, 223, 221, 0.5);
+	--color-adwaita-border: #E4EBE6;
+	--color-adwaita-blue: #0FBF3E;
+	--color-adwaita-blue-hover: #08872B;
+	--color-adwaita-text: #232925;
+	--color-adwaita-subtitle: #909692;
+	--color-adwaita-switcher-bg: rgba(228, 235, 230, 0.5);
 	--color-adwaita-switcher-active: #ffffff;
-	--color-adwaita-hover: rgba(0, 0, 0, 0.015);
+	--color-adwaita-hover: rgba(16, 20, 17, 0.015);
 
-	--color-palette-primary: #7865d9;
-	--color-palette-green: #66d9a2;
-	--color-palette-yellow: #d9ca65;
-	--color-palette-coral: #c97a6d;
-	--color-palette-slate: #6e6c7a;
+	--color-palette-primary: #0FBF3E;
+	--color-palette-green: #5FED83;
+	--color-palette-yellow: #D8BD0E;
+	--color-palette-coral: #FE4C25;
+	--color-palette-slate: #909692;
 }
 
 :root.dark {
-	--color-adwaita-bg: #242424;
-	--color-adwaita-card: #1e1e1e;
-	--color-adwaita-border: #303030;
-	--color-adwaita-text: #ffffff;
-	--color-adwaita-subtitle: #b8b8bc;
-	--color-adwaita-switcher-bg: rgba(48, 48, 48, 0.5);
-	--color-adwaita-switcher-active: #303030;
-	--color-adwaita-hover: rgba(255, 255, 255, 0.03);
+	--color-adwaita-bg: #101411;
+	--color-adwaita-card: #232925;
+	--color-adwaita-border: rgba(182, 191, 184, 0.15);
+	--color-adwaita-text: #F2F5F3;
+	--color-adwaita-subtitle: #B6BFB8;
+	--color-adwaita-switcher-bg: rgba(16, 20, 17, 0.5);
+	--color-adwaita-switcher-active: #232925;
+	--color-adwaita-hover: rgba(255, 255, 255, 0.02);
 }
 
 .no-scrollbar::-webkit-scrollbar {
@@ -70,18 +70,18 @@
 .prose-custom {
 	font-family: 'Libertinus Serif', ui-serif, Georgia, serif;
 	line-height: 1.7;
-	--color-heading: #111111;
-	--color-body: #222222;
-	--color-link: #7865d9;
-	--color-link-hover: #614ebf;
+	--color-heading: #101411;
+	--color-body: #232925;
+	--color-link: var(--color-adwaita-blue);
+	--color-link-hover: var(--color-adwaita-blue-hover);
 	color: var(--color-body);
 }
 
 :root.dark .prose-custom {
-	--color-heading: #d4d4d8;
-	--color-body: #b8b8bc;
-	--color-link: #9f91eb;
-	--color-link-hover: #b0a5f0;
+	--color-heading: #F2F5F3;
+	--color-body: #B6BFB8;
+	--color-link: var(--color-adwaita-blue);
+	--color-link-hover: var(--color-adwaita-blue-hover);
 }
 
 .prose-custom p {
