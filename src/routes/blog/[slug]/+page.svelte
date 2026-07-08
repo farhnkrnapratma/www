@@ -55,7 +55,6 @@
     }
   }
 
-
   onMount(() => {
     const saved = localStorage.getItem('theme') as Theme;
     theme = saved || 'auto';
@@ -393,9 +392,9 @@
                 class="rounded-xl border border-adwaita-border bg-adwaita-card/60 p-5 shadow-xs hover:bg-adwaita-hover/5 transition-colors text-left">
                 <div class="flex items-center justify-between gap-4 mb-2">
                   <h4
-                    class="inline-flex min-w-0 items-center gap-1.5 text-sm font-bold text-adwaita-text">
+                    class="inline-flex min-w-0 items-center gap-1.5 text-xs font-bold text-adwaita-text/80">
                     <span
-                      class="material-symbols-rounded text-base text-adwaita-subtitle"
+                      class="material-symbols-rounded text-sm text-adwaita-subtitle"
                       aria-hidden="true">
                       {getCommentIcon(comment)}
                     </span>
@@ -491,15 +490,12 @@
 
               {#if comment.children && comment.children.length > 0}
                 <div class="relative pl-6 md:pl-10 mt-2">
-                  <div
-                    class="absolute left-3 md:left-5 top-0 bottom-7.5 w-0.5 bg-adwaita-blue/50">
-                  </div>
-
-                  {#each comment.children as child (child.id)}
+                  {#each comment.children as child, i (child.id)}
                     <div class="relative mt-4">
-                      <div
-                        class="absolute -left-3 md:-left-5 top-7.5 w-3 md:w-5 h-0.5 bg-adwaita-blue/50">
-                      </div>
+                      {#if i < comment.children.length - 1}
+                        <div class="absolute -left-3 md:-left-5 top-0 bottom-0 w-0.5 bg-adwaita-subtitle/40"></div>
+                      {/if}
+                      <div class="absolute -left-3 md:-left-5 top-0 w-3 md:w-5 h-7.5 border-l-2 border-b-2 rounded-bl-lg border-adwaita-subtitle/40"></div>
                       {@render renderComment(child)}
                     </div>
                   {/each}

@@ -39,6 +39,15 @@
   type Theme = 'auto' | 'dark' | 'light';
   let theme = $state<Theme>('auto');
   let themeDropdownOpen = $state(false);
+  const expandedPostIds = new SvelteSet<string>();
+
+  function toggleComments(postId: string) {
+    if (expandedPostIds.has(postId)) {
+      expandedPostIds.delete(postId);
+    } else {
+      expandedPostIds.add(postId);
+    }
+  }
 
   function applyTheme(newTheme: Theme) {
     theme = newTheme;
@@ -192,17 +201,6 @@
     return roots;
   }
 
-  function flattenCommentTree(nodes: ThreadedAdminComment[], depth = 0): ThreadedAdminComment[] {
-    return nodes.flatMap(node => {
-      const current = { ...node, depth };
-      return [current, ...flattenCommentTree(node.children, depth + 1)];
-    });
-  }
-
-  function getPostThreadItems(postId: string) {
-    return flattenCommentTree(buildCommentTree(getPostComments(postId)));
-  }
-
   function getDescendantCommentIds(commentId: string, items: AdminComment[]) {
     const deletedIds = new SvelteSet([commentId]);
     let changed = true;
@@ -226,10 +224,6 @@
 
   function getCommentIcon(comment: AdminComment) {
     return comment.is_anonymous ? 'domino_mask' : 'person';
-  }
-
-  function getCommentIndent(depth: number) {
-    return `${Math.min(depth, 4) * 1.25}rem`;
   }
 </script>
 
@@ -359,7 +353,6 @@
         <div class="boxed-list text-left">
           {#each posts as post (post.id)}
             {@const postComments = getPostComments(post.id)}
-            {@const postThreadItems = getPostThreadItems(post.id)}
             <div class="action-row group flex flex-col items-stretch gap-4 py-4">
               <div class="flex items-start justify-between gap-3">
                 <div class="flex min-w-0 flex-1 flex-col gap-1">
@@ -376,14 +369,16 @@
                         >Draft</span>
                     {/if}
                     {#if postComments.length > 0}
-                      <span
-                        class="inline-flex items-center gap-1 rounded bg-adwaita-border/40 px-2 py-0.5 text-[10px] font-semibold text-adwaita-subtitle"
-                        title="{postComments.length} comments">
+                      <button
+                        type="button"
+                        onclick={() => toggleComments(post.id)}
+                        class="inline-flex items-center gap-1 rounded bg-adwaita-border/40 px-2 py-0.5 text-[10px] font-semibold text-adwaita-subtitle cursor-pointer hover:bg-adwaita-border transition-colors focus:outline-none"
+                        title="{expandedPostIds.has(post.id) ? 'Hide' : 'Show'} {postComments.length} comments">
                         <i
-                          class="bi bi-chat-left-text-fill text-[10px]"
+                          class="bi bi-chat-left-text-fill text-[10px] text-adwaita-blue"
                           aria-hidden="true"></i>
-                        {postComments.length}
-                      </span>
+                        {expandedPostIds.has(post.id) ? 'Hide' : 'Show'} Comments ({postComments.length})
+                      </button>
                     {/if}
                   </div>
                   <h2 class="text-base font-bold text-adwaita-text">{post.title}</h2>
@@ -449,39 +444,30 @@
                 </div>
               </div>
 
-              {#if postComments.length > 0}
-                <div
-                  class="relative z-20 rounded-lg border border-adwaita-border/60 bg-adwaita-bg/60">
-                  {#each postThreadItems as comment (comment.id)}
-                    <div
-                      class="border-b border-adwaita-border/50 p-3 last:border-b-0 {(
-                        comment.depth > 0
-                      ) ?
-                        'border-l border-l-adwaita-border/70'
-                      : ''}"
-                      style:margin-left={getCommentIndent(comment.depth)}>
-                      <div
-                        class="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+              {#if postComments.length > 0 && expandedPostIds.has(post.id)}
+                {#snippet renderAdminComment(comment: ThreadedAdminComment)}
+                  <div class="relative">
+                    <div class="rounded-xl border border-adwaita-border bg-adwaita-card/60 p-4 shadow-xs hover:bg-adwaita-hover/5 transition-colors text-left">
+                      <div class="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
                         <div class="min-w-0">
                           <div class="flex flex-wrap items-center gap-2">
-                            <h3
-                              class="inline-flex min-w-0 items-center gap-1.5 text-sm font-bold text-adwaita-text">
-                              <span
-                                class="material-symbols-rounded text-base text-adwaita-subtitle"
-                                aria-hidden="true">{getCommentIcon(comment)}</span>
+                            <h3 class="inline-flex min-w-0 items-center gap-1.5 text-xs font-bold text-adwaita-text/80">
+                              <span class="material-symbols-rounded text-sm text-adwaita-subtitle" aria-hidden="true">
+                                {getCommentIcon(comment)}
+                              </span>
                               <span class="truncate">{getCommentAuthor(comment)}</span>
                             </h3>
                             {#if comment.is_approved}
-                              <span
-                                class="rounded bg-palette-green/15 px-2 py-0.5 text-[10px] font-bold text-palette-green border border-palette-green/30"
-                                >Approved</span>
+                              <span class="rounded bg-palette-green/15 px-2 py-0.5 text-[10px] font-bold text-palette-green border border-palette-green/30">
+                                Approved
+                              </span>
                             {:else}
-                              <span
-                                class="rounded bg-palette-yellow/15 px-2 py-0.5 text-[10px] font-bold text-palette-yellow border border-palette-yellow/30"
-                                >Hidden</span>
+                              <span class="rounded bg-palette-yellow/15 px-2 py-0.5 text-[10px] font-bold text-palette-yellow border border-palette-yellow/30">
+                                Hidden
+                              </span>
                             {/if}
                           </div>
-                          <p class="mt-1 text-xs font-semibold text-adwaita-subtitle">
+                          <p class="mt-1 text-[10px] font-semibold text-adwaita-subtitle">
                             {formatDate(comment.created_at)}
                           </p>
                         </div>
@@ -489,20 +475,43 @@
                         <div class="flex shrink-0 items-center gap-2">
                           <button
                             onclick={() => toggleCommentApproval(comment)}
-                            class="inline-flex h-8 items-center justify-center rounded-lg bg-adwaita-card border border-adwaita-border px-3 text-xs font-semibold text-adwaita-text transition-colors hover:bg-adwaita-hover">
+                            class="inline-flex h-8 items-center justify-center cursor-pointer rounded-lg bg-adwaita-card border border-adwaita-border px-3 text-xs font-semibold text-adwaita-text transition-colors hover:bg-adwaita-hover"
+                          >
                             {comment.is_approved ? 'Hide' : 'Approve'}
                           </button>
                           <button
                             onclick={() => deleteComment(comment.id)}
-                            class="inline-flex h-8 items-center justify-center rounded-lg bg-palette-coral/10 border border-palette-coral/30 px-3 text-xs font-semibold text-palette-coral transition-colors hover:bg-palette-coral/20">
+                            class="inline-flex h-8 items-center justify-center cursor-pointer rounded-lg bg-palette-coral/10 border border-palette-coral/30 px-3 text-xs font-semibold text-palette-coral transition-colors hover:bg-palette-coral/20"
+                          >
                             Delete
                           </button>
                         </div>
                       </div>
-                      <p class="mt-2 text-sm text-adwaita-subtitle leading-relaxed">
+                      
+                      <p class="mt-2 text-sm text-adwaita-subtitle leading-relaxed whitespace-pre-line">
                         {comment.content}
                       </p>
                     </div>
+
+                    {#if comment.children && comment.children.length > 0}
+                      <div class="relative pl-6 md:pl-10 mt-2">
+                        {#each comment.children as child, i (child.id)}
+                          <div class="relative mt-4">
+                            {#if i < comment.children.length - 1}
+                              <div class="absolute -left-3 md:-left-5 top-0 bottom-0 w-0.5 bg-adwaita-subtitle/40"></div>
+                            {/if}
+                            <div class="absolute -left-3 md:-left-5 top-0 w-3 md:w-5 h-7.5 border-l-2 border-b-2 rounded-bl-lg border-adwaita-subtitle/40"></div>
+                            {@render renderAdminComment(child)}
+                          </div>
+                        {/each}
+                      </div>
+                    {/if}
+                  </div>
+                {/snippet}
+
+                <div class="flex flex-col gap-6 p-4">
+                  {#each buildCommentTree(postComments) as rootComment (rootComment.id)}
+                    {@render renderAdminComment(rootComment)}
                   {/each}
                 </div>
               {/if}
