@@ -3,13 +3,11 @@
 
 @layer base {
 	html {
-		font-size: 122%;
+		@apply text-[122%];
 	}
 
 	body {
-		@apply m-0 bg-adwaita-bg p-0 text-adwaita-text transition-colors duration-300;
-		font-family: 'Albert Sans', ui-sans-serif, system-ui, sans-serif;
-		overflow-x: hidden;
+		@apply m-0 bg-adwaita-bg p-0 text-adwaita-text transition-colors duration-300 font-sans overflow-x-hidden;
 		scrollbar-gutter: stable;
 	}
 
@@ -59,7 +57,7 @@
 }
 
 .no-scrollbar::-webkit-scrollbar {
-	display: none;
+	@apply hidden;
 }
 .no-scrollbar {
 	-ms-overflow-style: none;
@@ -68,8 +66,7 @@
 
 /* Custom typography layout for markdown contents */
 .prose-custom {
-	font-family: 'Libertinus Serif', ui-serif, Georgia, serif;
-	line-height: 1.7;
+	@apply font-serif leading-[1.7];
 	--color-heading: #101411;
 	--color-body: #232925;
 	--color-link: var(--color-adwaita-blue);
@@ -85,8 +82,7 @@
 }
 
 .prose-custom p {
-	margin-top: 1.25rem;
-	margin-bottom: 1.25rem;
+	@apply mt-5 mb-5;
 	color: var(--color-body);
 }
 
@@ -96,76 +92,49 @@
 .prose-custom h4,
 .prose-custom h5,
 .prose-custom h6 {
-	font-family: 'Albert Sans', ui-sans-serif, system-ui, sans-serif;
+	@apply font-sans;
 	color: var(--color-heading);
 }
 
 .prose-custom h1 {
-	font-size: 1.875rem;
-	font-weight: 800;
-	margin-top: 2rem;
-	margin-bottom: 1rem;
+	@apply text-3xl font-extrabold mt-8 mb-4;
 }
 
 .prose-custom h2 {
-	font-size: 1.5rem;
-	font-weight: 700;
-	margin-top: 1.75rem;
-	margin-bottom: 0.75rem;
+	@apply text-2xl font-bold mt-7 mb-3;
 }
 
 .prose-custom h3 {
-	font-size: 1.25rem;
-	font-weight: 600;
-	margin-top: 1.5rem;
-	margin-bottom: 0.5rem;
+	@apply text-xl font-semibold mt-6 mb-2;
 }
 
 .prose-custom ul {
-	margin-top: 1rem;
-	margin-bottom: 1rem;
-	padding-left: 1.5rem;
-	list-style-type: disc;
+	@apply mt-4 mb-4 pl-6 list-disc;
 }
 
 .prose-custom ol {
-	margin-top: 1rem;
-	margin-bottom: 1rem;
-	padding-left: 1.5rem;
-	list-style-type: decimal;
+	@apply mt-4 mb-4 pl-6 list-decimal;
 }
 
 .prose-custom li {
-	margin-top: 0.25rem;
-	margin-bottom: 0.25rem;
+	@apply mt-1 mb-1;
 }
 
 .prose-custom pre {
-	background-color: var(--color-adwaita-hover);
-	border: 1px solid var(--color-adwaita-border);
-	padding: 1rem;
-	border-radius: 0.5rem;
-	overflow-x: auto;
-	margin-top: 1.5rem;
-	margin-bottom: 1.5rem;
+	@apply bg-adwaita-hover border border-adwaita-border p-4 rounded-lg overflow-x-auto mt-6 mb-6;
 }
 
 .prose-custom code {
-	font-family: monospace;
-	font-size: 0.875rem;
-	background-color: var(--color-adwaita-hover);
-	padding: 0.125rem 0.25rem;
-	border-radius: 0.25rem;
+	@apply font-mono text-sm bg-adwaita-hover px-1 py-0.5 rounded;
 }
 
 .prose-custom pre code {
-	background-color: transparent;
-	padding: 0;
+	@apply bg-transparent p-0;
 }
 
 .prose-custom a {
+	@apply underline;
 	color: var(--color-link);
-	text-decoration: underline;
 }
 
 .prose-custom a:hover {
@@ -174,7 +143,7 @@
 
 /* ShinyText animation rules */
 .shiny-text {
-	display: inline-block;
+	@apply inline-block bg-clip-text text-transparent;
 	background-image: linear-gradient(
 		var(--spread),
 		var(--color) 0%,
@@ -185,8 +154,6 @@
 	);
 	background-size: 200% auto;
 	-webkit-background-clip: text;
-	background-clip: text;
-	-webkit-text-fill-color: transparent;
 	animation-name: var(--anim-name);
 	animation-duration: var(--speed);
 	animation-delay: var(--delay);
@@ -196,10 +163,7 @@
 }
 
 .shiny-text.disabled {
-	background-image: none !important;
-	-webkit-text-fill-color: initial !important;
-	color: var(--color) !important;
-	animation: none !important;
+	@apply bg-none! text-[color:var(--color)]! animate-none!;
 }
 
 .shiny-text.pause-on-hover:hover {
