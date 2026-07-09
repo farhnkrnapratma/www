@@ -45,11 +45,11 @@
 
   const navItems: NavItem[] = [
     { id: 'home', label: 'Home' },
-    { id: 'blogs', label: 'Blogs' },
-    { id: 'contacts', label: 'Contacts' },
-    { id: 'cv', label: 'CV' },
     { id: 'projects', label: 'Projects' },
+    { id: 'blogs', label: 'Blogs' },
+    { id: 'cv', label: 'CV' },
     { id: 'funding', label: 'Funding' },
+    { id: 'contacts', label: 'Contacts' },
   ];
 
   const posts = $derived(data.posts || []);

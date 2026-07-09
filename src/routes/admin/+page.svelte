@@ -514,11 +514,15 @@
               {#if postComments.length > 0 && expandedPostIds.has(post.id)}
                 <div class="flex flex-col gap-6 p-4">
                   {#each buildCommentTree(postComments) as rootComment (rootComment.id)}
-                    <div class="flex flex-col gap-4">
+                    <div class="relative flex flex-col gap-4">
+                      <!-- Trunk line connecting root avatar center to last reply avatar center -->
+                      {#if rootComment.children && rootComment.children.length > 0}
+                        <div class="absolute left-4 top-4 bottom-0 w-[1px] bg-adwaita-subtitle/20 z-0"></div>
+                      {/if}
                       <!-- Top-level Comment -->
                       <div class="relative flex items-start gap-3">
                         <!-- Avatar Column -->
-                        <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-adwaita-card text-adwaita-subtitle border border-adwaita-border">
+                        <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-adwaita-card text-adwaita-subtitle border border-adwaita-border z-10">
                           <span
                             class="material-symbols-rounded text-sm text-adwaita-subtitle"
                             style="font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;"
@@ -622,8 +626,6 @@
                       <!-- Replies Section (Flat List, max 1 level indent) -->
                       {#if rootComment.children && rootComment.children.length > 0}
                         <div class="relative pl-11">
-                          <!-- Trunk (vertical line) starting from parent avatar center -->
-                          <div class="absolute left-4 top-0 bottom-0 w-[1px] bg-adwaita-subtitle/20"></div>
 
                           {#each rootComment.children as child, i (child.id)}
                             <div class="relative flex items-start gap-3 mt-4">
