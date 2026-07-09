@@ -555,7 +555,7 @@
                     <div
                       class="relative flex flex-col gap-4"
                       use:trunkAction>
-                      <!-- Single continuous trunk line connecting root avatar center to last reply avatar center -->
+                      
                       {#if rootComment.children && rootComment.children.length > 0}
                         <div
                           class="trunk-line-single absolute border-l border-adwaita-subtitle/20 z-0"
@@ -563,9 +563,9 @@
                         </div>
                       {/if}
 
-                      <!-- Top-level Comment -->
+                      
                       <div class="relative flex items-start gap-3">
-                        <!-- Avatar Column -->
+                        
                         <div
                           class="parent-avatar flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-adwaita-card text-adwaita-subtitle border border-adwaita-border z-10">
                           <span
@@ -576,7 +576,7 @@
                           </span>
                         </div>
 
-                        <!-- Content Column -->
+                        
                         <div class="flex-1 min-w-0">
                           <div
                             class="inline-block max-w-full bg-adwaita-card/50 px-4 py-2 text-left"
@@ -588,7 +588,7 @@
                             </p>
                           </div>
 
-                          <!-- Actions / Metadata below bubble -->
+                          
                           <div
                             class="flex flex-wrap items-center gap-3 mt-1 ml-2 text-[10px] text-adwaita-subtitle">
                             <span>{formatDate(rootComment.created_at)}</span>
@@ -619,7 +619,7 @@
                             </button>
                           </div>
 
-                          <!-- Inline Reply Form for Root Comment -->
+                          
                           {#if replyTo?.id === rootComment.id}
                             <form
                               onsubmit={e => handleAdminSubmit(e, rootComment.id, post.id)}
@@ -670,20 +670,20 @@
                         </div>
                       </div>
 
-                      <!-- Replies Section (Flat List, max 1 level indent) -->
+                      
                       {#if rootComment.children && rootComment.children.length > 0}
                         <div
                           class="relative"
                           style="padding-left: 44px;">
                           {#each rootComment.children as child, i (child.id)}
                             <div class="relative flex items-start gap-3 mt-4">
-                              <!-- Curved elbow connector (trunk part + rounded bend + hook part) -->
+                              
                               <div
                                 class="absolute border-l border-b border-adwaita-subtitle/20 z-0"
                                 style="left: -28px; top: -16px; width: 28px; height: 32px; border-bottom-left-radius: 10px;">
                               </div>
 
-                              <!-- Reply Avatar Column -->
+                              
                               <div
                                 class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-adwaita-card text-adwaita-subtitle border border-adwaita-border z-10"
                                 class:last-reply-avatar={i === rootComment.children.length - 1}>
@@ -695,7 +695,7 @@
                                 </span>
                               </div>
 
-                              <!-- Reply Content Column -->
+                              
                               <div class="flex-1 min-w-0">
                                 <div
                                   class="inline-block max-w-full bg-adwaita-card/50 px-4 py-2 text-left"
@@ -711,7 +711,7 @@
                                   </p>
                                 </div>
 
-                                <!-- Actions / Metadata below bubble -->
+                                
                                 <div
                                   class="flex flex-wrap items-center gap-3 mt-1 ml-2 text-[10px] text-adwaita-subtitle">
                                   <span>{formatDate(child.created_at)}</span>
@@ -742,7 +742,7 @@
                                   </button>
                                 </div>
 
-                                <!-- Inline Reply Form for Child Comment (Replies go to the same flat level under rootComment) -->
+                                
                                 {#if replyTo?.id === child.id}
                                   <form
                                     onsubmit={e => handleAdminSubmit(e, child.id, post.id)}

@@ -3,6 +3,7 @@
   import { SvelteMap } from 'svelte/reactivity';
   import type { PageProps } from './$types';
   import hljs from 'highlight.js';
+  import { isNameReserved } from '$lib/nameValidator';
 
   let { data }: PageProps = $props();
   const post = $derived(data.post);
@@ -83,6 +84,7 @@
 
   let authorName = $state('');
   let isAnonymous = $state(false);
+  const isNameInvalid = $derived(!isAnonymous && authorName.trim() !== '' && isNameReserved(authorName));
   let commentContent = $state('');
   let replyTo = $state<BlogComment | null>(null);
   let isSubmitting = $state(false);
@@ -136,7 +138,7 @@
           const replyObj: FlatComment = {
             ...item,
             children: [],
-            reply_to_author: parent && parent.id !== ancestor.id ? getCommentAuthor(parent) : null,
+            reply_to_author: (parent && parent.id !== ancestor.id) ? getCommentAuthor(parent) : null
           };
           if (!rootRepliesMap.has(ancestor.id)) {
             rootRepliesMap.set(ancestor.id, []);
@@ -200,13 +202,21 @@
     return {
       destroy() {
         observer.disconnect();
-      },
+      }
     };
   }
 
   async function handleSubmit(e: SubmitEvent, parentId: string | null = null) {
     e.preventDefault();
     if ((!isAnonymous && !authorName.trim()) || !commentContent.trim()) return;
+
+    if (!isAnonymous && isNameReserved(authorName)) {
+      feedbackMessage = {
+        type: 'error',
+        text: 'This name cannot be used. Please use another name.',
+      };
+      return;
+    }
 
     isSubmitting = true;
     feedbackMessage = null;
@@ -410,14 +420,20 @@
               <label
                 for="comment-author"
                 class="text-xs font-bold text-adwaita-subtitle w-20 shrink-0">Name</label>
-              <input
-                type="text"
-                id="comment-author"
-                required={!isAnonymous}
-                disabled={isAnonymous}
-                placeholder={isAnonymous ? 'Anonymous User' : 'Linus Torvalds'}
-                bind:value={authorName}
-                class="w-full px-3 py-1.5 text-sm bg-adwaita-bg border border-adwaita-border rounded-lg text-adwaita-text placeholder:text-adwaita-subtitle/70 focus:outline-none focus:border-adwaita-blue transition-colors disabled:opacity-60" />
+              <div class="w-full">
+                <input
+                  type="text"
+                  id="comment-author"
+                  required={!isAnonymous}
+                  disabled={isAnonymous}
+                  placeholder={isAnonymous ? 'Anonymous User' : 'Linus Torvalds'}
+                  bind:value={authorName}
+                  class="w-full px-3 py-1.5 text-sm bg-adwaita-bg border border-adwaita-border rounded-lg text-adwaita-text placeholder:text-adwaita-subtitle/70 focus:outline-none focus:border-adwaita-blue transition-colors disabled:opacity-60"
+                  class:border-palette-coral={isNameInvalid} />
+                {#if isNameInvalid}
+                  <p class="text-xs text-palette-coral mt-1">This name cannot be used. Please use another name.</p>
+                {/if}
+              </div>
             </div>
             <div class="flex flex-col items-start gap-2">
               <label
@@ -436,7 +452,7 @@
             <div class="flex justify-end mt-2">
               <button
                 type="submit"
-                disabled={isSubmitting}
+                disabled={isSubmitting || isNameInvalid}
                 class="inline-flex cursor-pointer items-center justify-center rounded-lg bg-adwaita-blue px-5 py-2 text-sm font-semibold text-white transition-colors hover:bg-adwaita-blue-hover focus:outline-none disabled:cursor-not-allowed disabled:opacity-55">
                 {isSubmitting ? 'Validating...' : 'Post Comment'}
               </button>
@@ -453,7 +469,7 @@
             <div
               class="relative flex flex-col gap-4"
               use:trunkAction>
-              <!-- Single continuous trunk line connecting root avatar center to last reply avatar center -->
+              
               {#if rootComment.children && rootComment.children.length > 0}
                 <div
                   class="trunk-line-single absolute border-l border-adwaita-subtitle/20 z-0"
@@ -461,9 +477,9 @@
                 </div>
               {/if}
 
-              <!-- Top-level Comment -->
+              
               <div class="relative flex items-start gap-3">
-                <!-- Avatar Column -->
+                
                 <div
                   class="parent-avatar flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-adwaita-card text-adwaita-subtitle border border-adwaita-border z-10">
                   <span
@@ -474,7 +490,7 @@
                   </span>
                 </div>
 
-                <!-- Content Column -->
+                
                 <div class="flex-1 min-w-0">
                   <div
                     class="inline-block max-w-full bg-adwaita-card/50 px-4 py-2 text-left"
@@ -486,7 +502,7 @@
                     </p>
                   </div>
 
-                  <!-- Actions / Metadata below bubble -->
+                  
                   <div class="flex items-center gap-3 mt-1 ml-2 text-[10px] text-adwaita-subtitle">
                     <span>{formatDate(rootComment.created_at)}</span>
                     <button
@@ -501,7 +517,7 @@
                     </button>
                   </div>
 
-                  <!-- Inline Reply Form for Root Comment -->
+                  
                   {#if replyTo?.id === rootComment.id}
                     <form
                       onsubmit={e => handleSubmit(e, rootComment.id)}
@@ -532,14 +548,20 @@
                             for="reply-author-{rootComment.id}"
                             class="text-xs font-bold text-adwaita-subtitle w-20 shrink-0"
                             >Name</label>
-                          <input
-                            type="text"
-                            id="reply-author-{rootComment.id}"
-                            required={!isAnonymous}
-                            disabled={isAnonymous}
-                            placeholder={isAnonymous ? 'Anonymous User' : 'Linus Torvalds'}
-                            bind:value={authorName}
-                            class="w-full px-3 py-1.5 text-sm bg-adwaita-bg border border-adwaita-border rounded-lg text-adwaita-text placeholder:text-adwaita-subtitle/70 focus:outline-none focus:border-adwaita-blue transition-colors disabled:opacity-60" />
+                          <div class="w-full">
+                            <input
+                              type="text"
+                              id="reply-author-{rootComment.id}"
+                              required={!isAnonymous}
+                              disabled={isAnonymous}
+                              placeholder={isAnonymous ? 'Anonymous User' : 'Linus Torvalds'}
+                              bind:value={authorName}
+                              class="w-full px-3 py-1.5 text-sm bg-adwaita-bg border border-adwaita-border rounded-lg text-adwaita-text placeholder:text-adwaita-subtitle/70 focus:outline-none focus:border-adwaita-blue transition-colors disabled:opacity-60"
+                              class:border-palette-coral={isNameInvalid} />
+                            {#if isNameInvalid}
+                              <p class="text-xs text-palette-coral mt-1">This name cannot be used. Please use another name.</p>
+                            {/if}
+                          </div>
                         </div>
                         <div class="flex flex-col items-start gap-2">
                           <label
@@ -559,7 +581,7 @@
                         <div class="flex justify-end">
                           <button
                             type="submit"
-                            disabled={isSubmitting}
+                            disabled={isSubmitting || isNameInvalid}
                             class="inline-flex cursor-pointer items-center justify-center rounded-lg bg-adwaita-blue px-5 py-2 text-sm font-semibold text-white transition-colors hover:bg-adwaita-blue-hover focus:outline-none disabled:cursor-not-allowed disabled:opacity-55">
                             {isSubmitting ? 'Validating...' : 'Post Reply'}
                           </button>
@@ -570,20 +592,20 @@
                 </div>
               </div>
 
-              <!-- Replies Section (Flat List, max 1 level indent) -->
+              
               {#if rootComment.children && rootComment.children.length > 0}
                 <div
                   class="relative"
                   style="padding-left: 44px;">
                   {#each rootComment.children as child, i (child.id)}
                     <div class="relative flex items-start gap-3 mt-4">
-                      <!-- Curved elbow connector (trunk part + rounded bend + hook part) -->
+                      
                       <div
                         class="absolute border-l border-b border-adwaita-subtitle/20 z-0"
                         style="left: -28px; top: -16px; width: 28px; height: 32px; border-bottom-left-radius: 10px;">
                       </div>
 
-                      <!-- Reply Avatar Column -->
+                      
                       <div
                         class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-adwaita-card text-adwaita-subtitle border border-adwaita-border z-10"
                         class:last-reply-avatar={i === rootComment.children.length - 1}>
@@ -595,7 +617,7 @@
                         </span>
                       </div>
 
-                      <!-- Reply Content Column -->
+                      
                       <div class="flex-1 min-w-0">
                         <div
                           class="inline-block max-w-full bg-adwaita-card/50 px-4 py-2 text-left"
@@ -611,7 +633,7 @@
                           </p>
                         </div>
 
-                        <!-- Actions / Metadata below bubble -->
+                        
                         <div
                           class="flex items-center gap-3 mt-1 ml-2 text-[10px] text-adwaita-subtitle">
                           <span>{formatDate(child.created_at)}</span>
@@ -627,7 +649,7 @@
                           </button>
                         </div>
 
-                        <!-- Inline Reply Form for Child Comment (Replies go to the same flat level under rootComment) -->
+                        
                         {#if replyTo?.id === child.id}
                           <form
                             onsubmit={e => handleSubmit(e, child.id)}
@@ -658,14 +680,20 @@
                                   for="reply-author-child-{child.id}"
                                   class="text-xs font-bold text-adwaita-subtitle w-20 shrink-0"
                                   >Name</label>
-                                <input
-                                  type="text"
-                                  id="reply-author-child-{child.id}"
-                                  required={!isAnonymous}
-                                  disabled={isAnonymous}
-                                  placeholder={isAnonymous ? 'Anonymous User' : 'Linus Torvalds'}
-                                  bind:value={authorName}
-                                  class="w-full px-3 py-1.5 text-sm bg-adwaita-bg border border-adwaita-border rounded-lg text-adwaita-text placeholder:text-adwaita-subtitle/70 focus:outline-none focus:border-adwaita-blue transition-colors disabled:opacity-60" />
+                                <div class="w-full">
+                                  <input
+                                    type="text"
+                                    id="reply-author-child-{child.id}"
+                                    required={!isAnonymous}
+                                    disabled={isAnonymous}
+                                    placeholder={isAnonymous ? 'Anonymous User' : 'Linus Torvalds'}
+                                    bind:value={authorName}
+                                    class="w-full px-3 py-1.5 text-sm bg-adwaita-bg border border-adwaita-border rounded-lg text-adwaita-text placeholder:text-adwaita-subtitle/70 focus:outline-none focus:border-adwaita-blue transition-colors disabled:opacity-60"
+                                    class:border-palette-coral={isNameInvalid} />
+                                  {#if isNameInvalid}
+                                    <p class="text-xs text-palette-coral mt-1">This name cannot be used. Please use another name.</p>
+                                  {/if}
+                                </div>
                               </div>
                               <div class="flex flex-col items-start gap-2">
                                 <label
@@ -685,7 +713,7 @@
                               <div class="flex justify-end">
                                 <button
                                   type="submit"
-                                  disabled={isSubmitting}
+                                  disabled={isSubmitting || isNameInvalid}
                                   class="inline-flex cursor-pointer items-center justify-center rounded-lg bg-adwaita-blue px-5 py-2 text-sm font-semibold text-white transition-colors hover:bg-adwaita-blue-hover focus:outline-none disabled:cursor-not-allowed disabled:opacity-55">
                                   {isSubmitting ? 'Validating...' : 'Post Reply'}
                                 </button>

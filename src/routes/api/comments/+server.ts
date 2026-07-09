@@ -1,6 +1,7 @@
 import { json } from '@sveltejs/kit';
 import { supabase } from '$lib/supabase';
 import type { RequestHandler } from './$types';
+import { isNameReserved } from '$lib/nameValidator';
 
 const FORBIDDEN_WORDS = [
   /anj\w+/i,
@@ -78,6 +79,10 @@ export const POST: RequestHandler = async ({ request, platform }) => {
 
     if (!postId || !trimmedContent || (!anonymous && !trimmedAuthorName)) {
       return json({ message: 'Missing required fields' }, { status: 400 });
+    }
+
+    if (!anonymous && isNameReserved(trimmedAuthorName)) {
+      return json({ message: 'This name cannot be used. Please use another name.' }, { status: 400 });
     }
 
     if (displayName.length > MAX_AUTHOR_LENGTH || trimmedContent.length > MAX_CONTENT_LENGTH) {

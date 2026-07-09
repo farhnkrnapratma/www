@@ -3,6 +3,7 @@
   import ShinyText from '$lib/ShinyText.svelte';
   import { onMount } from 'svelte';
   import type { BlogPost } from './+page.server';
+  import { isNameReserved } from '$lib/nameValidator';
 
   let { data } = $props();
 
@@ -176,7 +177,9 @@
   let menuOpen = $state(false);
   let theme = $state<Theme>('auto');
   let themeDropdownOpen = $state(false);
+  let formName = $state('');
   let formMessage = $state('');
+  const isNameInvalid = $derived(formName.trim() !== '' && isNameReserved(formName));
 
   function navigate(section: Section) {
     activeSection = section;
@@ -663,6 +666,7 @@
       <form
         action="https://formsubmit.co/contact@fkp.my.id"
         method="POST"
+        onsubmit={e => { if (isNameInvalid) e.preventDefault(); }}
         class="w-full boxed-list text-left shadow-xs"
         autocomplete="off">
         <input
@@ -694,14 +698,22 @@
           <label
             for="form-name"
             class="text-sm font-semibold text-adwaita-text sm:w-1/4 shrink-0">Name</label>
-          <input
-            type="text"
-            id="form-name"
-            name="name"
-            required
-            placeholder="Linus Torvalds"
-            autocomplete="name"
-            class="w-full sm:w-3/4 bg-transparent border-0 px-2 py-1 text-sm text-adwaita-text placeholder:text-adwaita-subtitle/50 rounded-md focus:outline-none focus:ring-2 focus:ring-adwaita-blue/50 transition-all text-left" />
+          <div class="w-full sm:w-3/4">
+            <input
+              type="text"
+              id="form-name"
+              name="name"
+              required
+              placeholder="Linus Torvalds"
+              autocomplete="name"
+              bind:value={formName}
+              class="w-full bg-transparent border-0 px-2 py-1 text-sm text-adwaita-text placeholder:text-adwaita-subtitle/50 rounded-md focus:outline-none focus:ring-2 focus:ring-adwaita-blue/50 transition-all text-left"
+              class:ring-2={isNameInvalid}
+              class:ring-palette-coral={isNameInvalid} />
+            {#if isNameInvalid}
+              <p class="text-xs text-palette-coral mt-1 px-2">This name cannot be used. Please use another name.</p>
+            {/if}
+          </div>
         </div>
 
         <div
@@ -748,7 +760,8 @@
         <div class="px-5 py-3.5 flex items-center justify-end bg-adwaita-hover/30">
           <button
             type="submit"
-            class="inline-flex items-center justify-center cursor-pointer rounded-lg bg-adwaita-blue px-5 py-2 text-sm font-semibold text-white transition-colors hover:bg-adwaita-blue-hover focus:outline-none">
+            disabled={isNameInvalid}
+            class="inline-flex items-center justify-center cursor-pointer rounded-lg bg-adwaita-blue px-5 py-2 text-sm font-semibold text-white transition-colors hover:bg-adwaita-blue-hover focus:outline-none disabled:cursor-not-allowed disabled:opacity-55">
             Send Message
           </button>
         </div>

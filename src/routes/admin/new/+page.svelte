@@ -92,10 +92,10 @@
     if (title && !isEditMode) {
       slug = title
         .toLowerCase()
-        .replace(/[^a-z0-9\s-]/g, '') // remove special chars
-        .replace(/\s+/g, '-') // replace spaces with hyphens
-        .replace(/-+/g, '-') // remove multiple consecutive hyphens
-        .replace(/^-+|-+$/g, ''); // trim leading/trailing hyphens
+        .replace(/[^a-z0-9\s-]/g, '') 
+        .replace(/\s+/g, '-') 
+        .replace(/-+/g, '-') 
+        .replace(/^-+|-+$/g, ''); 
     }
   });
 
