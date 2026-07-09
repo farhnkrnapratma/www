@@ -579,7 +579,7 @@
                         
                         <div class="flex-1 min-w-0">
                           <div
-                            class="inline-block max-w-full bg-adwaita-card/50 px-4 py-2 text-left"
+                            class="inline-block max-w-full bg-adwaita-card/50 border border-adwaita-border px-4 py-2 text-left"
                             style="border-radius: 18px;">
                             <p class="text-sm leading-relaxed text-adwaita-text/90">
                               <strong class="text-xs font-bold text-adwaita-text/95 mr-2"
@@ -698,7 +698,7 @@
                               
                               <div class="flex-1 min-w-0">
                                 <div
-                                  class="inline-block max-w-full bg-adwaita-card/50 px-4 py-2 text-left"
+                                  class="inline-block max-w-full bg-adwaita-card/50 border border-adwaita-border px-4 py-2 text-left"
                                   style="border-radius: 18px;">
                                   <p class="text-sm leading-relaxed text-adwaita-text/90">
                                     <strong class="text-xs font-bold text-adwaita-text/95 mr-2"
