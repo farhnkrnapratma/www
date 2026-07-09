@@ -212,6 +212,40 @@
     return comments.filter(comment => comment.post_id === postId);
   }
 
+  function trunkAction(node: HTMLElement) {
+    if (typeof window === 'undefined') return;
+
+    function update() {
+      const parentAvatar = node.querySelector('.parent-avatar') as HTMLElement;
+      const lastAvatar = node.querySelector('.last-reply-avatar') as HTMLElement;
+      const trunkLine = node.querySelector('.trunk-line-single') as HTMLElement;
+      if (parentAvatar && lastAvatar && trunkLine) {
+        const parentRect = parentAvatar.getBoundingClientRect();
+        const lastRect = lastAvatar.getBoundingClientRect();
+        const nodeRect = node.getBoundingClientRect();
+
+        const parentCenterY = parentRect.top + parentRect.height / 2 - nodeRect.top;
+        const lastCenterY = lastRect.top + lastRect.height / 2 - nodeRect.top;
+
+        trunkLine.style.top = `${parentCenterY}px`;
+        trunkLine.style.height = `${lastCenterY - parentCenterY}px`;
+      }
+    }
+
+    setTimeout(update, 0);
+
+    const observer = new ResizeObserver(() => {
+      update();
+    });
+    observer.observe(node);
+
+    return {
+      destroy() {
+        observer.disconnect();
+      }
+    };
+  }
+
   function buildCommentTree(items: AdminComment[]): FlatAdminComment[] {
     const commentMap = new SvelteMap<string, AdminComment>();
     for (const item of items) {
@@ -514,15 +548,16 @@
               {#if postComments.length > 0 && expandedPostIds.has(post.id)}
                 <div class="flex flex-col gap-6 p-4">
                   {#each buildCommentTree(postComments) as rootComment (rootComment.id)}
-                    <div class="relative flex flex-col gap-4">
+                    <div class="relative flex flex-col gap-4" use:trunkAction>
+                      <!-- Single continuous trunk line connecting root avatar center to last reply avatar center -->
+                      {#if rootComment.children && rootComment.children.length > 0}
+                        <div class="trunk-line-single absolute w-[1px] bg-adwaita-subtitle/20 z-0" style="left: 16px;"></div>
+                      {/if}
+
                       <!-- Top-level Comment -->
                       <div class="relative flex items-start gap-3">
-                        <!-- Trunk line connecting root avatar center to replies -->
-                        {#if rootComment.children && rootComment.children.length > 0}
-                          <div class="absolute w-[1px] bg-adwaita-subtitle/20 z-0" style="left: 16px; top: 16px; bottom: 0;"></div>
-                        {/if}
                         <!-- Avatar Column -->
-                        <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-adwaita-card text-adwaita-subtitle border border-adwaita-border z-10">
+                        <div class="parent-avatar flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-adwaita-card text-adwaita-subtitle border border-adwaita-border z-10">
                           <span
                             class="material-symbols-rounded text-sm text-adwaita-subtitle"
                             style="font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;"
@@ -632,13 +667,8 @@
                               <!-- Curved elbow connector (trunk part + rounded bend + hook part) -->
                               <div class="absolute border-l border-b border-adwaita-subtitle/20 z-0" style="left: -28px; top: -16px; width: 28px; height: 32px; border-bottom-left-radius: 10px;"></div>
 
-                              <!-- Trunk continuation line for all except the last child -->
-                              {#if i !== rootComment.children.length - 1}
-                                <div class="absolute w-[1px] bg-adwaita-subtitle/20 z-0" style="left: -28px; top: 16px; bottom: 0;"></div>
-                              {/if}
-
                               <!-- Reply Avatar Column -->
-                              <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-adwaita-card text-adwaita-subtitle border border-adwaita-border z-10">
+                              <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-adwaita-card text-adwaita-subtitle border border-adwaita-border z-10" class:last-reply-avatar={i === rootComment.children.length - 1}>
                                 <span
                                   class="material-symbols-rounded text-sm text-adwaita-subtitle"
                                   style="font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;"
