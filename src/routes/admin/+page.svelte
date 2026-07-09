@@ -531,17 +531,24 @@
                         <!-- Content Column -->
                         <div class="flex-1 min-w-0">
                           <div class="inline-block max-w-full rounded-2xl bg-adwaita-card/50 px-4 py-2 text-left">
-                            <h4 class="text-xs font-bold text-adwaita-text/80 mb-0.5">
-                              {getCommentAuthor(rootComment)}
-                            </h4>
-                            <p class="text-sm leading-relaxed text-adwaita-text/90 whitespace-pre-line">
-                              {rootComment.content}
+                            <p class="text-sm leading-relaxed text-adwaita-text/90">
+                              <strong class="text-xs font-bold text-adwaita-text/95 mr-2">{getCommentAuthor(rootComment)}</strong>
+                              <span class="whitespace-pre-line">{rootComment.content}</span>
                             </p>
                           </div>
 
                           <!-- Actions / Metadata below bubble -->
-                          <div class="flex items-center gap-3 mt-1 ml-2 text-[10px] text-adwaita-subtitle">
+                          <div class="flex flex-wrap items-center gap-3 mt-1 ml-2 text-[10px] text-adwaita-subtitle">
                             <span>{formatDate(rootComment.created_at)}</span>
+                            {#if rootComment.is_approved}
+                              <span class="rounded bg-palette-green/15 px-2 py-0.5 text-[10px] font-bold text-palette-green border border-palette-green/30">
+                                Approved
+                              </span>
+                            {:else}
+                              <span class="rounded bg-palette-yellow/15 px-2 py-0.5 text-[10px] font-bold text-palette-yellow border border-palette-yellow/30">
+                                Hidden
+                              </span>
+                            {/if}
                             <button
                               type="button"
                               onclick={() => {
@@ -641,38 +648,45 @@
 
                               <!-- Reply Content Column -->
                               <div class="flex-1 min-w-0">
-                                <div class="inline-block max-w-full rounded-2xl bg-adwaita-card/50 px-4 py-2 text-left">
-                                  <h4 class="text-xs font-bold text-adwaita-text/80 mb-0.5">
-                                    {getCommentAuthor(child)}
-                                  </h4>
-                                  <p class="text-sm leading-relaxed text-adwaita-text/90 whitespace-pre-line">
-                                    {#if child.reply_to_author}
-                                      <span class="font-bold text-adwaita-blue/90 text-xs mr-1">@{child.reply_to_author}</span>
-                                    {/if}
-                                    {child.content}
-                                  </p>
-                                </div>
+                                 <div class="inline-block max-w-full rounded-2xl bg-adwaita-card/50 px-4 py-2 text-left">
+                                   <p class="text-sm leading-relaxed text-adwaita-text/90">
+                                     <strong class="text-xs font-bold text-adwaita-text/95 mr-2">{getCommentAuthor(child)}</strong>
+                                     {#if child.reply_to_author}
+                                       <span class="font-bold text-adwaita-blue/90 text-xs mr-1">@{child.reply_to_author}</span>
+                                     {/if}
+                                     <span class="whitespace-pre-line">{child.content}</span>
+                                   </p>
+                                 </div>
 
-                                <!-- Actions / Metadata below bubble -->
-                                <div class="flex items-center gap-3 mt-1 ml-2 text-[10px] text-adwaita-subtitle">
-                                  <span>{formatDate(child.created_at)}</span>
-                                  <button
-                                    type="button"
-                                    onclick={() => {
-                                      replyTo = child;
-                                      commentContent = '';
-                                    }}
-                                    class="font-bold text-adwaita-text/70 hover:text-adwaita-blue transition-colors cursor-pointer"
-                                  >
-                                    Reply
-                                  </button>
-                                  <button
-                                    onclick={() => deleteComment(child.id)}
-                                    class="font-bold text-palette-coral/80 hover:text-palette-coral transition-colors cursor-pointer"
-                                  >
-                                    Delete
-                                  </button>
-                                </div>
+                                 <!-- Actions / Metadata below bubble -->
+                                 <div class="flex flex-wrap items-center gap-3 mt-1 ml-2 text-[10px] text-adwaita-subtitle">
+                                   <span>{formatDate(child.created_at)}</span>
+                                   {#if child.is_approved}
+                                     <span class="rounded bg-palette-green/15 px-2 py-0.5 text-[10px] font-bold text-palette-green border border-palette-green/30">
+                                       Approved
+                                     </span>
+                                   {:else}
+                                     <span class="rounded bg-palette-yellow/15 px-2 py-0.5 text-[10px] font-bold text-palette-yellow border border-palette-yellow/30">
+                                       Hidden
+                                     </span>
+                                   {/if}
+                                   <button
+                                     type="button"
+                                     onclick={() => {
+                                       replyTo = child;
+                                       commentContent = '';
+                                     }}
+                                     class="font-bold text-adwaita-text/70 hover:text-adwaita-blue transition-colors cursor-pointer"
+                                   >
+                                     Reply
+                                   </button>
+                                   <button
+                                     onclick={() => deleteComment(child.id)}
+                                     class="font-bold text-palette-coral/80 hover:text-palette-coral transition-colors cursor-pointer"
+                                   >
+                                     Delete
+                                   </button>
+                                 </div>
 
                                 <!-- Inline Reply Form for Child Comment (Replies go to the same flat level under rootComment) -->
                                 {#if replyTo?.id === child.id}

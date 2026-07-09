@@ -527,6 +527,139 @@
         </div>
       </div>
 
+      <div>
+        <h3 class="text-lg font-bold text-adwaita-text tracking-tight mb-4">Top Projects</h3>
+        <div class="boxed-list text-left">
+          {#each projects.slice(0, 3) as project (project.name)}
+            <div class="relative action-row group flex flex-col items-stretch gap-2 text-left">
+              <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                <div class="flex items-center gap-2">
+                  <h4
+                    class="text-base font-bold text-adwaita-text group-hover:text-adwaita-blue transition-colors leading-none">
+                    <a
+                      href={project.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      title="Opens in a new tab"
+                      class="after:absolute after:inset-0 after:z-10">
+                      {project.name}
+                    </a>
+                  </h4>
+                  {#if langColors[project.lang]}
+                    <span
+                      class="rounded bg-adwaita-blue/15 px-2 py-0.5 text-[11px] font-semibold text-adwaita-blue"
+                      title="Language: {project.lang}">{project.lang}</span>
+                  {/if}
+                </div>
+
+                <div
+                  class="flex flex-wrap items-center gap-3 sm:justify-end shrink-0 relative z-20">
+                  {#if project.licenseName}
+                    <span
+                      class="text-xs font-semibold text-adwaita-subtitle whitespace-nowrap"
+                      title="License: {project.licenseName}">
+                      {project.licenseName} License
+                    </span>
+                  {/if}
+
+                  <div class="flex items-center gap-1 text-xs font-semibold text-adwaita-subtitle">
+                    <i
+                      class="bi bi-star-fill text-amber-600 text-[12px]"
+                      aria-hidden="true"></i>
+                    {project.stars}
+                  </div>
+                  <i
+                    class="bi bi-chevron-right text-sm text-zinc-400 opacity-80 group-hover:translate-x-0.5 transition-transform"
+                    aria-hidden="true"></i>
+                </div>
+              </div>
+              <p class="text-sm text-adwaita-subtitle leading-relaxed">{project.desc}</p>
+              <div class="mt-0.5 flex flex-wrap items-center gap-1.5 relative z-20">
+                {#each project.tags as tag (tag)}
+                  <span
+                    class="rounded bg-adwaita-border/40 px-2 py-0.5 text-[11px] font-medium text-adwaita-subtitle"
+                    >{tag}</span>
+                {/each}
+              </div>
+            </div>
+          {/each}
+          <button
+            onclick={() => navigate('projects')}
+            class="action-row w-full text-left group cursor-pointer flex items-center justify-between">
+            <span class="text-sm font-bold text-adwaita-blue group-hover:underline"
+              >View all projects</span>
+            <i
+              class="bi bi-chevron-right text-sm text-adwaita-blue group-hover:translate-x-0.5 transition-transform"
+              aria-hidden="true"></i>
+          </button>
+        </div>
+      </div>
+
+      <div>
+        <h3 class="text-lg font-bold text-adwaita-text tracking-tight mb-4">Recent Blog Posts</h3>
+        <div class="boxed-list text-left">
+          {#if posts.length === 0}
+            <div class="p-6 text-center text-sm text-adwaita-subtitle">
+              No blog posts published yet.
+            </div>
+          {:else}
+            {#each posts.slice(0, 2) as post (post.title)}
+              <a
+                href="/blog/{post.slug}"
+                class="action-row w-full text-left group cursor-pointer flex items-center justify-between">
+                <div class="flex flex-col gap-1 pr-6 font-sans">
+                  <p class="text-xs font-semibold text-adwaita-subtitle">{getPostDate(post)}</p>
+                  <h4
+                    class="text-base font-bold text-adwaita-text group-hover:text-adwaita-blue transition-colors leading-tight">
+                    {post.title}
+                  </h4>
+                  <p class="mt-1.5 text-sm text-adwaita-subtitle line-clamp-2">{post.excerpt}</p>
+                </div>
+                <i
+                  class="bi bi-chevron-right text-sm text-zinc-400 group-hover:text-adwaita-blue transition-all group-hover:translate-x-0.5"
+                  aria-hidden="true"></i>
+              </a>
+            {/each}
+            <button
+              onclick={() => navigate('blogs')}
+              class="action-row w-full text-left group cursor-pointer flex items-center justify-between">
+              <span class="text-sm font-bold text-adwaita-blue group-hover:underline"
+                >View all posts</span>
+              <i
+                class="bi bi-chevron-right text-sm text-adwaita-blue group-hover:translate-x-0.5 transition-transform"
+                aria-hidden="true"></i>
+            </button>
+          {/if}
+        </div>
+      </div>
+
+      <div class="boxed-list text-left border-adwaita-blue/30 bg-adwaita-blue/5">
+        <div class="px-5 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div class="flex items-start gap-4">
+            <i
+              class="bi bi-heart-fill text-2xl text-adwaita-blue shrink-0 mt-0.5"
+              aria-hidden="true"></i>
+            <div>
+              <h4 class="text-sm font-bold">
+                <ShinyText
+                  text="Support Open Source Work"
+                  color="#0FBF3E"
+                  shineColor="#ffffff"
+                  speed={1.5} />
+              </h4>
+              <p class="text-xs text-adwaita-subtitle mt-0.5 leading-relaxed">
+                Your support helps maintain and improve these open-source projects
+              </p>
+            </div>
+          </div>
+          <button
+            onclick={() => navigate('funding')}
+            class="inline-flex items-center justify-center cursor-pointer rounded-lg bg-adwaita-blue px-4 py-2 text-xs font-semibold text-white transition-colors hover:bg-adwaita-blue-hover focus:outline-none shrink-0">
+            Become a Sponsor
+          </button>
+        </div>
+      </div>
+
       <form
         action="https://formsubmit.co/contact@fkp.my.id"
         method="POST"
@@ -620,139 +753,6 @@
           </button>
         </div>
       </form>
-
-      <div>
-        <h3 class="text-lg font-bold text-adwaita-text tracking-tight mb-4">Recent Blog Posts</h3>
-        <div class="boxed-list text-left">
-          {#if posts.length === 0}
-            <div class="p-6 text-center text-sm text-adwaita-subtitle">
-              No blog posts published yet.
-            </div>
-          {:else}
-            {#each posts.slice(0, 2) as post (post.title)}
-              <a
-                href="/blog/{post.slug}"
-                class="action-row w-full text-left group cursor-pointer flex items-center justify-between">
-                <div class="flex flex-col gap-1 pr-6 font-sans">
-                  <p class="text-xs font-semibold text-adwaita-subtitle">{getPostDate(post)}</p>
-                  <h4
-                    class="text-base font-bold text-adwaita-text group-hover:text-adwaita-blue transition-colors leading-tight">
-                    {post.title}
-                  </h4>
-                  <p class="mt-1.5 text-sm text-adwaita-subtitle line-clamp-2">{post.excerpt}</p>
-                </div>
-                <i
-                  class="bi bi-chevron-right text-sm text-zinc-400 group-hover:text-adwaita-blue transition-all group-hover:translate-x-0.5"
-                  aria-hidden="true"></i>
-              </a>
-            {/each}
-            <button
-              onclick={() => navigate('blogs')}
-              class="action-row w-full text-left group cursor-pointer flex items-center justify-between">
-              <span class="text-sm font-bold text-adwaita-blue group-hover:underline"
-                >View all posts</span>
-              <i
-                class="bi bi-chevron-right text-sm text-adwaita-blue group-hover:translate-x-0.5 transition-transform"
-                aria-hidden="true"></i>
-            </button>
-          {/if}
-        </div>
-      </div>
-
-      <div>
-        <h3 class="text-lg font-bold text-adwaita-text tracking-tight mb-4">Top Projects</h3>
-        <div class="boxed-list text-left">
-          {#each projects.slice(0, 3) as project (project.name)}
-            <div class="relative action-row group flex flex-col items-stretch gap-2 text-left">
-              <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-                <div class="flex items-center gap-2">
-                  <h4
-                    class="text-base font-bold text-adwaita-text group-hover:text-adwaita-blue transition-colors leading-none">
-                    <a
-                      href={project.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      title="Opens in a new tab"
-                      class="after:absolute after:inset-0 after:z-10">
-                      {project.name}
-                    </a>
-                  </h4>
-                  {#if langColors[project.lang]}
-                    <span
-                      class="rounded bg-adwaita-blue/15 px-2 py-0.5 text-[11px] font-semibold text-adwaita-blue"
-                      title="Language: {project.lang}">{project.lang}</span>
-                  {/if}
-                </div>
-
-                <div
-                  class="flex flex-wrap items-center gap-3 sm:justify-end shrink-0 relative z-20">
-                  {#if project.licenseName}
-                    <span
-                      class="text-xs font-semibold text-adwaita-subtitle whitespace-nowrap"
-                      title="License: {project.licenseName}">
-                      {project.licenseName} License
-                    </span>
-                  {/if}
-
-                  <div class="flex items-center gap-1 text-xs font-semibold text-adwaita-subtitle">
-                    <i
-                      class="bi bi-star-fill text-amber-600 text-[12px]"
-                      aria-hidden="true"></i>
-                    {project.stars}
-                  </div>
-                  <i
-                    class="bi bi-chevron-right text-sm text-zinc-400 opacity-80 group-hover:translate-x-0.5 transition-transform"
-                    aria-hidden="true"></i>
-                </div>
-              </div>
-              <p class="text-sm text-adwaita-subtitle leading-relaxed">{project.desc}</p>
-              <div class="mt-0.5 flex flex-wrap items-center gap-1.5 relative z-20">
-                {#each project.tags as tag (tag)}
-                  <span
-                    class="rounded bg-adwaita-border/40 px-2 py-0.5 text-[11px] font-medium text-adwaita-subtitle"
-                    >{tag}</span>
-                {/each}
-              </div>
-            </div>
-          {/each}
-          <button
-            onclick={() => navigate('projects')}
-            class="action-row w-full text-left group cursor-pointer flex items-center justify-between">
-            <span class="text-sm font-bold text-adwaita-blue group-hover:underline"
-              >View all projects</span>
-            <i
-              class="bi bi-chevron-right text-sm text-adwaita-blue group-hover:translate-x-0.5 transition-transform"
-              aria-hidden="true"></i>
-          </button>
-        </div>
-      </div>
-
-      <div class="boxed-list text-left border-adwaita-blue/30 bg-adwaita-blue/5">
-        <div class="px-5 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div class="flex items-start gap-4">
-            <i
-              class="bi bi-heart-fill text-2xl text-adwaita-blue shrink-0 mt-0.5"
-              aria-hidden="true"></i>
-            <div>
-              <h4 class="text-sm font-bold">
-                <ShinyText
-                  text="Support Open Source Work"
-                  color="#0FBF3E"
-                  shineColor="#ffffff"
-                  speed={1.5} />
-              </h4>
-              <p class="text-xs text-adwaita-subtitle mt-0.5 leading-relaxed">
-                Your support helps maintain and improve these open-source projects
-              </p>
-            </div>
-          </div>
-          <button
-            onclick={() => navigate('funding')}
-            class="inline-flex items-center justify-center cursor-pointer rounded-lg bg-adwaita-blue px-4 py-2 text-xs font-semibold text-white transition-colors hover:bg-adwaita-blue-hover focus:outline-none shrink-0">
-            Become a Sponsor
-          </button>
-        </div>
-      </div>
     </section>
   {/if}
 

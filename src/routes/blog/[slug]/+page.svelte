@@ -426,11 +426,9 @@
                   <!-- Content Column -->
                   <div class="flex-1 min-w-0">
                     <div class="inline-block max-w-full rounded-2xl bg-adwaita-card/50 px-4 py-2 text-left">
-                      <h4 class="text-xs font-bold text-adwaita-text/80 mb-0.5">
-                        {getCommentAuthor(rootComment)}
-                      </h4>
-                      <p class="text-sm leading-relaxed text-adwaita-text/90 whitespace-pre-line">
-                        {rootComment.content}
+                      <p class="text-sm leading-relaxed text-adwaita-text/90">
+                        <strong class="text-xs font-bold text-adwaita-text/95 mr-2">{getCommentAuthor(rootComment)}</strong>
+                        <span class="whitespace-pre-line">{rootComment.content}</span>
                       </p>
                     </div>
 
@@ -543,14 +541,12 @@
                         <!-- Reply Content Column -->
                         <div class="flex-1 min-w-0">
                           <div class="inline-block max-w-full rounded-2xl bg-adwaita-card/50 px-4 py-2 text-left">
-                            <h4 class="text-xs font-bold text-adwaita-text/80 mb-0.5">
-                              {getCommentAuthor(child)}
-                            </h4>
-                            <p class="text-sm leading-relaxed text-adwaita-text/90 whitespace-pre-line">
+                            <p class="text-sm leading-relaxed text-adwaita-text/90">
+                              <strong class="text-xs font-bold text-adwaita-text/95 mr-2">{getCommentAuthor(child)}</strong>
                               {#if child.reply_to_author}
                                 <span class="font-bold text-adwaita-blue/90 text-xs mr-1">@{child.reply_to_author}</span>
                               {/if}
-                              {child.content}
+                              <span class="whitespace-pre-line">{child.content}</span>
                             </p>
                           </div>
 
