@@ -25,7 +25,7 @@ const FORBIDDEN_WORDS = [
   /porn/i,
 ];
 
-const ANONYMOUS_AUTHOR = 'Anonymous User';
+const ANONYMOUS_AUTHOR = 'Anonymous';
 const MAX_AUTHOR_LENGTH = 80;
 const MAX_CONTENT_LENGTH = 2000;
 const MAX_REPLY_DEPTH = 4;
