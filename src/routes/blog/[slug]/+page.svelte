@@ -416,10 +416,10 @@
               <div class="relative flex flex-col gap-4">
                 <!-- Top-level Comment -->
                 <div class="relative flex items-start gap-3">
-                  <!-- Trunk line connecting root avatar center to replies -->
-                  {#if rootComment.children && rootComment.children.length > 0}
-                    <div class="absolute left-4 top-4 bottom-0 w-[1px] bg-adwaita-subtitle/20 z-0"></div>
-                  {/if}
+                   <!-- Trunk line connecting root avatar center to replies -->
+                   {#if rootComment.children && rootComment.children.length > 0}
+                     <div class="absolute w-[1px] bg-adwaita-subtitle/20 z-0" style="left: 16px; top: 16px; bottom: 0;"></div>
+                   {/if}
                   <!-- Avatar Column -->
                   <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-adwaita-card text-adwaita-subtitle border border-adwaita-border z-10">
                     <span class="material-symbols-rounded text-sm" style="font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;" aria-hidden="true">
@@ -521,16 +521,16 @@
 
                 <!-- Replies Section (Flat List, max 1 level indent) -->
                 {#if rootComment.children && rootComment.children.length > 0}
-                  <div class="relative pl-11">
+                  <div class="relative" style="padding-left: 44px;">
 
                     {#each rootComment.children as child, i (child.id)}
                       <div class="relative flex items-start gap-3 mt-4">
                         <!-- Curved elbow connector (trunk part + rounded bend + hook part) -->
-                        <div class="absolute -left-7 top-[-16px] w-7 h-8 border-l border-b border-adwaita-subtitle/20 rounded-bl-[8px] z-0"></div>
+                        <div class="absolute border-l border-b border-adwaita-subtitle/20 z-0" style="left: -28px; top: -16px; width: 28px; height: 32px; border-bottom-left-radius: 10px;"></div>
 
                         <!-- Trunk continuation line for all except the last child -->
                         {#if i !== rootComment.children.length - 1}
-                          <div class="absolute -left-7 top-4 bottom-0 w-[1px] bg-adwaita-subtitle/20 z-0"></div>
+                          <div class="absolute w-[1px] bg-adwaita-subtitle/20 z-0" style="left: -28px; top: 16px; bottom: 0;"></div>
                         {/if}
 
                         <!-- Reply Avatar Column -->
