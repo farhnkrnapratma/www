@@ -573,7 +573,7 @@
                           <!-- Inline Reply Form for Child Comment (Replies go to the same flat level under rootComment) -->
                           {#if replyTo?.id === child.id}
                             <form
-                              onsubmit={e => handleSubmit(e, rootComment.id)}
+                              onsubmit={e => handleSubmit(e, child.id)}
                               class="mt-3 rounded-xl border border-adwaita-border bg-adwaita-bg/60 p-4"
                             >
                               <div class="mb-3 flex items-center justify-between gap-3">

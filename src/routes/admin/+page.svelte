@@ -294,10 +294,6 @@
   }
 </script>
 
-<svelte:head>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=shield_person" />
-</svelte:head>
-
 <nav
   class="fixed top-0 z-40 flex h-15 w-full items-center justify-between bg-adwaita-card/60 backdrop-blur-lg px-5 font-sans border-b border-adwaita-border shadow-xs transition-colors duration-300">
   <div class="flex items-center gap-3">
@@ -681,7 +677,7 @@
                                 <!-- Inline Reply Form for Child Comment (Replies go to the same flat level under rootComment) -->
                                 {#if replyTo?.id === child.id}
                                   <form
-                                    onsubmit={e => handleAdminSubmit(e, rootComment.id, post.id)}
+                                    onsubmit={e => handleAdminSubmit(e, child.id, post.id)}
                                     class="mt-3 rounded-xl border border-adwaita-border bg-adwaita-bg/60 p-4"
                                   >
                                     <div class="mb-3 flex items-center justify-between gap-3">
