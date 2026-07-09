@@ -227,7 +227,7 @@
         const lastCenterY = lastRect.top + lastRect.height / 2 - nodeRect.top;
 
         trunkLine.style.top = `${parentCenterY}px`;
-        trunkLine.style.height = `${lastCenterY - parentCenterY}px`;
+        trunkLine.style.height = `${lastCenterY - parentCenterY - 8}px`;
       }
     }
 
@@ -558,8 +558,8 @@
                       <!-- Single continuous trunk line connecting root avatar center to last reply avatar center -->
                       {#if rootComment.children && rootComment.children.length > 0}
                         <div
-                          class="trunk-line-single absolute w-[1px] bg-adwaita-subtitle/20 z-0"
-                          style="left: 16px;">
+                          class="trunk-line-single absolute border-l border-adwaita-subtitle/20 z-0"
+                          style="left: 16px; width: 0px;">
                         </div>
                       {/if}
 
