@@ -153,6 +153,7 @@
     var(--color) 100%
   );
   background-size: 200% auto;
+  background-clip: text;
   -webkit-background-clip: text;
   animation-name: var(--anim-name);
   animation-duration: var(--speed);

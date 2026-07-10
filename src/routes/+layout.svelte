@@ -2,7 +2,7 @@
   import './layout.css';
   import { onMount } from 'svelte';
   import { fade } from 'svelte/transition';
-  import { page } from '$app/stores';
+  import { page } from '$app/state';
 
   const { children } = $props();
 
@@ -11,11 +11,11 @@
   let showScrollTop = $state(false);
 
   const isPageWithFeedback = $derived(
-    $page.url.pathname === '/admin/login' || 
-    !$page.url.pathname.startsWith('/admin')
+    page.url.pathname === '/admin/login' ||
+    !page.url.pathname.startsWith('/admin')
   );
 
-  const postTitle = $derived($page.data.post?.title);
+  const postTitle = $derived(page.data.post?.title);
   const feedbackSubject = $derived(
     postTitle ? `Feedback on Post: ${postTitle}` : 'Feedback on portfolio website'
   );

@@ -27,7 +27,7 @@ const FORBIDDEN_WORDS = [
 
 const ANONYMOUS_AUTHOR = 'Anonymous';
 const MAX_AUTHOR_LENGTH = 80;
-const MAX_CONTENT_LENGTH = 2000;
+const MAX_CONTENT_LENGTH = 1000;
 const MAX_REPLY_DEPTH = 4;
 
 function localModerate(content: string): boolean {

@@ -4,7 +4,7 @@
   import type { PageProps } from './$types';
   import hljs from 'highlight.js';
   import { isNameReserved } from '$lib/nameValidator';
-  import { page } from '$app/stores';
+  import { page } from '$app/state';
 
   let { data }: PageProps = $props();
   const post = $derived(data.post);
@@ -396,7 +396,7 @@
           <span class="hidden sm:inline">{showCopySuccess ? 'Copied!' : 'Copy'}</span>
         </button>
         <a
-          href="https://twitter.com/intent/tweet?url={encodeURIComponent($page.url.href)}&text={encodeURIComponent(post.title)}"
+          href="https://twitter.com/intent/tweet?url={encodeURIComponent(page.url.href)}&text={encodeURIComponent(post.title)}"
           target="_blank"
           rel="noopener noreferrer"
           class="inline-flex h-9 items-center justify-center gap-2 rounded-lg border border-adwaita-border bg-adwaita-card px-4 text-xs font-semibold text-adwaita-text transition-colors hover:bg-adwaita-hover hover:text-adwaita-blue focus:outline-none select-none"
@@ -405,7 +405,7 @@
           <span class="hidden sm:inline">X</span>
         </a>
         <a
-          href="https://www.facebook.com/sharer/sharer.php?u={encodeURIComponent($page.url.href)}"
+          href="https://www.facebook.com/sharer/sharer.php?u={encodeURIComponent(page.url.href)}"
           target="_blank"
           rel="noopener noreferrer"
           class="inline-flex h-9 items-center justify-center gap-2 rounded-lg border border-adwaita-border bg-adwaita-card px-4 text-xs font-semibold text-adwaita-text transition-colors hover:bg-adwaita-hover hover:text-adwaita-blue focus:outline-none select-none"
@@ -414,7 +414,7 @@
           <span class="hidden sm:inline">Facebook</span>
         </a>
         <a
-          href="https://www.linkedin.com/sharing/share-offsite/?url={encodeURIComponent($page.url.href)}"
+          href="https://www.linkedin.com/sharing/share-offsite/?url={encodeURIComponent(page.url.href)}"
           target="_blank"
           rel="noopener noreferrer"
           class="inline-flex h-9 items-center justify-center gap-2 rounded-lg border border-adwaita-border bg-adwaita-card px-4 text-xs font-semibold text-adwaita-text transition-colors hover:bg-adwaita-hover hover:text-adwaita-blue focus:outline-none select-none"
@@ -423,7 +423,7 @@
           <span class="hidden sm:inline">LinkedIn</span>
         </a>
         <a
-          href="mailto:?subject={encodeURIComponent(post.title)}&body={encodeURIComponent($page.url.href)}"
+          href="mailto:?subject={encodeURIComponent(post.title)}&body={encodeURIComponent(page.url.href)}"
           class="inline-flex h-9 items-center justify-center gap-2 rounded-lg border border-adwaita-border bg-adwaita-card px-4 text-xs font-semibold text-adwaita-text transition-colors hover:bg-adwaita-hover hover:text-adwaita-blue focus:outline-none select-none"
           title="Share via Email">
           <i class="bi bi-envelope" aria-hidden="true"></i>
