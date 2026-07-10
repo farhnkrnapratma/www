@@ -289,9 +289,10 @@
 <main class="pt-15 font-sans flex flex-col min-h-[calc(100vh-3.75rem)]">
   {#if isCheckingAuth}
     <div class="flex flex-col items-center justify-center py-20 text-adwaita-subtitle flex-1">
-      <i
-        class="bi bi-hourglass-split text-3xl animate-spin mb-3"
-        aria-hidden="true"></i>
+      <svg class="animate-spin h-8 w-8 text-adwaita-subtitle mb-3 select-none" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+      </svg>
       Verifying credentials...
     </div>
   {:else}
@@ -410,17 +411,7 @@
             type="submit"
             disabled={isSubmitting}
             class="inline-flex h-10 items-center justify-center gap-2 cursor-pointer rounded-lg bg-adwaita-blue px-6 text-sm font-semibold text-white transition-colors hover:bg-adwaita-blue-hover focus:outline-none disabled:opacity-55">
-            {#if isSubmitting}
-              <i
-                class="bi bi-hourglass-split text-xs animate-spin"
-                aria-hidden="true"></i>
-              Saving...
-            {:else}
-              <i
-                class="bi bi-check-lg text-sm"
-                aria-hidden="true"></i>
-              {isEditMode ? 'Save Changes' : 'Save Blog Post'}
-            {/if}
+            {isSubmitting ? 'Saving...' : (isEditMode ? 'Save Changes' : 'Save Blog Post')}
           </button>
         </div>
       </form>

@@ -215,9 +215,9 @@
     if (typeof window === 'undefined') return;
 
     function update() {
-      const parentAvatar = node.querySelector('.parent-avatar') as HTMLElement;
-      const lastAvatar = node.querySelector('.last-reply-avatar') as HTMLElement;
-      const trunkLine = node.querySelector('.trunk-line-single') as HTMLElement;
+      const parentAvatar = node.querySelector(':scope > .comment-row-wrapper .parent-avatar') as HTMLElement;
+      const lastAvatar = node.querySelector(':scope > .replies-container > .child-wrapper:last-child > div > .comment-row-wrapper .last-reply-avatar') as HTMLElement;
+      const trunkLine = node.querySelector(':scope > .trunk-line-single') as HTMLElement;
       if (parentAvatar && lastAvatar && trunkLine) {
         const parentRect = parentAvatar.getBoundingClientRect();
         const lastRect = lastAvatar.getBoundingClientRect();
@@ -305,7 +305,10 @@
 <nav
   class="fixed top-0 z-40 flex h-15 w-full items-center justify-between bg-adwaita-card/60 backdrop-blur-lg px-5 font-sans border-b border-adwaita-border shadow-xs transition-colors duration-300">
   <div class="flex items-center gap-3">
-    <span class="text-sm font-bold text-adwaita-text">CMS Admin Panel</span>
+    <div class="flex items-center gap-2">
+      <span class="material-symbols-rounded text-adwaita-blue text-lg select-none">code</span>
+      <span class="text-sm font-bold text-adwaita-text select-none">Console</span>
+    </div>
   </div>
 
   <div class="flex items-center gap-2">
@@ -389,22 +392,20 @@
     <button
       onclick={handleLogout}
       disabled={isLoggingOut}
-      class="inline-flex h-9 items-center justify-center rounded-lg bg-adwaita-card border border-adwaita-border px-4 text-xs font-semibold text-adwaita-text transition-colors hover:bg-adwaita-hover focus:outline-none disabled:opacity-50">
-      <i
-        class="bi bi-box-arrow-right mr-1.5"
-        aria-hidden="true"></i>
+      class="inline-flex h-9 items-center justify-center rounded-lg bg-adwaita-card border border-adwaita-border px-4 text-xs font-semibold text-adwaita-text transition-colors hover:bg-adwaita-hover focus:outline-none disabled:opacity-50 select-none">
       Logout
     </button>
   </div>
 </nav>
 
 <main class="pt-15 font-sans flex flex-col min-h-[calc(100vh-3.75rem)]">
-  <section class="mx-auto w-full md:w-[80%] lg:w-[55%] md:max-w-none px-6 py-14 flex-1">
+  <section class="mx-auto w-full md:w-[80%] lg:w-[50%] md:max-w-none px-6 py-14 flex-1">
     {#if isLoading}
       <div class="flex flex-col items-center justify-center py-20 text-adwaita-subtitle">
-        <i
-          class="bi bi-hourglass-split text-3xl animate-spin mb-3"
-          aria-hidden="true"></i>
+        <svg class="animate-spin h-8 w-8 text-adwaita-subtitle mb-3 select-none" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
         Loading dashboard data...
       </div>
     {:else}
@@ -526,12 +527,12 @@
                   {#snippet commentNode(comment: FlatAdminComment, depth: number, isLastChildOfParent: boolean)}
                     <div class="relative flex flex-col gap-4" use:trunkAction>
                       {#if comment.children && comment.children.length > 0}
-                        <div class="trunk-line-single absolute border-l border-adwaita-subtitle/20 z-0" style="left: 16px; width: 0px;"></div>
+                        <div class="trunk-line-single absolute border-l border-adwaita-subtitle/10 z-0" style="left: 16px; width: 0px;"></div>
                       {/if}
 
                       <div class="comment-row-wrapper relative flex items-start gap-3">
                         <div
-                          class="parent-avatar flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-adwaita-card text-adwaita-subtitle border border-adwaita-border z-10"
+                          class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-adwaita-card text-adwaita-subtitle border border-adwaita-border z-10"
                           class:parent-avatar={comment.children && comment.children.length > 0}
                           class:last-reply-avatar={isLastChildOfParent}>
                           <span
@@ -560,12 +561,7 @@
                           <div
                             class="flex flex-wrap items-center gap-3 mt-1 ml-2 text-[10px] text-adwaita-subtitle">
                             <span>{formatDate(comment.created_at)}</span>
-                            {#if comment.is_approved}
-                              <span
-                                class="rounded bg-palette-green/15 px-2 py-0.5 text-[10px] font-bold text-palette-green border border-palette-green/30">
-                                Approved
-                              </span>
-                            {:else}
+                            {#if !comment.is_approved}
                               <span
                                 class="rounded bg-palette-yellow/15 px-2 py-0.5 text-[10px] font-bold text-palette-yellow border border-palette-yellow/30">
                                 Hidden
@@ -610,27 +606,34 @@
                               </div>
 
                               <div class="flex flex-col gap-4">
-                                <div class="flex flex-col items-start gap-2">
+                                <div class="flex flex-col gap-2">
                                   <label
                                     for="reply-msg-{comment.id}"
-                                    class="text-xs font-bold text-adwaita-subtitle w-20 shrink-0 mt-1">
+                                    class="text-xs font-bold text-adwaita-subtitle select-none">
                                     Message
                                   </label>
-                                  <textarea
-                                    id="reply-msg-{comment.id}"
-                                    required
-                                    rows="3"
-                                    maxlength="2000"
-                                    placeholder="Write your reply here..."
-                                    bind:value={commentContent}
-                                    class="w-full px-3 py-1.5 text-sm bg-adwaita-bg border border-adwaita-border rounded-lg text-adwaita-text placeholder:text-adwaita-subtitle/70 focus:outline-none focus:border-adwaita-blue transition-colors resize-none"
-                                  ></textarea>
+                                  <div class="relative w-full">
+                                    <textarea
+                                      id="reply-msg-{comment.id}"
+                                      required
+                                      rows="3"
+                                      maxlength="1000"
+                                      placeholder="Enter your message"
+                                      bind:value={commentContent}
+                                      class="w-full px-3 py-1.5 pr-8 text-sm bg-adwaita-bg border border-adwaita-border rounded-lg text-adwaita-text placeholder:text-adwaita-subtitle/70 focus:outline-none focus:border-adwaita-blue transition-colors resize-none no-scrollbar"
+                                    ></textarea>
+                                    {#if commentContent.length > 0}
+                                      <div class="absolute right-3 bottom-2.5 pointer-events-none select-none z-10 font-mono text-[10px] text-adwaita-subtitle/80">
+                                        {1000 - commentContent.length}
+                                      </div>
+                                    {/if}
+                                  </div>
                                 </div>
                                 <div class="flex justify-end">
                                   <button
                                     type="submit"
                                     disabled={isSubmitting}
-                                    class="inline-flex cursor-pointer items-center justify-center rounded-lg bg-adwaita-blue px-5 py-2 text-sm font-semibold text-white transition-colors hover:bg-adwaita-blue-hover focus:outline-none disabled:cursor-not-allowed disabled:opacity-55">
+                                    class="inline-flex cursor-pointer items-center justify-center rounded-lg bg-adwaita-blue px-5 py-2 text-sm font-semibold text-white transition-colors hover:bg-adwaita-blue-hover focus:outline-none disabled:cursor-not-allowed disabled:opacity-55 select-none">
                                     {isSubmitting ? 'Posting...' : 'Post Reply'}
                                   </button>
                                 </div>
@@ -645,7 +648,7 @@
                           {#each comment.children as child, i (child.id)}
                             <div class="child-wrapper relative mt-4">
                               <div
-                                class="absolute border-l border-b border-adwaita-subtitle/20 z-0"
+                                class="absolute border-l border-b border-adwaita-subtitle/10 z-0"
                                 style="left: -28px; top: -16px; width: 28px; height: 32px; border-bottom-left-radius: 10px;">
                               </div>
                               {@render commentNode(child, depth + 1, i === comment.children.length - 1)}

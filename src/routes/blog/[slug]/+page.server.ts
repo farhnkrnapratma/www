@@ -25,11 +25,15 @@ export const load: PageServerLoad = async ({ params, fetch }) => {
       throw new Error(`Failed to fetch markdown file: ${fileRes.statusText}`);
     }
     const markdown = await fileRes.text();
-
     html = await marked.parse(markdown);
+
+    const words = markdown.trim().split(/\s+/).length;
+    const minutes = Math.max(1, Math.ceil(words / 200));
+    post.read_time = `${minutes} min${minutes > 1 ? 's' : ''} read`;
   } catch (err) {
     console.error('Error fetching/rendering markdown file:', err);
     html = '<p class="text-red-500">Error: Could not render post content.</p>';
+    post.read_time = '1 min read';
   }
 
   const { data: comments, error: commentsError } = await supabase

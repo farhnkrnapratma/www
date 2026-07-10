@@ -34,6 +34,7 @@
   --color-adwaita-blue-hover: #08872b;
   --color-adwaita-text: #232925;
   --color-adwaita-subtitle: #909692;
+  --color-adwaita-body: #232925;
   --color-adwaita-switcher-bg: rgba(228, 235, 230, 0.5);
   --color-adwaita-switcher-active: #ffffff;
   --color-adwaita-hover: rgba(16, 20, 17, 0.015);
@@ -51,6 +52,7 @@
   --color-adwaita-border: rgba(182, 191, 184, 0.15);
   --color-adwaita-text: #f2f5f3;
   --color-adwaita-subtitle: #b6bfb8;
+  --color-adwaita-body: #b6bfb8;
   --color-adwaita-switcher-bg: rgba(16, 20, 17, 0.5);
   --color-adwaita-switcher-active: #232925;
   --color-adwaita-hover: rgba(255, 255, 255, 0.02);
@@ -161,7 +163,7 @@
 }
 
 .shiny-text.disabled {
-  @apply animate-none! bg-none! text-[color:var(--color)]!;
+  @apply animate-none! bg-none! text-(--color)!;
 }
 
 .shiny-text.pause-on-hover:hover {
@@ -184,4 +186,20 @@
   100% {
     background-position: 150% center;
   }
+}
+
+button,
+.material-symbols-rounded,
+.bi,
+::placeholder,
+.parent-avatar,
+.last-reply-avatar,
+.trunk-line-single {
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+::placeholder {
+  color: var(--color-adwaita-subtitle) !important;
+  opacity: 0.45 !important;
 }
