@@ -1,0 +1,1 @@
+Conventions: use Svelte 5 runes syntax in components. Prefer $app/state over deprecated $app/stores page. Global styling lives in src/routes/layout.css with Tailwind @theme variables and custom prose/shiny-text utilities. Preserve existing Svelte formatting and small focused edits.

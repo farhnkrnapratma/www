@@ -1,0 +1,1 @@
+Useful commands: bun run dev, bun run build, bun run check, bun run lint, bun run format. The project uses Linux paths and bun is the documented runner in README, while package.json scripts map to Vite/SvelteKit tooling.

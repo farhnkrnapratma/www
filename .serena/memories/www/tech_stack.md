@@ -1,0 +1,1 @@
+Tech stack: SvelteKit 2.x, Svelte 5, TypeScript, Tailwind CSS 4, Supabase, Cloudflare adapter, Vite. Package manager/docs mention bun for dev/build/check commands. Key scripts: dev, build, preview, check, lint, format.
