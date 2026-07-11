@@ -63,6 +63,6 @@
     "@supabase/supabase-js": "^2.110.0",
     "bootstrap-icons": "^1.13.1",
     "highlight.js": "^11.11.1",
-    "marked": "^18.0.5"
+    "marked": "^18.0.6"
   }
 }
