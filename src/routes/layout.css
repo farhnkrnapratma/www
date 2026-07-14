@@ -35,6 +35,9 @@
   --color-adwaita-text: #232925;
   --color-adwaita-subtitle: #909692;
   --color-adwaita-body: #232925;
+  --color-adwaita-label: #5c625e;
+  --color-adwaita-error: #c73a1d;
+  --color-adwaita-focus: #08872b;
   --color-adwaita-switcher-bg: rgba(228, 235, 230, 0.5);
   --color-adwaita-switcher-active: #ffffff;
   --color-adwaita-hover: rgba(16, 20, 17, 0.015);
@@ -53,6 +56,9 @@
   --color-adwaita-text: #f2f5f3;
   --color-adwaita-subtitle: #b6bfb8;
   --color-adwaita-body: #b6bfb8;
+  --color-adwaita-label: #b6bfb8;
+  --color-adwaita-error: #ff7b6b;
+  --color-adwaita-focus: #0fbf3e;
   --color-adwaita-switcher-bg: rgba(16, 20, 17, 0.5);
   --color-adwaita-switcher-active: #232925;
   --color-adwaita-hover: rgba(255, 255, 255, 0.02);
@@ -201,6 +207,13 @@ button,
 }
 
 ::placeholder {
-  color: var(--color-adwaita-subtitle) !important;
-  opacity: 0.45 !important;
+  color: var(--color-adwaita-label) !important;
+  opacity: 0.75 !important;
+}
+
+input:focus-visible,
+textarea:focus-visible,
+input[type="checkbox"]:focus-visible {
+  outline: 2px solid var(--color-adwaita-focus) !important;
+  outline-offset: 2px !important;
 }

@@ -103,7 +103,6 @@
 
   let authorName = $state('');
   let isAnonymous = $state(false);
-  const isNameInvalid = $derived(!isAnonymous && authorName.trim() !== '' && isNameReserved(authorName));
   let commentContent = $state('');
   let replyTo = $state<BlogComment | null>(null);
   let isSubmitting = $state(false);
@@ -161,6 +160,7 @@
     replyTo = null;
     commentContent = '';
     feedbackMessage = null;
+    errors = { authorName: '', commentContent: '' };
   }
 
   function trunkAction(node: HTMLElement) {
@@ -197,17 +197,25 @@
     };
   }
 
+  let errors = $state({ authorName: '', commentContent: '' });
+
+  function validate() {
+    const nameErr = (!isAnonymous && authorName.trim() === '') ? 'Name is required.' : '';
+    const msgErr = commentContent.trim() === '' ? 'Message is required.' : '';
+    const nameReservedErr = (!isAnonymous && !nameErr && isNameReserved(authorName)) ? 'This name cannot be used. Please use another name.' : '';
+
+    errors = {
+      authorName: nameErr || nameReservedErr,
+      commentContent: msgErr
+    };
+
+    return !errors.authorName && !errors.commentContent;
+  }
+
   async function handleSubmit(e: SubmitEvent, parentId: string | null = null) {
     e.preventDefault();
-    if ((!isAnonymous && !authorName.trim()) || !commentContent.trim()) return;
-
-    if (!isAnonymous && isNameReserved(authorName)) {
-      feedbackMessage = {
-        type: 'error',
-        text: 'This name cannot be used. Please use another name.',
-      };
-      return;
-    }
+    errors = { authorName: '', commentContent: '' };
+    if (!validate()) return;
 
     isSubmitting = true;
     feedbackMessage = null;
@@ -518,60 +526,82 @@
           </div>
 
           <form
+            novalidate
             onsubmit={e => handleSubmit(e)}
             class="flex flex-col gap-4">
-            <label class="flex items-center gap-2 text-xs font-bold text-adwaita-subtitle select-none cursor-pointer">
+            <label class="flex items-center gap-2 text-xs font-bold text-adwaita-label select-none cursor-pointer">
               <input
                 type="checkbox"
                 bind:checked={isAnonymous}
+                aria-describedby="anon-help-main"
                 class="h-3.5 w-3.5 rounded border-adwaita-border text-adwaita-blue focus:ring-adwaita-blue cursor-pointer" />
               Comment anonymously
             </label>
+            <span id="anon-help-main" class="sr-only">
+              If checked, your name is hidden and your comment is posted as Anonymous.
+            </span>
+
             <div class="flex flex-col sm:flex-row sm:items-center gap-2">
               <label
                 for="comment-author"
-                class="text-xs font-bold text-adwaita-subtitle w-20 shrink-0 select-none">Name</label>
+                class="text-xs font-bold text-adwaita-label w-20 shrink-0 select-none">
+                Name {#if !isAnonymous}<span aria-hidden="true" class="text-adwaita-error">*</span><span class="sr-only">(required)</span>{/if}
+              </label>
               <div class="w-full">
                 <input
                   type="text"
                   id="comment-author"
-                  required={!isAnonymous}
                   disabled={isAnonymous}
+                  aria-required={!isAnonymous}
+                  aria-invalid={!!errors.authorName}
+                  aria-describedby={errors.authorName ? 'comment-author-error' : ''}
                   placeholder={isAnonymous ? 'Anonymous' : 'Enter your name'}
                   bind:value={authorName}
-                  class="w-full px-3 py-1.5 text-sm bg-adwaita-bg border border-adwaita-border rounded-lg text-adwaita-text placeholder:text-adwaita-subtitle/70 focus:outline-none focus:border-adwaita-blue transition-colors disabled:opacity-60"
-                  class:border-palette-coral={isNameInvalid} />
-                {#if isNameInvalid}
-                  <p class="text-xs text-palette-coral mt-1">This name cannot be used. Please use another name.</p>
+                  class="w-full px-3 py-1.5 text-sm bg-adwaita-bg border border-adwaita-border rounded-lg text-adwaita-text placeholder:text-adwaita-label/70 focus:outline-none transition-colors disabled:opacity-60"
+                  class:border-adwaita-error={errors.authorName} />
+                {#if errors.authorName}
+                  <p id="comment-author-error" role="alert" class="text-adwaita-error font-medium text-xs mt-1">
+                    {errors.authorName}
+                  </p>
                 {/if}
               </div>
             </div>
+
             <div class="flex flex-col gap-2">
               <label
                 for="comment-msg"
-                class="text-xs font-bold text-adwaita-subtitle select-none">Message</label>
+                class="text-xs font-bold text-adwaita-label select-none">
+                Message <span aria-hidden="true" class="text-adwaita-error">*</span><span class="sr-only">(required)</span>
+              </label>
               <div class="relative w-full">
                 <textarea
                   id="comment-msg"
-                  required
                   rows="3"
                   maxlength="1000"
                   placeholder="Enter your message"
                   bind:value={commentContent}
-                  class="w-full px-3 py-1.5 pr-8 text-sm bg-adwaita-bg border border-adwaita-border rounded-lg text-adwaita-text placeholder:text-adwaita-subtitle/70 focus:outline-none focus:border-adwaita-blue transition-colors resize-none no-scrollbar"
+                  aria-required="true"
+                  aria-invalid={!!errors.commentContent}
+                  aria-describedby="comment-msg-count {errors.commentContent ? 'comment-msg-error' : ''}"
+                  class="w-full px-3 py-1.5 pr-16 text-sm bg-adwaita-bg border border-adwaita-border rounded-lg text-adwaita-text placeholder:text-adwaita-label/70 focus:outline-none transition-colors resize-none no-scrollbar"
+                  class:border-adwaita-error={errors.commentContent}
                 ></textarea>
-                {#if commentContent.length > 0}
-                  <div class="absolute right-3 bottom-2.5 pointer-events-none select-none z-10 font-mono text-[10px] text-adwaita-subtitle/80">
-                    {1000 - commentContent.length}
-                  </div>
-                {/if}
+                <div class="absolute right-3 bottom-2.5 pointer-events-none select-none z-10 font-mono text-[10px] text-adwaita-label" id="comment-msg-count" aria-live="polite">
+                  {commentContent.length}/1000
+                </div>
               </div>
+              {#if errors.commentContent}
+                <p id="comment-msg-error" role="alert" class="text-adwaita-error font-medium text-xs mt-0.5">
+                  {errors.commentContent}
+                </p>
+              {/if}
             </div>
+
             <div class="flex justify-end mt-2">
               <button
                 type="submit"
-                disabled={isSubmitting || isNameInvalid}
-                class="inline-flex cursor-pointer items-center justify-center rounded-lg bg-adwaita-blue px-5 py-2 text-sm font-semibold text-white transition-colors hover:bg-adwaita-blue-hover focus:outline-none disabled:cursor-not-allowed disabled:opacity-55 select-none">
+                disabled={isSubmitting}
+                class="inline-flex cursor-pointer items-center justify-center rounded-lg bg-adwaita-focus px-5 py-2 text-sm font-semibold text-white transition-colors hover:bg-adwaita-focus/90 focus:outline-none disabled:cursor-not-allowed disabled:opacity-55 select-none">
                 {isSubmitting ? 'Validating...' : 'Post Comment'}
               </button>
             </div>
@@ -632,6 +662,7 @@
 
                 {#if replyTo?.id === comment.id}
                   <form
+                    novalidate
                     onsubmit={e => handleSubmit(e, comment.id)}
                     class="mt-3 rounded-xl border border-adwaita-border bg-adwaita-bg/60 p-4">
                     <div class="mb-3 flex items-center justify-between gap-3">
@@ -648,60 +679,79 @@
 
                     <div class="flex flex-col gap-4">
                       <label
-                        class="flex items-center gap-2 text-xs font-bold text-adwaita-subtitle select-none cursor-pointer">
+                        class="flex items-center gap-2 text-xs font-bold text-adwaita-label select-none cursor-pointer">
                         <input
                           type="checkbox"
                           bind:checked={isAnonymous}
+                          aria-describedby="anon-help-reply-{comment.id}"
                           class="h-3.5 w-3.5 rounded border-adwaita-border text-adwaita-blue focus:ring-adwaita-blue cursor-pointer" />
                         Comment anonymously
                       </label>
+                      <span id="anon-help-reply-{comment.id}" class="sr-only">
+                        If checked, your name is hidden and your comment is posted as Anonymous.
+                      </span>
+
                       <div class="flex flex-col sm:flex-row sm:items-center gap-2">
                         <label
                           for="reply-author-{comment.id}"
-                          class="text-xs font-bold text-adwaita-subtitle w-20 shrink-0 select-none"
-                          >Name</label>
+                          class="text-xs font-bold text-adwaita-label w-20 shrink-0 select-none">
+                          Name {#if !isAnonymous}<span aria-hidden="true" class="text-adwaita-error">*</span><span class="sr-only">(required)</span>{/if}
+                        </label>
                         <div class="w-full">
                           <input
                             type="text"
                             id="reply-author-{comment.id}"
-                            required={!isAnonymous}
                             disabled={isAnonymous}
+                            aria-required={!isAnonymous}
+                            aria-invalid={!!errors.authorName}
+                            aria-describedby={errors.authorName ? 'reply-author-error-' + comment.id : ''}
                             placeholder={isAnonymous ? 'Anonymous' : 'Enter your name'}
                             bind:value={authorName}
-                            class="w-full px-3 py-1.5 text-sm bg-adwaita-bg border border-adwaita-border rounded-lg text-adwaita-text placeholder:text-adwaita-subtitle/70 focus:outline-none focus:border-adwaita-blue transition-colors disabled:opacity-60"
-                            class:border-palette-coral={isNameInvalid} />
-                          {#if isNameInvalid}
-                            <p class="text-xs text-palette-coral mt-1">This name cannot be used. Please use another name.</p>
+                            class="w-full px-3 py-1.5 text-sm bg-adwaita-bg border border-adwaita-border rounded-lg text-adwaita-text placeholder:text-adwaita-label/70 focus:outline-none transition-colors disabled:opacity-60"
+                            class:border-adwaita-error={errors.authorName} />
+                          {#if errors.authorName}
+                            <p id="reply-author-error-{comment.id}" role="alert" class="text-adwaita-error font-medium text-xs mt-1">
+                              {errors.authorName}
+                            </p>
                           {/if}
                         </div>
                       </div>
+
                       <div class="flex flex-col gap-2">
                         <label
                           for="reply-msg-{comment.id}"
-                          class="text-xs font-bold text-adwaita-subtitle select-none"
-                          >Message</label>
+                          class="text-xs font-bold text-adwaita-label select-none">
+                          Message <span aria-hidden="true" class="text-adwaita-error">*</span><span class="sr-only">(required)</span>
+                        </label>
                         <div class="relative w-full">
                           <textarea
                             id="reply-msg-{comment.id}"
-                            required
                             rows="3"
                             maxlength="1000"
                             placeholder="Enter your message"
                             bind:value={commentContent}
-                            class="w-full px-3 py-1.5 pr-8 text-sm bg-adwaita-bg border border-adwaita-border rounded-lg text-adwaita-text placeholder:text-adwaita-subtitle/70 focus:outline-none focus:border-adwaita-blue transition-colors resize-none no-scrollbar"
+                            aria-required="true"
+                            aria-invalid={!!errors.commentContent}
+                            aria-describedby="reply-msg-count-{comment.id} {errors.commentContent ? 'reply-msg-error-' + comment.id : ''}"
+                            class="w-full px-3 py-1.5 pr-16 text-sm bg-adwaita-bg border border-adwaita-border rounded-lg text-adwaita-text placeholder:text-adwaita-label/70 focus:outline-none transition-colors resize-none no-scrollbar"
+                            class:border-adwaita-error={errors.commentContent}
                           ></textarea>
-                          {#if commentContent.length > 0}
-                            <div class="absolute right-3 bottom-2.5 pointer-events-none select-none z-10 font-mono text-[10px] text-adwaita-subtitle/80">
-                              {1000 - commentContent.length}
-                            </div>
-                          {/if}
+                          <div class="absolute right-3 bottom-2.5 pointer-events-none select-none z-10 font-mono text-[10px] text-adwaita-label" id="reply-msg-count-{comment.id}" aria-live="polite">
+                            {commentContent.length}/1000
+                          </div>
                         </div>
+                        {#if errors.commentContent}
+                          <p id="reply-msg-error-{comment.id}" role="alert" class="text-adwaita-error font-medium text-xs mt-0.5">
+                            {errors.commentContent}
+                          </p>
+                        {/if}
                       </div>
+
                       <div class="flex justify-end">
                         <button
                           type="submit"
-                          disabled={isSubmitting || isNameInvalid}
-                          class="inline-flex cursor-pointer items-center justify-center rounded-lg bg-adwaita-blue px-5 py-2 text-sm font-semibold text-white transition-colors hover:bg-adwaita-blue-hover focus:outline-none disabled:cursor-not-allowed disabled:opacity-55 select-none">
+                          disabled={isSubmitting}
+                          class="inline-flex cursor-pointer items-center justify-center rounded-lg bg-adwaita-focus px-5 py-2 text-sm font-semibold text-white transition-colors hover:bg-adwaita-focus/90 focus:outline-none disabled:cursor-not-allowed disabled:opacity-55 select-none">
                           {isSubmitting ? 'Validating...' : 'Post Reply'}
                         </button>
                       </div>

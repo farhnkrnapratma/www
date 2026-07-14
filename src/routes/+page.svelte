@@ -203,7 +203,22 @@
   let themeDropdownOpen = $state(false);
   let formName = $state('');
   let formMessage = $state('');
-  const isNameInvalid = $derived(formName.trim() !== '' && isNameReserved(formName));
+  let formErrors = $state({ name: '', message: '' });
+
+  function validateForm(e: Event) {
+    const nameErr = formName.trim() === '' ? 'Name is required.' : '';
+    const msgErr = formMessage.trim() === '' ? 'Message is required.' : '';
+    const nameReservedErr = (!nameErr && isNameReserved(formName)) ? 'This name cannot be used. Please use another name.' : '';
+
+    formErrors = {
+      name: nameErr || nameReservedErr,
+      message: msgErr
+    };
+
+    if (formErrors.name || formErrors.message) {
+      e.preventDefault();
+    }
+  }
 
   function navigate(section: Section) {
     activeSection = section;
@@ -688,9 +703,10 @@
       </div>
 
       <form
+        novalidate
         action="https://formsubmit.co/contact@fkp.my.id"
         method="POST"
-        onsubmit={e => { if (isNameInvalid) e.preventDefault(); }}
+        onsubmit={validateForm}
         class="w-full text-left p-5 bg-adwaita-card/45 border border-adwaita-border rounded-2xl shadow-xs backdrop-blur-lg transition-colors duration-300 flex flex-col gap-4"
         autocomplete="off">
         <input
@@ -712,7 +728,7 @@
 
         <div class="mb-2 select-none">
           <h2 class="text-sm font-bold text-adwaita-text">Send a Message</h2>
-          <p class="text-xs text-adwaita-subtitle mt-0.5">
+          <p class="text-xs text-adwaita-label mt-0.5">
             Feel free to drop me a line. I'll get back to you as soon as possible.
           </p>
         </div>
@@ -720,19 +736,25 @@
         <div class="flex flex-col sm:flex-row sm:items-center gap-2">
           <label
             for="form-name"
-            class="text-xs font-bold text-adwaita-subtitle w-20 shrink-0 select-none">Name</label>
+            class="text-xs font-bold text-adwaita-label w-20 shrink-0 select-none">
+            Name <span aria-hidden="true" class="text-adwaita-error">*</span><span class="sr-only">(required)</span>
+          </label>
           <div class="w-full">
             <input
               type="text"
               id="form-name"
               name="name"
-              required
+              aria-required="true"
+              aria-invalid={!!formErrors.name}
+              aria-describedby={formErrors.name ? 'form-name-error' : ''}
               placeholder="Enter your name"
               bind:value={formName}
-              class="w-full px-3 py-1.5 text-sm bg-adwaita-bg border border-adwaita-border rounded-lg text-adwaita-text placeholder:text-adwaita-subtitle/70 focus:outline-none focus:border-adwaita-blue transition-colors"
-              class:border-palette-coral={isNameInvalid} />
-            {#if isNameInvalid}
-              <p class="text-xs text-palette-coral mt-1">This name cannot be used. Please use another name.</p>
+              class="w-full px-3 py-1.5 text-sm bg-adwaita-bg border border-adwaita-border rounded-lg text-adwaita-text placeholder:text-adwaita-label/70 focus:outline-none transition-colors"
+              class:border-adwaita-error={formErrors.name} />
+            {#if formErrors.name}
+              <p id="form-name-error" role="alert" class="text-adwaita-error font-medium text-xs mt-1">
+                {formErrors.name}
+              </p>
             {/if}
           </div>
         </div>
@@ -740,47 +762,54 @@
         <div class="flex flex-col sm:flex-row sm:items-center gap-2">
           <label
             for="form-email"
-            class="text-xs font-bold text-adwaita-subtitle w-20 shrink-0 select-none">Email</label>
+            class="text-xs font-bold text-adwaita-label w-20 shrink-0 select-none">
+            Email <span aria-hidden="true" class="text-adwaita-error">*</span><span class="sr-only">(required)</span>
+          </label>
           <input
             type="email"
             id="form-email"
             name="email"
-            required
+            aria-required="true"
             placeholder="Enter your email"
             autocomplete="email"
-            class="w-full px-3 py-1.5 text-sm bg-adwaita-bg border border-adwaita-border rounded-lg text-adwaita-text placeholder:text-adwaita-subtitle/70 focus:outline-none focus:border-adwaita-blue transition-colors" />
+            class="w-full px-3 py-1.5 text-sm bg-adwaita-bg border border-adwaita-border rounded-lg text-adwaita-text placeholder:text-adwaita-label/70 focus:outline-none transition-colors" />
         </div>
 
         <div class="flex flex-col gap-2">
           <label
             for="form-message"
-            class="text-xs font-bold text-adwaita-subtitle select-none">Message</label>
+            class="text-xs font-bold text-adwaita-label select-none">
+            Message <span aria-hidden="true" class="text-adwaita-error">*</span><span class="sr-only">(required)</span>
+          </label>
           <div class="relative w-full">
             <textarea
               id="form-message"
               name="message"
-              required
               rows="4"
               placeholder="Enter your message"
               maxlength="1000"
               bind:value={formMessage}
-              class="w-full px-3 py-1.5 pr-8 text-sm bg-adwaita-bg border border-adwaita-border rounded-lg text-adwaita-text placeholder:text-adwaita-subtitle/70 focus:outline-none focus:border-adwaita-blue transition-colors resize-none no-scrollbar"
+              aria-required="true"
+              aria-invalid={!!formErrors.message}
+              aria-describedby="form-msg-count {formErrors.message ? 'form-message-error' : ''}"
+              class="w-full px-3 py-1.5 pr-16 text-sm bg-adwaita-bg border border-adwaita-border rounded-lg text-adwaita-text placeholder:text-adwaita-label/70 focus:outline-none transition-colors resize-none no-scrollbar"
+              class:border-adwaita-error={formErrors.message}
             ></textarea>
-            {#if formMessage.length > 0}
-              <div class="absolute right-3 bottom-2.5 pointer-events-none select-none z-10">
-                <span class="text-[10px] text-adwaita-subtitle/80 font-mono">
-                  {1000 - formMessage.length}
-                </span>
-              </div>
-            {/if}
+            <div class="absolute right-3 bottom-2.5 pointer-events-none select-none z-10 font-mono text-[10px] text-adwaita-label" id="form-msg-count" aria-live="polite">
+              {formMessage.length}/1000
+            </div>
           </div>
+          {#if formErrors.message}
+            <p id="form-message-error" role="alert" class="text-adwaita-error font-medium text-xs mt-0.5">
+              {formErrors.message}
+            </p>
+          {/if}
         </div>
 
         <div class="flex justify-end mt-2">
           <button
             type="submit"
-            disabled={isNameInvalid}
-            class="inline-flex items-center justify-center cursor-pointer rounded-lg bg-adwaita-blue px-5 py-2 text-sm font-semibold text-white transition-colors hover:bg-adwaita-blue-hover focus:outline-none disabled:cursor-not-allowed disabled:opacity-55 select-none">
+            class="inline-flex items-center justify-center cursor-pointer rounded-lg bg-adwaita-focus px-5 py-2 text-sm font-semibold text-white transition-colors hover:bg-adwaita-focus/90 focus:outline-none disabled:cursor-not-allowed disabled:opacity-55 select-none">
             Send Message
           </button>
         </div>
