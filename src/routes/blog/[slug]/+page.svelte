@@ -409,6 +409,7 @@
         <button
           onclick={copyToClipboard}
           class="inline-flex h-9 items-center justify-center gap-2 rounded-lg border border-adwaita-border bg-adwaita-card px-4 text-xs font-semibold text-adwaita-text transition-colors hover:bg-adwaita-hover hover:text-adwaita-blue focus:outline-none select-none cursor-pointer"
+          aria-label="Copy link to clipboard"
           title="Copy Link">
           <i class="bi {showCopySuccess ? 'bi-check2 text-palette-green' : 'bi-link-45deg'}" aria-hidden="true"></i>
           <span class="hidden sm:inline">{showCopySuccess ? 'Copied!' : 'Copy'}</span>
@@ -418,6 +419,7 @@
           target="_blank"
           rel="noopener noreferrer"
           class="inline-flex h-9 items-center justify-center gap-2 rounded-lg border border-adwaita-border bg-adwaita-card px-4 text-xs font-semibold text-adwaita-text transition-colors hover:bg-adwaita-hover hover:text-adwaita-blue focus:outline-none select-none"
+          aria-label="Share on X (opens in a new tab)"
           title="Share on X">
           <i class="bi bi-twitter-x" aria-hidden="true"></i>
           <span class="hidden sm:inline">X</span>
@@ -427,6 +429,7 @@
           target="_blank"
           rel="noopener noreferrer"
           class="inline-flex h-9 items-center justify-center gap-2 rounded-lg border border-adwaita-border bg-adwaita-card px-4 text-xs font-semibold text-adwaita-text transition-colors hover:bg-adwaita-hover hover:text-adwaita-blue focus:outline-none select-none"
+          aria-label="Share on Facebook (opens in a new tab)"
           title="Share on Facebook">
           <i class="bi bi-facebook" aria-hidden="true"></i>
           <span class="hidden sm:inline">Facebook</span>
@@ -436,6 +439,7 @@
           target="_blank"
           rel="noopener noreferrer"
           class="inline-flex h-9 items-center justify-center gap-2 rounded-lg border border-adwaita-border bg-adwaita-card px-4 text-xs font-semibold text-adwaita-text transition-colors hover:bg-adwaita-hover hover:text-adwaita-blue focus:outline-none select-none"
+          aria-label="Share on LinkedIn (opens in a new tab)"
           title="Share on LinkedIn">
           <i class="bi bi-linkedin" aria-hidden="true"></i>
           <span class="hidden sm:inline">LinkedIn</span>
@@ -443,6 +447,7 @@
         <a
           href="mailto:?subject={encodeURIComponent(post.title)}&body={encodeURIComponent(page.url.href)}"
           class="inline-flex h-9 items-center justify-center gap-2 rounded-lg border border-adwaita-border bg-adwaita-card px-4 text-xs font-semibold text-adwaita-text transition-colors hover:bg-adwaita-hover hover:text-adwaita-blue focus:outline-none select-none"
+          aria-label="Share via Email"
           title="Share via Email">
           <i class="bi bi-envelope" aria-hidden="true"></i>
           <span class="hidden sm:inline">Email</span>
@@ -467,48 +472,48 @@
             href="https://github.com/farhnkrnapratma"
             target="_blank"
             rel="noopener noreferrer"
-            class="text-lg text-adwaita-subtitle transition-colors hover:text-adwaita-blue"
-            title="GitHub">
+            class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-adwaita-border bg-adwaita-card text-adwaita-subtitle transition-colors hover:bg-adwaita-hover hover:text-adwaita-blue"
+            aria-label="GitHub (opens in a new tab)">
             <i class="bi bi-github" aria-hidden="true"></i>
           </a>
           <a
             href="https://linkedin.com/in/farhnkrnapratma"
             target="_blank"
             rel="noopener noreferrer"
-            class="text-lg text-adwaita-subtitle transition-colors hover:text-adwaita-blue"
-            title="LinkedIn">
+            class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-adwaita-border bg-adwaita-card text-adwaita-subtitle transition-colors hover:bg-adwaita-hover hover:text-adwaita-blue"
+            aria-label="LinkedIn (opens in a new tab)">
             <i class="bi bi-linkedin" aria-hidden="true"></i>
           </a>
           <a
             href="https://x.com/farhnkrnapratma"
             target="_blank"
             rel="noopener noreferrer"
-            class="text-lg text-adwaita-subtitle transition-colors hover:text-adwaita-blue"
-            title="X">
+            class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-adwaita-border bg-adwaita-card text-adwaita-subtitle transition-colors hover:bg-adwaita-hover hover:text-adwaita-blue"
+            aria-label="X (opens in a new tab)">
             <i class="bi bi-twitter-x" aria-hidden="true"></i>
           </a>
           <a
             href="https://facebook.com/farhnkrnapratma"
             target="_blank"
             rel="noopener noreferrer"
-            class="text-lg text-adwaita-subtitle transition-colors hover:text-adwaita-blue"
-            title="Facebook">
+            class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-adwaita-border bg-adwaita-card text-adwaita-subtitle transition-colors hover:bg-adwaita-hover hover:text-adwaita-blue"
+            aria-label="Facebook (opens in a new tab)">
             <i class="bi bi-facebook" aria-hidden="true"></i>
           </a>
           <a
             href="https://instagram.com/farhnkrnapratma"
             target="_blank"
             rel="noopener noreferrer"
-            class="text-lg text-adwaita-subtitle transition-colors hover:text-adwaita-blue"
-            title="Instagram">
+            class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-adwaita-border bg-adwaita-card text-adwaita-subtitle transition-colors hover:bg-adwaita-hover hover:text-adwaita-blue"
+            aria-label="Instagram (opens in a new tab)">
             <i class="bi bi-instagram" aria-hidden="true"></i>
           </a>
           <a
             href="https://threads.net/@farhnkrnapratma"
             target="_blank"
             rel="noopener noreferrer"
-            class="text-lg text-adwaita-subtitle transition-colors hover:text-adwaita-blue"
-            title="Threads">
+            class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-adwaita-border bg-adwaita-card text-adwaita-subtitle transition-colors hover:bg-adwaita-hover hover:text-adwaita-blue"
+            aria-label="Threads (opens in a new tab)">
             <i class="bi bi-threads" aria-hidden="true"></i>
           </a>
         </div>

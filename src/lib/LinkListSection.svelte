@@ -39,6 +39,7 @@
           <span class="hidden text-sm font-medium text-adwaita-subtitle truncate sm:inline">
             {item.value}
           </span>
+          <span class="sr-only"> (opens in a new tab)</span>
           <i
             class="bi bi-chevron-right text-sm text-zinc-400 opacity-80 transition-all group-hover:translate-x-0.5 group-hover:text-adwaita-blue shrink-0"
             aria-hidden="true"></i>
