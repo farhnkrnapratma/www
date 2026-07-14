@@ -219,6 +219,11 @@ button,
   outline-offset: 2px !important;
 }
 
+input:focus-visible,
+textarea:focus-visible {
+  outline: none !important;
+}
+
 input:focus,
 textarea:focus {
   border-color: var(--color-adwaita-focus) !important;
