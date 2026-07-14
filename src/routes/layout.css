@@ -15,7 +15,7 @@
   }
 
   .boxed-list {
-    @apply divide-y divide-adwaita-border overflow-hidden rounded-2xl border border-adwaita-border bg-adwaita-card shadow-xs transition-colors duration-300;
+    @apply divide-y divide-adwaita-border overflow-hidden rounded-2xl border border-adwaita-border bg-adwaita-card/45 shadow-xs backdrop-blur-lg transition-colors duration-300;
   }
 
   .action-row {

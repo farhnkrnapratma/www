@@ -71,7 +71,7 @@
 
 <main class="pt-15 font-sans flex flex-col items-center min-h-[calc(100vh-3.75rem)] justify-center">
   <div class="w-full max-w-sm px-6 flex-1 flex flex-col justify-center py-10">
-    <div class="p-6 bg-adwaita-card border border-adwaita-border rounded-2xl shadow-xs transition-colors duration-300">
+    <div class="p-6 bg-adwaita-card/45 border border-adwaita-border rounded-2xl shadow-xs backdrop-blur-lg transition-colors duration-300">
       <div class="text-center mb-6 select-none flex flex-col items-center">
         <div class="flex items-center gap-2">
           <span class="material-symbols-rounded text-adwaita-accent text-2xl select-none">code</span>
