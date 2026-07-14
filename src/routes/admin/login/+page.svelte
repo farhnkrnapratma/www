@@ -71,10 +71,10 @@
 
 <main class="pt-15 font-sans flex flex-col items-center min-h-[calc(100vh-3.75rem)] justify-center">
   <div class="w-full max-w-sm px-6 flex-1 flex flex-col justify-center py-10">
-    <div class="p-6 bg-adwaita-card/45 border border-adwaita-border rounded-2xl shadow-xs backdrop-blur-lg transition-colors duration-300">
+    <div class="p-6 bg-adwaita-card border border-adwaita-border rounded-2xl shadow-xs transition-colors duration-300">
       <div class="text-center mb-6 select-none flex flex-col items-center">
         <div class="flex items-center gap-2">
-          <span class="material-symbols-rounded text-adwaita-blue text-2xl select-none">code</span>
+          <span class="material-symbols-rounded text-adwaita-accent text-2xl select-none">code</span>
           <h1 class="text-xl font-bold text-adwaita-text">Console</h1>
         </div>
         <p class="text-xs text-adwaita-subtitle mt-1">Sign in to manage your blog posts</p>
@@ -135,7 +135,7 @@
             <button
               type="button"
               onclick={() => showPassword = !showPassword}
-              class="absolute right-3 text-adwaita-label hover:text-adwaita-text transition-colors flex items-center justify-center cursor-pointer select-none"
+              class="absolute right-1 w-8 h-8 text-adwaita-label hover:text-adwaita-text transition-colors flex items-center justify-center cursor-pointer select-none rounded-lg focus:outline-2 focus:outline-adwaita-accent"
               aria-label={showPassword ? 'Hide password' : 'Show password'}>
               <span class="material-symbols-rounded text-base">
                 {showPassword ? 'visibility_off' : 'visibility'}

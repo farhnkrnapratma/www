@@ -316,7 +316,7 @@
   class="fixed top-0 z-40 flex h-15 w-full items-center justify-between bg-adwaita-card/60 backdrop-blur-lg px-5 font-sans border-b border-adwaita-border shadow-xs transition-colors duration-300">
   <div class="flex items-center gap-3">
     <div class="flex items-center gap-2">
-      <span class="material-symbols-rounded text-adwaita-blue text-lg select-none">code</span>
+      <span class="material-symbols-rounded text-adwaita-accent text-lg select-none">code</span>
       <span class="text-sm font-bold text-adwaita-text select-none">Console</span>
     </div>
   </div>
@@ -356,7 +356,7 @@
             class="flex w-full cursor-pointer items-center gap-3 px-4 py-2.5 text-left text-xs font-bold transition-colors hover:bg-adwaita-hover {(
               theme === 'auto'
             ) ?
-              'text-adwaita-blue'
+              'text-adwaita-accent'
             : 'text-adwaita-text'}">
             <i
               class="bi bi-circle-half text-sm"
@@ -372,7 +372,7 @@
             class="flex w-full cursor-pointer items-center gap-3 px-4 py-2.5 text-left text-xs font-bold transition-colors hover:bg-adwaita-hover {(
               theme === 'light'
             ) ?
-              'text-adwaita-blue'
+              'text-adwaita-accent'
             : 'text-adwaita-text'}">
             <i
               class="bi bi-sun-fill text-sm"
@@ -388,7 +388,7 @@
             class="flex w-full cursor-pointer items-center gap-3 px-4 py-2.5 text-left text-xs font-bold transition-colors hover:bg-adwaita-hover {(
               theme === 'dark'
             ) ?
-              'text-adwaita-blue'
+              'text-adwaita-accent'
             : 'text-adwaita-text'}">
             <i
               class="bi bi-moon-stars-fill text-sm"
@@ -423,7 +423,7 @@
         <h1 class="text-3xl font-bold text-adwaita-text tracking-tight">Blog Posts</h1>
         <a
           href="/admin/new"
-          class="inline-flex h-9 items-center justify-center rounded-lg bg-adwaita-blue px-4 text-xs font-semibold text-white transition-colors hover:bg-adwaita-blue-hover focus:outline-none">
+          class="inline-flex h-9 items-center justify-center rounded-lg bg-adwaita-accent px-4 text-xs font-semibold text-white transition-colors hover:bg-adwaita-accent-hover focus:outline-none">
           New Post
         </a>
       </div>
@@ -458,12 +458,12 @@
                       <button
                         type="button"
                         onclick={() => toggleComments(post.id)}
-                        class="inline-flex items-center gap-1 rounded bg-adwaita-border/40 px-2 py-0.5 text-[10px] font-semibold text-adwaita-subtitle cursor-pointer hover:bg-adwaita-border transition-colors focus:outline-none"
+                        class="inline-flex h-6 items-center gap-1 rounded bg-adwaita-border/40 px-2 text-[10px] font-semibold text-adwaita-subtitle cursor-pointer hover:bg-adwaita-border transition-colors focus:outline-none"
                         title="{expandedPostIds.has(post.id) ? 'Hide' : (
                           'Show'
                         )} {postComments.length} comments">
                         <i
-                          class="bi bi-chat-left-text-fill text-[10px] text-adwaita-blue"
+                          class="bi bi-chat-left-text-fill text-[10px] text-adwaita-accent"
                           aria-hidden="true"></i>
                         {expandedPostIds.has(post.id) ? 'Hide' : 'Show'} Comments ({postComments.length})
                       </button>
@@ -584,14 +584,14 @@
                                   replyTo = comment;
                                   commentContent = '';
                                 }}
-                                class="font-bold text-adwaita-text/70 hover:text-adwaita-blue transition-colors cursor-pointer">
+                                class="inline-flex h-6 items-center rounded bg-adwaita-border/30 px-2 py-0.5 font-bold text-adwaita-text/70 hover:bg-adwaita-border hover:text-adwaita-accent transition-colors cursor-pointer">
                                 Reply
                               </button>
                             {/if}
                             <button
                               type="button"
                               onclick={() => deleteComment(comment.id)}
-                              class="font-bold text-palette-coral hover:text-palette-coral/80 transition-colors cursor-pointer ml-auto">
+                              class="inline-flex h-6 items-center rounded bg-palette-coral/10 border border-palette-coral/20 px-2 py-0.5 font-bold text-palette-coral hover:bg-palette-coral/20 transition-colors cursor-pointer ml-auto">
                               Delete
                             </button>
                           </div>
@@ -630,7 +630,7 @@
                                       maxlength="1000"
                                       placeholder="Enter your message"
                                       bind:value={commentContent}
-                                      class="w-full px-3 py-1.5 pr-8 text-sm bg-adwaita-bg border border-adwaita-border rounded-lg text-adwaita-text placeholder:text-adwaita-subtitle/70 focus:outline-none focus:border-adwaita-blue transition-colors resize-none no-scrollbar"
+                                      class="w-full px-3 py-1.5 pr-8 text-sm bg-adwaita-bg border border-adwaita-border rounded-lg text-adwaita-text placeholder:text-adwaita-subtitle/70 focus:outline-none focus:border-adwaita-accent transition-colors resize-none no-scrollbar"
                                     ></textarea>
                                     {#if commentContent.length > 0}
                                       <div class="absolute right-3 bottom-2.5 pointer-events-none select-none z-10 font-mono text-[10px] text-adwaita-subtitle/80">
@@ -643,7 +643,7 @@
                                   <button
                                     type="submit"
                                     disabled={isSubmitting}
-                                    class="inline-flex cursor-pointer items-center justify-center rounded-lg bg-adwaita-blue px-5 py-2 text-sm font-semibold text-white transition-colors hover:bg-adwaita-blue-hover focus:outline-none disabled:cursor-not-allowed disabled:opacity-55 select-none">
+                                    class="inline-flex cursor-pointer items-center justify-center rounded-lg bg-adwaita-accent px-5 py-2 text-sm font-semibold text-white transition-colors hover:bg-adwaita-accent-hover focus:outline-none disabled:cursor-not-allowed disabled:opacity-55 select-none">
                                     {isSubmitting ? 'Posting...' : 'Post Reply'}
                                   </button>
                                 </div>

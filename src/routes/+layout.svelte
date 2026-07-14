@@ -76,7 +76,7 @@
 {#if showScrollTop}
   <button
     transition:fade={{ duration: 150 }}
-    class="fixed bottom-6 right-6 inline-flex h-10 w-10 sm:w-auto px-0 sm:px-4 items-center justify-center gap-2 rounded-lg border border-adwaita-border bg-adwaita-card text-xs sm:text-sm font-semibold text-adwaita-body shadow-lg transition-all hover:bg-adwaita-hover hover:text-adwaita-blue focus:outline-none select-none cursor-pointer z-50"
+    class="fixed bottom-6 right-6 inline-flex h-10 w-10 sm:w-auto px-0 sm:px-4 items-center justify-center gap-2 rounded-lg border border-adwaita-border bg-adwaita-card text-xs sm:text-sm font-semibold text-adwaita-body shadow-lg transition-all hover:bg-adwaita-hover hover:text-adwaita-accent focus:outline-none select-none cursor-pointer z-50"
     onclick={scrollToTop}
     title="Scroll to Top">
     <i class="bi bi-arrow-up text-sm" aria-hidden="true"></i>
@@ -87,7 +87,7 @@
 {#if isPageWithFeedback}
   <a
     href="mailto:contact@fkp.my.id?subject={encodeURIComponent(feedbackSubject)}"
-    class="fixed bottom-6 left-6 inline-flex h-10 w-10 sm:w-auto px-0 sm:px-4 items-center justify-center gap-2 rounded-lg border border-adwaita-border bg-adwaita-card text-xs sm:text-sm font-semibold text-adwaita-body shadow-lg transition-all hover:bg-adwaita-hover hover:text-adwaita-blue focus:outline-none select-none cursor-pointer z-50"
+    class="fixed bottom-6 left-6 inline-flex h-10 w-10 sm:w-auto px-0 sm:px-4 items-center justify-center gap-2 rounded-lg border border-adwaita-border bg-adwaita-card text-xs sm:text-sm font-semibold text-adwaita-body shadow-lg transition-all hover:bg-adwaita-hover hover:text-adwaita-accent focus:outline-none select-none cursor-pointer z-50"
     title="Give Feedback">
     <i class="bi bi-chat-left-text text-sm" aria-hidden="true"></i>
     <span class="hidden sm:inline">Feedback</span>

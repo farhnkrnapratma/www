@@ -241,7 +241,7 @@
             class="flex w-full cursor-pointer items-center gap-3 px-4 py-2.5 text-left text-xs font-bold transition-colors hover:bg-adwaita-hover {(
               theme === 'auto'
             ) ?
-              'text-adwaita-blue'
+              'text-adwaita-accent'
             : 'text-adwaita-text'}">
             <i
               class="bi bi-circle-half text-sm"
@@ -257,7 +257,7 @@
             class="flex w-full cursor-pointer items-center gap-3 px-4 py-2.5 text-left text-xs font-bold transition-colors hover:bg-adwaita-hover {(
               theme === 'light'
             ) ?
-              'text-adwaita-blue'
+              'text-adwaita-accent'
             : 'text-adwaita-text'}">
             <i
               class="bi bi-sun-fill text-sm"
@@ -273,7 +273,7 @@
             class="flex w-full cursor-pointer items-center gap-3 px-4 py-2.5 text-left text-xs font-bold transition-colors hover:bg-adwaita-hover {(
               theme === 'dark'
             ) ?
-              'text-adwaita-blue'
+              'text-adwaita-accent'
             : 'text-adwaita-text'}">
             <i
               class="bi bi-moon-stars-fill text-sm"
@@ -320,7 +320,7 @@
                 required
                 placeholder="Getting Started with Rust"
                 bind:value={title}
-                class="w-full px-3 py-2 text-sm bg-adwaita-bg border border-adwaita-border rounded-lg text-adwaita-text placeholder:text-adwaita-subtitle/70 focus:outline-none focus:border-adwaita-blue transition-colors" />
+                class="w-full px-3 py-2 text-sm bg-adwaita-bg border border-adwaita-border rounded-lg text-adwaita-text placeholder:text-adwaita-subtitle/70 focus:outline-none focus:border-adwaita-accent transition-colors" />
             </div>
             <div class="flex flex-col sm:flex-row sm:items-center gap-2">
               <label
@@ -332,7 +332,7 @@
                 required
                 placeholder="getting-started-with-rust"
                 bind:value={slug}
-                class="w-full px-3 py-2 text-sm bg-adwaita-bg border border-adwaita-border rounded-lg text-adwaita-text placeholder:text-adwaita-subtitle/70 focus:outline-none focus:border-adwaita-blue transition-colors" />
+                class="w-full px-3 py-2 text-sm bg-adwaita-bg border border-adwaita-border rounded-lg text-adwaita-text placeholder:text-adwaita-subtitle/70 focus:outline-none focus:border-adwaita-accent transition-colors" />
             </div>
             <div class="flex flex-col items-start gap-2">
               <label
@@ -343,7 +343,7 @@
                 rows="2"
                 placeholder="Brief summary of the article..."
                 bind:value={excerpt}
-                class="w-full px-3 py-1.5 text-sm bg-adwaita-bg border border-adwaita-border rounded-lg text-adwaita-text placeholder:text-adwaita-subtitle/70 focus:outline-none focus:border-adwaita-blue transition-colors resize-none"
+                class="w-full px-3 py-1.5 text-sm bg-adwaita-bg border border-adwaita-border rounded-lg text-adwaita-text placeholder:text-adwaita-subtitle/70 focus:outline-none focus:border-adwaita-accent transition-colors resize-none"
               ></textarea>
             </div>
             <div class="flex items-center gap-2 mt-2">
@@ -351,7 +351,7 @@
                 type="checkbox"
                 id="post-publish"
                 bind:checked={published}
-                class="rounded border-adwaita-border text-adwaita-blue focus:ring-adwaita-blue" />
+                class="rounded border-adwaita-border text-adwaita-accent focus:ring-adwaita-accent" />
               <label
                 for="post-publish"
                 class="text-xs font-bold text-adwaita-text cursor-pointer select-none"
@@ -368,7 +368,7 @@
               class="px-4 py-2 text-xs font-bold border-b-2 transition-colors {(
                 activeTab === 'editor'
               ) ?
-                'border-adwaita-blue text-adwaita-blue'
+                'border-adwaita-accent text-adwaita-accent'
               : 'border-transparent text-adwaita-subtitle hover:text-adwaita-text'}">
               Markdown Editor
             </button>
@@ -378,7 +378,7 @@
               class="px-4 py-2 text-xs font-bold border-b-2 transition-colors {(
                 activeTab === 'preview'
               ) ?
-                'border-adwaita-blue text-adwaita-blue'
+                'border-adwaita-accent text-adwaita-accent'
               : 'border-transparent text-adwaita-subtitle hover:text-adwaita-text'}">
               Live HTML Preview
             </button>
@@ -387,8 +387,9 @@
           {#if activeTab === 'editor'}
             <textarea
               required
+              aria-label="Markdown Content"
               bind:value={markdownContent}
-              class="w-full flex-1 p-5 text-sm font-mono bg-adwaita-bg text-adwaita-text focus:outline-none resize-y min-h-87.5 leading-relaxed"
+              class="w-full flex-1 p-5 text-sm font-mono bg-adwaita-bg text-adwaita-text focus:outline-none focus:ring-2 focus:ring-inset focus:ring-adwaita-accent resize-y min-h-87.5 leading-relaxed"
             ></textarea>
           {:else}
             <div class="prose-custom p-6 w-full overflow-y-auto bg-adwaita-bg min-h-87.5">
@@ -410,7 +411,7 @@
           <button
             type="submit"
             disabled={isSubmitting}
-            class="inline-flex h-10 items-center justify-center gap-2 cursor-pointer rounded-lg bg-adwaita-blue px-6 text-sm font-semibold text-white transition-colors hover:bg-adwaita-blue-hover focus:outline-none disabled:opacity-55">
+            class="inline-flex h-10 items-center justify-center gap-2 cursor-pointer rounded-lg bg-adwaita-accent px-6 text-sm font-semibold text-white transition-colors hover:bg-adwaita-accent-hover focus:outline-none disabled:opacity-55">
             {isSubmitting ? 'Saving...' : (isEditMode ? 'Save Changes' : 'Save Blog Post')}
           </button>
         </div>

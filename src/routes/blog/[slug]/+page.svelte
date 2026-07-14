@@ -290,7 +290,7 @@
 </svelte:head>
 
 <nav
-  class="fixed top-0 z-40 flex h-15 w-full items-center justify-between bg-adwaita-card/60 backdrop-blur-lg px-5 font-sans border-b border-adwaita-border shadow-xs transition-colors duration-300">
+  class="fixed top-0 z-40 flex h-15 w-full items-center justify-between bg-adwaita-card/60 backdrop-blur-lg px-3 sm:px-5 font-sans border-b border-adwaita-border shadow-xs transition-colors duration-300">
   <a
     href="/#blogs"
     class="inline-flex h-9 items-center justify-center rounded-lg border border-adwaita-border bg-adwaita-card px-4 text-xs font-semibold text-adwaita-text transition-colors hover:bg-adwaita-hover focus:outline-none">
@@ -336,7 +336,7 @@
             class="flex w-full cursor-pointer items-center gap-3 px-4 py-2.5 text-left text-xs font-bold transition-colors hover:bg-adwaita-hover {(
               theme === 'auto'
             ) ?
-              'text-adwaita-blue'
+              'text-adwaita-accent'
             : 'text-adwaita-text'}">
             <i
               class="bi bi-circle-half text-sm"
@@ -352,7 +352,7 @@
             class="flex w-full cursor-pointer items-center gap-3 px-4 py-2.5 text-left text-xs font-bold transition-colors hover:bg-adwaita-hover {(
               theme === 'light'
             ) ?
-              'text-adwaita-blue'
+              'text-adwaita-accent'
             : 'text-adwaita-text'}">
             <i
               class="bi bi-sun-fill text-sm"
@@ -368,7 +368,7 @@
             class="flex w-full cursor-pointer items-center gap-3 px-4 py-2.5 text-left text-xs font-bold transition-colors hover:bg-adwaita-hover {(
               theme === 'dark'
             ) ?
-              'text-adwaita-blue'
+              'text-adwaita-accent'
             : 'text-adwaita-text'}">
             <i
               class="bi bi-moon-stars-fill text-sm"
@@ -408,7 +408,7 @@
       <div class="flex flex-wrap items-center justify-between gap-3">
         <button
           onclick={copyToClipboard}
-          class="inline-flex h-9 items-center justify-center gap-2 rounded-lg border border-adwaita-border bg-adwaita-card px-4 text-xs font-semibold text-adwaita-text transition-colors hover:bg-adwaita-hover hover:text-adwaita-blue focus:outline-none select-none cursor-pointer"
+          class="inline-flex h-9 items-center justify-center gap-2 rounded-lg border border-adwaita-border bg-adwaita-card px-4 text-xs font-semibold text-adwaita-text transition-colors hover:bg-adwaita-hover hover:text-adwaita-accent focus:outline-none select-none cursor-pointer"
           aria-label="Copy link to clipboard"
           title="Copy Link">
           <i class="bi {showCopySuccess ? 'bi-check2 text-palette-green' : 'bi-link-45deg'}" aria-hidden="true"></i>
@@ -418,7 +418,7 @@
           href="https://twitter.com/intent/tweet?url={encodeURIComponent(page.url.href)}&text={encodeURIComponent(post.title)}"
           target="_blank"
           rel="noopener noreferrer"
-          class="inline-flex h-9 items-center justify-center gap-2 rounded-lg border border-adwaita-border bg-adwaita-card px-4 text-xs font-semibold text-adwaita-text transition-colors hover:bg-adwaita-hover hover:text-adwaita-blue focus:outline-none select-none"
+          class="inline-flex h-9 items-center justify-center gap-2 rounded-lg border border-adwaita-border bg-adwaita-card px-4 text-xs font-semibold text-adwaita-text transition-colors hover:bg-adwaita-hover hover:text-adwaita-accent focus:outline-none select-none"
           aria-label="Share on X (opens in a new tab)"
           title="Share on X">
           <i class="bi bi-twitter-x" aria-hidden="true"></i>
@@ -428,7 +428,7 @@
           href="https://www.facebook.com/sharer/sharer.php?u={encodeURIComponent(page.url.href)}"
           target="_blank"
           rel="noopener noreferrer"
-          class="inline-flex h-9 items-center justify-center gap-2 rounded-lg border border-adwaita-border bg-adwaita-card px-4 text-xs font-semibold text-adwaita-text transition-colors hover:bg-adwaita-hover hover:text-adwaita-blue focus:outline-none select-none"
+          class="inline-flex h-9 items-center justify-center gap-2 rounded-lg border border-adwaita-border bg-adwaita-card px-4 text-xs font-semibold text-adwaita-text transition-colors hover:bg-adwaita-hover hover:text-adwaita-accent focus:outline-none select-none"
           aria-label="Share on Facebook (opens in a new tab)"
           title="Share on Facebook">
           <i class="bi bi-facebook" aria-hidden="true"></i>
@@ -438,7 +438,7 @@
           href="https://www.linkedin.com/sharing/share-offsite/?url={encodeURIComponent(page.url.href)}"
           target="_blank"
           rel="noopener noreferrer"
-          class="inline-flex h-9 items-center justify-center gap-2 rounded-lg border border-adwaita-border bg-adwaita-card px-4 text-xs font-semibold text-adwaita-text transition-colors hover:bg-adwaita-hover hover:text-adwaita-blue focus:outline-none select-none"
+          class="inline-flex h-9 items-center justify-center gap-2 rounded-lg border border-adwaita-border bg-adwaita-card px-4 text-xs font-semibold text-adwaita-text transition-colors hover:bg-adwaita-hover hover:text-adwaita-accent focus:outline-none select-none"
           aria-label="Share on LinkedIn (opens in a new tab)"
           title="Share on LinkedIn">
           <i class="bi bi-linkedin" aria-hidden="true"></i>
@@ -446,7 +446,7 @@
         </a>
         <a
           href="mailto:?subject={encodeURIComponent(post.title)}&body={encodeURIComponent(page.url.href)}"
-          class="inline-flex h-9 items-center justify-center gap-2 rounded-lg border border-adwaita-border bg-adwaita-card px-4 text-xs font-semibold text-adwaita-text transition-colors hover:bg-adwaita-hover hover:text-adwaita-blue focus:outline-none select-none"
+          class="inline-flex h-9 items-center justify-center gap-2 rounded-lg border border-adwaita-border bg-adwaita-card px-4 text-xs font-semibold text-adwaita-text transition-colors hover:bg-adwaita-hover hover:text-adwaita-accent focus:outline-none select-none"
           aria-label="Share via Email"
           title="Share via Email">
           <i class="bi bi-envelope" aria-hidden="true"></i>
@@ -472,7 +472,7 @@
             href="https://github.com/farhnkrnapratma"
             target="_blank"
             rel="noopener noreferrer"
-            class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-adwaita-border bg-adwaita-card text-adwaita-subtitle transition-colors hover:bg-adwaita-hover hover:text-adwaita-blue"
+            class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-adwaita-border bg-adwaita-card text-adwaita-subtitle transition-colors hover:bg-adwaita-hover hover:text-adwaita-accent"
             aria-label="GitHub (opens in a new tab)">
             <i class="bi bi-github text-base flex items-center justify-center leading-none" aria-hidden="true"></i>
           </a>
@@ -480,7 +480,7 @@
             href="https://linkedin.com/in/farhnkrnapratma"
             target="_blank"
             rel="noopener noreferrer"
-            class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-adwaita-border bg-adwaita-card text-adwaita-subtitle transition-colors hover:bg-adwaita-hover hover:text-adwaita-blue"
+            class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-adwaita-border bg-adwaita-card text-adwaita-subtitle transition-colors hover:bg-adwaita-hover hover:text-adwaita-accent"
             aria-label="LinkedIn (opens in a new tab)">
             <i class="bi bi-linkedin text-base flex items-center justify-center leading-none" aria-hidden="true"></i>
           </a>
@@ -488,7 +488,7 @@
             href="https://x.com/farhnkrnapratma"
             target="_blank"
             rel="noopener noreferrer"
-            class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-adwaita-border bg-adwaita-card text-adwaita-subtitle transition-colors hover:bg-adwaita-hover hover:text-adwaita-blue"
+            class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-adwaita-border bg-adwaita-card text-adwaita-subtitle transition-colors hover:bg-adwaita-hover hover:text-adwaita-accent"
             aria-label="X (opens in a new tab)">
             <i class="bi bi-twitter-x text-base flex items-center justify-center leading-none" aria-hidden="true"></i>
           </a>
@@ -496,7 +496,7 @@
             href="https://facebook.com/farhnkrnapratma"
             target="_blank"
             rel="noopener noreferrer"
-            class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-adwaita-border bg-adwaita-card text-adwaita-subtitle transition-colors hover:bg-adwaita-hover hover:text-adwaita-blue"
+            class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-adwaita-border bg-adwaita-card text-adwaita-subtitle transition-colors hover:bg-adwaita-hover hover:text-adwaita-accent"
             aria-label="Facebook (opens in a new tab)">
             <i class="bi bi-facebook text-base flex items-center justify-center leading-none" aria-hidden="true"></i>
           </a>
@@ -504,7 +504,7 @@
             href="https://instagram.com/farhnkrnapratma"
             target="_blank"
             rel="noopener noreferrer"
-            class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-adwaita-border bg-adwaita-card text-adwaita-subtitle transition-colors hover:bg-adwaita-hover hover:text-adwaita-blue"
+            class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-adwaita-border bg-adwaita-card text-adwaita-subtitle transition-colors hover:bg-adwaita-hover hover:text-adwaita-accent"
             aria-label="Instagram (opens in a new tab)">
             <i class="bi bi-instagram text-base flex items-center justify-center leading-none" aria-hidden="true"></i>
           </a>
@@ -512,7 +512,7 @@
             href="https://threads.net/@farhnkrnapratma"
             target="_blank"
             rel="noopener noreferrer"
-            class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-adwaita-border bg-adwaita-card text-adwaita-subtitle transition-colors hover:bg-adwaita-hover hover:text-adwaita-blue"
+            class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-adwaita-border bg-adwaita-card text-adwaita-subtitle transition-colors hover:bg-adwaita-hover hover:text-adwaita-accent"
             aria-label="Threads (opens in a new tab)">
             <i class="bi bi-threads text-base flex items-center justify-center leading-none" aria-hidden="true"></i>
           </a>
@@ -544,12 +544,15 @@
             novalidate
             onsubmit={e => handleSubmit(e)}
             class="flex flex-col gap-4">
-            <label class="flex items-center gap-2 text-xs font-bold text-adwaita-label select-none cursor-pointer">
+            <label
+              for="comment-anon"
+              class="flex items-center gap-2 text-xs font-bold text-adwaita-label select-none cursor-pointer">
               <input
                 type="checkbox"
+                id="comment-anon"
                 bind:checked={isAnonymous}
                 aria-describedby="anon-help-main"
-                class="h-3.5 w-3.5 rounded border-adwaita-border text-adwaita-blue focus:ring-adwaita-blue cursor-pointer" />
+                class="h-3.5 w-3.5 rounded border-adwaita-border text-adwaita-accent focus:ring-adwaita-accent cursor-pointer" />
               Comment anonymously
             </label>
             <span id="anon-help-main" class="sr-only">
@@ -672,7 +675,7 @@
                       feedbackMessage = null;
                       commentContent = '';
                     }}
-                    class="font-bold text-adwaita-text/70 hover:text-adwaita-blue transition-colors cursor-pointer">
+                    class="inline-flex h-6 items-center rounded bg-adwaita-border/30 px-2 py-0.5 font-bold text-adwaita-text/70 hover:bg-adwaita-border hover:text-adwaita-accent transition-colors cursor-pointer">
                     Reply
                   </button>
                 </div>
@@ -696,12 +699,14 @@
 
                     <div class="flex flex-col gap-4">
                       <label
+                        for="reply-anon-{comment.id}"
                         class="flex items-center gap-2 text-xs font-bold text-adwaita-label select-none cursor-pointer">
                         <input
                           type="checkbox"
+                          id="reply-anon-{comment.id}"
                           bind:checked={isAnonymous}
                           aria-describedby="anon-help-reply-{comment.id}"
-                          class="h-3.5 w-3.5 rounded border-adwaita-border text-adwaita-blue focus:ring-adwaita-blue cursor-pointer" />
+                          class="h-3.5 w-3.5 rounded border-adwaita-border text-adwaita-accent focus:ring-adwaita-accent cursor-pointer" />
                         Comment anonymously
                       </label>
                       <span id="anon-help-reply-{comment.id}" class="sr-only">
@@ -781,7 +786,7 @@
             </div>
 
             {#if comment.children && comment.children.length > 0}
-              <div class="replies-container relative" style="padding-left: 44px;">
+              <div class="replies-container relative" style="padding-left: clamp(16px, 5vw, 44px);">
                 {#each comment.children as child, i (child.id)}
                   <div class="child-wrapper relative mt-4">
                     <div
@@ -804,4 +809,7 @@
       {/if}
     </section>
   </article>
+  <footer class="w-full px-6 py-8 text-center text-xs text-adwaita-subtitle/75 select-none font-sans">
+    <p>&copy; {new Date().getFullYear()} Farhan Kurnia Pratama. All rights reserved</p>
+  </footer>
 </main>

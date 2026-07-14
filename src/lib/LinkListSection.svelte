@@ -30,7 +30,7 @@
         <div class="flex items-center gap-4 min-w-0 shrink-0">
           <i
             class="bi {item.icon} text-lg {item.color ||
-              'text-adwaita-subtitle'} transition-colors group-hover:text-adwaita-blue"
+              'text-adwaita-subtitle'} transition-colors group-hover:text-adwaita-accent"
             aria-hidden="true"></i>
           <span class="text-sm font-semibold text-adwaita-text whitespace-nowrap"
             >{item.label}</span>
@@ -41,7 +41,7 @@
           </span>
           <span class="sr-only"> (opens in a new tab)</span>
           <i
-            class="bi bi-chevron-right text-sm text-zinc-400 opacity-80 transition-all group-hover:translate-x-0.5 group-hover:text-adwaita-blue shrink-0"
+            class="bi bi-chevron-right text-sm text-zinc-400 opacity-80 transition-all group-hover:translate-x-0.5 group-hover:text-adwaita-accent shrink-0"
             aria-hidden="true"></i>
         </div>
       </a>
