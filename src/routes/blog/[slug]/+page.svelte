@@ -474,7 +474,7 @@
             rel="noopener noreferrer"
             class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-adwaita-border bg-adwaita-card text-adwaita-subtitle transition-colors hover:bg-adwaita-hover hover:text-adwaita-blue"
             aria-label="GitHub (opens in a new tab)">
-            <i class="bi bi-github" aria-hidden="true"></i>
+            <i class="bi bi-github text-base flex items-center justify-center leading-none" aria-hidden="true"></i>
           </a>
           <a
             href="https://linkedin.com/in/farhnkrnapratma"
@@ -482,7 +482,7 @@
             rel="noopener noreferrer"
             class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-adwaita-border bg-adwaita-card text-adwaita-subtitle transition-colors hover:bg-adwaita-hover hover:text-adwaita-blue"
             aria-label="LinkedIn (opens in a new tab)">
-            <i class="bi bi-linkedin" aria-hidden="true"></i>
+            <i class="bi bi-linkedin text-base flex items-center justify-center leading-none" aria-hidden="true"></i>
           </a>
           <a
             href="https://x.com/farhnkrnapratma"
@@ -490,7 +490,7 @@
             rel="noopener noreferrer"
             class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-adwaita-border bg-adwaita-card text-adwaita-subtitle transition-colors hover:bg-adwaita-hover hover:text-adwaita-blue"
             aria-label="X (opens in a new tab)">
-            <i class="bi bi-twitter-x" aria-hidden="true"></i>
+            <i class="bi bi-twitter-x text-base flex items-center justify-center leading-none" aria-hidden="true"></i>
           </a>
           <a
             href="https://facebook.com/farhnkrnapratma"
@@ -498,7 +498,7 @@
             rel="noopener noreferrer"
             class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-adwaita-border bg-adwaita-card text-adwaita-subtitle transition-colors hover:bg-adwaita-hover hover:text-adwaita-blue"
             aria-label="Facebook (opens in a new tab)">
-            <i class="bi bi-facebook" aria-hidden="true"></i>
+            <i class="bi bi-facebook text-base flex items-center justify-center leading-none" aria-hidden="true"></i>
           </a>
           <a
             href="https://instagram.com/farhnkrnapratma"
@@ -506,7 +506,7 @@
             rel="noopener noreferrer"
             class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-adwaita-border bg-adwaita-card text-adwaita-subtitle transition-colors hover:bg-adwaita-hover hover:text-adwaita-blue"
             aria-label="Instagram (opens in a new tab)">
-            <i class="bi bi-instagram" aria-hidden="true"></i>
+            <i class="bi bi-instagram text-base flex items-center justify-center leading-none" aria-hidden="true"></i>
           </a>
           <a
             href="https://threads.net/@farhnkrnapratma"
@@ -514,7 +514,7 @@
             rel="noopener noreferrer"
             class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-adwaita-border bg-adwaita-card text-adwaita-subtitle transition-colors hover:bg-adwaita-hover hover:text-adwaita-blue"
             aria-label="Threads (opens in a new tab)">
-            <i class="bi bi-threads" aria-hidden="true"></i>
+            <i class="bi bi-threads text-base flex items-center justify-center leading-none" aria-hidden="true"></i>
           </a>
         </div>
       </div>
