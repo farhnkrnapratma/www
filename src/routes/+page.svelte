@@ -202,21 +202,41 @@
   let theme = $state<Theme>('auto');
   let themeDropdownOpen = $state(false);
   let formName = $state('');
+  let formEmail = $state('');
   let formMessage = $state('');
-  let formErrors = $state({ name: '', message: '' });
+  let formErrors = $state({ name: '', email: '', message: '' });
+
+  function sanitizeInput(text: string): string {
+    return text
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#x27;')
+      .replace(/\//g, '&#x2F;');
+  }
 
   function validateForm(e: Event) {
     const nameErr = formName.trim() === '' ? 'Name is required.' : '';
+    const emailErr = formEmail.trim() === '' ? 'Email is required.' : '';
     const msgErr = formMessage.trim() === '' ? 'Message is required.' : '';
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const emailFormatErr = (!emailErr && !emailRegex.test(formEmail.trim())) ? 'Please enter a valid email address.' : '';
     const nameReservedErr = (!nameErr && isNameReserved(formName)) ? 'This name cannot be used. Please use another name.' : '';
 
     formErrors = {
       name: nameErr || nameReservedErr,
+      email: emailErr || emailFormatErr,
       message: msgErr
     };
 
-    if (formErrors.name || formErrors.message) {
+    if (formErrors.name || formErrors.email || formErrors.message) {
       e.preventDefault();
+    } else {
+      formName = sanitizeInput(formName.trim());
+      formEmail = sanitizeInput(formEmail.trim());
+      formMessage = sanitizeInput(formMessage.trim());
     }
   }
 
@@ -749,6 +769,7 @@
               aria-describedby={formErrors.name ? 'form-name-error' : ''}
               placeholder="Enter your name"
               bind:value={formName}
+              oninput={() => formErrors.name = ''}
               class="w-full px-3 py-1.5 text-sm bg-adwaita-bg border border-adwaita-border rounded-lg text-adwaita-text placeholder:text-adwaita-label/70 focus:outline-none transition-colors"
               class:border-adwaita-error={formErrors.name} />
             {#if formErrors.name}
@@ -765,14 +786,26 @@
             class="text-xs font-bold text-adwaita-label w-20 shrink-0 select-none">
             Email <span aria-hidden="true" class="text-adwaita-error">*</span><span class="sr-only">(required)</span>
           </label>
-          <input
-            type="email"
-            id="form-email"
-            name="email"
-            aria-required="true"
-            placeholder="Enter your email"
-            autocomplete="email"
-            class="w-full px-3 py-1.5 text-sm bg-adwaita-bg border border-adwaita-border rounded-lg text-adwaita-text placeholder:text-adwaita-label/70 focus:outline-none transition-colors" />
+          <div class="w-full">
+            <input
+              type="email"
+              id="form-email"
+              name="email"
+              aria-required="true"
+              aria-invalid={!!formErrors.email}
+              aria-describedby={formErrors.email ? 'form-email-error' : ''}
+              placeholder="Enter your email"
+              autocomplete="email"
+              bind:value={formEmail}
+              oninput={() => formErrors.email = ''}
+              class="w-full px-3 py-1.5 text-sm bg-adwaita-bg border border-adwaita-border rounded-lg text-adwaita-text placeholder:text-adwaita-label/70 focus:outline-none transition-colors"
+              class:border-adwaita-error={formErrors.email} />
+            {#if formErrors.email}
+              <p id="form-email-error" role="alert" class="text-adwaita-error font-medium text-xs mt-1">
+                {formErrors.email}
+              </p>
+            {/if}
+          </div>
         </div>
 
         <div class="flex flex-col gap-2">
@@ -789,6 +822,7 @@
               placeholder="Enter your message"
               maxlength="1000"
               bind:value={formMessage}
+              oninput={() => formErrors.message = ''}
               aria-required="true"
               aria-invalid={!!formErrors.message}
               aria-describedby="form-msg-count {formErrors.message ? 'form-message-error' : ''}"

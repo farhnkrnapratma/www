@@ -199,6 +199,16 @@
 
   let errors = $state({ authorName: '', commentContent: '' });
 
+  function sanitizeInput(text: string): string {
+    return text
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#x27;')
+      .replace(/\//g, '&#x2F;');
+  }
+
   function validate() {
     const nameErr = (!isAnonymous && authorName.trim() === '') ? 'Name is required.' : '';
     const msgErr = commentContent.trim() === '' ? 'Message is required.' : '';
@@ -229,9 +239,9 @@
         body: JSON.stringify({
           postId: post.id,
           parentId,
-          authorName: authorName.trim(),
+          authorName: isAnonymous ? '' : sanitizeInput(authorName.trim()),
           isAnonymous,
-          content: commentContent.trim(),
+          content: sanitizeInput(commentContent.trim()),
         }),
       });
 
@@ -557,6 +567,7 @@
                   aria-describedby={errors.authorName ? 'comment-author-error' : ''}
                   placeholder={isAnonymous ? 'Anonymous' : 'Enter your name'}
                   bind:value={authorName}
+                  oninput={() => errors.authorName = ''}
                   class="w-full px-3 py-1.5 text-sm bg-adwaita-bg border border-adwaita-border rounded-lg text-adwaita-text placeholder:text-adwaita-label/70 focus:outline-none transition-colors disabled:opacity-60"
                   class:border-adwaita-error={errors.authorName} />
                 {#if errors.authorName}
@@ -580,6 +591,7 @@
                   maxlength="1000"
                   placeholder="Enter your message"
                   bind:value={commentContent}
+                  oninput={() => errors.commentContent = ''}
                   aria-required="true"
                   aria-invalid={!!errors.commentContent}
                   aria-describedby="comment-msg-count {errors.commentContent ? 'comment-msg-error' : ''}"
@@ -707,6 +719,7 @@
                             aria-describedby={errors.authorName ? 'reply-author-error-' + comment.id : ''}
                             placeholder={isAnonymous ? 'Anonymous' : 'Enter your name'}
                             bind:value={authorName}
+                            oninput={() => errors.authorName = ''}
                             class="w-full px-3 py-1.5 text-sm bg-adwaita-bg border border-adwaita-border rounded-lg text-adwaita-text placeholder:text-adwaita-label/70 focus:outline-none transition-colors disabled:opacity-60"
                             class:border-adwaita-error={errors.authorName} />
                           {#if errors.authorName}
@@ -730,6 +743,7 @@
                             maxlength="1000"
                             placeholder="Enter your message"
                             bind:value={commentContent}
+                            oninput={() => errors.commentContent = ''}
                             aria-required="true"
                             aria-invalid={!!errors.commentContent}
                             aria-describedby="reply-msg-count-{comment.id} {errors.commentContent ? 'reply-msg-error-' + comment.id : ''}"
