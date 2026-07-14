@@ -885,7 +885,7 @@
               <div class="flex flex-col gap-1 pr-6 font-sans">
                 <p class="text-xs font-semibold text-adwaita-subtitle select-none">{getPostDate(post)} &middot; {post.read_time} &middot; {post.comment_count || 0} {post.comment_count === 1 ? 'comment' : 'comments'}</p>
                 <h2
-                  class="text-lg font-bold text-adwaita-text group-hover:text-adwaita-blue transition-colors leading-snug">
+                  class="text-xl font-bold text-adwaita-text group-hover:text-adwaita-blue transition-colors leading-snug">
                   {post.title}
                 </h2>
                 {#if post.excerpt}
