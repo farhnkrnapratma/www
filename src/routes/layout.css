@@ -218,3 +218,8 @@ button,
   outline: 2px solid var(--color-adwaita-focus) !important;
   outline-offset: 2px !important;
 }
+
+input:focus,
+textarea:focus {
+  border-color: var(--color-adwaita-focus) !important;
+}
