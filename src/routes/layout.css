@@ -214,17 +214,30 @@ button,
   opacity: 0.75 !important;
 }
 
+/* ── Keyboard focus: thick accent outline on interactive elements ── */
 :focus-visible {
-  outline: 2px solid var(--color-adwaita-focus) !important;
-  outline-offset: 2px !important;
+  outline: 3px solid var(--color-adwaita-accent) !important;
+  outline-offset: 3px !important;
+  border-radius: 6px;
 }
 
+/* inputs/textareas use border instead of outline to avoid double-ring */
 input:focus-visible,
-textarea:focus-visible {
+textarea:focus-visible,
+select:focus-visible {
   outline: none !important;
 }
 
 input:focus,
-textarea:focus {
-  border-color: var(--color-adwaita-focus) !important;
+textarea:focus,
+select:focus {
+  border-color: var(--color-adwaita-accent) !important;
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-adwaita-accent) 20%, transparent) !important;
 }
+
+/* ── Valid input state (applied via JS after debounce validation) ── */
+input.input-valid,
+textarea.input-valid {
+  border-color: var(--color-adwaita-accent) !important;
+}
+

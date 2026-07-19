@@ -92,10 +92,10 @@
     if (title && !isEditMode) {
       slug = title
         .toLowerCase()
-        .replace(/[^a-z0-9\s-]/g, '') 
-        .replace(/\s+/g, '-') 
-        .replace(/-+/g, '-') 
-        .replace(/^-+|-+$/g, ''); 
+        .replace(/[^a-z0-9\s-]/g, '')
+        .replace(/\s+/g, '-')
+        .replace(/-+/g, '-')
+        .replace(/^-+|-+$/g, '');
     }
   });
 
@@ -192,10 +192,10 @@
 </script>
 
 <nav
-  class="fixed top-0 z-40 flex h-15 w-full items-center justify-between bg-adwaita-card/60 backdrop-blur-lg px-5 font-sans border-b border-adwaita-border shadow-xs transition-colors duration-300">
+  class="fixed top-0 z-40 flex h-15 w-full items-center justify-between border-b border-adwaita-border bg-adwaita-card/60 px-5 font-sans shadow-xs backdrop-blur-lg transition-colors duration-300">
   <a
     href="/admin"
-    class="inline-flex h-9 items-center justify-center rounded-lg border border-adwaita-border bg-adwaita-card px-4 text-xs font-semibold text-adwaita-text transition-colors hover:bg-adwaita-hover focus:outline-none">
+    class="inline-flex h-9 items-center justify-center rounded-lg border border-adwaita-border bg-adwaita-card px-4 text-xs font-semibold text-adwaita-text transition-colors hover:bg-adwaita-hover">
     <i
       class="bi bi-arrow-left mr-2"
       aria-hidden="true"></i>
@@ -210,7 +210,7 @@
       <button
         type="button"
         onclick={() => (themeDropdownOpen = !themeDropdownOpen)}
-        class="flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg border border-adwaita-border bg-adwaita-card text-sm text-adwaita-text transition-colors hover:bg-adwaita-hover focus:outline-none"
+        class="flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg border border-adwaita-border bg-adwaita-card text-sm text-adwaita-text transition-colors hover:bg-adwaita-hover"
         aria-label="Change theme"
         aria-haspopup="true"
         aria-expanded={themeDropdownOpen}>
@@ -231,7 +231,7 @@
           onclick={() => (themeDropdownOpen = false)}
           aria-label="Close theme menu"></button>
         <div
-          class="absolute right-0 top-11 z-50 flex min-w-31.25 flex-col rounded-xl border border-adwaita-border bg-adwaita-card py-1.5 shadow-lg">
+          class="absolute top-11 right-0 z-50 flex min-w-31.25 flex-col rounded-xl border border-adwaita-border bg-adwaita-card py-1.5 shadow-lg">
           <button
             type="button"
             onclick={() => {
@@ -286,20 +286,34 @@
   </div>
 </nav>
 
-<main class="pt-15 font-sans flex flex-col min-h-[calc(100vh-3.75rem)]">
+<main class="flex min-h-[calc(100vh-3.75rem)] flex-col pt-15 font-sans">
   {#if isCheckingAuth}
-    <div class="flex flex-col items-center justify-center py-20 text-adwaita-subtitle flex-1">
-      <svg class="animate-spin h-8 w-8 text-adwaita-subtitle mb-3 select-none" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+    <div class="flex flex-1 flex-col items-center justify-center py-20 text-adwaita-subtitle">
+      <svg
+        class="mb-3 h-8 w-8 animate-spin text-adwaita-subtitle select-none"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24">
+        <circle
+          class="opacity-25"
+          cx="12"
+          cy="12"
+          r="10"
+          stroke="currentColor"
+          stroke-width="4"></circle>
+        <path
+          class="opacity-75"
+          fill="currentColor"
+          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+        ></path>
       </svg>
       Verifying credentials...
     </div>
   {:else}
-    <section class="mx-auto w-full max-w-4xl px-6 py-10 flex-1">
+    <section class="mx-auto w-full max-w-4xl flex-1 px-6 py-10">
       {#if errorMessage}
         <div
-          class="p-3 mb-6 rounded-lg text-sm font-semibold bg-palette-coral/10 text-palette-coral border border-palette-coral/30">
+          class="mb-6 rounded-lg border border-palette-coral/30 bg-palette-coral/10 p-3 text-sm font-semibold text-palette-coral">
           {errorMessage}
         </div>
       {/if}
@@ -307,46 +321,46 @@
       <form
         onsubmit={handleSubmit}
         class="flex flex-col gap-6">
-        <div class="boxed-list p-5 text-left bg-zinc-950/1">
-          <h2 class="text-sm font-bold text-adwaita-text mb-4">Post Settings</h2>
+        <div class="boxed-list bg-zinc-950/1 p-5 text-left">
+          <h2 class="mb-4 text-sm font-bold text-adwaita-text">Post Settings</h2>
           <div class="flex flex-col gap-4">
-            <div class="flex flex-col sm:flex-row sm:items-center gap-2">
+            <div class="flex flex-col gap-2 sm:flex-row sm:items-center">
               <label
                 for="post-title"
-                class="text-xs font-bold text-adwaita-subtitle w-20 shrink-0">Title</label>
+                class="w-20 shrink-0 text-xs font-bold text-adwaita-subtitle">Title</label>
               <input
                 type="text"
                 id="post-title"
                 required
                 placeholder="Getting Started with Rust"
                 bind:value={title}
-                class="w-full px-3 py-2 text-sm bg-adwaita-bg border border-adwaita-border rounded-lg text-adwaita-text placeholder:text-adwaita-subtitle/70 focus:outline-none focus:border-adwaita-accent transition-colors" />
+                class="w-full rounded-lg border border-adwaita-border bg-adwaita-bg px-3 py-2 text-sm text-adwaita-text transition-colors placeholder:text-adwaita-subtitle/70 focus:border-adwaita-accent" />
             </div>
-            <div class="flex flex-col sm:flex-row sm:items-center gap-2">
+            <div class="flex flex-col gap-2 sm:flex-row sm:items-center">
               <label
                 for="post-slug"
-                class="text-xs font-bold text-adwaita-subtitle w-20 shrink-0">Slug</label>
+                class="w-20 shrink-0 text-xs font-bold text-adwaita-subtitle">Slug</label>
               <input
                 type="text"
                 id="post-slug"
                 required
                 placeholder="getting-started-with-rust"
                 bind:value={slug}
-                class="w-full px-3 py-2 text-sm bg-adwaita-bg border border-adwaita-border rounded-lg text-adwaita-text placeholder:text-adwaita-subtitle/70 focus:outline-none focus:border-adwaita-accent transition-colors" />
+                class="w-full rounded-lg border border-adwaita-border bg-adwaita-bg px-3 py-2 text-sm text-adwaita-text transition-colors placeholder:text-adwaita-subtitle/70 focus:border-adwaita-accent" />
             </div>
             <div class="flex flex-col items-start gap-2">
               <label
                 for="post-excerpt"
-                class="text-xs font-bold text-adwaita-subtitle w-20 shrink-0 mt-1">Excerpt</label>
+                class="mt-1 w-20 shrink-0 text-xs font-bold text-adwaita-subtitle">Excerpt</label>
               <textarea
                 id="post-excerpt"
                 rows="2"
                 placeholder="Brief summary of the article..."
                 bind:value={excerpt}
-                class="w-full px-3 py-1.5 text-sm bg-adwaita-bg border border-adwaita-border rounded-lg text-adwaita-text placeholder:text-adwaita-subtitle/70 focus:outline-none focus:border-adwaita-accent transition-colors resize-none"
+                class="w-full resize-none rounded-lg border border-adwaita-border bg-adwaita-bg px-3 py-1.5 text-sm text-adwaita-text transition-colors placeholder:text-adwaita-subtitle/70 focus:border-adwaita-accent"
               ></textarea>
             </div>
-            <div class="flex items-center gap-2 mt-2">
+            <div class="mt-2 flex items-center gap-2">
               <input
                 type="checkbox"
                 id="post-publish"
@@ -354,18 +368,18 @@
                 class="rounded border-adwaita-border text-adwaita-accent focus:ring-adwaita-accent" />
               <label
                 for="post-publish"
-                class="text-xs font-bold text-adwaita-text cursor-pointer select-none"
+                class="cursor-pointer text-xs font-bold text-adwaita-text select-none"
                 >Publish immediately</label>
             </div>
           </div>
         </div>
 
-        <div class="boxed-list overflow-hidden text-left flex flex-col min-h-100">
+        <div class="boxed-list flex min-h-100 flex-col overflow-hidden text-left">
           <div class="flex border-b border-adwaita-border bg-adwaita-hover/30 px-3 py-1">
             <button
               type="button"
               onclick={() => (activeTab = 'editor')}
-              class="px-4 py-2 text-xs font-bold border-b-2 transition-colors {(
+              class="border-b-2 px-4 py-2 text-xs font-bold transition-colors {(
                 activeTab === 'editor'
               ) ?
                 'border-adwaita-accent text-adwaita-accent'
@@ -375,7 +389,7 @@
             <button
               type="button"
               onclick={() => (activeTab = 'preview')}
-              class="px-4 py-2 text-xs font-bold border-b-2 transition-colors {(
+              class="border-b-2 px-4 py-2 text-xs font-bold transition-colors {(
                 activeTab === 'preview'
               ) ?
                 'border-adwaita-accent text-adwaita-accent'
@@ -389,10 +403,10 @@
               required
               aria-label="Markdown Content"
               bind:value={markdownContent}
-              class="w-full flex-1 p-5 text-sm font-mono bg-adwaita-bg text-adwaita-text focus:outline-none focus:ring-2 focus:ring-inset focus:ring-adwaita-accent resize-y min-h-87.5 leading-relaxed"
+              class="min-h-87.5 w-full flex-1 resize-y bg-adwaita-bg p-5 font-mono text-sm leading-relaxed text-adwaita-text focus:ring-2 focus:ring-adwaita-accent focus:ring-inset"
             ></textarea>
           {:else}
-            <div class="prose-custom p-6 w-full overflow-y-auto bg-adwaita-bg min-h-87.5">
+            <div class="prose-custom min-h-87.5 w-full overflow-y-auto bg-adwaita-bg p-6">
               {#if previewHtml}
                 {@html previewHtml}
               {:else}
@@ -402,17 +416,19 @@
           {/if}
         </div>
 
-        <div class="flex justify-end gap-3 mt-4 mb-10">
+        <div class="mt-4 mb-10 flex justify-end gap-3">
           <a
             href="/admin"
-            class="inline-flex h-10 items-center justify-center rounded-lg bg-adwaita-card border border-adwaita-border px-5 text-sm font-semibold text-adwaita-text transition-colors hover:bg-adwaita-hover focus:outline-none">
+            class="inline-flex h-10 items-center justify-center rounded-lg border border-adwaita-border bg-adwaita-card px-5 text-sm font-semibold text-adwaita-text transition-colors hover:bg-adwaita-hover">
             Cancel
           </a>
           <button
             type="submit"
             disabled={isSubmitting}
-            class="inline-flex h-10 items-center justify-center gap-2 cursor-pointer rounded-lg bg-adwaita-accent px-6 text-sm font-semibold text-white transition-colors hover:bg-adwaita-accent-hover focus:outline-none disabled:opacity-55">
-            {isSubmitting ? 'Saving...' : (isEditMode ? 'Save Changes' : 'Save Blog Post')}
+            class="inline-flex h-10 cursor-pointer items-center justify-center gap-2 rounded-lg bg-adwaita-accent px-6 text-sm font-semibold text-white transition-colors hover:bg-adwaita-accent-hover disabled:opacity-55">
+            {isSubmitting ? 'Saving...'
+            : isEditMode ? 'Save Changes'
+            : 'Save Blog Post'}
           </button>
         </div>
       </form>

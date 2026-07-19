@@ -93,39 +93,43 @@ export const load: PageServerLoad = async ({ fetch, platform }) => {
       .order('created_at', { ascending: false })
       .limit(3);
     if (!error && data) {
-      dbPosts = await Promise.all(data.map(async (post) => {
-        let readTime = '1 min read';
-        let commentCount = 0;
-        try {
-          const { data: urlData } = supabase.storage.from('blog-posts').getPublicUrl(post.storage_path);
-          const fileRes = await fetch(urlData.publicUrl);
-          if (fileRes.ok) {
-            const text = await fileRes.text();
-            const words = text.trim().split(/\s+/).length;
-            const minutes = Math.max(1, Math.ceil(words / 200));
-            readTime = `${minutes} min${minutes > 1 ? 's' : ''} read`;
+      dbPosts = await Promise.all(
+        data.map(async post => {
+          let readTime = '1 min read';
+          let commentCount = 0;
+          try {
+            const { data: urlData } = supabase.storage
+              .from('blog-posts')
+              .getPublicUrl(post.storage_path);
+            const fileRes = await fetch(urlData.publicUrl);
+            if (fileRes.ok) {
+              const text = await fileRes.text();
+              const words = text.trim().split(/\s+/).length;
+              const minutes = Math.max(1, Math.ceil(words / 200));
+              readTime = `${minutes} min${minutes > 1 ? 's' : ''} read`;
+            }
+          } catch (err) {
+            console.error(err);
           }
-        } catch (err) {
-          console.error(err);
-        }
 
-        try {
-          const { count } = await supabase
-            .from('comments')
-            .select('*', { count: 'exact', head: true })
-            .eq('post_id', post.id)
-            .eq('is_approved', true);
-          commentCount = count ?? 0;
-        } catch (err) {
-          console.error(err);
-        }
+          try {
+            const { count } = await supabase
+              .from('comments')
+              .select('*', { count: 'exact', head: true })
+              .eq('post_id', post.id)
+              .eq('is_approved', true);
+            commentCount = count ?? 0;
+          } catch (err) {
+            console.error(err);
+          }
 
-        return {
-          ...post,
-          read_time: readTime,
-          comment_count: commentCount
-        };
-      }));
+          return {
+            ...post,
+            read_time: readTime,
+            comment_count: commentCount,
+          };
+        }),
+      );
     }
   } catch (err) {
     console.error(err);

@@ -1,1 +1,0 @@
-Project root: /home/hanz/Projects/www. SvelteKit-based personal website with routes under src/routes, including admin, blog, and API comment handling. Root layout loads global CSS from src/routes/layout.css. Home page load fetches GitHub repos and latest published posts from Supabase.

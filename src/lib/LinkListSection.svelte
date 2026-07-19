@@ -16,10 +16,10 @@
 </script>
 
 <section
-  class="mx-auto w-full md:w-[70%] lg:w-[45%] md:max-w-none px-6 pt-10 pb-24 md:pt-14 md:pb-28 relative z-10">
-  <h1 class="text-3xl font-bold text-adwaita-text tracking-tight">{title}</h1>
+  class="relative z-10 mx-auto w-full px-6 pt-10 pb-24 md:w-[70%] md:max-w-none md:pt-14 md:pb-28 lg:w-[45%]">
+  <h1 class="text-3xl font-bold tracking-tight text-adwaita-text">{title}</h1>
   <p class="mt-2 text-sm text-adwaita-subtitle">{subtitle}</p>
-  <div class="mt-10 boxed-list">
+  <div class="boxed-list mt-10">
     {#each items as item (item.label)}
       <a
         href={item.href}
@@ -27,21 +27,21 @@
         rel="noopener noreferrer"
         title="Opens in a new tab"
         class="action-row group flex items-center justify-between gap-3">
-        <div class="flex items-center gap-4 min-w-0 shrink-0">
+        <div class="flex min-w-0 shrink-0 items-center gap-4">
           <i
             class="bi {item.icon} text-lg {item.color ||
               'text-adwaita-subtitle'} transition-colors group-hover:text-adwaita-accent"
             aria-hidden="true"></i>
-          <span class="text-sm font-semibold text-adwaita-text whitespace-nowrap"
+          <span class="text-sm font-semibold whitespace-nowrap text-adwaita-text"
             >{item.label}</span>
         </div>
-        <div class="flex items-center justify-end gap-3 min-w-0">
-          <span class="hidden text-sm font-medium text-adwaita-subtitle truncate sm:inline">
+        <div class="flex min-w-0 items-center justify-end gap-3">
+          <span class="hidden truncate text-sm font-medium text-adwaita-subtitle sm:inline">
             {item.value}
           </span>
           <span class="sr-only"> (opens in a new tab)</span>
           <i
-            class="bi bi-chevron-right text-sm text-zinc-400 opacity-80 transition-all group-hover:translate-x-0.5 group-hover:text-adwaita-accent shrink-0"
+            class="bi bi-chevron-right shrink-0 text-sm text-zinc-400 opacity-80 transition-all group-hover:translate-x-0.5 group-hover:text-adwaita-accent"
             aria-hidden="true"></i>
         </div>
       </a>

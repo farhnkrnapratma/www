@@ -205,6 +205,54 @@
   let formEmail = $state('');
   let formMessage = $state('');
   let formErrors = $state({ name: '', email: '', message: '' });
+  let formValid = $state({ name: false, email: false, message: false });
+
+  // Debounce helper – returns a function that delays cb by ms after last call
+  function debounce<T extends unknown[]>(cb: (...args: T) => void, ms: number) {
+    let timer: ReturnType<typeof setTimeout>;
+    return (...args: T) => {
+      clearTimeout(timer);
+      timer = setTimeout(() => cb(...args), ms);
+    };
+  }
+
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  const validateName = debounce(() => {
+    if (formName.trim() === '') {
+      formErrors.name = '';
+      formValid.name = false;
+    } else if (isNameReserved(formName)) {
+      formErrors.name = 'This name cannot be used. Please use another name.';
+      formValid.name = false;
+    } else {
+      formErrors.name = '';
+      formValid.name = true;
+    }
+  }, 300);
+
+  const validateEmail = debounce(() => {
+    if (formEmail.trim() === '') {
+      formErrors.email = '';
+      formValid.email = false;
+    } else if (!emailRegex.test(formEmail.trim())) {
+      formErrors.email = 'Please enter a valid email address.';
+      formValid.email = false;
+    } else {
+      formErrors.email = '';
+      formValid.email = true;
+    }
+  }, 300);
+
+  const validateMessage = debounce(() => {
+    if (formMessage.trim() === '') {
+      formErrors.message = '';
+      formValid.message = false;
+    } else {
+      formErrors.message = '';
+      formValid.message = true;
+    }
+  }, 300);
 
   function sanitizeInput(text: string): string {
     return text
@@ -220,16 +268,22 @@
     const nameErr = formName.trim() === '' ? 'Name is required.' : '';
     const emailErr = formEmail.trim() === '' ? 'Email is required.' : '';
     const msgErr = formMessage.trim() === '' ? 'Message is required.' : '';
-
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const emailFormatErr = (!emailErr && !emailRegex.test(formEmail.trim())) ? 'Please enter a valid email address.' : '';
-    const nameReservedErr = (!nameErr && isNameReserved(formName)) ? 'This name cannot be used. Please use another name.' : '';
+    const emailFormatErr =
+      !emailErr && !emailRegex.test(formEmail.trim()) ? 'Please enter a valid email address.' : '';
+    const nameReservedErr =
+      !nameErr && isNameReserved(formName) ?
+        'This name cannot be used. Please use another name.'
+      : '';
 
     formErrors = {
       name: nameErr || nameReservedErr,
       email: emailErr || emailFormatErr,
-      message: msgErr
+      message: msgErr,
     };
+    // Clear valid state for any field that has an error
+    if (formErrors.name) formValid.name = false;
+    if (formErrors.email) formValid.email = false;
+    if (formErrors.message) formValid.message = false;
 
     if (formErrors.name || formErrors.email || formErrors.message) {
       e.preventDefault();
@@ -387,17 +441,17 @@
 {/if}
 
 <nav
-  class="fixed top-0 z-40 flex h-15 w-full items-center justify-between bg-adwaita-card md:bg-adwaita-card/60 backdrop-blur-lg px-3 sm:px-5 font-sans border-b border-adwaita-border shadow-xs transition-colors duration-300">
+  class="fixed top-0 z-40 flex h-15 w-full items-center justify-between border-b border-adwaita-border bg-adwaita-card px-3 font-sans shadow-xs backdrop-blur-lg transition-colors duration-300 sm:px-5 md:bg-adwaita-card/60">
   <button
     onclick={() => navigate('home')}
-    class="min-w-0 max-w-[calc(100vw-5rem)] cursor-pointer truncate text-left text-base font-bold text-adwaita-text tracking-tight hover:text-adwaita-accent transition-colors sm:max-w-none">
+    class="max-w-[calc(100vw-5rem)] min-w-0 cursor-pointer truncate text-left text-base font-bold tracking-tight text-adwaita-text transition-colors hover:text-adwaita-accent sm:max-w-none">
     {name}
   </button>
 
   <div class="flex items-center gap-2 sm:gap-3">
     <ul
       id="mobile-menu"
-      class="fixed right-5 top-16 z-40 flex w-56 flex-col items-start gap-1 bg-adwaita-card p-2 rounded-xl border border-adwaita-border shadow-lg transition-all duration-200 origin-top-right md:static md:h-auto md:w-auto md:translate-x-0 md:flex-row md:items-center md:bg-adwaita-switcher-bg md:p-1 md:rounded-lg md:border md:border-adwaita-border md:gap-0.5 md:shadow-none md:opacity-100 md:pointer-events-auto md:scale-100"
+      class="fixed top-16 right-5 z-40 flex w-56 origin-top-right flex-col items-start gap-1 rounded-xl border border-adwaita-border bg-adwaita-card p-2 shadow-lg transition-all duration-200 md:pointer-events-auto md:static md:h-auto md:w-auto md:translate-x-0 md:scale-100 md:flex-row md:items-center md:gap-0.5 md:rounded-lg md:border md:border-adwaita-border md:bg-adwaita-switcher-bg md:p-1 md:opacity-100 md:shadow-none"
       class:opacity-0={!menuOpen}
       class:scale-95={!menuOpen}
       class:pointer-events-none={!menuOpen}
@@ -407,7 +461,7 @@
         <div class="relative w-full">
           <button
             onclick={() => (themeDropdownOpen = !themeDropdownOpen)}
-            class="flex h-11 w-full cursor-pointer items-center justify-between rounded-lg px-4 text-sm font-semibold text-adwaita-text transition-colors hover:bg-adwaita-hover focus:outline-none"
+            class="flex h-11 w-full cursor-pointer items-center justify-between rounded-lg px-4 text-sm font-semibold text-adwaita-text transition-colors hover:bg-adwaita-hover"
             aria-label="Change theme"
             aria-haspopup="true"
             aria-expanded={themeDropdownOpen}>
@@ -424,7 +478,7 @@
 
           {#if themeDropdownOpen}
             <div
-              class="absolute left-0 right-0 top-12 z-50 flex w-full flex-col rounded-lg border border-adwaita-border bg-adwaita-card p-1 shadow-lg">
+              class="absolute top-12 right-0 left-0 z-50 flex w-full flex-col rounded-lg border border-adwaita-border bg-adwaita-card p-1 shadow-lg">
               {#each ['auto', 'light', 'dark'] as themeOption (themeOption)}
                 <button
                   onclick={() => {
@@ -454,11 +508,11 @@
               navigate(item.id);
               menuOpen = false;
             }}
-            class="flex w-full cursor-pointer whitespace-nowrap items-center justify-start md:justify-center rounded-lg border-0 px-4 h-11 text-sm font-medium leading-none outline-none focus:outline-none active:outline-none transition-all md:rounded-md md:px-3.5 md:h-7.5 {(
+            class="flex h-11 w-full cursor-pointer items-center justify-start rounded-lg border-0 px-4 text-sm leading-none font-medium whitespace-nowrap transition-all md:h-7.5 md:justify-center md:rounded-md md:px-3.5 {(
               activeSection === item.id
             ) ?
-              'bg-adwaita-accent text-white hover:bg-adwaita-accent/90 md:bg-adwaita-switcher-active md:text-adwaita-accent md:shadow-xs md:hover:bg-adwaita-switcher-active font-semibold'
-            : 'text-adwaita-text hover:bg-adwaita-hover md:text-adwaita-subtitle md:hover:text-adwaita-text md:hover:bg-adwaita-hover'}">
+              'bg-adwaita-accent font-semibold text-white hover:bg-adwaita-accent/90 md:bg-adwaita-switcher-active md:text-adwaita-accent md:shadow-xs md:hover:bg-adwaita-switcher-active'
+            : 'text-adwaita-text hover:bg-adwaita-hover md:text-adwaita-subtitle md:hover:bg-adwaita-hover md:hover:text-adwaita-text'}">
             {item.label}
           </button>
         </li>
@@ -468,7 +522,7 @@
     <div class="relative">
       <button
         onclick={() => (themeDropdownOpen = !themeDropdownOpen)}
-        class="hidden h-10 w-10 cursor-pointer items-center justify-center rounded-full text-lg text-adwaita-text transition-colors hover:bg-adwaita-hover focus:outline-none md:flex"
+        class="hidden h-10 w-10 cursor-pointer items-center justify-center rounded-full text-lg text-adwaita-text transition-colors hover:bg-adwaita-hover md:flex"
         aria-label="Change theme"
         aria-haspopup="true"
         aria-expanded={themeDropdownOpen}>
@@ -483,7 +537,7 @@
           onclick={() => (themeDropdownOpen = false)}
           aria-label="Close theme menu"></button>
         <div
-          class="absolute right-0 top-12 z-50 hidden min-w-31.25 flex-col rounded-xl border border-adwaita-border bg-adwaita-card py-1.5 shadow-lg md:flex">
+          class="absolute top-12 right-0 z-50 hidden min-w-31.25 flex-col rounded-xl border border-adwaita-border bg-adwaita-card py-1.5 shadow-lg md:flex">
           <button
             onclick={() => {
               applyTheme('auto');
@@ -546,58 +600,58 @@
   </div>
 </nav>
 
-<main class="pt-15 font-sans flex flex-col min-h-[calc(100vh-3.75rem)]">
+<main class="flex min-h-[calc(100vh-3.75rem)] flex-col pt-15 font-sans">
   {#if activeSection === 'home'}
     <section
-      class="mx-auto w-full md:w-[80%] lg:w-[50%] md:max-w-none px-6 pt-10 pb-24 md:pt-14 md:pb-28 flex flex-col gap-8 relative z-10">
+      class="relative z-10 mx-auto flex w-full flex-col gap-8 px-6 pt-10 pb-24 md:w-[80%] md:max-w-none md:pt-14 md:pb-28 lg:w-[50%]">
       <div
-        class="absolute top-12.5 left-[50%] translate-x-[-50%] w-[320px] h-80 rounded-full bg-adwaita-accent/10 blur-[80px] pointer-events-none z-0">
+        class="pointer-events-none absolute top-12.5 left-[50%] z-0 h-80 w-[320px] translate-x-[-50%] rounded-full bg-adwaita-accent/10 blur-[80px]">
       </div>
 
-      <div class="flex flex-col items-center justify-center text-center relative z-10">
+      <div class="relative z-10 flex flex-col items-center justify-center text-center">
         <img
           src="/android-chrome-512x512.png"
           alt="Farhan Kurnia Pratama"
-          class="mb-6 h-28 w-28 rounded-full object-cover object-top border-2 border-adwaita-accent shadow-[0_0_20px_rgba(120,101,217,0.25)] dark:shadow-[0_0_25px_rgba(120,101,217,0.35)] transition-all duration-300 relative z-10" />
+          class="relative z-10 mb-6 h-28 w-28 rounded-full border-2 border-adwaita-accent object-cover object-top shadow-[0_0_20px_rgba(120,101,217,0.25)] transition-all duration-300 dark:shadow-[0_0_25px_rgba(120,101,217,0.35)]" />
         <h1
-          class="text-3xl font-bold text-adwaita-text md:text-4xl lg:text-5xl tracking-tight md:whitespace-nowrap relative z-10">
+          class="relative z-10 text-3xl font-bold tracking-tight text-adwaita-text md:text-4xl md:whitespace-nowrap lg:text-5xl">
           {name}
         </h1>
-        <p class="mt-3 mb-2 text-lg font-medium text-adwaita-subtitle relative z-10">{headline}</p>
-        <p class="mt-4 max-w-xl text-base text-adwaita-subtitle/90 leading-relaxed relative z-10">
+        <p class="relative z-10 mt-3 mb-2 text-lg font-medium text-adwaita-subtitle">{headline}</p>
+        <p class="relative z-10 mt-4 max-w-xl text-base leading-relaxed text-adwaita-subtitle/90">
           {desc}
         </p>
 
         <div
-          class="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 relative z-10 w-full">
+          class="relative z-10 mt-8 flex w-full flex-col items-center justify-center gap-3 sm:flex-row sm:gap-4">
           <a
             href="/cv.pdf"
             download="Farhan_Kurnia_Pratama_CV.pdf"
-            class="w-full sm:w-48 inline-flex items-center justify-center cursor-pointer rounded-lg bg-adwaita-accent py-2 text-xs sm:text-sm font-semibold text-white transition-colors hover:bg-adwaita-accent-hover focus:outline-none whitespace-nowrap">
+            class="inline-flex w-full cursor-pointer items-center justify-center rounded-lg bg-adwaita-accent py-2 text-xs font-semibold whitespace-nowrap text-white transition-colors hover:bg-adwaita-accent-hover sm:w-48 sm:text-sm">
             Download CV
           </a>
           <button
             onclick={() => navigate('projects')}
-            class="w-full sm:w-48 inline-flex items-center justify-center cursor-pointer rounded-lg border border-adwaita-border bg-adwaita-card py-2 text-xs sm:text-sm font-semibold text-adwaita-text transition-colors hover:bg-adwaita-hover focus:outline-none whitespace-nowrap">
+            class="inline-flex w-full cursor-pointer items-center justify-center rounded-lg border border-adwaita-border bg-adwaita-card py-2 text-xs font-semibold whitespace-nowrap text-adwaita-text transition-colors hover:bg-adwaita-hover sm:w-48 sm:text-sm">
             Browse Projects
           </button>
           <button
             onclick={() => navigate('contacts')}
-            class="w-full sm:mt-0 sm:w-48 inline-flex items-center justify-center cursor-pointer rounded-lg border border-adwaita-border bg-adwaita-card py-2 text-xs sm:text-sm font-semibold text-adwaita-text transition-colors hover:bg-adwaita-hover focus:outline-none whitespace-nowrap">
+            class="inline-flex w-full cursor-pointer items-center justify-center rounded-lg border border-adwaita-border bg-adwaita-card py-2 text-xs font-semibold whitespace-nowrap text-adwaita-text transition-colors hover:bg-adwaita-hover sm:mt-0 sm:w-48 sm:text-sm">
             Get in Touch
           </button>
         </div>
       </div>
 
       <div>
-        <h3 class="text-lg font-bold text-adwaita-text tracking-tight mb-4">Top Projects</h3>
+        <h3 class="mb-4 text-lg font-bold tracking-tight text-adwaita-text">Top Projects</h3>
         <div class="boxed-list text-left">
           {#each projects.slice(0, 3) as project (project.name)}
-            <div class="relative action-row group flex flex-col items-stretch gap-2 text-left">
+            <div class="action-row group relative flex flex-col items-stretch gap-2 text-left">
               <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                 <div class="flex items-center gap-2">
                   <h4
-                    class="text-base font-bold text-adwaita-text group-hover:text-adwaita-accent transition-colors leading-none">
+                    class="text-base leading-none font-bold text-adwaita-text transition-colors group-hover:text-adwaita-accent">
                     <a
                       href={project.url}
                       target="_blank"
@@ -615,10 +669,10 @@
                 </div>
 
                 <div
-                  class="flex flex-wrap items-center gap-3 sm:justify-end shrink-0 relative z-20">
+                  class="relative z-20 flex shrink-0 flex-wrap items-center gap-3 sm:justify-end">
                   {#if project.licenseName}
                     <span
-                      class="text-xs font-semibold text-adwaita-subtitle whitespace-nowrap"
+                      class="text-xs font-semibold whitespace-nowrap text-adwaita-subtitle"
                       title="License: {project.licenseName}">
                       {project.licenseName} License
                     </span>
@@ -626,17 +680,17 @@
 
                   <div class="flex items-center gap-1 text-xs font-semibold text-adwaita-subtitle">
                     <i
-                      class="bi bi-star-fill text-amber-600 text-[12px]"
+                      class="bi bi-star-fill text-[12px] text-amber-600"
                       aria-hidden="true"></i>
                     {project.stars}
                   </div>
                   <i
-                    class="bi bi-chevron-right text-sm text-zinc-400 opacity-80 group-hover:translate-x-0.5 transition-transform"
+                    class="bi bi-chevron-right text-sm text-zinc-400 opacity-80 transition-transform group-hover:translate-x-0.5"
                     aria-hidden="true"></i>
                 </div>
               </div>
-              <p class="text-sm text-adwaita-subtitle leading-relaxed">{project.desc}</p>
-              <div class="mt-0.5 flex flex-wrap items-center gap-1.5 relative z-20">
+              <p class="text-sm leading-relaxed text-adwaita-subtitle">{project.desc}</p>
+              <div class="relative z-20 mt-0.5 flex flex-wrap items-center gap-1.5">
                 {#each project.tags as tag (tag)}
                   <span
                     class="rounded bg-adwaita-border/40 px-2 py-0.5 text-[11px] font-medium text-adwaita-subtitle"
@@ -647,18 +701,18 @@
           {/each}
           <button
             onclick={() => navigate('projects')}
-            class="action-row w-full text-left group cursor-pointer flex items-center justify-between">
+            class="action-row group flex w-full cursor-pointer items-center justify-between text-left">
             <span class="text-sm font-bold text-adwaita-accent group-hover:underline"
               >View all projects</span>
             <i
-              class="bi bi-chevron-right text-sm text-adwaita-accent group-hover:translate-x-0.5 transition-transform"
+              class="bi bi-chevron-right text-sm text-adwaita-accent transition-transform group-hover:translate-x-0.5"
               aria-hidden="true"></i>
           </button>
         </div>
       </div>
 
       <div>
-        <h3 class="text-lg font-bold text-adwaita-text tracking-tight mb-4">Recent Blog Posts</h3>
+        <h3 class="mb-4 text-lg font-bold tracking-tight text-adwaita-text">Recent Blog Posts</h3>
         <div class="boxed-list text-left">
           {#if posts.length === 0}
             <div class="p-6 text-center text-sm text-adwaita-subtitle">
@@ -668,38 +722,41 @@
             {#each posts.slice(0, 2) as post (post.title)}
               <a
                 href="/blog/{post.slug}"
-                class="action-row w-full text-left group cursor-pointer flex items-center justify-between">
+                class="action-row group flex w-full cursor-pointer items-center justify-between text-left">
                 <div class="flex flex-col gap-1 pr-6 font-sans">
-                  <p class="text-xs font-semibold text-adwaita-subtitle select-none">{getPostDate(post)} &middot; {post.read_time} &middot; {post.comment_count || 0} {post.comment_count === 1 ? 'comment' : 'comments'}</p>
+                  <p class="text-xs font-semibold text-adwaita-subtitle select-none">
+                    {getPostDate(post)} &middot; {post.read_time} &middot; {post.comment_count || 0}
+                    {post.comment_count === 1 ? 'comment' : 'comments'}
+                  </p>
                   <h4
-                    class="text-base font-bold text-adwaita-text group-hover:text-adwaita-accent transition-colors leading-tight">
+                    class="text-base leading-tight font-bold text-adwaita-text transition-colors group-hover:text-adwaita-accent">
                     {post.title}
                   </h4>
-                  <p class="mt-1.5 text-sm text-adwaita-subtitle line-clamp-2">{post.excerpt}</p>
+                  <p class="mt-1.5 line-clamp-2 text-sm text-adwaita-subtitle">{post.excerpt}</p>
                 </div>
                 <i
-                  class="bi bi-chevron-right text-sm text-zinc-400 group-hover:text-adwaita-accent transition-all group-hover:translate-x-0.5"
+                  class="bi bi-chevron-right text-sm text-zinc-400 transition-all group-hover:translate-x-0.5 group-hover:text-adwaita-accent"
                   aria-hidden="true"></i>
               </a>
             {/each}
             <button
               onclick={() => navigate('blogs')}
-              class="action-row w-full text-left group cursor-pointer flex items-center justify-between">
+              class="action-row group flex w-full cursor-pointer items-center justify-between text-left">
               <span class="text-sm font-bold text-adwaita-accent group-hover:underline"
                 >View all posts</span>
               <i
-                class="bi bi-chevron-right text-sm text-adwaita-accent group-hover:translate-x-0.5 transition-transform"
+                class="bi bi-chevron-right text-sm text-adwaita-accent transition-transform group-hover:translate-x-0.5"
                 aria-hidden="true"></i>
             </button>
           {/if}
         </div>
       </div>
 
-      <div class="boxed-list text-left border-adwaita-accent/30 bg-adwaita-accent/5">
-        <div class="px-5 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div class="boxed-list border-adwaita-accent/30 bg-adwaita-accent/5 text-left">
+        <div class="flex flex-col justify-between gap-4 px-5 py-4 sm:flex-row sm:items-center">
           <div class="flex items-start gap-4">
             <i
-              class="bi bi-heart-fill text-2xl text-adwaita-accent shrink-0 mt-0.5"
+              class="bi bi-heart-fill mt-0.5 shrink-0 text-2xl text-adwaita-accent"
               aria-hidden="true"></i>
             <div>
               <h4 class="text-sm font-bold">
@@ -709,14 +766,14 @@
                   shineColor="var(--color-adwaita-card)"
                   speed={1.5} />
               </h4>
-              <p class="text-xs text-adwaita-subtitle mt-0.5 leading-relaxed">
+              <p class="mt-0.5 text-xs leading-relaxed text-adwaita-subtitle">
                 Your support helps maintain and improve these open-source projects
               </p>
             </div>
           </div>
           <button
             onclick={() => navigate('funding')}
-            class="inline-flex items-center justify-center cursor-pointer rounded-lg bg-adwaita-accent px-4 py-2 text-xs font-semibold text-white transition-colors hover:bg-adwaita-accent-hover focus:outline-none shrink-0">
+            class="inline-flex shrink-0 cursor-pointer items-center justify-center rounded-lg bg-adwaita-accent px-4 py-2 text-xs font-semibold text-white transition-colors hover:bg-adwaita-accent-hover">
             Become a Sponsor
           </button>
         </div>
@@ -727,7 +784,7 @@
         action="https://formsubmit.co/contact@fkp.my.id"
         method="POST"
         onsubmit={validateForm}
-        class="w-full text-left p-5 bg-adwaita-card/45 border border-adwaita-border rounded-2xl shadow-xs backdrop-blur-lg transition-colors duration-300 flex flex-col gap-4"
+        class="flex w-full flex-col gap-4 rounded-2xl border border-adwaita-border bg-adwaita-card/45 p-5 text-left shadow-xs backdrop-blur-lg transition-colors duration-300"
         autocomplete="off">
         <input
           type="hidden"
@@ -748,16 +805,19 @@
 
         <div class="mb-2 select-none">
           <h2 class="text-sm font-bold text-adwaita-text">Send a Message</h2>
-          <p class="text-xs text-adwaita-label mt-0.5">
+          <p class="mt-0.5 text-xs text-adwaita-label">
             Feel free to drop me a line. I'll get back to you as soon as possible.
           </p>
         </div>
 
-        <div class="flex flex-col sm:flex-row sm:items-center gap-2">
+        <div class="flex flex-col gap-2 sm:flex-row sm:items-center">
           <label
             for="form-name"
-            class="text-xs font-bold text-adwaita-label w-20 shrink-0 select-none">
-            Name <span aria-hidden="true" class="text-adwaita-error">*</span><span class="sr-only">(required)</span>
+            class="w-20 shrink-0 text-xs font-bold text-adwaita-label select-none">
+            Name <span
+              aria-hidden="true"
+              class="text-adwaita-error">*</span
+            ><span class="sr-only">(required)</span>
           </label>
           <div class="w-full">
             <input
@@ -766,25 +826,36 @@
               name="name"
               aria-required="true"
               aria-invalid={!!formErrors.name}
-              aria-describedby={formErrors.name ? 'form-name-error' : ''}
+              aria-describedby="{formErrors.name ? 'form-name-error' : ''} {formValid.name ? 'form-name-ok' : ''}"
               placeholder="Enter your name"
               bind:value={formName}
-              oninput={() => formErrors.name = ''}
-              class="w-full px-3 py-1.5 text-sm bg-adwaita-bg border border-adwaita-border rounded-lg text-adwaita-text placeholder:text-adwaita-label/70 focus:outline-none transition-colors"
-              class:border-adwaita-error={formErrors.name} />
+              oninput={() => { formErrors.name = ''; formValid.name = false; validateName(); }}
+              class="w-full rounded-lg border border-adwaita-border bg-adwaita-bg px-3 py-1.5 text-sm text-adwaita-text transition-colors placeholder:text-adwaita-label/70"
+              class:border-adwaita-error={formErrors.name}
+              class:input-valid={formValid.name} />
             {#if formErrors.name}
-              <p id="form-name-error" role="alert" class="text-adwaita-error font-medium text-xs mt-1">
+              <p
+                id="form-name-error"
+                role="alert"
+                class="mt-1 flex items-center gap-1 text-xs font-medium text-adwaita-error">
                 {formErrors.name}
+              </p>
+            {:else if formValid.name}
+              <p id="form-name-ok" class="mt-1 flex items-center gap-1 text-xs font-medium text-adwaita-accent">
+                <i class="bi bi-check-circle-fill"></i> Looks good
               </p>
             {/if}
           </div>
         </div>
 
-        <div class="flex flex-col sm:flex-row sm:items-center gap-2">
+        <div class="flex flex-col gap-2 sm:flex-row sm:items-center">
           <label
             for="form-email"
-            class="text-xs font-bold text-adwaita-label w-20 shrink-0 select-none">
-            Email <span aria-hidden="true" class="text-adwaita-error">*</span><span class="sr-only">(required)</span>
+            class="w-20 shrink-0 text-xs font-bold text-adwaita-label select-none">
+            Email <span
+              aria-hidden="true"
+              class="text-adwaita-error">*</span
+            ><span class="sr-only">(required)</span>
           </label>
           <div class="w-full">
             <input
@@ -793,16 +864,24 @@
               name="email"
               aria-required="true"
               aria-invalid={!!formErrors.email}
-              aria-describedby={formErrors.email ? 'form-email-error' : ''}
+              aria-describedby="{formErrors.email ? 'form-email-error' : ''} {formValid.email ? 'form-email-ok' : ''}"
               placeholder="Enter your email"
               autocomplete="email"
               bind:value={formEmail}
-              oninput={() => formErrors.email = ''}
-              class="w-full px-3 py-1.5 text-sm bg-adwaita-bg border border-adwaita-border rounded-lg text-adwaita-text placeholder:text-adwaita-label/70 focus:outline-none transition-colors"
-              class:border-adwaita-error={formErrors.email} />
+              oninput={() => { formErrors.email = ''; formValid.email = false; validateEmail(); }}
+              class="w-full rounded-lg border border-adwaita-border bg-adwaita-bg px-3 py-1.5 text-sm text-adwaita-text transition-colors placeholder:text-adwaita-label/70"
+              class:border-adwaita-error={formErrors.email}
+              class:input-valid={formValid.email} />
             {#if formErrors.email}
-              <p id="form-email-error" role="alert" class="text-adwaita-error font-medium text-xs mt-1">
+              <p
+                id="form-email-error"
+                role="alert"
+                class="mt-1 flex items-center gap-1 text-xs font-medium text-adwaita-error">
                 {formErrors.email}
+              </p>
+            {:else if formValid.email}
+              <p id="form-email-ok" class="mt-1 flex items-center gap-1 text-xs font-medium text-adwaita-accent">
+                <i class="bi bi-check-circle-fill"></i> Looks good
               </p>
             {/if}
           </div>
@@ -812,7 +891,10 @@
           <label
             for="form-message"
             class="text-xs font-bold text-adwaita-label select-none">
-            Message <span aria-hidden="true" class="text-adwaita-error">*</span><span class="sr-only">(required)</span>
+            Message <span
+              aria-hidden="true"
+              class="text-adwaita-error">*</span
+            ><span class="sr-only">(required)</span>
           </label>
           <div class="relative w-full">
             <textarea
@@ -822,28 +904,38 @@
               placeholder="Enter your message"
               maxlength="1000"
               bind:value={formMessage}
-              oninput={() => formErrors.message = ''}
+              oninput={() => { formErrors.message = ''; formValid.message = false; validateMessage(); }}
               aria-required="true"
               aria-invalid={!!formErrors.message}
-              aria-describedby="form-msg-count {formErrors.message ? 'form-message-error' : ''}"
-              class="w-full px-3 py-1.5 pr-16 text-sm bg-adwaita-bg border border-adwaita-border rounded-lg text-adwaita-text placeholder:text-adwaita-label/70 focus:outline-none transition-colors resize-none no-scrollbar"
+              aria-describedby="form-msg-count {formErrors.message ? 'form-message-error' : ''} {formValid.message ? 'form-message-ok' : ''}"
+              class="no-scrollbar w-full resize-none rounded-lg border border-adwaita-border bg-adwaita-bg px-3 py-1.5 pr-16 text-sm text-adwaita-text transition-colors placeholder:text-adwaita-label/70"
               class:border-adwaita-error={formErrors.message}
-            ></textarea>
-            <div class="absolute right-3 bottom-2.5 pointer-events-none select-none z-10 font-mono text-[10px] text-adwaita-label" id="form-msg-count" aria-live="polite">
+              class:input-valid={formValid.message}></textarea>
+            <div
+              class="pointer-events-none absolute right-3 bottom-2.5 z-10 font-mono text-[10px] text-adwaita-label select-none"
+              id="form-msg-count"
+              aria-live="polite">
               {formMessage.length}/1000
             </div>
           </div>
           {#if formErrors.message}
-            <p id="form-message-error" role="alert" class="text-adwaita-error font-medium text-xs mt-0.5">
+            <p
+              id="form-message-error"
+              role="alert"
+              class="mt-0.5 flex items-center gap-1 text-xs font-medium text-adwaita-error">
               {formErrors.message}
+            </p>
+          {:else if formValid.message}
+            <p id="form-message-ok" class="mt-0.5 flex items-center gap-1 text-xs font-medium text-adwaita-accent">
+              <i class="bi bi-check-circle-fill"></i> Looks good
             </p>
           {/if}
         </div>
 
-        <div class="flex justify-end mt-2">
+        <div class="mt-2 flex justify-end">
           <button
             type="submit"
-            class="inline-flex items-center justify-center cursor-pointer rounded-lg bg-adwaita-focus px-5 py-2 text-sm font-semibold text-white transition-colors hover:bg-adwaita-focus/90 focus:outline-none disabled:cursor-not-allowed disabled:opacity-55 select-none">
+            class="inline-flex cursor-pointer items-center justify-center rounded-lg bg-adwaita-accent px-5 py-2 text-sm font-semibold text-white transition-colors select-none hover:bg-adwaita-accent-hover disabled:cursor-not-allowed disabled:opacity-55">
             Send Message
           </button>
         </div>
@@ -860,25 +952,25 @@
 
   {#if activeSection === 'cv'}
     <section
-      class="mx-auto w-full md:w-[80%] lg:w-[50%] md:max-w-none px-6 pt-10 pb-24 md:pt-14 md:pb-28 relative z-10">
+      class="relative z-10 mx-auto w-full px-6 pt-10 pb-24 md:w-[80%] md:max-w-none md:pt-14 md:pb-28 lg:w-[50%]">
       <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 class="text-3xl font-bold text-adwaita-text tracking-tight">Curriculum Vitae</h1>
+          <h1 class="text-3xl font-bold tracking-tight text-adwaita-text">Curriculum Vitae</h1>
           <p class="mt-2 text-sm text-adwaita-subtitle">Security-focused Software Engineer.</p>
         </div>
         <a
           href="/cv.pdf"
           download="Farhan_Kurnia_Pratama_CV.pdf"
-          class="inline-flex items-center justify-center rounded-lg bg-adwaita-accent px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-adwaita-accent-hover focus:outline-none">
+          class="inline-flex items-center justify-center rounded-lg bg-adwaita-accent px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-adwaita-accent-hover">
           Download PDF
         </a>
       </div>
 
       <div class="mt-10">
         <h2 class="text-sm font-bold text-adwaita-subtitle">Experience</h2>
-        <div class="mt-4 boxed-list">
+        <div class="boxed-list mt-4">
           {#each experiences as exp (exp.role)}
-            <div class="px-6 py-5 flex flex-col gap-2 hover:bg-adwaita-hover transition-all">
+            <div class="flex flex-col gap-2 px-6 py-5 transition-all hover:bg-adwaita-hover">
               <div class="flex items-start justify-between gap-4">
                 <div>
                   <h3 class="text-base font-bold text-adwaita-text">{exp.role}</h3>
@@ -886,7 +978,7 @@
                 </div>
                 <p class="shrink-0 text-xs font-semibold text-adwaita-subtitle">{exp.period}</p>
               </div>
-              <p class="mt-1.5 text-sm text-adwaita-subtitle leading-relaxed">{exp.desc}</p>
+              <p class="mt-1.5 text-sm leading-relaxed text-adwaita-subtitle">{exp.desc}</p>
             </div>
           {/each}
         </div>
@@ -894,14 +986,14 @@
 
       <div class="mt-10">
         <h2 class="text-sm font-bold text-adwaita-subtitle">Education</h2>
-        <div class="mt-4 boxed-list">
+        <div class="boxed-list mt-4">
           {#each education as edu (`${edu.degree}-${edu.university}`)}
-            <div class="px-6 py-5 flex flex-col gap-1.5 hover:bg-adwaita-hover transition-all">
+            <div class="flex flex-col gap-1.5 px-6 py-5 transition-all hover:bg-adwaita-hover">
               <div class="flex items-start justify-between gap-4">
                 <div>
                   <h3 class="text-base font-bold text-adwaita-text">{edu.degree} in {edu.major}</h3>
                   <p class="text-sm text-adwaita-subtitle">{edu.faculty}</p>
-                  <p class="text-sm font-semibold text-adwaita-text mt-1">{edu.university}</p>
+                  <p class="mt-1 text-sm font-semibold text-adwaita-text">{edu.university}</p>
                 </div>
                 <p class="shrink-0 text-xs font-semibold text-adwaita-subtitle">{edu.period}</p>
               </div>
@@ -915,7 +1007,7 @@
         <div class="mt-4 flex flex-wrap gap-2">
           {#each skills as group (group.category)}
             <span
-              class="cursor-default rounded-full bg-adwaita-border/40 px-4 py-2 text-sm font-bold text-adwaita-text hover:bg-adwaita-border/60 transition-colors">
+              class="cursor-default rounded-full bg-adwaita-border/40 px-4 py-2 text-sm font-bold text-adwaita-text transition-colors hover:bg-adwaita-border/60">
               {group.category}
               <span class="font-normal opacity-85">({group.items.join(', ')})</span>
             </span>
@@ -927,16 +1019,16 @@
 
   {#if activeSection === 'blogs'}
     <section
-      class="mx-auto w-full md:w-[80%] lg:w-[50%] md:max-w-none px-6 pt-10 pb-24 md:pt-14 md:pb-28 relative z-10">
-      <h1 class="text-3xl font-bold text-adwaita-text tracking-tight">Blogs</h1>
+      class="relative z-10 mx-auto w-full px-6 pt-10 pb-24 md:w-[80%] md:max-w-none md:pt-14 md:pb-28 lg:w-[50%]">
+      <h1 class="text-3xl font-bold tracking-tight text-adwaita-text">Blogs</h1>
       <p class="mt-2 text-sm text-adwaita-subtitle">
         Thoughts on Linux, security, and open source.
       </p>
-      <div class="mt-10 boxed-list">
+      <div class="boxed-list mt-10">
         {#if posts.length === 0}
           <div class="p-8 text-center text-adwaita-subtitle">
             <i
-              class="bi bi-journal-x text-3xl block mb-2 opacity-60"
+              class="bi bi-journal-x mb-2 block text-3xl opacity-60"
               aria-hidden="true"></i>
             No blog posts published yet.
           </div>
@@ -944,19 +1036,22 @@
           {#each posts as post (post.id)}
             <a
               href="/blog/{post.slug}"
-              class="action-row w-full text-left group cursor-pointer flex items-center justify-between">
+              class="action-row group flex w-full cursor-pointer items-center justify-between text-left">
               <div class="flex flex-col gap-1 pr-6 font-sans">
-                <p class="text-xs font-semibold text-adwaita-subtitle select-none">{getPostDate(post)} &middot; {post.read_time} &middot; {post.comment_count || 0} {post.comment_count === 1 ? 'comment' : 'comments'}</p>
+                <p class="text-xs font-semibold text-adwaita-subtitle select-none">
+                  {getPostDate(post)} &middot; {post.read_time} &middot; {post.comment_count || 0}
+                  {post.comment_count === 1 ? 'comment' : 'comments'}
+                </p>
                 <h2
-                  class="text-xl font-bold text-adwaita-text group-hover:text-adwaita-accent transition-colors leading-snug">
+                  class="text-xl leading-snug font-bold text-adwaita-text transition-colors group-hover:text-adwaita-accent">
                   {post.title}
                 </h2>
                 {#if post.excerpt}
-                  <p class="mt-1.5 text-sm text-adwaita-subtitle line-clamp-2">{post.excerpt}</p>
+                  <p class="mt-1.5 line-clamp-2 text-sm text-adwaita-subtitle">{post.excerpt}</p>
                 {/if}
               </div>
               <i
-                class="bi bi-chevron-right text-sm text-zinc-400 group-hover:text-adwaita-accent transition-all group-hover:translate-x-0.5"
+                class="bi bi-chevron-right text-sm text-zinc-400 transition-all group-hover:translate-x-0.5 group-hover:text-adwaita-accent"
                 aria-hidden="true"></i>
             </a>
           {/each}
@@ -967,16 +1062,16 @@
 
   {#if activeSection === 'projects'}
     <section
-      class="mx-auto w-full md:w-[80%] lg:w-[50%] md:max-w-none px-6 pt-10 pb-24 md:pt-14 md:pb-28 relative z-10">
-      <h1 class="text-3xl font-bold text-adwaita-text tracking-tight">Projects</h1>
+      class="relative z-10 mx-auto w-full px-6 pt-10 pb-24 md:w-[80%] md:max-w-none md:pt-14 md:pb-28 lg:w-[50%]">
+      <h1 class="text-3xl font-bold tracking-tight text-adwaita-text">Projects</h1>
       <p class="mt-2 text-sm text-adwaita-subtitle">Open source work on GitHub.</p>
-      <div class="mt-10 boxed-list">
+      <div class="boxed-list mt-10">
         {#each projects as project (project.name)}
-          <div class="relative action-row group flex flex-col items-stretch gap-2 text-left">
+          <div class="action-row group relative flex flex-col items-stretch gap-2 text-left">
             <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
               <div class="flex items-center gap-2">
                 <h3
-                  class="text-base font-bold text-adwaita-text group-hover:text-adwaita-accent transition-colors leading-none">
+                  class="text-base leading-none font-bold text-adwaita-text transition-colors group-hover:text-adwaita-accent">
                   <a
                     href={project.url}
                     target="_blank"
@@ -993,10 +1088,10 @@
                 {/if}
               </div>
 
-              <div class="flex flex-wrap items-center gap-2 sm:justify-end shrink-0 relative z-20">
+              <div class="relative z-20 flex shrink-0 flex-wrap items-center gap-2 sm:justify-end">
                 {#if project.licenseName}
                   <span
-                    class="text-xs font-semibold text-adwaita-subtitle whitespace-nowrap"
+                    class="text-xs font-semibold whitespace-nowrap text-adwaita-subtitle"
                     title="License: {project.licenseName}">
                     {project.licenseName} License
                   </span>
@@ -1004,17 +1099,17 @@
 
                 <div class="flex items-center gap-1 text-xs font-semibold text-adwaita-subtitle">
                   <i
-                    class="bi bi-star-fill text-amber-600 text-[12px]"
+                    class="bi bi-star-fill text-[12px] text-amber-600"
                     aria-hidden="true"></i>
                   {project.stars}
                 </div>
                 <i
-                  class="bi bi-chevron-right text-sm text-zinc-400 opacity-80 group-hover:translate-x-0.5 transition-transform"
+                  class="bi bi-chevron-right text-sm text-zinc-400 opacity-80 transition-transform group-hover:translate-x-0.5"
                   aria-hidden="true"></i>
               </div>
             </div>
-            <p class="text-sm text-adwaita-subtitle leading-relaxed">{project.desc}</p>
-            <div class="mt-0.5 flex flex-wrap items-center gap-1.5 relative z-20">
+            <p class="text-sm leading-relaxed text-adwaita-subtitle">{project.desc}</p>
+            <div class="relative z-20 mt-0.5 flex flex-wrap items-center gap-1.5">
               {#each project.tags as tag (tag)}
                 <span
                   class="rounded bg-adwaita-border/40 px-2 py-0.5 text-[11px] font-medium text-adwaita-subtitle"
@@ -1035,7 +1130,7 @@
   {/if}
 
   <footer
-    class="mx-auto w-full md:w-[80%] lg:w-[50%] md:max-w-none px-6 py-12 mt-auto text-center text-xs text-adwaita-subtitle/75 border-t border-adwaita-border relative z-10">
+    class="relative z-10 mx-auto mt-auto w-full border-t border-adwaita-border px-6 py-12 text-center text-xs text-adwaita-subtitle/75 md:w-[80%] md:max-w-none lg:w-[50%]">
     <p>&copy; {new Date().getFullYear()} {name}. All rights reserved</p>
   </footer>
 </main>

@@ -1,1 +1,72 @@
-{"files": {"code": ["/home/hanz/Projects/www/.gemini/settings.json", "/home/hanz/Projects/www/.mcp.json", "/home/hanz/Projects/www/.vscode/extensions.json", "/home/hanz/Projects/www/.vscode/settings.json", "/home/hanz/Projects/www/eslint.config.js", "/home/hanz/Projects/www/package.json", "/home/hanz/Projects/www/prettier.config.ts", "/home/hanz/Projects/www/src/app.d.ts", "/home/hanz/Projects/www/src/lib/LinkListSection.svelte", "/home/hanz/Projects/www/src/lib/ShinyText.svelte", "/home/hanz/Projects/www/src/lib/index.ts", "/home/hanz/Projects/www/src/lib/nameValidator.ts", "/home/hanz/Projects/www/src/lib/supabase.ts", "/home/hanz/Projects/www/src/routes/+error.svelte", "/home/hanz/Projects/www/src/routes/+layout.svelte", "/home/hanz/Projects/www/src/routes/+page.server.ts", "/home/hanz/Projects/www/src/routes/+page.svelte", "/home/hanz/Projects/www/src/routes/admin/+page.svelte", "/home/hanz/Projects/www/src/routes/admin/login/+page.svelte", "/home/hanz/Projects/www/src/routes/admin/new/+page.svelte", "/home/hanz/Projects/www/src/routes/api/comments/+server.ts", "/home/hanz/Projects/www/src/routes/blog/[slug]/+page.server.ts", "/home/hanz/Projects/www/src/routes/blog/[slug]/+page.svelte", "/home/hanz/Projects/www/tsconfig.json", "/home/hanz/Projects/www/vite.config.ts"], "document": ["/home/hanz/Projects/www/.github/FUNDING.yml", "/home/hanz/Projects/www/.github/dependabot.yml", "/home/hanz/Projects/www/GEMINI.md", "/home/hanz/Projects/www/README.md", "/home/hanz/Projects/www/src/app.html"], "paper": [], "image": ["/home/hanz/Projects/www/static/android-chrome-192x192.png", "/home/hanz/Projects/www/static/android-chrome-512x512.png", "/home/hanz/Projects/www/static/apple-touch-icon.png", "/home/hanz/Projects/www/static/favicon-16x16.png", "/home/hanz/Projects/www/static/favicon-32x32.png", "/home/hanz/Projects/www/static/hero.png", "/home/hanz/Projects/www/static/universed.jpeg"], "video": []}, "total_files": 37, "total_words": 26661, "needs_graph": false, "warning": "Corpus is ~26,661 words - fits in a single context window. You may not need a graph.", "skipped_sensitive": ["/home/hanz/Projects/www/.env.example"], "unclassified": ["/home/hanz/Projects/www/.editorconfig", "/home/hanz/Projects/www/.gitignore", "/home/hanz/Projects/www/.npmrc", "/home/hanz/Projects/www/LICENSE", "/home/hanz/Projects/www/_headers", "/home/hanz/Projects/www/bun.lock", "/home/hanz/Projects/www/flake.lock", "/home/hanz/Projects/www/flake.nix", "/home/hanz/Projects/www/src/routes/layout.css", "/home/hanz/Projects/www/static/favicon.ico", "/home/hanz/Projects/www/static/site.webmanifest", "/home/hanz/Projects/www/wrangler.jsonc"], "walk_errors": [], "ignored": ["/home/hanz/Projects/www/.env", "/home/hanz/Projects/www/.wrangler/"], "graphifyignore_patterns": 16, "scan_root": "/home/hanz/Projects/www"}
+{
+  "files": {
+    "code": [
+      "/home/hanz/Projects/www/.gemini/settings.json",
+      "/home/hanz/Projects/www/.mcp.json",
+      "/home/hanz/Projects/www/.vscode/extensions.json",
+      "/home/hanz/Projects/www/.vscode/settings.json",
+      "/home/hanz/Projects/www/eslint.config.js",
+      "/home/hanz/Projects/www/package.json",
+      "/home/hanz/Projects/www/prettier.config.ts",
+      "/home/hanz/Projects/www/src/app.d.ts",
+      "/home/hanz/Projects/www/src/lib/LinkListSection.svelte",
+      "/home/hanz/Projects/www/src/lib/ShinyText.svelte",
+      "/home/hanz/Projects/www/src/lib/index.ts",
+      "/home/hanz/Projects/www/src/lib/nameValidator.ts",
+      "/home/hanz/Projects/www/src/lib/supabase.ts",
+      "/home/hanz/Projects/www/src/routes/+error.svelte",
+      "/home/hanz/Projects/www/src/routes/+layout.svelte",
+      "/home/hanz/Projects/www/src/routes/+page.server.ts",
+      "/home/hanz/Projects/www/src/routes/+page.svelte",
+      "/home/hanz/Projects/www/src/routes/admin/+page.svelte",
+      "/home/hanz/Projects/www/src/routes/admin/login/+page.svelte",
+      "/home/hanz/Projects/www/src/routes/admin/new/+page.svelte",
+      "/home/hanz/Projects/www/src/routes/api/comments/+server.ts",
+      "/home/hanz/Projects/www/src/routes/blog/[slug]/+page.server.ts",
+      "/home/hanz/Projects/www/src/routes/blog/[slug]/+page.svelte",
+      "/home/hanz/Projects/www/tsconfig.json",
+      "/home/hanz/Projects/www/vite.config.ts"
+    ],
+    "document": [
+      "/home/hanz/Projects/www/.github/FUNDING.yml",
+      "/home/hanz/Projects/www/.github/dependabot.yml",
+      "/home/hanz/Projects/www/GEMINI.md",
+      "/home/hanz/Projects/www/README.md",
+      "/home/hanz/Projects/www/src/app.html"
+    ],
+    "paper": [],
+    "image": [
+      "/home/hanz/Projects/www/static/android-chrome-192x192.png",
+      "/home/hanz/Projects/www/static/android-chrome-512x512.png",
+      "/home/hanz/Projects/www/static/apple-touch-icon.png",
+      "/home/hanz/Projects/www/static/favicon-16x16.png",
+      "/home/hanz/Projects/www/static/favicon-32x32.png",
+      "/home/hanz/Projects/www/static/hero.png",
+      "/home/hanz/Projects/www/static/universed.jpeg"
+    ],
+    "video": []
+  },
+  "total_files": 37,
+  "total_words": 26661,
+  "needs_graph": false,
+  "warning": "Corpus is ~26,661 words - fits in a single context window. You may not need a graph.",
+  "skipped_sensitive": ["/home/hanz/Projects/www/.env.example"],
+  "unclassified": [
+    "/home/hanz/Projects/www/.editorconfig",
+    "/home/hanz/Projects/www/.gitignore",
+    "/home/hanz/Projects/www/.npmrc",
+    "/home/hanz/Projects/www/LICENSE",
+    "/home/hanz/Projects/www/_headers",
+    "/home/hanz/Projects/www/bun.lock",
+    "/home/hanz/Projects/www/flake.lock",
+    "/home/hanz/Projects/www/flake.nix",
+    "/home/hanz/Projects/www/src/routes/layout.css",
+    "/home/hanz/Projects/www/static/favicon.ico",
+    "/home/hanz/Projects/www/static/site.webmanifest",
+    "/home/hanz/Projects/www/wrangler.jsonc"
+  ],
+  "walk_errors": [],
+  "ignored": ["/home/hanz/Projects/www/.env", "/home/hanz/Projects/www/.wrangler/"],
+  "graphifyignore_patterns": 16,
+  "scan_root": "/home/hanz/Projects/www"
+}

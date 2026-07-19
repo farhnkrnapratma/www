@@ -1,1 +1,0 @@
-For code changes in this repo, run bun run check after edits. If CSS/layout or route logic changes are involved, bun run check is the primary validation step and should return clean before finishing.

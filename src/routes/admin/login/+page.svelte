@@ -29,12 +29,13 @@
   function validate() {
     const emailErr = email.trim() === '' ? 'Email is required.' : '';
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const emailFormatErr = (!emailErr && !emailRegex.test(email.trim())) ? 'Please enter a valid email address.' : '';
+    const emailFormatErr =
+      !emailErr && !emailRegex.test(email.trim()) ? 'Please enter a valid email address.' : '';
     const passwordErr = password.trim() === '' ? 'Password is required.' : '';
 
     errors = {
       email: emailErr || emailFormatErr,
-      password: passwordErr
+      password: passwordErr,
     };
 
     return !errors.email && !errors.password;
@@ -69,20 +70,22 @@
   }
 </script>
 
-<main class="pt-15 font-sans flex flex-col items-center min-h-[calc(100vh-3.75rem)] justify-center">
-  <div class="w-full max-w-sm px-6 flex-1 flex flex-col justify-center py-10">
-    <div class="p-6 bg-adwaita-card/45 border border-adwaita-border rounded-2xl shadow-xs backdrop-blur-lg transition-colors duration-300">
-      <div class="text-center mb-6 select-none flex flex-col items-center">
+<main class="flex min-h-[calc(100vh-3.75rem)] flex-col items-center justify-center pt-15 font-sans">
+  <div class="flex w-full max-w-sm flex-1 flex-col justify-center px-6 py-10">
+    <div
+      class="rounded-2xl border border-adwaita-border bg-adwaita-card/45 p-6 shadow-xs backdrop-blur-lg transition-colors duration-300">
+      <div class="mb-6 flex flex-col items-center text-center select-none">
         <div class="flex items-center gap-2">
-          <span class="material-symbols-rounded text-adwaita-accent text-2xl select-none">code</span>
+          <span class="material-symbols-rounded text-2xl text-adwaita-accent select-none"
+            >code</span>
           <h1 class="text-xl font-bold text-adwaita-text">Console</h1>
         </div>
-        <p class="text-xs text-adwaita-subtitle mt-1">Sign in to manage your blog posts</p>
+        <p class="mt-1 text-xs text-adwaita-subtitle">Sign in to manage your blog posts</p>
       </div>
 
       {#if errorMessage}
         <div
-          class="p-3 mb-4 rounded-lg text-xs font-semibold bg-palette-coral/10 text-palette-coral border border-palette-coral/30">
+          class="mb-4 rounded-lg border border-palette-coral/30 bg-palette-coral/10 p-3 text-xs font-semibold text-palette-coral">
           {errorMessage}
         </div>
       {/if}
@@ -95,21 +98,27 @@
           <label
             for="login-email"
             class="text-xs font-bold text-adwaita-label select-none">
-            Email <span aria-hidden="true" class="text-adwaita-error">*</span><span class="sr-only">(required)</span>
+            Email <span
+              aria-hidden="true"
+              class="text-adwaita-error">*</span
+            ><span class="sr-only">(required)</span>
           </label>
           <input
             type="email"
             id="login-email"
             placeholder="admin@email.com"
             bind:value={email}
-            oninput={() => errors.email = ''}
+            oninput={() => (errors.email = '')}
             aria-required="true"
             aria-invalid={!!errors.email}
             aria-describedby={errors.email ? 'login-email-error' : ''}
-            class="w-full px-3 py-2 text-sm bg-adwaita-bg border border-adwaita-border rounded-lg text-adwaita-text focus:outline-none transition-colors"
+            class="w-full rounded-lg border border-adwaita-border bg-adwaita-bg px-3 py-2 text-sm text-adwaita-text transition-colors"
             class:border-adwaita-error={errors.email} />
           {#if errors.email}
-            <p id="login-email-error" role="alert" class="text-adwaita-error font-medium text-xs mt-1">
+            <p
+              id="login-email-error"
+              role="alert"
+              class="mt-1 text-xs font-medium text-adwaita-error">
               {errors.email}
             </p>
           {/if}
@@ -118,7 +127,10 @@
           <label
             for="login-pass"
             class="text-xs font-bold text-adwaita-label select-none">
-            Password <span aria-hidden="true" class="text-adwaita-error">*</span><span class="sr-only">(required)</span>
+            Password <span
+              aria-hidden="true"
+              class="text-adwaita-error">*</span
+            ><span class="sr-only">(required)</span>
           </label>
           <div class="relative flex items-center">
             <input
@@ -126,16 +138,16 @@
               id="login-pass"
               placeholder="••••••••"
               bind:value={password}
-              oninput={() => errors.password = ''}
+              oninput={() => (errors.password = '')}
               aria-required="true"
               aria-invalid={!!errors.password}
               aria-describedby={errors.password ? 'login-pass-error' : ''}
-              class="w-full pl-3 pr-10 py-2 text-sm bg-adwaita-bg border border-adwaita-border rounded-lg text-adwaita-text focus:outline-none transition-colors"
+              class="w-full rounded-lg border border-adwaita-border bg-adwaita-bg py-2 pr-10 pl-3 text-sm text-adwaita-text transition-colors"
               class:border-adwaita-error={errors.password} />
             <button
               type="button"
-              onclick={() => showPassword = !showPassword}
-              class="absolute right-1 w-8 h-8 text-adwaita-label hover:text-adwaita-text transition-colors flex items-center justify-center cursor-pointer select-none rounded-lg focus:outline-2 focus:outline-adwaita-accent"
+              onclick={() => (showPassword = !showPassword)}
+              class="absolute right-1 flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg text-adwaita-label transition-colors select-none hover:text-adwaita-text focus:outline-2 focus:outline-adwaita-accent"
               aria-label={showPassword ? 'Hide password' : 'Show password'}>
               <span class="material-symbols-rounded text-base">
                 {showPassword ? 'visibility_off' : 'visibility'}
@@ -143,7 +155,10 @@
             </button>
           </div>
           {#if errors.password}
-            <p id="login-pass-error" role="alert" class="text-adwaita-error font-medium text-xs mt-1">
+            <p
+              id="login-pass-error"
+              role="alert"
+              class="mt-1 text-xs font-medium text-adwaita-error">
               {errors.password}
             </p>
           {/if}
@@ -152,13 +167,13 @@
         <button
           type="submit"
           disabled={isSubmitting}
-          class="w-full inline-flex items-center justify-center gap-2 cursor-pointer rounded-lg bg-adwaita-focus px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-adwaita-focus/90 focus:outline-none disabled:opacity-55 select-none">
+          class="inline-flex w-full cursor-pointer items-center justify-center gap-2 rounded-lg bg-adwaita-focus px-5 py-2.5 text-sm font-semibold text-white transition-colors select-none hover:bg-adwaita-focus/90 disabled:opacity-55">
           {isSubmitting ? 'Signing in...' : 'Sign In'}
         </button>
       </form>
     </div>
 
-    <div class="text-center mt-4 select-none">
+    <div class="mt-4 text-center select-none">
       <a
         href="/"
         class="text-xs font-semibold text-adwaita-subtitle hover:underline">
@@ -167,8 +182,7 @@
     </div>
   </div>
 
-  <footer
-    class="w-full px-6 py-8 text-center text-xs text-adwaita-subtitle/75 select-none">
+  <footer class="w-full px-6 py-8 text-center text-xs text-adwaita-subtitle/75 select-none">
     <p>&copy; {new Date().getFullYear()} Farhan Kurnia Pratama. All rights reserved</p>
   </footer>
 </main>

@@ -82,7 +82,10 @@ export const POST: RequestHandler = async ({ request, platform }) => {
     }
 
     if (!anonymous && isNameReserved(trimmedAuthorName)) {
-      return json({ message: 'This name cannot be used. Please use another name.' }, { status: 400 });
+      return json(
+        { message: 'This name cannot be used. Please use another name.' },
+        { status: 400 },
+      );
     }
 
     if (displayName.length > MAX_AUTHOR_LENGTH || trimmedContent.length > MAX_CONTENT_LENGTH) {

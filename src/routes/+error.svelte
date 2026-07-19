@@ -1,4 +1,4 @@
-<main class="grid min-h-[80vh] place-items-center px-6 py-24 sm:py-32 lg:px-8 font-sans">
+<main class="grid min-h-[80vh] place-items-center px-6 py-24 font-sans sm:py-32 lg:px-8">
   <div class="text-center">
     <p class="text-base font-semibold text-adwaita-accent">404</p>
     <h1
@@ -11,7 +11,7 @@
     <div class="mt-10 flex items-center justify-center gap-x-6">
       <a
         href="/"
-        class="rounded-md bg-adwaita-accent px-3.5 py-2.5 text-sm font-semibold text-white shadow-xs hover:bg-adwaita-accent-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-adwaita-accent transition-colors duration-200">
+        class="rounded-md bg-adwaita-accent px-3.5 py-2.5 text-sm font-semibold text-white shadow-xs transition-colors duration-200 hover:bg-adwaita-accent-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-adwaita-accent">
         Go back home
       </a>
     </div>
