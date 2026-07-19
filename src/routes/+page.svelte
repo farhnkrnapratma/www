@@ -826,25 +826,24 @@
               name="name"
               aria-required="true"
               aria-invalid={!!formErrors.name}
-              aria-describedby="{formErrors.name ? 'form-name-error' : ''} {formValid.name ? 'form-name-ok' : ''}"
+              aria-describedby="form-name-fb"
               placeholder="Enter your name"
               bind:value={formName}
               oninput={() => { formErrors.name = ''; formValid.name = false; validateName(); }}
               class="w-full rounded-lg border border-adwaita-border bg-adwaita-bg px-3 py-1.5 text-sm text-adwaita-text transition-colors placeholder:text-adwaita-label/70"
               class:border-adwaita-error={formErrors.name}
               class:input-valid={formValid.name} />
-            {#if formErrors.name}
-              <p
-                id="form-name-error"
-                role="alert"
-                class="mt-1 flex items-center gap-1 text-xs font-medium text-adwaita-error">
-                {formErrors.name}
-              </p>
-            {:else if formValid.name}
-              <p id="form-name-ok" class="mt-1 flex items-center gap-1 text-xs font-medium text-adwaita-accent">
-                <i class="bi bi-check-circle-fill"></i> Looks good
-              </p>
-            {/if}
+            <div id="form-name-fb" aria-live="polite" class="mt-1 h-4 text-xs font-medium leading-none">
+              {#if formErrors.name}
+                <span role="alert" class="flex items-center gap-1 text-adwaita-error">
+                  <i class="bi bi-exclamation-circle-fill"></i>{formErrors.name}
+                </span>
+              {:else if formValid.name}
+                <span class="flex items-center gap-1 text-adwaita-accent">
+                  <i class="bi bi-check-circle-fill"></i>Looks good
+                </span>
+              {/if}
+            </div>
           </div>
         </div>
 
@@ -864,7 +863,7 @@
               name="email"
               aria-required="true"
               aria-invalid={!!formErrors.email}
-              aria-describedby="{formErrors.email ? 'form-email-error' : ''} {formValid.email ? 'form-email-ok' : ''}"
+              aria-describedby="form-email-fb"
               placeholder="Enter your email"
               autocomplete="email"
               bind:value={formEmail}
@@ -872,18 +871,17 @@
               class="w-full rounded-lg border border-adwaita-border bg-adwaita-bg px-3 py-1.5 text-sm text-adwaita-text transition-colors placeholder:text-adwaita-label/70"
               class:border-adwaita-error={formErrors.email}
               class:input-valid={formValid.email} />
-            {#if formErrors.email}
-              <p
-                id="form-email-error"
-                role="alert"
-                class="mt-1 flex items-center gap-1 text-xs font-medium text-adwaita-error">
-                {formErrors.email}
-              </p>
-            {:else if formValid.email}
-              <p id="form-email-ok" class="mt-1 flex items-center gap-1 text-xs font-medium text-adwaita-accent">
-                <i class="bi bi-check-circle-fill"></i> Looks good
-              </p>
-            {/if}
+            <div id="form-email-fb" aria-live="polite" class="mt-1 h-4 text-xs font-medium leading-none">
+              {#if formErrors.email}
+                <span role="alert" class="flex items-center gap-1 text-adwaita-error">
+                  <i class="bi bi-exclamation-circle-fill"></i>{formErrors.email}
+                </span>
+              {:else if formValid.email}
+                <span class="flex items-center gap-1 text-adwaita-accent">
+                  <i class="bi bi-check-circle-fill"></i>Looks good
+                </span>
+              {/if}
+            </div>
           </div>
         </div>
 
@@ -907,7 +905,7 @@
               oninput={() => { formErrors.message = ''; formValid.message = false; validateMessage(); }}
               aria-required="true"
               aria-invalid={!!formErrors.message}
-              aria-describedby="form-msg-count {formErrors.message ? 'form-message-error' : ''} {formValid.message ? 'form-message-ok' : ''}"
+              aria-describedby="form-msg-count form-message-fb"
               class="no-scrollbar w-full resize-none rounded-lg border border-adwaita-border bg-adwaita-bg px-3 py-1.5 pr-16 text-sm text-adwaita-text transition-colors placeholder:text-adwaita-label/70"
               class:border-adwaita-error={formErrors.message}
               class:input-valid={formValid.message}></textarea>
@@ -918,18 +916,17 @@
               {formMessage.length}/1000
             </div>
           </div>
-          {#if formErrors.message}
-            <p
-              id="form-message-error"
-              role="alert"
-              class="mt-0.5 flex items-center gap-1 text-xs font-medium text-adwaita-error">
-              {formErrors.message}
-            </p>
-          {:else if formValid.message}
-            <p id="form-message-ok" class="mt-0.5 flex items-center gap-1 text-xs font-medium text-adwaita-accent">
-              <i class="bi bi-check-circle-fill"></i> Looks good
-            </p>
-          {/if}
+          <div id="form-message-fb" aria-live="polite" class="mt-0.5 h-4 text-xs font-medium leading-none">
+            {#if formErrors.message}
+              <span role="alert" class="flex items-center gap-1 text-adwaita-error">
+                <i class="bi bi-exclamation-circle-fill"></i>{formErrors.message}
+              </span>
+            {:else if formValid.message}
+              <span class="flex items-center gap-1 text-adwaita-accent">
+                <i class="bi bi-check-circle-fill"></i>Looks good
+              </span>
+            {/if}
+          </div>
         </div>
 
         <div class="mt-2 flex justify-end">

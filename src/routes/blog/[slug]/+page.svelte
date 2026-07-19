@@ -204,6 +204,39 @@
   }
 
   let errors = $state({ authorName: '', commentContent: '' });
+  let valid = $state({ authorName: false, commentContent: false });
+
+  function debounce<T extends unknown[]>(cb: (...args: T) => void, ms: number) {
+    let timer: ReturnType<typeof setTimeout>;
+    return (...args: T) => {
+      clearTimeout(timer);
+      timer = setTimeout(() => cb(...args), ms);
+    };
+  }
+
+  const validateAuthorName = debounce(() => {
+    if (isAnonymous) { valid.authorName = false; return; }
+    if (authorName.trim() === '') {
+      errors.authorName = '';
+      valid.authorName = false;
+    } else if (isNameReserved(authorName)) {
+      errors.authorName = 'This name cannot be used. Please use another name.';
+      valid.authorName = false;
+    } else {
+      errors.authorName = '';
+      valid.authorName = true;
+    }
+  }, 300);
+
+  const validateCommentContent = debounce(() => {
+    if (commentContent.trim() === '') {
+      errors.commentContent = '';
+      valid.commentContent = false;
+    } else {
+      errors.commentContent = '';
+      valid.commentContent = true;
+    }
+  }, 300);
 
   function sanitizeInput(text: string): string {
     return text
@@ -227,6 +260,8 @@
       authorName: nameErr || nameReservedErr,
       commentContent: msgErr,
     };
+    if (errors.authorName) valid.authorName = false;
+    if (errors.commentContent) valid.commentContent = false;
 
     return !errors.authorName && !errors.commentContent;
   }
@@ -619,20 +654,24 @@
                   disabled={isAnonymous}
                   aria-required={!isAnonymous}
                   aria-invalid={!!errors.authorName}
-                  aria-describedby={errors.authorName ? 'comment-author-error' : ''}
+                  aria-describedby="comment-author-fb"
                   placeholder={isAnonymous ? 'Anonymous' : 'Enter your name'}
                   bind:value={authorName}
-                  oninput={() => (errors.authorName = '')}
+                  oninput={() => { errors.authorName = ''; valid.authorName = false; validateAuthorName(); }}
                   class="w-full rounded-lg border border-adwaita-border bg-adwaita-bg px-3 py-1.5 text-sm text-adwaita-text transition-colors placeholder:text-adwaita-label/70 disabled:opacity-60"
-                  class:border-adwaita-error={errors.authorName} />
-                {#if errors.authorName}
-                  <p
-                    id="comment-author-error"
-                    role="alert"
-                    class="mt-1 text-xs font-medium text-adwaita-error">
-                    {errors.authorName}
-                  </p>
-                {/if}
+                  class:border-adwaita-error={errors.authorName}
+                  class:input-valid={valid.authorName && !isAnonymous} />
+                <div id="comment-author-fb" aria-live="polite" class="mt-1 h-4 text-xs font-medium leading-none">
+                  {#if errors.authorName}
+                    <span role="alert" class="flex items-center gap-1 text-adwaita-error">
+                      <i class="bi bi-exclamation-circle-fill"></i>{errors.authorName}
+                    </span>
+                  {:else if valid.authorName && !isAnonymous}
+                    <span class="flex items-center gap-1 text-adwaita-accent">
+                      <i class="bi bi-check-circle-fill"></i>Looks good
+                    </span>
+                  {/if}
+                </div>
               </div>
             </div>
 
@@ -652,13 +691,13 @@
                   maxlength="1000"
                   placeholder="Enter your message"
                   bind:value={commentContent}
-                  oninput={() => (errors.commentContent = '')}
+                  oninput={() => { errors.commentContent = ''; valid.commentContent = false; validateCommentContent(); }}
                   aria-required="true"
                   aria-invalid={!!errors.commentContent}
-                  aria-describedby="comment-msg-count {errors.commentContent ? 'comment-msg-error'
-                  : ''}"
+                  aria-describedby="comment-msg-count comment-msg-fb"
                   class="no-scrollbar w-full resize-none rounded-lg border border-adwaita-border bg-adwaita-bg px-3 py-1.5 pr-16 text-sm text-adwaita-text transition-colors placeholder:text-adwaita-label/70"
-                  class:border-adwaita-error={errors.commentContent}></textarea>
+                  class:border-adwaita-error={errors.commentContent}
+                  class:input-valid={valid.commentContent}></textarea>
                 <div
                   class="pointer-events-none absolute right-3 bottom-2.5 z-10 font-mono text-[10px] text-adwaita-label select-none"
                   id="comment-msg-count"
@@ -666,14 +705,17 @@
                   {commentContent.length}/1000
                 </div>
               </div>
-              {#if errors.commentContent}
-                <p
-                  id="comment-msg-error"
-                  role="alert"
-                  class="mt-0.5 text-xs font-medium text-adwaita-error">
-                  {errors.commentContent}
-                </p>
-              {/if}
+              <div id="comment-msg-fb" aria-live="polite" class="mt-0.5 h-4 text-xs font-medium leading-none">
+                {#if errors.commentContent}
+                  <span role="alert" class="flex items-center gap-1 text-adwaita-error">
+                    <i class="bi bi-exclamation-circle-fill"></i>{errors.commentContent}
+                  </span>
+                {:else if valid.commentContent}
+                  <span class="flex items-center gap-1 text-adwaita-accent">
+                    <i class="bi bi-check-circle-fill"></i>Looks good
+                  </span>
+                {/if}
+              </div>
             </div>
 
             <div class="mt-2 flex justify-end">
@@ -796,22 +838,24 @@
                             disabled={isAnonymous}
                             aria-required={!isAnonymous}
                             aria-invalid={!!errors.authorName}
-                            aria-describedby={errors.authorName ?
-                              'reply-author-error-' + comment.id
-                            : ''}
+                            aria-describedby="reply-author-fb-{comment.id}"
                             placeholder={isAnonymous ? 'Anonymous' : 'Enter your name'}
                             bind:value={authorName}
-                            oninput={() => (errors.authorName = '')}
+                            oninput={() => { errors.authorName = ''; valid.authorName = false; validateAuthorName(); }}
                             class="w-full rounded-lg border border-adwaita-border bg-adwaita-bg px-3 py-1.5 text-sm text-adwaita-text transition-colors placeholder:text-adwaita-label/70 disabled:opacity-60"
-                            class:border-adwaita-error={errors.authorName} />
-                          {#if errors.authorName}
-                            <p
-                              id="reply-author-error-{comment.id}"
-                              role="alert"
-                              class="mt-1 text-xs font-medium text-adwaita-error">
-                              {errors.authorName}
-                            </p>
-                          {/if}
+                            class:border-adwaita-error={errors.authorName}
+                            class:input-valid={valid.authorName && !isAnonymous} />
+                          <div id="reply-author-fb-{comment.id}" aria-live="polite" class="mt-1 h-4 text-xs font-medium leading-none">
+                            {#if errors.authorName}
+                              <span role="alert" class="flex items-center gap-1 text-adwaita-error">
+                                <i class="bi bi-exclamation-circle-fill"></i>{errors.authorName}
+                              </span>
+                            {:else if valid.authorName && !isAnonymous}
+                              <span class="flex items-center gap-1 text-adwaita-accent">
+                                <i class="bi bi-check-circle-fill"></i>Looks good
+                              </span>
+                            {/if}
+                          </div>
                         </div>
                       </div>
 
@@ -831,14 +875,13 @@
                             maxlength="1000"
                             placeholder="Enter your message"
                             bind:value={commentContent}
-                            oninput={() => (errors.commentContent = '')}
+                            oninput={() => { errors.commentContent = ''; valid.commentContent = false; validateCommentContent(); }}
                             aria-required="true"
                             aria-invalid={!!errors.commentContent}
-                            aria-describedby="reply-msg-count-{comment.id} {errors.commentContent ?
-                              'reply-msg-error-' + comment.id
-                            : ''}"
+                            aria-describedby="reply-msg-count-{comment.id} reply-msg-fb-{comment.id}"
                             class="no-scrollbar w-full resize-none rounded-lg border border-adwaita-border bg-adwaita-bg px-3 py-1.5 pr-16 text-sm text-adwaita-text transition-colors placeholder:text-adwaita-label/70"
-                            class:border-adwaita-error={errors.commentContent}></textarea>
+                            class:border-adwaita-error={errors.commentContent}
+                            class:input-valid={valid.commentContent}></textarea>
                           <div
                             class="pointer-events-none absolute right-3 bottom-2.5 z-10 font-mono text-[10px] text-adwaita-label select-none"
                             id="reply-msg-count-{comment.id}"
@@ -846,14 +889,17 @@
                             {commentContent.length}/1000
                           </div>
                         </div>
-                        {#if errors.commentContent}
-                          <p
-                            id="reply-msg-error-{comment.id}"
-                            role="alert"
-                            class="mt-0.5 text-xs font-medium text-adwaita-error">
-                            {errors.commentContent}
-                          </p>
-                        {/if}
+                        <div id="reply-msg-fb-{comment.id}" aria-live="polite" class="mt-0.5 h-4 text-xs font-medium leading-none">
+                          {#if errors.commentContent}
+                            <span role="alert" class="flex items-center gap-1 text-adwaita-error">
+                              <i class="bi bi-exclamation-circle-fill"></i>{errors.commentContent}
+                            </span>
+                          {:else if valid.commentContent}
+                            <span class="flex items-center gap-1 text-adwaita-accent">
+                              <i class="bi bi-check-circle-fill"></i>Looks good
+                            </span>
+                          {/if}
+                        </div>
                       </div>
 
                       <div class="flex justify-end">
