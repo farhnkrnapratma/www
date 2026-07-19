@@ -118,7 +118,7 @@
         </div>
       {/if}
 
-      <form novalidate onsubmit={handleLogin} class="flex flex-col gap-4">
+      <form novalidate onsubmit={handleLogin} class="flex flex-col gap-2.5">
         <!-- Email -->
         <div class="flex flex-col gap-1.5">
           <label for="login-email" class="text-xs font-bold text-adwaita-label select-none">

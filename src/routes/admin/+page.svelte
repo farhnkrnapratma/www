@@ -559,7 +559,7 @@
                     isLastChildOfParent: boolean,
                   )}
                     <div
-                      class="relative flex flex-col gap-4"
+                      class="relative flex flex-col gap-2.5"
                       use:trunkAction>
                       {#if comment.children && comment.children.length > 0}
                         <div
@@ -644,7 +644,7 @@
                                 </button>
                               </div>
 
-                              <div class="flex flex-col gap-4">
+                              <div class="flex flex-col gap-2.5">
                                 <div class="flex flex-col gap-2">
                                   <label
                                     for="reply-msg-{comment.id}"

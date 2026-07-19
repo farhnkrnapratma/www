@@ -323,7 +323,7 @@
         class="flex flex-col gap-6">
         <div class="boxed-list bg-zinc-950/1 p-5 text-left">
           <h2 class="mb-4 text-sm font-bold text-adwaita-text">Post Settings</h2>
-          <div class="flex flex-col gap-4">
+          <div class="flex flex-col gap-2.5">
             <div class="flex flex-col gap-2 sm:flex-row sm:items-center">
               <label
                 for="post-title"

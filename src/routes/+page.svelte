@@ -784,7 +784,7 @@
         action="https://formsubmit.co/contact@fkp.my.id"
         method="POST"
         onsubmit={validateForm}
-        class="flex w-full flex-col gap-4 rounded-2xl border border-adwaita-border bg-adwaita-card/45 p-5 text-left shadow-xs backdrop-blur-lg transition-colors duration-300"
+        class="flex w-full flex-col gap-2.5 rounded-2xl border border-adwaita-border bg-adwaita-card/45 p-5 text-left shadow-xs backdrop-blur-lg transition-colors duration-300"
         autocomplete="off">
         <input
           type="hidden"

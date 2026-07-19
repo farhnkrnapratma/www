@@ -620,7 +620,7 @@
           <form
             novalidate
             onsubmit={e => handleSubmit(e)}
-            class="flex flex-col gap-4">
+            class="flex flex-col gap-2.5">
             <label
               for="comment-anon"
               class="flex cursor-pointer items-center gap-2 text-xs font-bold text-adwaita-label select-none">
@@ -735,7 +735,7 @@
       {:else}
         {#snippet commentNode(comment: FlatComment, depth: number, isLastChildOfParent: boolean)}
           <div
-            class="relative flex flex-col gap-4"
+            class="relative flex flex-col gap-2.5"
             use:trunkAction>
             {#if comment.children && comment.children.length > 0}
               <div
@@ -804,7 +804,7 @@
                       </button>
                     </div>
 
-                    <div class="flex flex-col gap-4">
+                    <div class="flex flex-col gap-2.5">
                       <label
                         for="reply-anon-{comment.id}"
                         class="flex cursor-pointer items-center gap-2 text-xs font-bold text-adwaita-label select-none">
