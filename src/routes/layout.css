@@ -214,17 +214,27 @@ button,
   opacity: 0.75 !important;
 }
 
-/* ── Keyboard focus: thick accent outline on interactive elements ── */
-:focus-visible {
-  outline: 3px solid var(--color-adwaita-accent) !important;
-  outline-offset: 3px !important;
+/* ── Keyboard focus ring: only truly interactive elements ── */
+a:focus-visible,
+button:focus-visible,
+[role="button"]:focus-visible,
+[role="link"]:focus-visible,
+[role="menuitem"]:focus-visible,
+[role="tab"]:focus-visible,
+[role="option"]:focus-visible,
+[role="combobox"]:focus-visible,
+select:focus-visible,
+details:focus-visible,
+summary:focus-visible,
+[tabindex="0"]:focus-visible {
+  outline: 2px solid var(--color-adwaita-accent) !important;
+  outline-offset: 2px !important;
   border-radius: 6px;
 }
 
-/* inputs/textareas use border instead of outline to avoid double-ring */
+/* inputs/textareas: use border + soft glow instead of outline */
 input:focus-visible,
-textarea:focus-visible,
-select:focus-visible {
+textarea:focus-visible {
   outline: none !important;
 }
 
@@ -240,4 +250,5 @@ input.input-valid,
 textarea.input-valid {
   border-color: var(--color-adwaita-accent) !important;
 }
+
 
