@@ -810,10 +810,10 @@
           </p>
         </div>
 
-        <div class="flex flex-col gap-2 sm:flex-row sm:items-center">
+        <div class="flex flex-col gap-2 sm:flex-row sm:items-start">
           <label
             for="form-name"
-            class="w-20 shrink-0 text-xs font-bold text-adwaita-label select-none">
+            class="w-20 shrink-0 pt-1.5 text-xs font-bold text-adwaita-label select-none">
             Name <span
               aria-hidden="true"
               class="text-adwaita-error">*</span
@@ -847,10 +847,10 @@
           </div>
         </div>
 
-        <div class="flex flex-col gap-2 sm:flex-row sm:items-center">
+        <div class="flex flex-col gap-2 sm:flex-row sm:items-start">
           <label
             for="form-email"
-            class="w-20 shrink-0 text-xs font-bold text-adwaita-label select-none">
+            class="w-20 shrink-0 pt-1.5 text-xs font-bold text-adwaita-label select-none">
             Email <span
               aria-hidden="true"
               class="text-adwaita-error">*</span
