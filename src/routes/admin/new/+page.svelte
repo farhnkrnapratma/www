@@ -780,10 +780,7 @@
                     class:input-valid={excerptValid}
                     style="overflow: hidden; resize: none;"
                   ></textarea>
-                  <span 
-                    class="absolute right-2.5 bottom-2 text-[10px] font-mono pointer-events-none select-none"
-                    class:text-adwaita-error={excerptError}
-                    class:text-adwaita-subtitle-mut={!excerptError}>
+                  <span class="absolute right-2.5 bottom-2 text-[10px] font-mono pointer-events-none select-none {excerptError ? 'text-adwaita-error' : 'text-adwaita-subtitle/50'}">
                     {excerpt.length}/250
                   </span>
                 </div>

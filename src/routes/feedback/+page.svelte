@@ -527,7 +527,7 @@
             class:border-adwaita-error={formErrors.message}
             class:input-valid={formValid.message}></textarea>
           <div
-            class="pointer-events-none absolute right-3 bottom-2.5 z-10 font-mono text-[10px] text-adwaita-label select-none"
+            class="pointer-events-none absolute right-3 bottom-2.5 z-10 font-mono text-[10px] text-adwaita-subtitle/50 select-none"
             id="form-msg-count"
             aria-live="polite">
             {formMessage.length}/1000
