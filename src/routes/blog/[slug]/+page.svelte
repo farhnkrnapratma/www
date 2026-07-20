@@ -1344,7 +1344,10 @@
 
 <ConfirmationDialog
   bind:isOpen={showYesFeedbackDialog}
-  title="Would you like to share this article?">
+  title="Would you like to share this article?"
+  onCancel={() => {
+    helpfulnessFeedback = null;
+  }}>
   <div class="mt-4 flex flex-col gap-4">
     <p class="text-left text-xs leading-normal text-adwaita-subtitle">
       Great to hear this article helped you! Share it with your peers:
@@ -1356,7 +1359,7 @@
           copyToClipboard();
           showYesFeedbackDialog = false;
         }}
-        class="flex h-9.5 cursor-pointer items-center justify-center gap-2 rounded-lg border border-adwaita-border bg-adwaita-card px-3 text-xs font-semibold text-adwaita-text transition-colors hover:bg-adwaita-hover hover:text-adwaita-accent">
+        class="col-span-2 flex h-9.5 cursor-pointer items-center justify-center gap-2 rounded-lg border border-adwaita-border bg-adwaita-card px-3 text-xs font-semibold text-adwaita-text transition-colors hover:bg-adwaita-hover hover:text-adwaita-accent">
         <i
           class="bi {showCopySuccess ? 'bi-check2 text-palette-green' : 'bi-link-45deg'} text-sm"
           aria-hidden="true"></i>
@@ -1378,18 +1381,6 @@
       </a>
 
       <a
-        href="https://www.facebook.com/sharer/sharer.php?u={encodeURIComponent(page.url.href)}"
-        target="_blank"
-        rel="noopener noreferrer"
-        onclick={() => (showYesFeedbackDialog = false)}
-        class="flex h-9.5 items-center justify-center gap-2 rounded-lg border border-adwaita-border bg-adwaita-card px-3 text-xs font-semibold text-adwaita-text transition-colors hover:bg-adwaita-hover hover:text-adwaita-accent">
-        <i
-          class="bi bi-facebook text-sm"
-          aria-hidden="true"></i>
-        <span>Facebook</span>
-      </a>
-
-      <a
         href="https://www.linkedin.com/sharing/share-offsite/?url={encodeURIComponent(
           page.url.href,
         )}"
@@ -1402,12 +1393,37 @@
           aria-hidden="true"></i>
         <span>LinkedIn</span>
       </a>
+
+      <a
+        href="https://www.facebook.com/sharer/sharer.php?u={encodeURIComponent(page.url.href)}"
+        target="_blank"
+        rel="noopener noreferrer"
+        onclick={() => (showYesFeedbackDialog = false)}
+        class="flex h-9.5 items-center justify-center gap-2 rounded-lg border border-adwaita-border bg-adwaita-card px-3 text-xs font-semibold text-adwaita-text transition-colors hover:bg-adwaita-hover hover:text-adwaita-accent">
+        <i
+          class="bi bi-facebook text-sm"
+          aria-hidden="true"></i>
+        <span>Facebook</span>
+      </a>
+
+      <a
+        href="mailto:?subject={encodeURIComponent(post.title)}&body={encodeURIComponent(page.url.href)}"
+        onclick={() => (showYesFeedbackDialog = false)}
+        class="flex h-9.5 items-center justify-center gap-2 rounded-lg border border-adwaita-border bg-adwaita-card px-3 text-xs font-semibold text-adwaita-text transition-colors hover:bg-adwaita-hover hover:text-adwaita-accent">
+        <i
+          class="bi bi-envelope text-sm"
+          aria-hidden="true"></i>
+        <span>Email</span>
+      </a>
     </div>
 
     <div class="mt-2 flex items-center justify-end gap-3">
       <button
         type="button"
-        onclick={() => (showYesFeedbackDialog = false)}
+        onclick={() => {
+          showYesFeedbackDialog = false;
+          helpfulnessFeedback = null;
+        }}
         class="inline-flex h-9 cursor-pointer items-center justify-center rounded-lg border border-adwaita-border bg-adwaita-card px-4 text-xs font-bold text-adwaita-text transition-colors hover:bg-adwaita-hover focus:outline-2 focus:outline-adwaita-accent">
         Cancel
       </button>
@@ -1419,9 +1435,28 @@
   bind:isOpen={showNoFeedbackDialog}
   title="Would you like to send feedback?"
   message="Tell us what we can improve. Your report helps make this article better for everyone."
-  confirmLabel="Send Feedback"
-  cancelLabel="Cancel"
-  isDestructive={false}
-  onConfirm={() => {
-    window.location.href = `/feedback?url=${encodeURIComponent(window.location.pathname)}`;
-  }} />
+  onCancel={() => {
+    helpfulnessFeedback = null;
+  }}>
+  <div class="mt-6 flex items-center justify-end gap-3">
+    <button
+      type="button"
+      onclick={() => {
+        showNoFeedbackDialog = false;
+        helpfulnessFeedback = null;
+      }}
+      class="cancel-btn inline-flex h-9.5 cursor-pointer items-center justify-center rounded-lg border border-transparent bg-transparent px-4 text-xs font-bold text-adwaita-text transition-colors hover:bg-adwaita-hover focus:outline-none">
+      Cancel
+    </button>
+
+    <button
+      type="button"
+      onclick={() => {
+        showNoFeedbackDialog = false;
+        window.location.href = `/feedback?url=${encodeURIComponent(window.location.pathname)}`;
+      }}
+      class="inline-flex h-9.5 cursor-pointer items-center justify-center rounded-lg bg-adwaita-accent px-4 text-xs font-bold text-white transition-colors hover:bg-adwaita-accent-hover focus:outline-2 focus:outline-adwaita-accent">
+      Send Feedback
+    </button>
+  </div>
+</ConfirmationDialog>
