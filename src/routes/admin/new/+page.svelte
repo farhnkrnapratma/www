@@ -11,6 +11,15 @@
   let excerpt = $state('');
   let markdownContent = $state('# New Post\n\nWrite your markdown content here...');
 
+  let isDark = $state(false);
+
+  function resizeExcerptTextarea(el: HTMLTextAreaElement) {
+    if (el) {
+      el.style.height = 'auto';
+      el.style.height = `${el.scrollHeight}px`;
+    }
+  }
+
   let isSubmitting = $state(false);
   let errorMessage = $state<string | null>(null);
   let activeTab = $state<'editor' | 'preview'>('editor');
@@ -53,16 +62,28 @@
     theme = newTheme;
     if (typeof window !== 'undefined') {
       localStorage.setItem('theme', newTheme);
-      const isDark =
+      const isDarkVal =
         newTheme === 'dark' ||
         (newTheme === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches);
-      if (isDark) {
+      isDark = isDarkVal;
+      if (isDarkVal) {
         document.documentElement.classList.add('dark');
       } else {
         document.documentElement.classList.remove('dark');
       }
     }
   }
+
+  $effect(() => {
+    if (typeof window !== 'undefined') {
+      isDark = document.documentElement.classList.contains('dark');
+      const observer = new MutationObserver(() => {
+        isDark = document.documentElement.classList.contains('dark');
+      });
+      observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+      return () => observer.disconnect();
+    }
+  });
 
   const IDLE_TIMEOUT_MS = 30 * 60 * 1000;
   let idleTimer: ReturnType<typeof setTimeout>;
@@ -455,6 +476,18 @@
   }
 </script>
 
+<svelte:head>
+  {#if isDark}
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" />
+  {:else}
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css" />
+  {/if}
+</svelte:head>
+
 <nav
   class="fixed top-0 z-40 flex h-15 w-full items-center justify-between border-b border-adwaita-border bg-adwaita-card/60 px-5 font-sans shadow-xs backdrop-blur-lg transition-colors duration-300">
   <button
@@ -642,32 +675,41 @@
 
             
             <div class="lg:col-span-7 flex flex-col gap-4">
-              
               <div class="flex flex-col gap-1">
-                <div class="flex items-center justify-between">
+                <div class="flex items-center justify-between min-h-[20px]">
                   <label for="post-title" class="text-xs font-bold text-adwaita-subtitle">
                     Title <span class="text-adwaita-error">*</span>
                   </label>
-                  <span class="text-[10px] text-adwaita-subtitle/85 font-mono">{title.length}/60</span>
+                  {#if slug}
+                    <div class="flex items-center gap-1 font-sans text-xs text-adwaita-subtitle select-none leading-none">
+                      <i class="bi bi-link-45deg text-sm text-adwaita-accent"></i>
+                      <span>fkp.my.id/blog/</span><span class="font-bold text-adwaita-accent">{slug}</span>
+                    </div>
+                  {/if}
                 </div>
                 
-                <input
-                  type="text"
-                  id="post-title"
-                  maxlength="60"
-                  required
-                  placeholder="Getting Started with Rust"
-                  bind:value={title}
-                  oninput={() => {
-                    titleError = '';
-                    titleValid = false;
-                    validateTitleField();
-                  }}
-                  class="w-full rounded-lg border border-adwaita-border bg-adwaita-bg px-3 py-2 text-sm text-adwaita-text transition-colors placeholder:text-adwaita-subtitle/70 focus:outline-none focus:ring-1 focus:ring-adwaita-accent"
-                  class:border-adwaita-error={titleError}
-                  class:input-valid={titleValid} />
+                <div class="relative">
+                  <input
+                    type="text"
+                    id="post-title"
+                    maxlength="60"
+                    required
+                    placeholder="Getting Started with Rust"
+                    bind:value={title}
+                    oninput={() => {
+                      titleError = '';
+                      titleValid = false;
+                      validateTitleField();
+                    }}
+                    class="w-full rounded-lg border border-adwaita-border bg-adwaita-bg pl-3 pr-16 py-2 text-sm text-adwaita-text transition-colors placeholder:text-adwaita-subtitle/70 focus:outline-none focus:ring-1 focus:ring-adwaita-accent"
+                    class:border-adwaita-error={titleError}
+                    class:input-valid={titleValid} />
+                  <span class="absolute right-2.5 top-1/2 -translate-y-1/2 text-[10px] text-adwaita-subtitle/50 font-mono pointer-events-none select-none">
+                    {title.length}/60
+                  </span>
+                </div>
 
-                <div class="flex items-center justify-between mt-1 min-h-[16px]">
+                <div class="flex items-center justify-between min-h-[16px]">
                   {#if titleError || titleValid}
                     <div id="post-title-fb" aria-live="polite" class="text-xs leading-none font-medium">
                       {#if titleError}
@@ -683,34 +725,31 @@
                   {:else}
                     <div></div>
                   {/if}
-
-                  {#if slug}
-                    <div class="flex items-center gap-1 font-sans text-xs text-adwaita-subtitle select-none leading-none">
-                      <i class="bi bi-link-45deg text-sm text-adwaita-accent"></i>
-                      <span>fkp.my.id/blog/</span><span class="font-bold text-adwaita-accent">{slug}</span>
-                    </div>
-                  {/if}
                 </div>
               </div>
 
-              
               <div class="flex flex-col gap-1">
                 <div class="flex items-center justify-between">
                   <label for="post-excerpt" class="text-xs font-bold text-adwaita-subtitle">
                     Excerpt <span class="text-adwaita-error">*</span>
                   </label>
-                  <span class="text-[10px] text-adwaita-subtitle/85 font-mono">{excerpt.length}/250</span>
                 </div>
-                <textarea
-                  use:autoResize={excerpt}
-                  id="post-excerpt"
-                  rows="3"
-                  maxlength="250"
-                  required
-                  placeholder="Brief summary of the article (max 250 characters)..."
-                  bind:value={excerpt}
-                  class="w-full resize-none overflow-hidden rounded-lg border border-adwaita-border bg-adwaita-bg px-3 py-2 text-sm text-adwaita-text transition-colors placeholder:text-adwaita-subtitle/70 focus:outline-none focus:ring-1 focus:ring-adwaita-accent"
-                ></textarea>
+                <div class="relative">
+                  <textarea
+                    use:autoResize={excerpt}
+                    id="post-excerpt"
+                    maxlength="250"
+                    required
+                    placeholder="Brief summary of the article (max 250 characters)..."
+                    bind:value={excerpt}
+                    oninput={(e) => resizeExcerptTextarea(e.currentTarget)}
+                    class="w-full rounded-lg border border-adwaita-border bg-adwaita-bg pl-3 pr-3 pt-2 pb-7 text-sm text-adwaita-text transition-colors placeholder:text-adwaita-subtitle/70 focus:outline-none focus:ring-1 focus:ring-adwaita-accent"
+                    style="overflow: hidden; resize: none;"
+                  ></textarea>
+                  <span class="absolute right-2.5 bottom-1.5 text-[10px] text-adwaita-subtitle/50 font-mono pointer-events-none select-none">
+                    {excerpt.length}/250
+                  </span>
+                </div>
               </div>
             </div>
           </div>
@@ -722,30 +761,39 @@
             <button
               type="button"
               onclick={() => (activeTab = 'editor')}
-              class="relative -mb-[1px] px-4 py-2 text-xs font-bold transition-all rounded-t-lg border-t border-x cursor-pointer {(
+              class="relative -mb-[1px] px-4 py-2 text-xs font-semibold rounded-t-md border-t border-x cursor-pointer transition-colors duration-150 {(
                 activeTab === 'editor'
               ) ?
-                'border-adwaita-border bg-adwaita-bg text-adwaita-accent'
+                'border-adwaita-border bg-adwaita-bg text-adwaita-text'
               : 'border-transparent text-adwaita-subtitle hover:text-adwaita-text hover:bg-adwaita-hover/30'}">
-              Markdown Editor
+              Edit
             </button>
             <button
               type="button"
               onclick={() => (activeTab = 'preview')}
-              class="relative -mb-[1px] px-4 py-2 text-xs font-bold transition-all rounded-t-lg border-t border-x cursor-pointer {(
+              class="relative -mb-[1px] px-4 py-2 text-xs font-semibold rounded-t-md border-t border-x cursor-pointer transition-colors duration-150 {(
                 activeTab === 'preview'
               ) ?
-                'border-adwaita-border bg-adwaita-bg text-adwaita-accent'
+                'border-adwaita-border bg-adwaita-bg text-adwaita-text'
               : 'border-transparent text-adwaita-subtitle hover:text-adwaita-text hover:bg-adwaita-hover/30'}">
-              Live HTML Preview
+              Preview
             </button>
 
             
-            <div class="ml-auto flex items-center pr-2 text-[10px] text-adwaita-subtitle italic font-medium select-none">
+            <div class="ml-auto flex items-center pr-2 text-xs text-adwaita-subtitle italic font-medium select-none">
               {#if autoSaveStatus === 'saving'}
-                <span class="flex items-center gap-1"><i class="bi bi-arrow-repeat animate-spin"></i> Saving draft...</span>
+                <span class="inline-flex items-center gap-1.5">
+                  <svg class="animate-spin h-3.5 w-3.5 text-adwaita-accent" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  Saving draft...
+                </span>
               {:else}
-                <span class="flex items-center gap-1"><i class="bi bi-cloud-check"></i> Draft saved</span>
+                <span class="inline-flex items-center gap-1.5">
+                  <i class="bi bi-cloud-check text-sm text-adwaita-accent"></i>
+                  Draft saved
+                </span>
               {/if}
             </div>
           </div>
@@ -758,9 +806,8 @@
                 
                 <pre
                   bind:this={preElement}
-                  class="pre-highlight pointer-events-none absolute inset-0 m-0 p-5 whitespace-pre-wrap break-all overflow-y-auto leading-relaxed text-adwaita-text select-none border-0 bg-transparent font-mono text-sm"
-                  style="height: 100%;"
-                ><code class="language-markdown block w-full bg-transparent">{@html highlightedMarkdown}</code></pre>
+                  class="editor-pre pre-highlight pointer-events-none absolute inset-0 text-adwaita-text select-none bg-transparent"
+                ><code class="language-markdown">{@html highlightedMarkdown}</code></pre>
 
                 
                 <textarea
@@ -769,7 +816,7 @@
                   aria-label="Markdown Content"
                   bind:value={markdownContent}
                   onscroll={syncScroll}
-                  class="absolute inset-0 w-full h-full resize-none overflow-y-auto bg-transparent p-5 text-transparent caret-adwaita-text font-mono text-sm leading-relaxed border-0 focus:outline-none focus:ring-0"
+                  class="editor-textarea absolute inset-0 bg-transparent text-transparent caret-adwaita-text focus:outline-none focus:ring-0"
                 ></textarea>
               </div>
             {:else}
@@ -845,5 +892,34 @@
   pre.pre-highlight {
     scrollbar-width: none !important;
     -ms-overflow-style: none !important;
+  }
+  
+  .editor-textarea,
+  .editor-pre {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace !important;
+    font-size: 14px !important;
+    line-height: 1.625 !important;
+    padding: 20px !important;
+    margin: 0 !important;
+    border: 0 !important;
+    box-sizing: border-box !important;
+    width: 100% !important;
+    height: 100% !important;
+    white-space: pre-wrap !important;
+    word-break: break-all !important;
+    overflow-wrap: break-word !important;
+  }
+
+  .editor-pre code {
+    font-family: inherit !important;
+    font-size: inherit !important;
+    line-height: inherit !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    display: block !important;
+    background: transparent !important;
+    white-space: pre-wrap !important;
+    word-break: break-all !important;
+    overflow-wrap: break-word !important;
   }
 </style>
