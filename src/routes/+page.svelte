@@ -783,12 +783,12 @@
 
                 <!-- Blog Information -->
                 <div class="flex-1 flex flex-col gap-1 font-sans">
-                  <div class="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs font-semibold text-adwaita-subtitle select-none font-sans">
-                    <span class="inline-flex items-center gap-1"><i class="bi bi-calendar3 text-[11px]" aria-hidden="true"></i> {getPostDate(post)}</span>
-                    <span class="inline-flex items-center gap-1"><i class="bi bi-clock text-[11px]" aria-hidden="true"></i> {post.read_time}</span>
-                    <span class="inline-flex items-center gap-1"><i class="bi bi-chat-left-text text-[11px]" aria-hidden="true"></i> {post.comment_count || 0}</span>
+                  <div class="flex flex-wrap items-center gap-x-3.5 gap-y-1 text-xs font-semibold text-adwaita-subtitle select-none font-sans">
+                    <span class="inline-flex items-center gap-1.5 leading-none"><i class="bi bi-calendar3 text-[11px] leading-none" aria-hidden="true"></i> {getPostDate(post)}</span>
+                    <span class="inline-flex items-center gap-1.5 leading-none"><i class="bi bi-clock text-[11px] leading-none" aria-hidden="true"></i> {(post.read_time || '').replace(/\s*read\s*/gi, '')}</span>
+                    <span class="inline-flex items-center gap-1.5 leading-none"><i class="bi bi-chat-left-text text-[11px] leading-none" aria-hidden="true"></i> {post.comment_count || 0}</span>
                     {#if post.views_count !== undefined}
-                      <span class="inline-flex items-center gap-1"><i class="bi bi-eye text-[11px]" aria-hidden="true"></i> {post.views_count}</span>
+                      <span class="inline-flex items-center gap-1.5 leading-none"><i class="bi bi-eye text-[11px] leading-none" aria-hidden="true"></i> {post.views_count}</span>
                     {/if}
                   </div>
                   <h4
@@ -1136,12 +1136,12 @@
 
               <!-- Blog Information -->
               <div class="flex-1 flex flex-col gap-1 font-sans">
-                 <div class="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs font-semibold text-adwaita-subtitle select-none font-sans">
-                    <span class="inline-flex items-center gap-1"><i class="bi bi-calendar3 text-[11px]" aria-hidden="true"></i> {getPostDate(post)}</span>
-                    <span class="inline-flex items-center gap-1"><i class="bi bi-clock text-[11px]" aria-hidden="true"></i> {post.read_time}</span>
-                    <span class="inline-flex items-center gap-1"><i class="bi bi-chat-left-text text-[11px]" aria-hidden="true"></i> {post.comment_count || 0}</span>
+                 <div class="flex flex-wrap items-center gap-x-3.5 gap-y-1 text-xs font-semibold text-adwaita-subtitle select-none font-sans">
+                    <span class="inline-flex items-center gap-1.5 leading-none"><i class="bi bi-calendar3 text-[11px] leading-none" aria-hidden="true"></i> {getPostDate(post)}</span>
+                    <span class="inline-flex items-center gap-1.5 leading-none"><i class="bi bi-clock text-[11px] leading-none" aria-hidden="true"></i> {(post.read_time || '').replace(/\s*read\s*/gi, '')}</span>
+                    <span class="inline-flex items-center gap-1.5 leading-none"><i class="bi bi-chat-left-text text-[11px] leading-none" aria-hidden="true"></i> {post.comment_count || 0}</span>
                     {#if post.views_count !== undefined}
-                      <span class="inline-flex items-center gap-1"><i class="bi bi-eye text-[11px]" aria-hidden="true"></i> {post.views_count}</span>
+                      <span class="inline-flex items-center gap-1.5 leading-none"><i class="bi bi-eye text-[11px] leading-none" aria-hidden="true"></i> {post.views_count}</span>
                     {/if}
                   </div>
                 <h2
