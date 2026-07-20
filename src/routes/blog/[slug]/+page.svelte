@@ -1424,7 +1424,7 @@
           showYesFeedbackDialog = false;
           helpfulnessFeedback = null;
         }}
-        class="inline-flex h-9 cursor-pointer items-center justify-center rounded-lg border border-adwaita-border bg-adwaita-card px-4 text-xs font-bold text-adwaita-text transition-colors hover:bg-adwaita-hover focus:outline-2 focus:outline-adwaita-accent">
+        class="inline-flex h-9.5 cursor-pointer items-center justify-center rounded-lg border border-adwaita-border bg-adwaita-card px-4 text-xs font-bold text-adwaita-text transition-colors hover:bg-adwaita-hover focus:outline-none">
         Cancel
       </button>
     </div>
@@ -1445,7 +1445,7 @@
         showNoFeedbackDialog = false;
         helpfulnessFeedback = null;
       }}
-      class="cancel-btn inline-flex h-9.5 cursor-pointer items-center justify-center rounded-lg border border-transparent bg-transparent px-4 text-xs font-bold text-adwaita-text transition-colors hover:bg-adwaita-hover focus:outline-none">
+      class="cancel-btn inline-flex h-9.5 cursor-pointer items-center justify-center rounded-lg border border-adwaita-border bg-adwaita-card px-4 text-xs font-bold text-adwaita-text transition-colors hover:bg-adwaita-hover focus:outline-none">
       Cancel
     </button>
 
