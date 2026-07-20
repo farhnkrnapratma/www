@@ -47,15 +47,23 @@ function estimateReadTime(markdown: string): string {
 export const load: PageServerLoad = async ({ params, fetch }) => {
   const { slug } = params;
 
-  const { data: post, error: postError } = await supabase
-    .from('posts')
-    .select('*')
-    .eq('slug', slug)
-    .single();
+  let post;
+  try {
+    const { data, error: postError } = await supabase
+      .from('posts')
+      .select('*')
+      .eq('slug', slug)
+      .single();
 
-  if (postError || !post) {
-    console.error(`Post not found: ${slug}`, postError);
-    throw error(404, 'Blog post not found');
+    if (postError || !data) {
+      console.error(`Post not found: ${slug}`, postError);
+      throw error(404, 'Blog post not found');
+    }
+    post = data;
+  } catch (err: any) {
+    if (err && err.status) throw err;
+    console.error(`Database error fetching post: ${slug}`, err);
+    throw error(500, 'Internal Server Error: Could not retrieve post.');
   }
 
   let html: string;
@@ -99,15 +107,22 @@ export const load: PageServerLoad = async ({ params, fetch }) => {
     headings.push({ id, text, level });
   }
 
-  const { data: comments, error: commentsError } = await supabase
-    .from('comments')
-    .select('*')
-    .eq('post_id', post.id)
-    .eq('is_approved', true)
-    .order('created_at', { ascending: true });
+  let comments: any[] = [];
+  try {
+    const { data, error: commentsError } = await supabase
+      .from('comments')
+      .select('*')
+      .eq('post_id', post.id)
+      .eq('is_approved', true)
+      .order('created_at', { ascending: true });
 
-  if (commentsError) {
-    console.error('Error fetching comments:', commentsError);
+    if (commentsError) {
+      console.error('Error fetching comments:', commentsError);
+    } else {
+      comments = data || [];
+    }
+  } catch (err) {
+    console.error('Database error fetching comments:', err);
   }
 
   return {
@@ -117,6 +132,6 @@ export const load: PageServerLoad = async ({ params, fetch }) => {
     },
     html,
     headings,
-    comments: comments || [],
+    comments,
   };
 };
