@@ -182,8 +182,6 @@
   </a>
 
   <div class="flex items-center gap-3 select-none">
-    <span class="text-sm font-bold text-adwaita-subtitle">Submit Feedback</span>
-
     <div class="relative">
       <button
         type="button"

@@ -391,10 +391,6 @@
   </button>
 
   <div class="flex items-center gap-3">
-    {#if !isEditMode}
-      <span class="text-sm font-bold text-adwaita-subtitle">Write New Post</span>
-    {/if}
-
     <div class="relative">
       <button
         type="button"
