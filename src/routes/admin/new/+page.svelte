@@ -223,6 +223,15 @@
     hljs.highlight(markdownContent || '', { language: 'markdown' }).value
   );
 
+  let excerptTextareaElement = $state<HTMLTextAreaElement | null>(null);
+
+  $effect(() => {
+    if (excerpt !== undefined && excerptTextareaElement) {
+      excerptTextareaElement.style.height = 'auto';
+      excerptTextareaElement.style.height = `${excerptTextareaElement.scrollHeight}px`;
+    }
+  });
+
   let preElement = $state<HTMLElement | null>(null);
   let textareaElement = $state<HTMLTextAreaElement | null>(null);
 
@@ -737,16 +746,17 @@
                 <div class="relative">
                   <textarea
                     use:autoResize={excerpt}
+                    bind:this={excerptTextareaElement}
                     id="post-excerpt"
+                    rows="3"
                     maxlength="250"
                     required
                     placeholder="Brief summary of the article (max 250 characters)..."
                     bind:value={excerpt}
-                    oninput={(e) => resizeExcerptTextarea(e.currentTarget)}
-                    class="w-full rounded-lg border border-adwaita-border bg-adwaita-bg pl-3 pr-3 pt-2 pb-7 text-sm text-adwaita-text transition-colors placeholder:text-adwaita-subtitle/70 focus:outline-none focus:ring-1 focus:ring-adwaita-accent"
+                    class="no-scrollbar w-full resize-none overflow-hidden rounded-lg border border-adwaita-border bg-adwaita-bg pl-3 pr-14 py-1.5 text-sm text-adwaita-text transition-colors placeholder:text-adwaita-subtitle/70 focus:outline-none focus:ring-1 focus:ring-adwaita-accent"
                     style="overflow: hidden; resize: none;"
                   ></textarea>
-                  <span class="absolute right-2.5 bottom-1.5 text-[10px] text-adwaita-subtitle/50 font-mono pointer-events-none select-none">
+                  <span class="absolute right-2.5 bottom-2 text-[10px] text-adwaita-subtitle/50 font-mono pointer-events-none select-none">
                     {excerpt.length}/250
                   </span>
                 </div>
