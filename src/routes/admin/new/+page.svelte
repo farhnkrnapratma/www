@@ -50,6 +50,9 @@
   let titleError = $state('');
   let titleValid = $state(false);
 
+  let excerptError = $state('');
+  let excerptValid = $state(false);
+
   let showCancelDialog = $state(false);
   let showPublishDialog = $state(false);
   let showSaveDraftDialog = $state(false);
@@ -284,6 +287,20 @@
     } else {
       titleError = '';
       titleValid = true;
+    }
+  }, 500);
+
+  const validateExcerptField = debounce(() => {
+    const val = excerpt.trim();
+    if (val === '') {
+      excerptError = '';
+      excerptValid = false;
+    } else if (val.length > 250) {
+      excerptError = 'Excerpt must be 250 characters or less.';
+      excerptValid = false;
+    } else {
+      excerptError = '';
+      excerptValid = true;
     }
   }, 500);
 
@@ -753,12 +770,40 @@
                     required
                     placeholder="Brief summary of the article (max 250 characters)..."
                     bind:value={excerpt}
+                    oninput={() => {
+                      excerptError = '';
+                      excerptValid = false;
+                      validateExcerptField();
+                    }}
                     class="no-scrollbar w-full resize-none overflow-hidden rounded-lg border border-adwaita-border bg-adwaita-bg pl-3 pr-14 py-1.5 text-sm text-adwaita-text transition-colors placeholder:text-adwaita-subtitle/70 focus:outline-none focus:ring-1 focus:ring-adwaita-accent"
+                    class:border-adwaita-error={excerptError}
+                    class:input-valid={excerptValid}
                     style="overflow: hidden; resize: none;"
                   ></textarea>
-                  <span class="absolute right-2.5 bottom-2 text-[10px] text-adwaita-subtitle/50 font-mono pointer-events-none select-none">
+                  <span 
+                    class="absolute right-2.5 bottom-2 text-[10px] font-mono pointer-events-none select-none"
+                    class:text-adwaita-error={excerptError}
+                    class:text-adwaita-subtitle-mut={!excerptError}>
                     {excerpt.length}/250
                   </span>
+                </div>
+
+                <div class="flex items-center justify-between mt-1 min-h-[16px]">
+                  {#if excerptError || excerptValid}
+                    <div id="post-excerpt-fb" aria-live="polite" class="text-xs leading-none font-medium">
+                      {#if excerptError}
+                        <span class="flex items-center gap-1 text-adwaita-error">
+                          <i class="bi bi-exclamation-circle-fill"></i>{excerptError}
+                        </span>
+                      {:else if excerptValid}
+                        <span class="flex items-center gap-1 text-adwaita-accent">
+                          <i class="bi bi-check-circle-fill"></i>Looks good
+                        </span>
+                      {/if}
+                    </div>
+                  {:else}
+                    <div></div>
+                  {/if}
                 </div>
               </div>
             </div>
