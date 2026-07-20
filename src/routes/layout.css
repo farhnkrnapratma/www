@@ -11,7 +11,15 @@
 
   body {
     @apply m-0 overflow-x-hidden bg-adwaita-bg p-0 font-sans text-adwaita-text transition-colors duration-300;
-    scrollbar-gutter: stable;
+  }
+
+  /* Hide scrollbars globally */
+  * {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+  *::-webkit-scrollbar {
+    display: none; /* Chrome, Safari and Opera */
   }
 
   .boxed-list {
@@ -249,6 +257,17 @@ select:focus {
 input.input-valid,
 textarea.input-valid {
   border-color: var(--color-adwaita-accent) !important;
+}
+
+/* ── Global Form Inputs Polishing (taller fields, compact margins) ── */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="search"],
+textarea,
+select {
+  padding-top: 0.55rem !important;
+  padding-bottom: 0.55rem !important;
 }
 
 

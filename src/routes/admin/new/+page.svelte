@@ -2,6 +2,7 @@
   import { supabase } from '$lib/supabase';
   import { onMount } from 'svelte';
   import { marked } from 'marked';
+  import { autoResize, ConfirmationDialog } from '$lib';
 
   let isCheckingAuth = $state(true);
   let title = $state('');
@@ -18,6 +19,35 @@
   let isEditMode = $state(false);
   let editId = $state<string | null>(null);
   let originalSlug = '';
+
+  // Banner image states
+  let bannerFile = $state<File | null>(null);
+  let bannerPreview = $state<string | null>(null);
+  let bannerPath = $state<string | null>(null);
+  let bannerError = $state<string | null>(null);
+
+  // Initial values for dirty checking
+  let initialTitle = $state('');
+  let initialExcerpt = $state('');
+  let initialMarkdownContent = $state('');
+  let initialBannerPath = $state('');
+
+  const isDirty = $derived(
+    title.trim() !== initialTitle.trim() ||
+    excerpt.trim() !== initialExcerpt.trim() ||
+    markdownContent.trim() !== initialMarkdownContent.trim() ||
+    (bannerPath || '').trim() !== (initialBannerPath || '').trim() ||
+    bannerFile !== null
+  );
+
+  // Validation state variables
+  let titleError = $state('');
+  let titleValid = $state(false);
+
+  // Dialog visibility states
+  let showCancelDialog = $state(false);
+  let showPublishDialog = $state(false);
+  let showSaveDraftDialog = $state(false);
 
   type Theme = 'auto' | 'dark' | 'light';
   let theme = $state<Theme>('auto');
@@ -38,24 +68,52 @@
     }
   }
 
-  onMount(async () => {
+  const IDLE_TIMEOUT_MS = 30 * 60 * 1000; // 30 minutes
+  let idleTimer: ReturnType<typeof setTimeout>;
+
+  function resetIdleTimer() {
+    clearTimeout(idleTimer);
+    idleTimer = setTimeout(async () => {
+      await supabase.auth.signOut();
+      window.location.href = '/admin/login';
+    }, IDLE_TIMEOUT_MS);
+  }
+
+  const ACTIVITY_EVENTS = ['mousemove', 'mousedown', 'keydown', 'scroll', 'touchstart'] as const;
+
+  onMount(() => {
     const saved = localStorage.getItem('theme') as Theme;
     theme = saved || 'auto';
 
-    const { data: sessionData } = await supabase.auth.getSession();
-    if (!sessionData.session) {
-      window.location.href = '/admin/login';
-      return;
-    }
-    isCheckingAuth = false;
+    (async () => {
+      const { data: sessionData } = await supabase.auth.getSession();
+      if (!sessionData.session) {
+        window.location.href = '/admin/login';
+        return;
+      }
+      isCheckingAuth = false;
 
-    const params = new URLSearchParams(window.location.search);
-    const id = params.get('id');
-    if (id) {
-      editId = id;
-      isEditMode = true;
-      await loadPostForEdit(id);
-    }
+      const params = new URLSearchParams(window.location.search);
+      const id = params.get('id');
+      if (id) {
+        editId = id;
+        isEditMode = true;
+        await loadPostForEdit(id);
+      } else {
+        initialTitle = '';
+        initialExcerpt = '';
+        initialMarkdownContent = '# New Post\n\nWrite your markdown content here...';
+      }
+    })();
+
+    // Start idle timer
+    resetIdleTimer();
+    ACTIVITY_EVENTS.forEach((evt) => window.addEventListener(evt, resetIdleTimer, { passive: true }));
+
+    return () => {
+      clearTimeout(idleTimer);
+      ACTIVITY_EVENTS.forEach((evt) => window.removeEventListener(evt, resetIdleTimer));
+    };
   });
 
   async function loadPostForEdit(id: string) {
@@ -80,7 +138,23 @@
         throw fileError;
       }
 
-      markdownContent = await fileData.text();
+      const fileText = await fileData.text();
+      markdownContent = fileText;
+
+      bannerPath = post.banner_path || null;
+      initialBannerPath = post.banner_path || '';
+      if (post.banner_path) {
+        const { data: publicUrl } = supabase.storage
+          .from('blog-posts')
+          .getPublicUrl(post.banner_path);
+        bannerPreview = publicUrl.publicUrl;
+      } else {
+        bannerPreview = null;
+      }
+
+      initialTitle = title;
+      initialExcerpt = excerpt;
+      initialMarkdownContent = markdownContent;
     } catch (err) {
       const error = err as Error;
       console.error('Error loading post for edit:', error);
@@ -88,15 +162,18 @@
     }
   }
 
+  // Automatic slug generation from title (a-z, - only)
+  function generateSlug(text: string): string {
+    return text
+      .toLowerCase()
+      .replace(/[^a-z\s-]/g, '')      // keep only letters, spaces, and hyphens
+      .replace(/\s+/g, '-')          // convert spaces to hyphens
+      .replace(/-+/g, '-')           // normalize repeated hyphens
+      .replace(/^-+|-+$/g, '');      // trim leading/trailing hyphens
+  }
+
   $effect(() => {
-    if (title && !isEditMode) {
-      slug = title
-        .toLowerCase()
-        .replace(/[^a-z0-9\s-]/g, '')
-        .replace(/\s+/g, '-')
-        .replace(/-+/g, '-')
-        .replace(/^-+|-+$/g, '');
-    }
+    slug = generateSlug(title);
   });
 
   $effect(() => {
@@ -107,22 +184,144 @@
     }
   });
 
-  async function handleSubmit(e: SubmitEvent) {
-    e.preventDefault();
-    if (!title.trim() || !slug.trim() || !markdownContent.trim()) {
-      errorMessage = 'Title, slug, and markdown content are required.';
+  // 300ms delayed title validation
+  function debounce<T extends unknown[]>(cb: (...args: T) => void, ms: number) {
+    let timer: ReturnType<typeof setTimeout>;
+    return (...args: T) => {
+      clearTimeout(timer);
+      timer = setTimeout(() => cb(...args), ms);
+    };
+  }
+
+  const validateTitleField = debounce(() => {
+    if (title.trim() === '') {
+      titleError = '';
+      titleValid = false;
+    } else if (title.trim().length > 60) {
+      titleError = 'Title must be 60 characters or less.';
+      titleValid = false;
+    } else {
+      titleError = '';
+      titleValid = true;
+    }
+  }, 300);
+
+  function validateImageDimensions(file: File): Promise<boolean> {
+    return new Promise(resolve => {
+      const img = new Image();
+      img.onload = () => {
+        const valid = img.width === 1280 && img.height === 640;
+        resolve(valid);
+      };
+      img.onerror = () => {
+        resolve(false);
+      };
+      img.src = URL.createObjectURL(file);
+    });
+  }
+
+  async function handleBannerChange(e: Event) {
+    bannerError = null;
+    const input = e.target as HTMLInputElement;
+    const file = input.files?.[0];
+    if (!file) return;
+
+    if (file.type !== 'image/png') {
+      bannerError = 'Banner must be a PNG image.';
+      input.value = '';
       return;
     }
 
+    const isValidDimensions = await validateImageDimensions(file);
+    if (!isValidDimensions) {
+      bannerError = 'Banner dimensions must be exactly 1280x640 pixels.';
+      input.value = '';
+      return;
+    }
+
+    bannerFile = file;
+    bannerPreview = URL.createObjectURL(file);
+  }
+
+  function validate() {
+    const titleVal = title.trim();
+    if (titleVal === '') {
+      titleError = 'Title is required.';
+      titleValid = false;
+      return false;
+    }
+    if (titleVal.length > 60) {
+      titleError = 'Title must be 60 characters or less.';
+      titleValid = false;
+      return false;
+    }
+
+    titleError = '';
+    titleValid = true;
+    return true;
+  }
+
+  function handleCancelClick() {
+    if (isDirty) {
+      showCancelDialog = true;
+    } else {
+      window.location.href = '/admin';
+    }
+  }
+
+  function handleSaveClick(toBePublished: boolean) {
+    if (!validate()) return;
+    if (!markdownContent.trim()) {
+      errorMessage = 'Markdown content is required.';
+      return;
+    }
+
+    if (toBePublished) {
+      showPublishDialog = true;
+    } else {
+      showSaveDraftDialog = true;
+    }
+  }
+
+  async function executeSave(toBePublished: boolean) {
     isSubmitting = true;
     errorMessage = null;
 
     try {
+      // Backend validation simulation (Supabase DB will also validate title length and slug format via CHECK constraints)
+      if (title.trim().length > 60) {
+        throw new Error('Title exceeds backend maximum length of 60 characters.');
+      }
+      if (!/^[a-z\-]*$/.test(slug)) {
+        throw new Error('Slug contains invalid characters. Only a-z and - are allowed.');
+      }
+
       const fileName = `${slug}.md`;
       const storagePath = `${fileName}`;
 
       const mdBlob = new Blob([markdownContent], { type: 'text/markdown' });
       const mdFile = new File([mdBlob], fileName, { type: 'text/markdown' });
+
+      let finalBannerPath = bannerPath;
+
+      if (bannerFile) {
+        // Backend validation of PNG and size
+        if (bannerFile.type !== 'image/png') {
+          throw new Error('Backend Validation: Banner must be a PNG image.');
+        }
+        const bannerFileName = `banners/${slug}.png`;
+        const { error: bannerUploadError } = await supabase.storage
+          .from('blog-posts')
+          .upload(bannerFileName, bannerFile, {
+            cacheControl: '3600',
+            upsert: true,
+          });
+
+        if (bannerUploadError) {
+          throw new Error(`Banner upload failed: ${bannerUploadError.message}`);
+        }
+        finalBannerPath = bannerFileName;
+      }
 
       if (isEditMode && editId) {
         const { error: uploadError } = await supabase.storage
@@ -142,8 +341,9 @@
             title: title.trim(),
             slug: slug.trim(),
             excerpt: excerpt.trim() || null,
-            published,
+            published: toBePublished,
             storage_path: storagePath,
+            banner_path: finalBannerPath,
           })
           .eq('id', editId);
 
@@ -152,7 +352,10 @@
         }
 
         if (originalSlug && originalSlug !== slug) {
-          await supabase.storage.from('blog-posts').remove([`${originalSlug}.md`]);
+          await supabase.storage.from('blog-posts').remove([
+            `${originalSlug}.md`,
+            `banners/${originalSlug}.png`
+          ]);
         }
       } else {
         const { error: uploadError } = await supabase.storage
@@ -170,8 +373,9 @@
           title: title.trim(),
           slug: slug.trim(),
           excerpt: excerpt.trim() || null,
-          published,
+          published: toBePublished,
           storage_path: storagePath,
+          banner_path: finalBannerPath,
         });
 
         if (dbError) {
@@ -193,18 +397,20 @@
 
 <nav
   class="fixed top-0 z-40 flex h-15 w-full items-center justify-between border-b border-adwaita-border bg-adwaita-card/60 px-5 font-sans shadow-xs backdrop-blur-lg transition-colors duration-300">
-  <a
-    href="/admin"
+  <button
+    type="button"
+    onclick={handleCancelClick}
     class="inline-flex h-9 items-center justify-center rounded-lg border border-adwaita-border bg-adwaita-card px-4 text-xs font-semibold text-adwaita-text transition-colors hover:bg-adwaita-hover">
     <i
       class="bi bi-arrow-left mr-2"
       aria-hidden="true"></i>
     Cancel
-  </a>
+  </button>
 
   <div class="flex items-center gap-3">
-    <span class="text-sm font-bold text-adwaita-subtitle"
-      >{isEditMode ? 'Edit Post' : 'Write New Post'}</span>
+    {#if !isEditMode}
+      <span class="text-sm font-bold text-adwaita-subtitle">Write New Post</span>
+    {/if}
 
     <div class="relative">
       <button
@@ -319,57 +525,106 @@
       {/if}
 
       <form
-        onsubmit={handleSubmit}
-        class="flex flex-col gap-6">
-        <div class="boxed-list bg-zinc-950/1 p-5 text-left">
-          <h2 class="mb-4 text-sm font-bold text-adwaita-text">Post Settings</h2>
+        onsubmit={e => e.preventDefault()}
+        class="flex flex-col gap-4">
+        <div class="boxed-list bg-zinc-950/1 p-5 text-left flex flex-col gap-2.5">
+          <h2 class="text-sm font-bold text-adwaita-text select-none">Post Settings</h2>
+          
           <div class="flex flex-col gap-2.5">
-            <div class="flex flex-col gap-2 sm:flex-row sm:items-center">
-              <label
-                for="post-title"
-                class="w-20 shrink-0 text-xs font-bold text-adwaita-subtitle">Title</label>
+            <!-- Title -->
+            <div class="flex flex-col gap-1">
+              <div class="flex items-center justify-between">
+                <label
+                  for="post-title"
+                  class="text-xs font-bold text-adwaita-subtitle">
+                  Title <span class="text-adwaita-error">*</span>
+                </label>
+                <!-- Permalink preview -->
+                {#if slug}
+                  <div class="flex items-center gap-1 text-[10px] text-adwaita-subtitle select-none font-sans">
+                    <i class="bi bi-link-45deg text-xs text-adwaita-accent"></i>
+                    <span>fkp.my.id/blog/</span><span class="font-bold text-adwaita-accent bg-adwaita-accent/10 px-1.5 py-0.5 rounded-md">{slug}</span>
+                  </div>
+                {/if}
+              </div>
               <input
                 type="text"
                 id="post-title"
+                maxlength="60"
                 required
                 placeholder="Getting Started with Rust"
                 bind:value={title}
-                class="w-full rounded-lg border border-adwaita-border bg-adwaita-bg px-3 py-2 text-sm text-adwaita-text transition-colors placeholder:text-adwaita-subtitle/70 focus:border-adwaita-accent" />
+                oninput={() => { titleError = ''; titleValid = false; validateTitleField(); }}
+                class="w-full rounded-lg border border-adwaita-border bg-adwaita-bg px-3 py-2 text-sm text-adwaita-text transition-colors placeholder:text-adwaita-subtitle/70"
+                class:border-adwaita-error={titleError}
+                class:input-valid={titleValid} />
+              <!-- Fixed-height feedback area -->
+              {#if titleError || titleValid}
+                <div id="post-title-fb" aria-live="polite" class="mt-1 text-xs font-medium leading-none">
+                  {#if titleError}
+                    <span class="flex items-center gap-1 text-adwaita-error">
+                      <i class="bi bi-exclamation-circle-fill"></i>{titleError}
+                    </span>
+                  {:else if titleValid}
+                    <span class="flex items-center gap-1 text-adwaita-accent">
+                      <i class="bi bi-check-circle-fill"></i>Looks good
+                    </span>
+                  {/if}
+                </div>
+              {/if}
             </div>
-            <div class="flex flex-col gap-2 sm:flex-row sm:items-center">
-              <label
-                for="post-slug"
-                class="w-20 shrink-0 text-xs font-bold text-adwaita-subtitle">Slug</label>
-              <input
-                type="text"
-                id="post-slug"
-                required
-                placeholder="getting-started-with-rust"
-                bind:value={slug}
-                class="w-full rounded-lg border border-adwaita-border bg-adwaita-bg px-3 py-2 text-sm text-adwaita-text transition-colors placeholder:text-adwaita-subtitle/70 focus:border-adwaita-accent" />
-            </div>
-            <div class="flex flex-col items-start gap-2">
+
+            <!-- Excerpt -->
+            <div class="flex flex-col gap-1">
               <label
                 for="post-excerpt"
-                class="mt-1 w-20 shrink-0 text-xs font-bold text-adwaita-subtitle">Excerpt</label>
+                class="text-xs font-bold text-adwaita-subtitle">Excerpt</label>
               <textarea
+                use:autoResize={excerpt}
                 id="post-excerpt"
                 rows="2"
                 placeholder="Brief summary of the article..."
                 bind:value={excerpt}
-                class="w-full resize-none rounded-lg border border-adwaita-border bg-adwaita-bg px-3 py-1.5 text-sm text-adwaita-text transition-colors placeholder:text-adwaita-subtitle/70 focus:border-adwaita-accent"
+                class="w-full resize-none overflow-hidden rounded-lg border border-adwaita-border bg-adwaita-bg px-3 py-1.5 text-sm text-adwaita-text transition-colors placeholder:text-adwaita-subtitle/70 focus:border-adwaita-accent"
               ></textarea>
             </div>
-            <div class="mt-2 flex items-center gap-2">
-              <input
-                type="checkbox"
-                id="post-publish"
-                bind:checked={published}
-                class="rounded border-adwaita-border text-adwaita-accent focus:ring-adwaita-accent" />
-              <label
-                for="post-publish"
-                class="cursor-pointer text-xs font-bold text-adwaita-text select-none"
-                >Publish immediately</label>
+
+            <!-- Banner Image -->
+            <div class="flex flex-col gap-1">
+              <span class="text-xs font-bold text-adwaita-subtitle select-none">Banner Image (PNG, 1280x640)</span>
+              
+              <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
+                <input
+                  type="file"
+                  id="post-banner"
+                  accept="image/png"
+                  onchange={handleBannerChange}
+                  class="block w-full text-xs text-adwaita-subtitle file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border file:border-adwaita-border file:bg-adwaita-card file:text-xs file:font-semibold file:text-adwaita-text file:cursor-pointer hover:file:bg-adwaita-hover focus:outline-2 focus:outline-adwaita-accent" />
+                
+                {#if bannerPreview}
+                  <div class="relative max-w-[200px] border border-adwaita-border rounded-lg overflow-hidden shrink-0">
+                    <img 
+                      src={bannerPreview} 
+                      alt="Banner preview" 
+                      class="w-full object-cover aspect-[2/1]" />
+                    <button
+                      type="button"
+                      onclick={() => { bannerFile = null; bannerPreview = null; bannerPath = null; }}
+                      class="absolute top-1 right-1 bg-black/70 hover:bg-black/90 text-white rounded-full p-1 cursor-pointer w-6 h-6 flex items-center justify-center border border-white/20"
+                      aria-label="Remove banner">
+                      <i class="bi bi-x text-xs"></i>
+                    </button>
+                  </div>
+                {/if}
+              </div>
+              
+              {#if bannerError}
+                <div id="post-banner-fb" aria-live="polite" class="mt-1 text-xs font-medium leading-none">
+                  <span role="alert" class="flex items-center gap-1 text-adwaita-error">
+                    <i class="bi bi-exclamation-circle-fill"></i>{bannerError}
+                  </span>
+                </div>
+              {/if}
             </div>
           </div>
         </div>
@@ -400,10 +655,11 @@
 
           {#if activeTab === 'editor'}
             <textarea
+              use:autoResize={markdownContent}
               required
               aria-label="Markdown Content"
               bind:value={markdownContent}
-              class="min-h-87.5 w-full flex-1 resize-y bg-adwaita-bg p-5 font-mono text-sm leading-relaxed text-adwaita-text focus:ring-2 focus:ring-adwaita-accent focus:ring-inset"
+              class="min-h-87.5 w-full flex-1 resize-none overflow-hidden bg-adwaita-bg p-5 font-mono text-sm leading-relaxed text-adwaita-text focus:ring-2 focus:ring-adwaita-accent focus:ring-inset"
             ></textarea>
           {:else}
             <div class="prose-custom min-h-87.5 w-full overflow-y-auto bg-adwaita-bg p-6">
@@ -416,22 +672,56 @@
           {/if}
         </div>
 
-        <div class="mt-4 mb-10 flex justify-end gap-3">
-          <a
-            href="/admin"
+        <!-- Buttons Action Placement -->
+        <div class="mt-4 mb-10 flex justify-end gap-3 select-none">
+          <button
+            type="button"
+            onclick={handleCancelClick}
             class="inline-flex h-10 items-center justify-center rounded-lg border border-adwaita-border bg-adwaita-card px-5 text-sm font-semibold text-adwaita-text transition-colors hover:bg-adwaita-hover">
             Cancel
-          </a>
+          </button>
+          
           <button
-            type="submit"
+            type="button"
+            onclick={() => handleSaveClick(false)}
+            disabled={isSubmitting}
+            class="inline-flex h-10 cursor-pointer items-center justify-center gap-2 rounded-lg border border-adwaita-border bg-adwaita-card px-5 text-sm font-semibold text-adwaita-text transition-colors hover:bg-adwaita-hover disabled:opacity-55">
+            Save as Draft
+          </button>
+          
+          <button
+            type="button"
+            onclick={() => handleSaveClick(true)}
             disabled={isSubmitting}
             class="inline-flex h-10 cursor-pointer items-center justify-center gap-2 rounded-lg bg-adwaita-accent px-6 text-sm font-semibold text-white transition-colors hover:bg-adwaita-accent-hover disabled:opacity-55">
-            {isSubmitting ? 'Saving...'
-            : isEditMode ? 'Save Changes'
-            : 'Save Blog Post'}
+            {isSubmitting ? 'Saving...' : 'Publish Blog'}
           </button>
         </div>
       </form>
     </section>
   {/if}
 </main>
+
+<ConfirmationDialog
+  bind:isOpen={showCancelDialog}
+  title="Discard Unsaved Changes?"
+  message="You have unsaved edits on this blog post. Are you sure you want to discard them?"
+  confirmLabel="Discard"
+  isDestructive={true}
+  onConfirm={() => (window.location.href = '/admin')} />
+
+<ConfirmationDialog
+  bind:isOpen={showPublishDialog}
+  title="Publish Blog Post?"
+  message="This will make this post immediately visible to readers. Do you want to publish?"
+  confirmLabel="Publish"
+  isDestructive={false}
+  onConfirm={() => executeSave(true)} />
+
+<ConfirmationDialog
+  bind:isOpen={showSaveDraftDialog}
+  title="Save as Draft?"
+  message="This will save this post as a private draft. Do you want to proceed?"
+  confirmLabel="Save Draft"
+  isDestructive={false}
+  onConfirm={() => executeSave(false)} />

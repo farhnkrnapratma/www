@@ -40,6 +40,9 @@
           nativeBuildInputs = with pkgs.${system}; [
             bun
             nodejs_26
+            nixd
+            nil
+            treefmt
           ];
         };
       });

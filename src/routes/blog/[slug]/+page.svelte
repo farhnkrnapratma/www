@@ -1,10 +1,12 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
+  import { onMount, tick } from 'svelte';
   import { SvelteMap } from 'svelte/reactivity';
   import type { PageProps } from './$types';
   import hljs from 'highlight.js';
   import { isNameReserved } from '$lib/nameValidator';
+  import { autoResize, ConfirmationDialog, SpotlightSearch } from '$lib';
   import { page } from '$app/state';
+  import { supabase } from '$lib/supabase';
 
   let { data }: PageProps = $props();
   const post = $derived(data.post);
@@ -54,6 +56,18 @@
   const comments = $derived([...data.comments, ...addedComments]);
   let isDark = $state(false);
 
+  let bannerPublicUrl = $state('');
+  $effect(() => {
+    if (data.post.banner_path) {
+      const { data: res } = supabase.storage
+        .from('blog-posts')
+        .getPublicUrl(data.post.banner_path);
+      bannerPublicUrl = res.publicUrl;
+    } else {
+      bannerPublicUrl = '';
+    }
+  });
+
   type Theme = 'auto' | 'dark' | 'light';
   let theme = $state<Theme>('auto');
   let themeDropdownOpen = $state(false);
@@ -73,6 +87,97 @@
       }
     }
   }
+
+  interface HeadingItem {
+    id: string;
+    text: string;
+    level: number;
+  }
+
+  const headings = $derived(data.headings || []);
+  let activeHeadingId = $state('');
+
+  const name = 'Farhan Kurnia Pratama';
+  const desc = 'Security-focused Software Engineer with expertise in Linux/Unix, AI, and Open-Source Software, dedicated to building reliable, maintainable, and privacy-centric systems.';
+  const footerNavItems = [
+    { label: 'Home', url: '/' },
+    { label: 'Projects', url: '/#projects' },
+    { label: 'Blogs', url: '/#blogs' },
+    { label: 'CV', url: '/#cv' },
+    { label: 'Funding', url: '/#funding' },
+    { label: 'Contacts', url: '/#contacts' }
+  ];
+  let helpfulnessFeedback = $state<'yes' | 'no' | null>(null);
+  let showYesFeedbackDialog = $state(false);
+  let showNoFeedbackDialog = $state(false);
+  let viewCount = $state<number | null>(null);
+
+  function handleHelpfulness(value: 'yes' | 'no') {
+    helpfulnessFeedback = value;
+    if (value === 'yes') {
+      showYesFeedbackDialog = true;
+    } else {
+      showNoFeedbackDialog = true;
+    }
+  }
+
+  $effect(() => {
+    const currentHtml = html; // establish dependency
+    let headingObserver: IntersectionObserver | null = null;
+
+    tick().then(() => {
+      const container = document.querySelector('.prose-custom');
+      if (container) {
+        const elements = container.querySelectorAll('h2, h3');
+        if (elements.length === 0) return;
+
+        elements.forEach((el) => {
+          el.classList.add('group', 'flex', 'items-center', 'scroll-mt-20');
+
+          const existingAnchor = el.querySelector('.anchor-link');
+          if (existingAnchor) {
+            existingAnchor.remove();
+          }
+
+          // Create link icon anchor
+          const anchor = document.createElement('a');
+          anchor.href = `#${el.id}`;
+          anchor.className = 'anchor-link opacity-0 group-hover:opacity-100 transition-opacity ml-2 text-adwaita-accent text-sm leading-none';
+          anchor.innerHTML = '<i class="bi bi-link-45deg" aria-hidden="true"></i>';
+          anchor.onclick = (e) => {
+            e.preventDefault();
+            const target = document.getElementById(el.id);
+            if (target) {
+              target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              history.pushState(null, '', `#${el.id}`);
+              activeHeadingId = el.id;
+            }
+          };
+          el.appendChild(anchor);
+        });
+
+        headingObserver = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              activeHeadingId = entry.target.id;
+            }
+          });
+        }, {
+          root: null,
+          rootMargin: '0px 0px -70% 0px',
+          threshold: 0.1
+        });
+
+        elements.forEach((el) => headingObserver?.observe(el));
+      }
+    });
+
+    return () => {
+      if (headingObserver) {
+        headingObserver.disconnect();
+      }
+    };
+  });
 
   onMount(() => {
     const saved = localStorage.getItem('theme') as Theme;
@@ -96,6 +201,22 @@
     });
 
     hljs.highlightAll();
+
+    // Track view + fetch count
+    (async () => {
+      try {
+        await fetch('/api/views', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ post_id: post.id }),
+        });
+        const res = await fetch(`/api/views?post_id=${encodeURIComponent(post.id)}`);
+        const data = await res.json();
+        viewCount = data.views ?? null;
+      } catch {
+        // non-critical, silently fail
+      }
+    })();
 
     return () => {
       observer.disconnect();
@@ -322,6 +443,27 @@
 </script>
 
 <svelte:head>
+  <title>{post.title} | Farhan Kurnia Pratama</title>
+  <meta name="description" content={post.excerpt || 'Read this article on my blog.'} />
+  
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content={'https://fkp.my.id/blog/' + post.slug} />
+  <meta property="og:title" content={post.title} />
+  <meta property="og:description" content={post.excerpt || 'Read this article on my blog.'} />
+  {#if bannerPublicUrl}
+    <meta property="og:image" content={bannerPublicUrl} />
+  {/if}
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image" />
+  <meta property="twitter:url" content={'https://fkp.my.id/blog/' + post.slug} />
+  <meta property="twitter:title" content={post.title} />
+  <meta property="twitter:description" content={post.excerpt || 'Read this article on my blog.'} />
+  {#if bannerPublicUrl}
+    <meta property="twitter:image" content={bannerPublicUrl} />
+  {/if}
+
   {#if isDark}
     <link
       rel="stylesheet"
@@ -343,7 +485,8 @@
       aria-hidden="true"></i>
     Back to Blog
   </a>
-  <div class="flex items-center gap-3">
+  <div class="flex items-center gap-2">
+    <SpotlightSearch />
     <div class="relative">
       <button
         type="button"
@@ -425,8 +568,8 @@
 </nav>
 
 <main class="flex min-h-[calc(100vh-3.75rem)] flex-col pt-15 font-sans">
-  <article
-    class="mx-auto w-full flex-1 px-6 pt-10 pb-16 md:w-[80%] md:max-w-none md:pt-14 md:pb-28 lg:w-[50%]">
+  <div class="mx-auto w-full max-w-7xl px-6 pt-10 pb-16 xl:grid xl:grid-cols-12 xl:gap-8 relative">
+    <article class="w-full mx-auto md:w-[80%] lg:w-[50%] xl:w-auto xl:mx-0 xl:col-start-4 xl:col-span-6 flex flex-col pt-4">
     <header class="mb-8 border-b border-adwaita-border pb-6">
       <h1
         class="text-4xl leading-tight font-extrabold tracking-tight text-adwaita-text md:text-5xl">
@@ -437,14 +580,55 @@
           {post.excerpt}
         </p>
       {/if}
-      <p class="mt-4 text-xs font-semibold text-adwaita-subtitle select-none">
-        {formatDate(post.created_at)} &middot; {post.read_time} &middot; {comments.length}
-        {comments.length === 1 ? 'comment' : 'comments'}
-      </p>
+      <div class="mt-4 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs font-semibold text-adwaita-subtitle select-none font-sans">
+        <span class="inline-flex items-center gap-1"><i class="bi bi-calendar3 text-[11px]" aria-hidden="true"></i> {formatDate(post.created_at)}</span>
+        <span class="inline-flex items-center gap-1"><i class="bi bi-clock text-[11px]" aria-hidden="true"></i> {post.read_time}</span>
+        <span class="inline-flex items-center gap-1"><i class="bi bi-chat-left-text text-[11px]" aria-hidden="true"></i> {comments.length}</span>
+        {#if viewCount !== null}
+          <span class="inline-flex items-center gap-1"><i class="bi bi-eye text-[11px]" aria-hidden="true"></i> {viewCount}</span>
+        {/if}
+      </div>
     </header>
 
     <div class="prose-custom w-full">
       {@html html}
+    </div>
+
+    <!-- Helpfulness Feedback Widget -->
+    <div class="mt-10 border-t border-adwaita-border pt-8 flex flex-col items-center justify-between gap-4 sm:flex-row select-none">
+      <div>
+        <h3 class="text-sm font-bold text-adwaita-text">Was this article helpful?</h3>
+        <p class="text-xs text-adwaita-subtitle mt-0.5">Help us improve by letting us know your thoughts.</p>
+      </div>
+      <div class="flex items-center gap-3">
+        {#if helpfulnessFeedback === null}
+          <button
+            type="button"
+            onclick={() => handleHelpfulness('yes')}
+            class="inline-flex h-9 cursor-pointer items-center justify-center gap-2 rounded-lg border border-adwaita-border bg-adwaita-card px-4 text-xs font-bold text-adwaita-text transition-colors hover:bg-adwaita-hover focus:outline-2 focus:outline-adwaita-accent"
+            aria-label="Yes, this article was helpful">
+            <i class="bi bi-hand-thumbs-up text-sm"></i>
+            Yes
+          </button>
+          
+          <button
+            type="button"
+            onclick={() => handleHelpfulness('no')}
+            class="inline-flex h-9 cursor-pointer items-center justify-center gap-2 rounded-lg border border-adwaita-border bg-adwaita-card px-4 text-xs font-bold text-adwaita-text transition-colors hover:bg-adwaita-hover focus:outline-2 focus:outline-adwaita-accent"
+            aria-label="No, this article was not helpful">
+            <i class="bi bi-hand-thumbs-down text-sm"></i>
+            No
+          </button>
+        {:else if helpfulnessFeedback === 'yes'}
+          <span class="flex items-center gap-1.5 text-xs font-bold text-adwaita-accent animate-pulse">
+            <i class="bi bi-heart-fill"></i> Thank you for your feedback!
+          </span>
+        {:else}
+          <span class="flex items-center gap-1.5 text-xs font-bold text-adwaita-subtitle">
+            <i class="bi bi-emoji-neutral"></i> Redirecting to feedback...
+          </span>
+        {/if}
+      </div>
     </div>
 
     <div class="mt-12 border-t border-adwaita-border pt-8 select-none">
@@ -637,11 +821,10 @@
               class="sr-only">
               If checked, your name is hidden and your comment is posted as Anonymous.
             </span>
-
-            <div class="flex flex-col gap-2 sm:flex-row sm:items-start">
+            <div class="flex flex-col gap-1">
               <label
                 for="comment-author"
-                class="w-20 shrink-0 pt-1.5 text-xs font-bold text-adwaita-label select-none">
+                class="text-xs font-bold text-adwaita-label select-none">
                 Name {#if !isAnonymous}<span
                     aria-hidden="true"
                     class="text-adwaita-error">*</span
@@ -653,6 +836,7 @@
                   id="comment-author"
                   disabled={isAnonymous}
                   aria-required={!isAnonymous}
+                  autocomplete="name"
                   aria-invalid={!!errors.authorName}
                   aria-describedby="comment-author-fb"
                   placeholder={isAnonymous ? 'Anonymous' : 'Enter your name'}
@@ -675,7 +859,7 @@
               </div>
             </div>
 
-            <div class="flex flex-col gap-2">
+            <div class="flex flex-col gap-1">
               <label
                 for="comment-msg"
                 class="text-xs font-bold text-adwaita-label select-none">
@@ -686,6 +870,7 @@
               </label>
               <div class="relative w-full">
                 <textarea
+                  use:autoResize={commentContent}
                   id="comment-msg"
                   rows="3"
                   maxlength="1000"
@@ -695,7 +880,7 @@
                   aria-required="true"
                   aria-invalid={!!errors.commentContent}
                   aria-describedby="comment-msg-count comment-msg-fb"
-                  class="no-scrollbar w-full resize-none rounded-lg border border-adwaita-border bg-adwaita-bg px-3 py-1.5 pr-16 text-sm text-adwaita-text transition-colors placeholder:text-adwaita-label/70"
+                  class="no-scrollbar w-full resize-none overflow-hidden rounded-lg border border-adwaita-border bg-adwaita-bg px-3 py-1.5 pr-16 text-sm text-adwaita-text transition-colors placeholder:text-adwaita-label/70"
                   class:border-adwaita-error={errors.commentContent}
                   class:input-valid={valid.commentContent}></textarea>
                 <div
@@ -804,7 +989,7 @@
                       </button>
                     </div>
 
-                    <div class="flex flex-col gap-2.5">
+                    <div class="flex flex-col gap-4">
                       <label
                         for="reply-anon-{comment.id}"
                         class="flex cursor-pointer items-center gap-2 text-xs font-bold text-adwaita-label select-none">
@@ -822,10 +1007,10 @@
                         If checked, your name is hidden and your comment is posted as Anonymous.
                       </span>
 
-                      <div class="flex flex-col gap-2 sm:flex-row sm:items-start">
+                      <div class="flex flex-col gap-1">
                         <label
                           for="reply-author-{comment.id}"
-                          class="w-20 shrink-0 pt-1.5 text-xs font-bold text-adwaita-label select-none">
+                          class="text-xs font-bold text-adwaita-label select-none">
                           Name {#if !isAnonymous}<span
                               aria-hidden="true"
                               class="text-adwaita-error">*</span
@@ -837,6 +1022,7 @@
                             id="reply-author-{comment.id}"
                             disabled={isAnonymous}
                             aria-required={!isAnonymous}
+                            autocomplete="name"
                             aria-invalid={!!errors.authorName}
                             aria-describedby="reply-author-fb-{comment.id}"
                             placeholder={isAnonymous ? 'Anonymous' : 'Enter your name'}
@@ -859,7 +1045,7 @@
                         </div>
                       </div>
 
-                      <div class="flex flex-col gap-2">
+                      <div class="flex flex-col gap-1">
                         <label
                           for="reply-msg-{comment.id}"
                           class="text-xs font-bold text-adwaita-label select-none">
@@ -870,6 +1056,7 @@
                         </label>
                         <div class="relative w-full">
                           <textarea
+                            use:autoResize={commentContent}
                             id="reply-msg-{comment.id}"
                             rows="3"
                             maxlength="1000"
@@ -879,7 +1066,7 @@
                             aria-required="true"
                             aria-invalid={!!errors.commentContent}
                             aria-describedby="reply-msg-count-{comment.id} reply-msg-fb-{comment.id}"
-                            class="no-scrollbar w-full resize-none rounded-lg border border-adwaita-border bg-adwaita-bg px-3 py-1.5 pr-16 text-sm text-adwaita-text transition-colors placeholder:text-adwaita-label/70"
+                            class="no-scrollbar w-full resize-none overflow-hidden rounded-lg border border-adwaita-border bg-adwaita-bg px-3 py-1.5 pr-16 text-sm text-adwaita-text transition-colors placeholder:text-adwaita-label/70"
                             class:border-adwaita-error={errors.commentContent}
                             class:input-valid={valid.commentContent}></textarea>
                           <div
@@ -941,9 +1128,188 @@
         </div>
       {/if}
     </section>
-  </article>
+    </article>
+    
+    <!-- Table of Contents Sidebar -->
+    <aside class="hidden xl:block xl:col-start-10 xl:col-span-3 sticky top-24 h-fit select-none">
+      <div class="boxed-list p-5 bg-adwaita-card/45 backdrop-blur-lg border border-adwaita-border">
+        <h3 class="text-xs font-bold text-adwaita-subtitle uppercase tracking-wider mb-3">In this article</h3>
+        
+        {#if headings.length === 0}
+          <p class="text-xs text-adwaita-subtitle italic">No subheadings found.</p>
+        {:else}
+          <ul class="flex flex-col gap-2">
+            {#each headings as heading, index (heading.id + '-' + index)}
+              <li class="text-xs" style="padding-left: {(heading.level - 2) * 12}px;">
+                <a
+                  href="#{heading.id}"
+                  onclick={(e) => {
+                    e.preventDefault();
+                    const target = document.getElementById(heading.id);
+                    if (target) {
+                      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                      history.pushState(null, '', `#${heading.id}`);
+                      activeHeadingId = heading.id;
+                    }
+                  }}
+                  class="block transition-colors py-0.5 hover:text-adwaita-accent leading-normal {
+                    activeHeadingId === heading.id 
+                      ? 'text-adwaita-accent font-bold border-l-2 border-adwaita-accent pl-2' 
+                      : 'text-adwaita-subtitle pl-2'
+                  }">
+                  {heading.text}
+                </a>
+              </li>
+            {/each}
+          </ul>
+        {/if}
+      </div>
+    </aside>
+  </div>
+  
   <footer
-    class="w-full px-6 py-8 text-center font-sans text-xs text-adwaita-subtitle/75 select-none">
-    <p>&copy; {new Date().getFullYear()} Farhan Kurnia Pratama. All rights reserved</p>
+    class="relative z-10 mx-auto mt-auto w-full border-t border-adwaita-border px-6 pt-16 pb-12 text-xs text-adwaita-subtitle/75 md:w-[80%] lg:w-[50%] font-sans">
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-8 pb-10">
+      <!-- Left Column: Brand & Socials -->
+      <div class="md:col-span-7 flex flex-col gap-4">
+        <div>
+          <h3 class="text-base font-bold text-adwaita-text">{name}</h3>
+          <p class="mt-2 text-xs leading-relaxed max-w-md text-adwaita-subtitle">
+            {desc}
+          </p>
+        </div>
+        
+        <!-- Social Icons -->
+        <div class="flex items-center gap-3">
+          <a
+            href="https://github.com/farhnkrnapratma"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-adwaita-border bg-adwaita-card text-adwaita-subtitle transition-colors hover:bg-adwaita-hover hover:text-adwaita-accent"
+            aria-label="GitHub (opens in a new tab)">
+            <i class="bi bi-github text-base leading-none" aria-hidden="true"></i>
+          </a>
+          <a
+            href="https://linkedin.com/in/farhnkrnapratma"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-adwaita-border bg-adwaita-card text-adwaita-subtitle transition-colors hover:bg-adwaita-hover hover:text-adwaita-accent"
+            aria-label="LinkedIn (opens in a new tab)">
+            <i class="bi bi-linkedin text-base leading-none" aria-hidden="true"></i>
+          </a>
+          <a
+            href="https://x.com/farhnkrnapratma"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-adwaita-border bg-adwaita-card text-adwaita-subtitle transition-colors hover:bg-adwaita-hover hover:text-adwaita-accent"
+            aria-label="X (opens in a new tab)">
+            <i class="bi bi-twitter-x text-base leading-none" aria-hidden="true"></i>
+          </a>
+          <a
+            href="https://instagram.com/farhnkrnapratma"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-adwaita-border bg-adwaita-card text-adwaita-subtitle transition-colors hover:bg-adwaita-hover hover:text-adwaita-accent"
+            aria-label="Instagram (opens in a new tab)">
+            <i class="bi bi-instagram text-base leading-none" aria-hidden="true"></i>
+          </a>
+        </div>
+      </div>
+
+      <!-- Right Column: Navigation Links -->
+      <div class="md:col-span-5 flex flex-col md:pt-8 pt-1">
+        <ul class="grid grid-cols-2 gap-x-4 gap-y-2">
+          {#each footerNavItems as item}
+            <li>
+              <a
+                href={item.url}
+                class="hover:text-adwaita-accent transition-colors font-medium text-left cursor-pointer">
+                {item.label}
+              </a>
+            </li>
+          {/each}
+        </ul>
+      </div>
+    </div>
+
+    <!-- Bottom Row: Divider & Copyright -->
+    <div class="border-t border-adwaita-border pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 select-none">
+      <p>&copy; {new Date().getFullYear()} {name}. All rights reserved</p>
+      <div class="flex items-center gap-4 text-[11px] text-adwaita-subtitle">
+        <a href="/atom.xml" class="hover:text-[#f26522] transition-colors inline-flex items-center gap-1">
+          <i class="bi bi-rss-fill" aria-hidden="true"></i> RSS Feed
+        </a>
+        <a href="/sitemap.xml" class="hover:text-adwaita-accent transition-colors">Sitemap</a>
+      </div>
+    </div>
   </footer>
 </main>
+
+<ConfirmationDialog
+  bind:isOpen={showYesFeedbackDialog}
+  title="Would you like to share this article?">
+  <div class="mt-4 flex flex-col gap-4">
+    <p class="text-xs text-adwaita-subtitle leading-normal text-left">
+      Great to hear this article helped you! Share it with your peers:
+    </p>
+    
+    <div class="grid grid-cols-2 gap-2 text-left">
+      <button
+        onclick={() => { copyToClipboard(); showYesFeedbackDialog = false; }}
+        class="flex h-9.5 cursor-pointer items-center justify-center gap-2 rounded-lg border border-adwaita-border bg-adwaita-card px-3 text-xs font-semibold text-adwaita-text transition-colors hover:bg-adwaita-hover hover:text-adwaita-accent">
+        <i class="bi {showCopySuccess ? 'bi-check2 text-palette-green' : 'bi-link-45deg'} text-sm" aria-hidden="true"></i>
+        <span>{showCopySuccess ? 'Copied!' : 'Copy Link'}</span>
+      </button>
+      
+      <a
+        href="https://twitter.com/intent/tweet?url={encodeURIComponent(page.url.href)}&text={encodeURIComponent(post.title)}"
+        target="_blank"
+        rel="noopener noreferrer"
+        onclick={() => (showYesFeedbackDialog = false)}
+        class="flex h-9.5 items-center justify-center gap-2 rounded-lg border border-adwaita-border bg-adwaita-card px-3 text-xs font-semibold text-adwaita-text transition-colors hover:bg-adwaita-hover hover:text-adwaita-accent">
+        <i class="bi bi-twitter-x text-sm" aria-hidden="true"></i>
+        <span>X</span>
+      </a>
+      
+      <a
+        href="https://www.facebook.com/sharer/sharer.php?u={encodeURIComponent(page.url.href)}"
+        target="_blank"
+        rel="noopener noreferrer"
+        onclick={() => (showYesFeedbackDialog = false)}
+        class="flex h-9.5 items-center justify-center gap-2 rounded-lg border border-adwaita-border bg-adwaita-card px-3 text-xs font-semibold text-adwaita-text transition-colors hover:bg-adwaita-hover hover:text-adwaita-accent">
+        <i class="bi bi-facebook text-sm" aria-hidden="true"></i>
+        <span>Facebook</span>
+      </a>
+      
+      <a
+        href="https://www.linkedin.com/sharing/share-offsite/?url={encodeURIComponent(page.url.href)}"
+        target="_blank"
+        rel="noopener noreferrer"
+        onclick={() => (showYesFeedbackDialog = false)}
+        class="flex h-9.5 items-center justify-center gap-2 rounded-lg border border-adwaita-border bg-adwaita-card px-3 text-xs font-semibold text-adwaita-text transition-colors hover:bg-adwaita-hover hover:text-adwaita-accent">
+        <i class="bi bi-linkedin text-sm" aria-hidden="true"></i>
+        <span>LinkedIn</span>
+      </a>
+    </div>
+
+    <div class="flex items-center justify-end gap-3 mt-2">
+      <button
+        type="button"
+        onclick={() => (showYesFeedbackDialog = false)}
+        class="inline-flex h-9 cursor-pointer items-center justify-center rounded-lg border border-adwaita-border bg-adwaita-card px-4 text-xs font-bold text-adwaita-text transition-colors hover:bg-adwaita-hover focus:outline-2 focus:outline-adwaita-accent">
+        Cancel
+      </button>
+    </div>
+  </div>
+</ConfirmationDialog>
+
+<ConfirmationDialog
+  bind:isOpen={showNoFeedbackDialog}
+  title="Would you like to send feedback?"
+  message="Tell us what we can improve. Your report helps make this article better for everyone."
+  confirmLabel="Send Feedback"
+  cancelLabel="Cancel"
+  isDestructive={false}
+  onConfirm={() => {
+    window.location.href = `/feedback?url=${encodeURIComponent(window.location.pathname)}`;
+  }} />

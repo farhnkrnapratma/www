@@ -35,11 +35,13 @@ export interface BlogPost {
   slug: string;
   published: boolean;
   storage_path: string;
+  banner_path?: string | null;
   created_at: string;
   excerpt?: string | null;
   content: string;
   read_time?: string;
   comment_count?: number;
+  views_count?: number;
 }
 
 const GITHUB_USERNAME = 'farhnkrnapratma';
@@ -123,10 +125,22 @@ export const load: PageServerLoad = async ({ fetch, platform }) => {
             console.error(err);
           }
 
+          let viewsCount = 0;
+          try {
+            const { count } = await supabase
+              .from('post_views')
+              .select('*', { count: 'exact', head: true })
+              .eq('post_id', post.id);
+            viewsCount = count ?? 0;
+          } catch (err) {
+            console.error(err);
+          }
+
           return {
             ...post,
             read_time: readTime,
             comment_count: commentCount,
+            views_count: viewsCount,
           };
         }),
       );

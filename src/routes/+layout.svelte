@@ -9,6 +9,7 @@
   type Theme = 'auto' | 'dark' | 'light';
 
   let showScrollTop = $state(false);
+  let scrollProgress = $state(0);
 
   const isPageWithFeedback = $derived(
     page.url.pathname === '/admin/login' || !page.url.pathname.startsWith('/admin'),
@@ -34,6 +35,14 @@
 
   function handleScroll() {
     showScrollTop = window.scrollY > 300;
+    
+    // Calculate scroll progress percentage
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    if (docHeight > 0) {
+      scrollProgress = (window.scrollY / docHeight) * 100;
+    } else {
+      scrollProgress = 0;
+    }
   }
 
   function scrollToTop() {
@@ -62,6 +71,9 @@
     window.addEventListener('storage', storageListener);
     window.addEventListener('scroll', handleScroll);
 
+    // Initial check on mount
+    handleScroll();
+
     return () => {
       media.removeEventListener('change', listener);
       window.removeEventListener('storage', storageListener);
@@ -69,6 +81,12 @@
     };
   });
 </script>
+
+<!-- Thin scroll progress indicator below navigation bar -->
+<div
+  class="fixed top-15 left-0 z-50 h-[2px] bg-adwaita-accent transition-all duration-75 ease-out select-none pointer-events-none"
+  style="width: {scrollProgress}%">
+</div>
 
 {@render children()}
 

@@ -3,6 +3,40 @@ import { error } from '@sveltejs/kit';
 import { marked } from 'marked';
 import type { PageServerLoad } from './$types';
 
+function injectHeadingIds(html: string): string {
+  let index = 0;
+  const usedIds = new Set<string>();
+  
+  return html.replace(/<h([23])([^>]*)>(.*?)<\/h\1>/gi, (match, level, attrs, content) => {
+    if (attrs.includes('id=')) {
+      const idMatch = attrs.match(/id="([^"]*)"/);
+      if (idMatch) {
+        usedIds.add(idMatch[1]);
+      }
+      return match;
+    }
+    
+    const text = content.replace(/<[^>]*>/g, '');
+    const baseId = text
+      ? text
+          .toLowerCase()
+          .replace(/[^a-z0-9\s-]/g, '')
+          .replace(/\s+/g, '-')
+          .replace(/-+/g, '-')
+          .trim()
+      : `heading-${index++}`;
+      
+    let id = baseId;
+    let counter = 1;
+    while (usedIds.has(id)) {
+      id = `${baseId}-${counter++}`;
+    }
+    usedIds.add(id);
+    
+    return `<h${level}${attrs} id="${id}">${content}</h${level}>`;
+  });
+}
+
 export const load: PageServerLoad = async ({ params, fetch }) => {
   const { slug } = params;
 
@@ -25,15 +59,37 @@ export const load: PageServerLoad = async ({ params, fetch }) => {
       throw new Error(`Failed to fetch markdown file: ${fileRes.statusText}`);
     }
     const markdown = await fileRes.text();
-    html = await marked.parse(markdown);
-
-    const words = markdown.trim().split(/\s+/).length;
-    const minutes = Math.max(1, Math.ceil(words / 200));
-    post.read_time = `${minutes} min${minutes > 1 ? 's' : ''} read`;
+    const rawHtml = await marked.parse(markdown);
+    html = injectHeadingIds(rawHtml);
   } catch (err) {
     console.error('Error fetching/rendering markdown file:', err);
     html = '<p class="text-red-500">Error: Could not render post content.</p>';
     post.read_time = '1 min read';
+  }
+
+  function decodeHtmlEntities(str: string): string {
+    return str
+      .replace(/&quot;/g, '"')
+      .replace(/&#39;/g, "'")
+      .replace(/&amp;/g, '&')
+      .replace(/&lt;/g, '<')
+      .replace(/&gt;/g, '>');
+  }
+
+  // Extract headings for Table of Contents
+  interface HeadingItem {
+    id: string;
+    text: string;
+    level: number;
+  }
+  const headings: HeadingItem[] = [];
+  const headingRegex = /<h([23])\s+[^>]*id="([^"]*)"[^>]*>(.*?)<\/h\1>/gi;
+  let match;
+  while ((match = headingRegex.exec(html)) !== null) {
+    const level = parseInt(match[1], 10);
+    const id = match[2];
+    const text = decodeHtmlEntities(match[3].replace(/<[^>]*>/g, '').trim()); // strip HTML tags & decode
+    headings.push({ id, text, level });
   }
 
   const { data: comments, error: commentsError } = await supabase
@@ -50,6 +106,7 @@ export const load: PageServerLoad = async ({ params, fetch }) => {
   return {
     post,
     html,
+    headings,
     comments: comments || [],
   };
 };

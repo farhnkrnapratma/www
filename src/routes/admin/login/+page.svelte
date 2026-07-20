@@ -120,7 +120,7 @@
 
       <form novalidate onsubmit={handleLogin} class="flex flex-col gap-2.5">
         <!-- Email -->
-        <div class="flex flex-col gap-1.5">
+        <div class="flex flex-col gap-1">
           <label for="login-email" class="text-xs font-bold text-adwaita-label select-none">
             Email <span aria-hidden="true" class="text-adwaita-error">*</span
             ><span class="sr-only">(required)</span>
@@ -128,7 +128,8 @@
           <input
             type="email"
             id="login-email"
-            placeholder="Enter your email address"
+            placeholder="Enter your email"
+            autocomplete="username"
             bind:value={email}
             oninput={() => { errors.email = ''; valid.email = false; validateEmailField(); }}
             aria-required="true"
@@ -137,22 +138,23 @@
             class="w-full rounded-lg border border-adwaita-border bg-adwaita-bg px-3 py-2 text-sm text-adwaita-text transition-colors"
             class:border-adwaita-error={errors.email}
             class:input-valid={valid.email} />
-          <!-- Fixed-height feedback area — never shifts layout -->
-          <div id="login-email-fb" aria-live="polite" class="h-4 text-xs font-medium leading-none">
-            {#if errors.email}
-              <span class="flex items-center gap-1 text-adwaita-error">
-                <i class="bi bi-exclamation-circle-fill"></i>{errors.email}
-              </span>
-            {:else if valid.email}
-              <span class="flex items-center gap-1 text-adwaita-accent">
-                <i class="bi bi-check-circle-fill"></i>Looks good
-              </span>
-            {/if}
-          </div>
+          {#if errors.email || valid.email}
+            <div id="login-email-fb" aria-live="polite" class="mt-1 text-xs font-medium leading-none">
+              {#if errors.email}
+                <span class="flex items-center gap-1 text-adwaita-error">
+                  <i class="bi bi-exclamation-circle-fill"></i>{errors.email}
+                </span>
+              {:else if valid.email}
+                <span class="flex items-center gap-1 text-adwaita-accent">
+                  <i class="bi bi-check-circle-fill"></i>Looks good
+                </span>
+              {/if}
+            </div>
+          {/if}
         </div>
 
         <!-- Password -->
-        <div class="flex flex-col gap-1.5">
+        <div class="flex flex-col gap-1">
           <label for="login-pass" class="text-xs font-bold text-adwaita-label select-none">
             Password <span aria-hidden="true" class="text-adwaita-error">*</span
             ><span class="sr-only">(required)</span>
@@ -162,6 +164,7 @@
               type={showPassword ? 'text' : 'password'}
               id="login-pass"
               placeholder="••••••••"
+              autocomplete="current-password"
               bind:value={password}
               oninput={() => { errors.password = ''; valid.password = false; validatePasswordField(); }}
               aria-required="true"
@@ -180,18 +183,19 @@
               </span>
             </button>
           </div>
-          <!-- Fixed-height feedback area -->
-          <div id="login-pass-fb" aria-live="polite" class="h-4 text-xs font-medium leading-none">
-            {#if errors.password}
-              <span class="flex items-center gap-1 text-adwaita-error">
-                <i class="bi bi-exclamation-circle-fill"></i>{errors.password}
-              </span>
-            {:else if valid.password}
-              <span class="flex items-center gap-1 text-adwaita-accent">
-                <i class="bi bi-check-circle-fill"></i>Looks good
-              </span>
-            {/if}
-          </div>
+          {#if errors.password || valid.password}
+            <div id="login-pass-fb" aria-live="polite" class="mt-1 text-xs font-medium leading-none">
+              {#if errors.password}
+                <span class="flex items-center gap-1 text-adwaita-error">
+                  <i class="bi bi-exclamation-circle-fill"></i>{errors.password}
+                </span>
+              {:else if valid.password}
+                <span class="flex items-center gap-1 text-adwaita-accent">
+                  <i class="bi bi-check-circle-fill"></i>Looks good
+                </span>
+              {/if}
+            </div>
+          {/if}
         </div>
 
         <button

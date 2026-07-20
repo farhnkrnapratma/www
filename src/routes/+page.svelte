@@ -4,6 +4,8 @@
   import { onMount } from 'svelte';
   import type { BlogPost } from './+page.server';
   import { isNameReserved } from '$lib/nameValidator';
+  import { autoResize, ConfirmationDialog, SpotlightSearch } from '$lib';
+  import { supabase } from '$lib/supabase';
 
   let { data } = $props();
 
@@ -40,8 +42,8 @@
   const name = 'Farhan Kurnia Pratama';
   const username = 'farhnkrnapratma';
   const desc =
-    'Security-focused Software Engineer with expertise in Linux/Unix and FOSS, dedicated to building reliable, maintainable, and privacy-centric systems.';
-  const headline = 'Linux/Unix, FOSS, and Cybersecurity';
+    'Security-focused Software Engineer with expertise in Linux/Unix, AI, and Open-Source Software, dedicated to building reliable, maintainable, and privacy-centric systems.';
+  const headline = 'Linux/Unix, AI, Open-Source Software, and Cybersecurity.';
   const siteUrl = 'https://fkp.my.id/';
 
   const navItems: NavItem[] = [
@@ -61,6 +63,12 @@
       month: 'long',
       day: 'numeric',
     });
+  }
+
+  function getBannerUrl(bannerPath: string | null | undefined): string | null {
+    if (!bannerPath) return null;
+    const { data: res } = supabase.storage.from('blog-posts').getPublicUrl(bannerPath);
+    return res.publicUrl;
   }
 
   const contacts: Contact[] = [
@@ -194,6 +202,28 @@
   };
 
   const projects = $derived(data.projects);
+  let activeProjectTag = $state<string | null>(null);
+
+  const projectTags = $derived.by(() => {
+    const counts = new Map<string, number>();
+    data.projects.forEach(p => {
+      p.tags.forEach(t => {
+        const normalized = t.toLowerCase();
+        counts.set(normalized, (counts.get(normalized) || 0) + 1);
+      });
+    });
+    return Array.from(counts.entries())
+      .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+      .slice(0, 10)
+      .map(entry => entry[0]);
+  });
+
+  const filteredProjects = $derived.by(() => {
+    if (!activeProjectTag) return data.projects;
+    return data.projects.filter(p => 
+      p.tags.some(t => t.toLowerCase() === activeProjectTag)
+    );
+  });
 
   type Theme = 'auto' | 'dark' | 'light';
 
@@ -206,6 +236,8 @@
   let formMessage = $state('');
   let formErrors = $state({ name: '', email: '', message: '' });
   let formValid = $state({ name: false, email: false, message: false });
+  let showSendMessageDialog = $state(false);
+  let contactFormElement = $state<HTMLFormElement | null>(null);
 
   // Debounce helper – returns a function that delays cb by ms after last call
   function debounce<T extends unknown[]>(cb: (...args: T) => void, ms: number) {
@@ -285,12 +317,20 @@
     if (formErrors.email) formValid.email = false;
     if (formErrors.message) formValid.message = false;
 
-    if (formErrors.name || formErrors.email || formErrors.message) {
-      e.preventDefault();
-    } else {
+    // Always block the default sync submit so we can show the confirmation dialog
+    e.preventDefault();
+
+    if (!formErrors.name && !formErrors.email && !formErrors.message) {
       formName = sanitizeInput(formName.trim());
       formEmail = sanitizeInput(formEmail.trim());
       formMessage = sanitizeInput(formMessage.trim());
+      showSendMessageDialog = true;
+    }
+  }
+
+  function executeSendMessage() {
+    if (contactFormElement) {
+      contactFormElement.submit();
     }
   }
 
@@ -587,6 +627,9 @@
       {/if}
     </div>
 
+    <!-- Spotlight Search trigger button (hidden on mobile, always visible on md+) -->
+    <SpotlightSearch projects={data.projects} />
+
     <button
       class="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full text-xl transition-colors hover:bg-adwaita-hover md:hidden"
       onclick={() => (menuOpen = !menuOpen)}
@@ -614,7 +657,7 @@
           alt="Farhan Kurnia Pratama"
           class="relative z-10 mb-6 h-28 w-28 rounded-full border-2 border-adwaita-accent object-cover object-top shadow-[0_0_20px_rgba(120,101,217,0.25)] transition-all duration-300 dark:shadow-[0_0_25px_rgba(120,101,217,0.35)]" />
         <h1
-          class="relative z-10 text-3xl font-bold tracking-tight text-adwaita-text md:text-4xl md:whitespace-nowrap lg:text-5xl">
+          class="relative z-10 text-3xl font-bold tracking-tight text-adwaita-text whitespace-nowrap md:text-4xl lg:text-5xl">
           {name}
         </h1>
         <p class="relative z-10 mt-3 mb-2 text-lg font-medium text-adwaita-subtitle">{headline}</p>
@@ -722,21 +765,47 @@
             {#each posts.slice(0, 2) as post (post.title)}
               <a
                 href="/blog/{post.slug}"
-                class="action-row group flex w-full cursor-pointer items-center justify-between text-left">
-                <div class="flex flex-col gap-1 pr-6 font-sans">
-                  <p class="text-xs font-semibold text-adwaita-subtitle select-none">
-                    {getPostDate(post)} &middot; {post.read_time} &middot; {post.comment_count || 0}
-                    {post.comment_count === 1 ? 'comment' : 'comments'}
-                  </p>
+                class="action-row group flex w-full flex-col sm:flex-row cursor-pointer gap-4 items-stretch sm:items-center text-left">
+                
+                <!-- Banner Container -->
+                {#if post.banner_path}
+                  <div class="w-full sm:w-40 md:w-48 aspect-[2/1] rounded-lg overflow-hidden border border-adwaita-border bg-adwaita-hover/20 shrink-0 select-none">
+                    <img
+                      src={getBannerUrl(post.banner_path)}
+                      alt=""
+                      class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-103" />
+                  </div>
+                {:else}
+                  <div class="w-full sm:w-40 md:w-48 aspect-[2/1] rounded-lg border border-adwaita-border bg-gradient-to-br from-adwaita-accent/15 to-palette-purple/15 flex items-center justify-center shrink-0 select-none">
+                    <i class="bi bi-journal-text text-xl text-adwaita-accent/50"></i>
+                  </div>
+                {/if}
+
+                <!-- Blog Information -->
+                <div class="flex-1 flex flex-col gap-1 font-sans">
+                  <div class="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs font-semibold text-adwaita-subtitle select-none font-sans">
+                    <span class="inline-flex items-center gap-1"><i class="bi bi-calendar3 text-[11px]" aria-hidden="true"></i> {getPostDate(post)}</span>
+                    <span class="inline-flex items-center gap-1"><i class="bi bi-clock text-[11px]" aria-hidden="true"></i> {post.read_time}</span>
+                    <span class="inline-flex items-center gap-1"><i class="bi bi-chat-left-text text-[11px]" aria-hidden="true"></i> {post.comment_count || 0}</span>
+                    {#if post.views_count !== undefined}
+                      <span class="inline-flex items-center gap-1"><i class="bi bi-eye text-[11px]" aria-hidden="true"></i> {post.views_count}</span>
+                    {/if}
+                  </div>
                   <h4
-                    class="text-base leading-tight font-bold text-adwaita-text transition-colors group-hover:text-adwaita-accent">
+                    class="text-base leading-snug font-bold text-adwaita-text transition-colors group-hover:text-adwaita-accent">
                     {post.title}
                   </h4>
-                  <p class="mt-1.5 line-clamp-2 text-sm text-adwaita-subtitle">{post.excerpt}</p>
+                  {#if post.excerpt}
+                    <p class="mt-1 line-clamp-2 text-xs text-adwaita-subtitle leading-normal">{post.excerpt}</p>
+                  {/if}
                 </div>
-                <i
-                  class="bi bi-chevron-right text-sm text-zinc-400 transition-all group-hover:translate-x-0.5 group-hover:text-adwaita-accent"
-                  aria-hidden="true"></i>
+
+                <!-- Chevron Indicator -->
+                <div class="hidden sm:flex items-center shrink-0 ml-2">
+                  <i
+                    class="bi bi-chevron-right text-sm text-zinc-400 transition-all group-hover:translate-x-0.5 group-hover:text-adwaita-accent"
+                    aria-hidden="true"></i>
+                </div>
               </a>
             {/each}
             <button
@@ -780,11 +849,12 @@
       </div>
 
       <form
+        bind:this={contactFormElement}
         novalidate
         action="https://formsubmit.co/contact@fkp.my.id"
         method="POST"
         onsubmit={validateForm}
-        class="flex w-full flex-col gap-2.5 rounded-2xl border border-adwaita-border bg-adwaita-card/45 p-5 text-left shadow-xs backdrop-blur-lg transition-colors duration-300"
+        class="flex w-full flex-col gap-2 rounded-2xl border border-adwaita-border bg-adwaita-card/45 p-5 text-left shadow-xs backdrop-blur-lg transition-colors duration-300"
         autocomplete="off">
         <input
           type="hidden"
@@ -810,10 +880,10 @@
           </p>
         </div>
 
-        <div class="flex flex-col gap-2 sm:flex-row sm:items-start">
+        <div class="flex flex-col gap-1">
           <label
             for="form-name"
-            class="w-20 shrink-0 pt-1.5 text-xs font-bold text-adwaita-label select-none">
+            class="text-xs font-bold text-adwaita-label select-none">
             Name <span
               aria-hidden="true"
               class="text-adwaita-error">*</span
@@ -825,6 +895,7 @@
               id="form-name"
               name="name"
               aria-required="true"
+              autocomplete="name"
               aria-invalid={!!formErrors.name}
               aria-describedby="form-name-fb"
               placeholder="Enter your name"
@@ -833,7 +904,7 @@
               class="w-full rounded-lg border border-adwaita-border bg-adwaita-bg px-3 py-1.5 text-sm text-adwaita-text transition-colors placeholder:text-adwaita-label/70"
               class:border-adwaita-error={formErrors.name}
               class:input-valid={formValid.name} />
-            <div id="form-name-fb" aria-live="polite" class="mt-1 h-4 text-xs font-medium leading-none">
+            <div id="form-name-fb" aria-live="polite" class="mt-0.5 h-4 text-[11px] font-medium leading-none">
               {#if formErrors.name}
                 <span role="alert" class="flex items-center gap-1 text-adwaita-error">
                   <i class="bi bi-exclamation-circle-fill"></i>{formErrors.name}
@@ -847,10 +918,10 @@
           </div>
         </div>
 
-        <div class="flex flex-col gap-2 sm:flex-row sm:items-start">
+        <div class="flex flex-col gap-1">
           <label
             for="form-email"
-            class="w-20 shrink-0 pt-1.5 text-xs font-bold text-adwaita-label select-none">
+            class="text-xs font-bold text-adwaita-label select-none">
             Email <span
               aria-hidden="true"
               class="text-adwaita-error">*</span
@@ -871,7 +942,7 @@
               class="w-full rounded-lg border border-adwaita-border bg-adwaita-bg px-3 py-1.5 text-sm text-adwaita-text transition-colors placeholder:text-adwaita-label/70"
               class:border-adwaita-error={formErrors.email}
               class:input-valid={formValid.email} />
-            <div id="form-email-fb" aria-live="polite" class="mt-1 h-4 text-xs font-medium leading-none">
+            <div id="form-email-fb" aria-live="polite" class="mt-0.5 h-4 text-[11px] font-medium leading-none">
               {#if formErrors.email}
                 <span role="alert" class="flex items-center gap-1 text-adwaita-error">
                   <i class="bi bi-exclamation-circle-fill"></i>{formErrors.email}
@@ -885,7 +956,7 @@
           </div>
         </div>
 
-        <div class="flex flex-col gap-2">
+        <div class="flex flex-col gap-1">
           <label
             for="form-message"
             class="text-xs font-bold text-adwaita-label select-none">
@@ -896,6 +967,7 @@
           </label>
           <div class="relative w-full">
             <textarea
+              use:autoResize={formMessage}
               id="form-message"
               name="message"
               rows="4"
@@ -906,7 +978,7 @@
               aria-required="true"
               aria-invalid={!!formErrors.message}
               aria-describedby="form-msg-count form-message-fb"
-              class="no-scrollbar w-full resize-none rounded-lg border border-adwaita-border bg-adwaita-bg px-3 py-1.5 pr-16 text-sm text-adwaita-text transition-colors placeholder:text-adwaita-label/70"
+              class="no-scrollbar w-full resize-none overflow-hidden rounded-lg border border-adwaita-border bg-adwaita-bg px-3 py-1.5 pr-16 text-sm text-adwaita-text transition-colors placeholder:text-adwaita-label/70"
               class:border-adwaita-error={formErrors.message}
               class:input-valid={formValid.message}></textarea>
             <div
@@ -916,7 +988,7 @@
               {formMessage.length}/1000
             </div>
           </div>
-          <div id="form-message-fb" aria-live="polite" class="mt-0.5 h-4 text-xs font-medium leading-none">
+          <div id="form-message-fb" aria-live="polite" class="mt-0.5 h-4 text-[11px] font-medium leading-none">
             {#if formErrors.message}
               <span role="alert" class="flex items-center gap-1 text-adwaita-error">
                 <i class="bi bi-exclamation-circle-fill"></i>{formErrors.message}
@@ -1017,11 +1089,24 @@
   {#if activeSection === 'blogs'}
     <section
       class="relative z-10 mx-auto w-full px-6 pt-10 pb-24 md:w-[80%] md:max-w-none md:pt-14 md:pb-28 lg:w-[50%]">
-      <h1 class="text-3xl font-bold tracking-tight text-adwaita-text">Blogs</h1>
-      <p class="mt-2 text-sm text-adwaita-subtitle">
-        Thoughts on Linux, security, and open source.
-      </p>
-      <div class="boxed-list mt-10">
+      <div class="flex items-end justify-between gap-4">
+        <div>
+          <h1 class="text-3xl font-bold tracking-tight text-adwaita-text">Blogs</h1>
+          <p class="mt-2 text-sm text-adwaita-subtitle">
+            Thoughts on Linux, security, and open source.
+          </p>
+        </div>
+        <a
+          href="/atom.xml"
+          target="_blank"
+          rel="noopener noreferrer"
+          title="Subscribe via Atom/RSS feed"
+          class="mb-0.5 flex shrink-0 h-9 items-center justify-center gap-1.5 rounded-lg border border-adwaita-border bg-adwaita-card px-3 text-xs font-semibold text-adwaita-subtitle transition-colors hover:bg-adwaita-hover hover:text-[#f26522] select-none">
+          <i class="bi bi-rss-fill text-sm leading-none flex items-center justify-center" aria-hidden="true"></i>
+          <span class="hidden sm:inline leading-none flex items-center">Feed</span>
+        </a>
+      </div>
+      <div class="boxed-list mt-8">
         {#if posts.length === 0}
           <div class="p-8 text-center text-adwaita-subtitle">
             <i
@@ -1033,23 +1118,47 @@
           {#each posts as post (post.id)}
             <a
               href="/blog/{post.slug}"
-              class="action-row group flex w-full cursor-pointer items-center justify-between text-left">
-              <div class="flex flex-col gap-1 pr-6 font-sans">
-                <p class="text-xs font-semibold text-adwaita-subtitle select-none">
-                  {getPostDate(post)} &middot; {post.read_time} &middot; {post.comment_count || 0}
-                  {post.comment_count === 1 ? 'comment' : 'comments'}
-                </p>
+              class="action-row group flex w-full flex-col sm:flex-row cursor-pointer gap-4 items-stretch sm:items-center text-left">
+              
+              <!-- Banner Container -->
+              {#if post.banner_path}
+                <div class="w-full sm:w-40 md:w-48 aspect-[2/1] rounded-lg overflow-hidden border border-adwaita-border bg-adwaita-hover/20 shrink-0 select-none">
+                  <img
+                    src={getBannerUrl(post.banner_path)}
+                    alt=""
+                    class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-103" />
+                </div>
+              {:else}
+                <div class="w-full sm:w-40 md:w-48 aspect-[2/1] rounded-lg border border-adwaita-border bg-gradient-to-br from-adwaita-accent/15 to-palette-purple/15 flex items-center justify-center shrink-0 select-none">
+                  <i class="bi bi-journal-text text-xl text-adwaita-accent/50"></i>
+                </div>
+              {/if}
+
+              <!-- Blog Information -->
+              <div class="flex-1 flex flex-col gap-1 font-sans">
+                 <div class="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs font-semibold text-adwaita-subtitle select-none font-sans">
+                    <span class="inline-flex items-center gap-1"><i class="bi bi-calendar3 text-[11px]" aria-hidden="true"></i> {getPostDate(post)}</span>
+                    <span class="inline-flex items-center gap-1"><i class="bi bi-clock text-[11px]" aria-hidden="true"></i> {post.read_time}</span>
+                    <span class="inline-flex items-center gap-1"><i class="bi bi-chat-left-text text-[11px]" aria-hidden="true"></i> {post.comment_count || 0}</span>
+                    {#if post.views_count !== undefined}
+                      <span class="inline-flex items-center gap-1"><i class="bi bi-eye text-[11px]" aria-hidden="true"></i> {post.views_count}</span>
+                    {/if}
+                  </div>
                 <h2
-                  class="text-xl leading-snug font-bold text-adwaita-text transition-colors group-hover:text-adwaita-accent">
+                  class="text-lg leading-snug font-bold text-adwaita-text transition-colors group-hover:text-adwaita-accent">
                   {post.title}
                 </h2>
                 {#if post.excerpt}
-                  <p class="mt-1.5 line-clamp-2 text-sm text-adwaita-subtitle">{post.excerpt}</p>
+                  <p class="mt-1 line-clamp-2 text-xs text-adwaita-subtitle leading-normal">{post.excerpt}</p>
                 {/if}
               </div>
-              <i
-                class="bi bi-chevron-right text-sm text-zinc-400 transition-all group-hover:translate-x-0.5 group-hover:text-adwaita-accent"
-                aria-hidden="true"></i>
+
+              <!-- Chevron Indicator -->
+              <div class="hidden sm:flex items-center shrink-0 ml-2">
+                <i
+                  class="bi bi-chevron-right text-sm text-zinc-400 transition-all group-hover:translate-x-0.5 group-hover:text-adwaita-accent"
+                  aria-hidden="true"></i>
+              </div>
             </a>
           {/each}
         {/if}
@@ -1062,8 +1171,37 @@
       class="relative z-10 mx-auto w-full px-6 pt-10 pb-24 md:w-[80%] md:max-w-none md:pt-14 md:pb-28 lg:w-[50%]">
       <h1 class="text-3xl font-bold tracking-tight text-adwaita-text">Projects</h1>
       <p class="mt-2 text-sm text-adwaita-subtitle">Open source work on GitHub.</p>
-      <div class="boxed-list mt-10">
-        {#each projects as project (project.name)}
+
+      <!-- Tag Filters -->
+      {#if projectTags.length > 0}
+        <div class="mt-6 flex flex-wrap gap-2 select-none">
+          <button
+            type="button"
+            onclick={() => activeProjectTag = null}
+            class="rounded-full px-3 py-1 text-xs font-semibold transition-all cursor-pointer focus:outline-2 focus:outline-adwaita-accent {
+              activeProjectTag === null
+                ? 'bg-adwaita-accent text-white shadow-xs'
+                : 'bg-adwaita-border/40 text-adwaita-subtitle hover:bg-adwaita-hover hover:text-adwaita-text'
+            }">
+            All
+          </button>
+          {#each projectTags as tag}
+            <button
+              type="button"
+              onclick={() => activeProjectTag = activeProjectTag === tag ? null : tag}
+              class="rounded-full px-3 py-1 text-xs font-semibold transition-all cursor-pointer focus:outline-2 focus:outline-adwaita-accent {
+                activeProjectTag === tag
+                  ? 'bg-adwaita-accent text-white shadow-xs'
+                  : 'bg-adwaita-border/40 text-adwaita-subtitle hover:bg-adwaita-hover hover:text-adwaita-text'
+              }">
+              #{tag}
+            </button>
+          {/each}
+        </div>
+      {/if}
+
+      <div class="boxed-list mt-8">
+        {#each filteredProjects as project (project.name)}
           <div class="action-row group relative flex flex-col items-stretch gap-2 text-left">
             <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
               <div class="flex items-center gap-2">
@@ -1108,9 +1246,14 @@
             <p class="text-sm leading-relaxed text-adwaita-subtitle">{project.desc}</p>
             <div class="relative z-20 mt-0.5 flex flex-wrap items-center gap-1.5">
               {#each project.tags as tag (tag)}
-                <span
-                  class="rounded bg-adwaita-border/40 px-2 py-0.5 text-[11px] font-medium text-adwaita-subtitle"
-                  >{tag}</span>
+                <button
+                  type="button"
+                  onclick={() => activeProjectTag = activeProjectTag === tag.toLowerCase() ? null : tag.toLowerCase()}
+                  class="rounded bg-adwaita-border/40 hover:bg-adwaita-hover hover:text-adwaita-accent px-2 py-0.5 text-[11px] font-medium transition-colors cursor-pointer {
+                    activeProjectTag === tag.toLowerCase() ? 'text-adwaita-accent font-semibold' : 'text-adwaita-subtitle'
+                  }">
+                  #{tag}
+                </button>
               {/each}
             </div>
           </div>
@@ -1127,7 +1270,90 @@
   {/if}
 
   <footer
-    class="relative z-10 mx-auto mt-auto w-full border-t border-adwaita-border px-6 py-12 text-center text-xs text-adwaita-subtitle/75 md:w-[80%] md:max-w-none lg:w-[50%]">
-    <p>&copy; {new Date().getFullYear()} {name}. All rights reserved</p>
+    class="relative z-10 mx-auto mt-auto w-full border-t border-adwaita-border px-6 pt-16 pb-12 text-xs text-adwaita-subtitle/75 md:w-[80%] lg:w-[50%] font-sans">
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-8 pb-10">
+      <!-- Left Column: Brand & Socials -->
+      <div class="md:col-span-7 flex flex-col gap-4">
+        <div>
+          <h3 class="text-base font-bold text-adwaita-text">{name}</h3>
+          <p class="mt-2 text-xs leading-relaxed max-w-md text-adwaita-subtitle">
+            {desc}
+          </p>
+        </div>
+        
+        <!-- Social Icons -->
+        <div class="flex items-center gap-3">
+          <a
+            href="https://github.com/farhnkrnapratma"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-adwaita-border bg-adwaita-card text-adwaita-subtitle transition-colors hover:bg-adwaita-hover hover:text-adwaita-accent"
+            aria-label="GitHub (opens in a new tab)">
+            <i class="bi bi-github text-base leading-none" aria-hidden="true"></i>
+          </a>
+          <a
+            href="https://linkedin.com/in/farhnkrnapratma"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-adwaita-border bg-adwaita-card text-adwaita-subtitle transition-colors hover:bg-adwaita-hover hover:text-adwaita-accent"
+            aria-label="LinkedIn (opens in a new tab)">
+            <i class="bi bi-linkedin text-base leading-none" aria-hidden="true"></i>
+          </a>
+          <a
+            href="https://x.com/farhnkrnapratma"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-adwaita-border bg-adwaita-card text-adwaita-subtitle transition-colors hover:bg-adwaita-hover hover:text-adwaita-accent"
+            aria-label="X (opens in a new tab)">
+            <i class="bi bi-twitter-x text-base leading-none" aria-hidden="true"></i>
+          </a>
+          <a
+            href="https://instagram.com/farhnkrnapratma"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-adwaita-border bg-adwaita-card text-adwaita-subtitle transition-colors hover:bg-adwaita-hover hover:text-adwaita-accent"
+            aria-label="Instagram (opens in a new tab)">
+            <i class="bi bi-instagram text-base leading-none" aria-hidden="true"></i>
+          </a>
+        </div>
+      </div>
+
+      <!-- Right Column: Navigation Links -->
+      <div class="md:col-span-5 flex flex-col md:pt-8 pt-1">
+        <ul class="grid grid-cols-2 gap-x-4 gap-y-2">
+          {#each navItems as item (item.id)}
+            <li>
+              <button
+                onclick={() => {
+                  navigate(item.id);
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
+                class="hover:text-adwaita-accent transition-colors font-medium text-left cursor-pointer">
+                {item.label}
+              </button>
+            </li>
+          {/each}
+        </ul>
+      </div>
+    </div>
+
+    <!-- Bottom Row: Divider & Copyright -->
+    <div class="border-t border-adwaita-border pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 select-none">
+      <p>&copy; {new Date().getFullYear()} {name}. All rights reserved</p>
+      <div class="flex items-center gap-4 text-[11px] text-adwaita-subtitle">
+        <a href="/atom.xml" class="hover:text-[#f26522] transition-colors inline-flex items-center gap-1">
+          <i class="bi bi-rss-fill" aria-hidden="true"></i> RSS Feed
+        </a>
+        <a href="/sitemap.xml" class="hover:text-adwaita-accent transition-colors">Sitemap</a>
+      </div>
+    </div>
   </footer>
 </main>
+
+<ConfirmationDialog
+  bind:isOpen={showSendMessageDialog}
+  title="Send Message?"
+  message="Are you sure you want to send this message?"
+  confirmLabel="Send"
+  isDestructive={false}
+  onConfirm={executeSendMessage} />

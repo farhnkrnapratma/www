@@ -2,6 +2,7 @@
   import { supabase } from '$lib/supabase';
   import { onMount } from 'svelte';
   import { SvelteMap, SvelteSet } from 'svelte/reactivity';
+  import { ConfirmationDialog } from '$lib';
 
   interface AdminPost {
     id: string;
@@ -16,6 +17,12 @@
   let posts = $state<AdminPost[]>([]);
   let isLoggingOut = $state(false);
   let openActionMenuId = $state<string | null>(null);
+
+  // Deletion dialog states
+  let showDeletePostDialog = $state(false);
+  let postToDelete = $state<AdminPost | null>(null);
+  let showDeleteCommentDialog = $state(false);
+  let commentIdToDelete = $state<string | null>(null);
 
   interface AdminComment {
     id: string;
@@ -119,18 +126,42 @@
     }
   }
 
-  onMount(async () => {
+  const IDLE_TIMEOUT_MS = 30 * 60 * 1000; // 30 minutes
+  let idleTimer: ReturnType<typeof setTimeout>;
+
+  function resetIdleTimer() {
+    clearTimeout(idleTimer);
+    idleTimer = setTimeout(async () => {
+      await supabase.auth.signOut();
+      window.location.href = '/admin/login';
+    }, IDLE_TIMEOUT_MS);
+  }
+
+  const ACTIVITY_EVENTS = ['mousemove', 'mousedown', 'keydown', 'scroll', 'touchstart'] as const;
+
+  onMount(() => {
     const saved = localStorage.getItem('theme') as Theme;
     theme = saved || 'auto';
 
-    const { data } = await supabase.auth.getSession();
-    if (!data.session) {
-      window.location.href = '/admin/login';
-      return;
-    }
+    (async () => {
+      const { data } = await supabase.auth.getSession();
+      if (!data.session) {
+        window.location.href = '/admin/login';
+        return;
+      }
 
-    await Promise.all([fetchPosts(), fetchComments()]);
-    isLoading = false;
+      await Promise.all([fetchPosts(), fetchComments()]);
+      isLoading = false;
+    })();
+
+    // Start idle timer
+    resetIdleTimer();
+    ACTIVITY_EVENTS.forEach((evt) => window.addEventListener(evt, resetIdleTimer, { passive: true }));
+
+    return () => {
+      clearTimeout(idleTimer);
+      ACTIVITY_EVENTS.forEach((evt) => window.removeEventListener(evt, resetIdleTimer));
+    };
   });
 
   async function fetchPosts() {
@@ -175,8 +206,15 @@
     }
   }
 
-  async function deletePost(post: AdminPost) {
-    if (!confirm(`Are you sure you want to delete "${post.title}"?`)) return;
+  function confirmDeletePost(post: AdminPost) {
+    postToDelete = post;
+    showDeletePostDialog = true;
+  }
+
+  async function executeDeletePost() {
+    if (!postToDelete) return;
+    const post = postToDelete;
+    postToDelete = null;
 
     const { error: storageError } = await supabase.storage
       .from('blog-posts')
@@ -196,8 +234,15 @@
     }
   }
 
-  async function deleteComment(id: string) {
-    if (!confirm('Are you sure you want to delete this comment?')) return;
+  function confirmDeleteComment(id: string) {
+    commentIdToDelete = id;
+    showDeleteCommentDialog = true;
+  }
+
+  async function executeDeleteComment() {
+    if (!commentIdToDelete) return;
+    const id = commentIdToDelete;
+    commentIdToDelete = null;
 
     const { error } = await supabase.from('comments').delete().eq('id', id);
 
@@ -537,7 +582,7 @@
                           type="button"
                           onclick={() => {
                             openActionMenuId = null;
-                            deletePost(post);
+                            confirmDeletePost(post);
                           }}
                           class="flex w-full cursor-pointer items-center gap-2.5 px-4 py-2.5 text-left text-xs font-bold text-palette-coral transition-colors hover:bg-palette-coral/10">
                           <i
@@ -619,7 +664,7 @@
                             {/if}
                             <button
                               type="button"
-                              onclick={() => deleteComment(comment.id)}
+                              onclick={() => confirmDeleteComment(comment.id)}
                               class="ml-auto inline-flex h-6 cursor-pointer items-center rounded border border-palette-coral/20 bg-palette-coral/10 px-2 py-0.5 font-bold text-palette-coral transition-colors hover:bg-palette-coral/20">
                               Delete
                             </button>
@@ -717,3 +762,19 @@
     {/if}
   </section>
 </main>
+
+<ConfirmationDialog
+  bind:isOpen={showDeletePostDialog}
+  title="Delete Blog Post?"
+  message={'Are you sure you want to permanently delete "' + (postToDelete?.title || '') + '"? This action is irreversible.'}
+  confirmLabel="Delete"
+  isDestructive={true}
+  onConfirm={executeDeletePost} />
+
+<ConfirmationDialog
+  bind:isOpen={showDeleteCommentDialog}
+  title="Delete Comment?"
+  message="Are you sure you want to permanently delete this comment and all its replies? This action is irreversible."
+  confirmLabel="Delete"
+  isDestructive={true}
+  onConfirm={executeDeleteComment} />
