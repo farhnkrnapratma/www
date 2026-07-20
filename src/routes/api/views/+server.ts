@@ -9,21 +9,18 @@ export const POST: RequestHandler = async ({ request, getClientAddress }) => {
       return json({ error: 'Invalid post_id' }, { status: 400 });
     }
 
-    // Hash the client IP to preserve privacy
     const ip = getClientAddress();
     const ipHashBuffer = await crypto.subtle.digest(
       'SHA-256',
       new TextEncoder().encode(ip + (process.env.IP_SALT ?? 'fkp-views-salt')),
     );
     const ipHash = Array.from(new Uint8Array(ipHashBuffer))
-      .map((b) => b.toString(16).padStart(2, '0'))
+      .map(b => b.toString(16).padStart(2, '0'))
       .join('');
 
-    // Date key for deduplication (one view per IP per post per day)
     const today = new Date().toISOString().split('T')[0];
     const dailyKey = `${today}_${ipHash}`;
 
-    // Check if already viewed today
     const { data: existing } = await supabase
       .from('post_views')
       .select('id')
@@ -35,7 +32,6 @@ export const POST: RequestHandler = async ({ request, getClientAddress }) => {
       return json({ counted: false });
     }
 
-    // Record the view
     await supabase.from('post_views').insert({
       post_id,
       ip_hash: dailyKey,

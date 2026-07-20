@@ -33,9 +33,7 @@ export default defineConfig(
   },
   {
     rules: {
-      'svelte/no-at-html-tags': 'off', // Needed to render HTML/Markdown content from the blog posts
-      // Disabled because the website is deployed at the domain root (no subdirectory base path),
-      // making base-path resolution via paths.base boilerplate code unnecessary for simple static links.
+      'svelte/no-at-html-tags': 'off',
       'svelte/no-navigation-without-resolve': 'off',
     },
   },

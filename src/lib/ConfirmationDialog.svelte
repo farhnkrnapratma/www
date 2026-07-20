@@ -1,6 +1,4 @@
 <script lang="ts">
-  import { onDestroy, onMount } from 'svelte';
-
   interface Props {
     isOpen: boolean;
     title: string;
@@ -22,7 +20,7 @@
     isDestructive = false,
     onConfirm = () => {},
     onCancel = () => {},
-    children
+    children,
   }: Props = $props();
 
   let dialogElement = $state<HTMLElement | null>(null);
@@ -44,7 +42,6 @@
     }
   }
 
-  // Handle global keyboard events (Escape to close, Enter to confirm unless destructive)
   function handleKeyDown(e: KeyboardEvent) {
     if (!isOpen) return;
 
@@ -52,7 +49,6 @@
       e.preventDefault();
       close();
     } else if (e.key === 'Enter') {
-      // Prevent automatic Enter confirmation if destructive to avoid accidents
       if (!isDestructive) {
         e.preventDefault();
         confirm();
@@ -60,12 +56,10 @@
     }
   }
 
-  // Manage focus when dialog opens/closes
   $effect(() => {
     if (isOpen) {
       if (typeof document !== 'undefined') {
         previousActiveElement = document.activeElement as HTMLElement;
-        // Wait a tiny bit for render, then focus the cancel button
         setTimeout(() => {
           const cancelBtn = dialogElement?.querySelector('.cancel-btn') as HTMLElement;
           cancelBtn?.focus();
@@ -78,37 +72,31 @@
 <svelte:window onkeydown={handleKeyDown} />
 
 {#if isOpen}
-  <!-- Backdrop -->
-  <!-- svelte-ignore a11y_click_events_have_key_events -->
-  <!-- svelte-ignore a11y_no_static_element_interactions -->
-  <div 
-    class="fixed inset-0 z-[100] flex items-center justify-center bg-black/55 backdrop-blur-md transition-all duration-300"
-    role="presentation"
-    onclick={close}>
-    
-    <!-- Modal Card (GNOME HIG Boxed/Card Style) -->
-    <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
-    <!-- svelte-ignore a11y_interactive_supports_focus -->
+  <div class="fixed inset-0 z-[100] flex items-center justify-center transition-all duration-300">
+    <button
+      type="button"
+      class="absolute inset-0 cursor-default bg-black/55 backdrop-blur-md"
+      aria-label="Close dialog"
+      onclick={close}></button>
+
     <div
       bind:this={dialogElement}
       role="dialog"
+      tabindex="-1"
       aria-modal="true"
       aria-labelledby="dialog-title"
       aria-describedby="dialog-desc"
-      class="w-[90%] max-w-[360px] transform rounded-2xl border border-adwaita-border bg-adwaita-card p-6 shadow-2xl transition-all duration-300 select-none"
-      onclick={(e) => e.stopPropagation()}>
-      
-      <!-- Icon & Header Info -->
+      class="relative w-[90%] max-w-[360px] transform rounded-2xl border border-adwaita-border bg-adwaita-card p-6 shadow-2xl transition-all duration-300 select-none">
       <div class="flex flex-col gap-1 text-left">
-        <h2 
-          id="dialog-title" 
+        <h2
+          id="dialog-title"
           class="text-base font-bold text-adwaita-text">
           {title}
         </h2>
         {#if message}
-          <p 
-            id="dialog-desc" 
-            class="text-xs leading-normal text-adwaita-subtitle/90 mt-1">
+          <p
+            id="dialog-desc"
+            class="mt-1 text-xs leading-normal text-adwaita-subtitle/90">
             {message}
           </p>
         {/if}
@@ -117,23 +105,22 @@
       {#if children}
         {@render children()}
       {:else}
-        <!-- Action Row: GNOME HIG specifies Cancel on left/start, Action on right/end -->
-        <div class="flex items-center justify-end gap-3 mt-6">
+        <div class="mt-6 flex items-center justify-end gap-3">
           <button
             type="button"
             onclick={close}
             class="cancel-btn inline-flex h-9.5 cursor-pointer items-center justify-center rounded-lg border border-adwaita-border bg-adwaita-card px-4 text-xs font-bold text-adwaita-text transition-colors hover:bg-adwaita-hover focus:outline-2 focus:outline-adwaita-accent">
             {cancelLabel}
           </button>
-          
+
           <button
             type="button"
             onclick={confirm}
-            class="inline-flex h-9.5 cursor-pointer items-center justify-center rounded-lg px-4 text-xs font-bold text-white transition-colors focus:outline-2 focus:outline-adwaita-accent {
-              isDestructive 
-                ? 'bg-adwaita-error hover:opacity-90' 
-                : 'bg-adwaita-accent hover:bg-adwaita-accent-hover'
-            }">
+            class="inline-flex h-9.5 cursor-pointer items-center justify-center rounded-lg px-4 text-xs font-bold text-white transition-colors focus:outline-2 focus:outline-adwaita-accent {(
+              isDestructive
+            ) ?
+              'bg-adwaita-error hover:opacity-90'
+            : 'bg-adwaita-accent hover:bg-adwaita-accent-hover'}">
             {confirmLabel}
           </button>
         </div>

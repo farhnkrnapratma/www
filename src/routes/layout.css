@@ -13,13 +13,12 @@
     @apply m-0 overflow-x-hidden bg-adwaita-bg p-0 font-sans text-adwaita-text transition-colors duration-300;
   }
 
-  /* Hide scrollbars globally */
   * {
-    -ms-overflow-style: none; /* IE and Edge */
-    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
   *::-webkit-scrollbar {
-    display: none; /* Chrome, Safari and Opera */
+    display: none;
   }
 
   .boxed-list {
@@ -222,25 +221,23 @@ button,
   opacity: 0.75 !important;
 }
 
-/* ── Keyboard focus ring: only truly interactive elements ── */
 a:focus-visible,
 button:focus-visible,
-[role="button"]:focus-visible,
-[role="link"]:focus-visible,
-[role="menuitem"]:focus-visible,
-[role="tab"]:focus-visible,
-[role="option"]:focus-visible,
-[role="combobox"]:focus-visible,
+[role='button']:focus-visible,
+[role='link']:focus-visible,
+[role='menuitem']:focus-visible,
+[role='tab']:focus-visible,
+[role='option']:focus-visible,
+[role='combobox']:focus-visible,
 select:focus-visible,
 details:focus-visible,
 summary:focus-visible,
-[tabindex="0"]:focus-visible {
+[tabindex='0']:focus-visible {
   outline: 2px solid var(--color-adwaita-accent) !important;
   outline-offset: 2px !important;
   border-radius: 6px;
 }
 
-/* inputs/textareas: use border + soft glow instead of outline */
 input:focus-visible,
 textarea:focus-visible {
   outline: none !important;
@@ -253,21 +250,17 @@ select:focus {
   box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-adwaita-accent) 20%, transparent) !important;
 }
 
-/* ── Valid input state (applied via JS after debounce validation) ── */
 input.input-valid,
 textarea.input-valid {
   border-color: var(--color-adwaita-accent) !important;
 }
 
-/* ── Global Form Inputs Polishing (taller fields, compact margins) ── */
-input[type="text"],
-input[type="email"],
-input[type="password"],
-input[type="search"],
+input[type='text'],
+input[type='email'],
+input[type='password'],
+input[type='search'],
 textarea,
 select {
   padding-top: 0.55rem !important;
   padding-bottom: 0.55rem !important;
 }
-
-

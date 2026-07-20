@@ -35,8 +35,7 @@
 
   function handleScroll() {
     showScrollTop = window.scrollY > 300;
-    
-    // Calculate scroll progress percentage
+
     const docHeight = document.documentElement.scrollHeight - window.innerHeight;
     if (docHeight > 0) {
       scrollProgress = (window.scrollY / docHeight) * 100;
@@ -71,7 +70,6 @@
     window.addEventListener('storage', storageListener);
     window.addEventListener('scroll', handleScroll);
 
-    // Initial check on mount
     handleScroll();
 
     return () => {
@@ -82,9 +80,8 @@
   });
 </script>
 
-<!-- Thin scroll progress indicator below navigation bar -->
 <div
-  class="fixed top-15 left-0 z-50 h-[2px] bg-adwaita-accent transition-all duration-75 ease-out select-none pointer-events-none"
+  class="pointer-events-none fixed top-15 left-0 z-50 h-[2px] bg-adwaita-accent transition-all duration-75 ease-out select-none"
   style="width: {scrollProgress}%">
 </div>
 

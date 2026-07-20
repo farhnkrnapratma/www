@@ -19,7 +19,6 @@ export const GET: RequestHandler = async ({ url }) => {
 
   const results: SearchResult[] = [];
 
-  // Search blog posts (title + excerpt)
   const { data: posts, error: postsError } = await supabase
     .from('posts')
     .select('id, title, slug, excerpt')

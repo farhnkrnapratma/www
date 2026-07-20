@@ -59,9 +59,7 @@
   let bannerPublicUrl = $state('');
   $effect(() => {
     if (data.post.banner_path) {
-      const { data: res } = supabase.storage
-        .from('blog-posts')
-        .getPublicUrl(data.post.banner_path);
+      const { data: res } = supabase.storage.from('blog-posts').getPublicUrl(data.post.banner_path);
       bannerPublicUrl = res.publicUrl;
     } else {
       bannerPublicUrl = '';
@@ -88,24 +86,19 @@
     }
   }
 
-  interface HeadingItem {
-    id: string;
-    text: string;
-    level: number;
-  }
-
   const headings = $derived(data.headings || []);
   let activeHeadingId = $state('');
 
   const name = 'Farhan Kurnia Pratama';
-  const desc = 'Security-focused Software Engineer with expertise in Linux/Unix, AI, and Open-Source Software, dedicated to building reliable, maintainable, and privacy-centric systems.';
+  const desc =
+    'Security-focused Software Engineer with expertise in Linux/Unix, AI, and Open-Source Software, dedicated to building reliable, maintainable, and privacy-centric systems.';
   const footerNavItems = [
     { label: 'Home', url: '/' },
     { label: 'Projects', url: '/#projects' },
     { label: 'Blogs', url: '/#blogs' },
     { label: 'CV', url: '/#cv' },
     { label: 'Funding', url: '/#funding' },
-    { label: 'Contacts', url: '/#contacts' }
+    { label: 'Contacts', url: '/#contacts' },
   ];
   let helpfulnessFeedback = $state<'yes' | 'no' | null>(null);
   let showYesFeedbackDialog = $state(false);
@@ -122,7 +115,7 @@
   }
 
   $effect(() => {
-    const currentHtml = html; // establish dependency
+    void html;
     let headingObserver: IntersectionObserver | null = null;
 
     tick().then(() => {
@@ -131,7 +124,7 @@
         const elements = container.querySelectorAll('h2, h3');
         if (elements.length === 0) return;
 
-        elements.forEach((el) => {
+        elements.forEach(el => {
           el.classList.add('group', 'flex', 'items-center', 'scroll-mt-20');
 
           const existingAnchor = el.querySelector('.anchor-link');
@@ -139,12 +132,12 @@
             existingAnchor.remove();
           }
 
-          // Create link icon anchor
           const anchor = document.createElement('a');
           anchor.href = `#${el.id}`;
-          anchor.className = 'anchor-link opacity-0 group-hover:opacity-100 transition-opacity ml-2 text-adwaita-accent text-sm leading-none';
+          anchor.className =
+            'anchor-link opacity-0 group-hover:opacity-100 transition-opacity ml-2 text-adwaita-accent text-sm leading-none';
           anchor.innerHTML = '<i class="bi bi-link-45deg" aria-hidden="true"></i>';
-          anchor.onclick = (e) => {
+          anchor.onclick = e => {
             e.preventDefault();
             const target = document.getElementById(el.id);
             if (target) {
@@ -156,19 +149,22 @@
           el.appendChild(anchor);
         });
 
-        headingObserver = new IntersectionObserver((entries) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-              activeHeadingId = entry.target.id;
-            }
-          });
-        }, {
-          root: null,
-          rootMargin: '0px 0px -70% 0px',
-          threshold: 0.1
-        });
+        headingObserver = new IntersectionObserver(
+          entries => {
+            entries.forEach(entry => {
+              if (entry.isIntersecting) {
+                activeHeadingId = entry.target.id;
+              }
+            });
+          },
+          {
+            root: null,
+            rootMargin: '0px 0px -70% 0px',
+            threshold: 0.1,
+          },
+        );
 
-        elements.forEach((el) => headingObserver?.observe(el));
+        elements.forEach(el => headingObserver?.observe(el));
       }
     });
 
@@ -202,7 +198,6 @@
 
     hljs.highlightAll();
 
-    // Track view + fetch count
     (async () => {
       try {
         await fetch('/api/views', {
@@ -214,7 +209,7 @@
         const data = await res.json();
         viewCount = data.views ?? null;
       } catch {
-        // non-critical, silently fail
+        viewCount = null;
       }
     })();
 
@@ -237,6 +232,10 @@
       month: 'long',
       day: 'numeric',
     });
+  }
+
+  function formatReadTime(readTime?: string | null) {
+    return (readTime || '1 min read').replace(/\s*read\s*/gi, '');
   }
 
   function buildCommentTree(items: BlogComment[]): FlatComment[] {
@@ -336,7 +335,10 @@
   }
 
   const validateAuthorName = debounce(() => {
-    if (isAnonymous) { valid.authorName = false; return; }
+    if (isAnonymous) {
+      valid.authorName = false;
+      return;
+    }
     if (authorName.trim() === '') {
       errors.authorName = '';
       valid.authorName = false;
@@ -444,24 +446,44 @@
 
 <svelte:head>
   <title>{post.title} | Farhan Kurnia Pratama</title>
-  <meta name="description" content={post.excerpt || 'Read this article on my blog.'} />
-  
-  <!-- Open Graph / Facebook -->
-  <meta property="og:type" content="article" />
-  <meta property="og:url" content={'https://fkp.my.id/blog/' + post.slug} />
-  <meta property="og:title" content={post.title} />
-  <meta property="og:description" content={post.excerpt || 'Read this article on my blog.'} />
+  <meta
+    name="description"
+    content={post.excerpt || 'Read this article on my blog.'} />
+
+  <meta
+    property="og:type"
+    content="article" />
+  <meta
+    property="og:url"
+    content={'https://fkp.my.id/blog/' + post.slug} />
+  <meta
+    property="og:title"
+    content={post.title} />
+  <meta
+    property="og:description"
+    content={post.excerpt || 'Read this article on my blog.'} />
   {#if bannerPublicUrl}
-    <meta property="og:image" content={bannerPublicUrl} />
+    <meta
+      property="og:image"
+      content={bannerPublicUrl} />
   {/if}
 
-  <!-- Twitter -->
-  <meta property="twitter:card" content="summary_large_image" />
-  <meta property="twitter:url" content={'https://fkp.my.id/blog/' + post.slug} />
-  <meta property="twitter:title" content={post.title} />
-  <meta property="twitter:description" content={post.excerpt || 'Read this article on my blog.'} />
+  <meta
+    property="twitter:card"
+    content="summary_large_image" />
+  <meta
+    property="twitter:url"
+    content={'https://fkp.my.id/blog/' + post.slug} />
+  <meta
+    property="twitter:title"
+    content={post.title} />
+  <meta
+    property="twitter:description"
+    content={post.excerpt || 'Read this article on my blog.'} />
   {#if bannerPublicUrl}
-    <meta property="twitter:image" content={bannerPublicUrl} />
+    <meta
+      property="twitter:image"
+      content={bannerPublicUrl} />
   {/if}
 
   {#if isDark}
@@ -568,594 +590,646 @@
 </nav>
 
 <main class="flex min-h-[calc(100vh-3.75rem)] flex-col pt-15 font-sans">
-  <div class="mx-auto w-full max-w-7xl px-6 pt-10 pb-16 xl:grid xl:grid-cols-12 xl:gap-8 relative">
-    <article class="w-full mx-auto md:w-[80%] lg:w-[50%] xl:w-auto xl:mx-0 xl:col-start-4 xl:col-span-6 flex flex-col pt-4">
-    <header class="mb-8 border-b border-adwaita-border pb-6">
-      <h1
-        class="text-4xl leading-tight font-extrabold tracking-tight text-adwaita-text md:text-5xl">
-        {post.title}
-      </h1>
-      {#if post.excerpt}
-        <p class="mt-3 text-base leading-relaxed text-adwaita-subtitle">
-          {post.excerpt}
-        </p>
-      {/if}
-      <div class="mt-4 flex flex-wrap items-center gap-x-3.5 gap-y-1 text-xs font-semibold text-adwaita-subtitle select-none font-sans">
-        <span class="inline-flex items-center gap-1.5 leading-none">
-          <i class="bi bi-calendar3 text-[11px] leading-none" aria-hidden="true"></i>
-          {formatDate(post.created_at)}
-        </span>
-        <span class="inline-flex items-center gap-1.5 leading-none">
-          <i class="bi bi-clock text-[11px] leading-none" aria-hidden="true"></i>
-          {post.read_time.replace(/\s*read\s*/gi, '')}
-        </span>
-        <span class="inline-flex items-center gap-1.5 leading-none">
-          <i class="bi bi-chat-left-text text-[11px] leading-none" aria-hidden="true"></i>
-          {comments.length}
-        </span>
-        {#if viewCount !== null}
+  <div class="relative mx-auto w-full max-w-7xl px-6 pt-10 pb-16 xl:grid xl:grid-cols-12 xl:gap-8">
+    <article
+      class="mx-auto flex w-full flex-col pt-4 md:w-[80%] lg:w-[50%] xl:col-span-6 xl:col-start-4 xl:mx-0 xl:w-auto">
+      <header class="mb-8 border-b border-adwaita-border pb-6">
+        <h1
+          class="text-4xl leading-tight font-extrabold tracking-tight text-adwaita-text md:text-5xl">
+          {post.title}
+        </h1>
+        {#if post.excerpt}
+          <p class="mt-3 text-base leading-relaxed text-adwaita-subtitle">
+            {post.excerpt}
+          </p>
+        {/if}
+        <div
+          class="mt-4 flex flex-wrap items-center gap-x-3.5 gap-y-1 font-sans text-xs font-semibold text-adwaita-subtitle select-none">
           <span class="inline-flex items-center gap-1.5 leading-none">
-            <i class="bi bi-eye text-[11px] leading-none" aria-hidden="true"></i>
-            {viewCount}
+            <i
+              class="bi bi-calendar3 text-[11px] leading-none"
+              aria-hidden="true"></i>
+            {formatDate(post.created_at)}
           </span>
-        {/if}
-      </div>
-    </header>
-
-    <div class="prose-custom w-full">
-      {@html html}
-    </div>
-
-    <!-- Helpfulness Feedback Widget -->
-    <div class="mt-10 border-t border-adwaita-border pt-8 flex flex-col items-center justify-between gap-4 sm:flex-row select-none">
-      <div>
-        <h3 class="text-sm font-bold text-adwaita-text">Was this article helpful?</h3>
-        <p class="text-xs text-adwaita-subtitle mt-0.5">Help us improve by letting us know your thoughts.</p>
-      </div>
-      <div class="flex items-center gap-3">
-        {#if helpfulnessFeedback === null}
-          <button
-            type="button"
-            onclick={() => handleHelpfulness('yes')}
-            class="inline-flex h-9 cursor-pointer items-center justify-center gap-2 rounded-lg border border-adwaita-border bg-adwaita-card px-4 text-xs font-bold text-adwaita-text transition-colors hover:bg-adwaita-hover focus:outline-2 focus:outline-adwaita-accent"
-            aria-label="Yes, this article was helpful">
-            <i class="bi bi-hand-thumbs-up text-sm"></i>
-            Yes
-          </button>
-          
-          <button
-            type="button"
-            onclick={() => handleHelpfulness('no')}
-            class="inline-flex h-9 cursor-pointer items-center justify-center gap-2 rounded-lg border border-adwaita-border bg-adwaita-card px-4 text-xs font-bold text-adwaita-text transition-colors hover:bg-adwaita-hover focus:outline-2 focus:outline-adwaita-accent"
-            aria-label="No, this article was not helpful">
-            <i class="bi bi-hand-thumbs-down text-sm"></i>
-            No
-          </button>
-        {:else if helpfulnessFeedback === 'yes'}
-          <span class="flex items-center gap-1.5 text-xs font-bold text-adwaita-accent animate-pulse">
-            <i class="bi bi-heart-fill"></i> Thank you for your feedback!
+          <span class="inline-flex items-center gap-1.5 leading-none">
+            <i
+              class="bi bi-clock text-[11px] leading-none"
+              aria-hidden="true"></i>
+            {formatReadTime(post.read_time)}
           </span>
-        {:else}
-          <span class="flex items-center gap-1.5 text-xs font-bold text-adwaita-subtitle">
-            <i class="bi bi-emoji-neutral"></i> Redirecting to feedback...
+          <span class="inline-flex items-center gap-1.5 leading-none">
+            <i
+              class="bi bi-chat-left-text text-[11px] leading-none"
+              aria-hidden="true"></i>
+            {comments.length}
           </span>
-        {/if}
-      </div>
-    </div>
-
-    <div class="mt-12 border-t border-adwaita-border pt-8 select-none">
-      <h3 class="mb-4 text-sm font-bold tracking-tight text-adwaita-text">Share this Blog</h3>
-      <div class="flex flex-wrap items-center justify-between gap-3">
-        <button
-          onclick={copyToClipboard}
-          class="inline-flex h-9 cursor-pointer items-center justify-center gap-2 rounded-lg border border-adwaita-border bg-adwaita-card px-4 text-xs font-semibold text-adwaita-text transition-colors select-none hover:bg-adwaita-hover hover:text-adwaita-accent"
-          aria-label="Copy link to clipboard"
-          title="Copy Link">
-          <i
-            class="bi {showCopySuccess ? 'bi-check2 text-palette-green' : 'bi-link-45deg'}"
-            aria-hidden="true"></i>
-          <span class="hidden sm:inline">{showCopySuccess ? 'Copied!' : 'Copy'}</span>
-        </button>
-        <a
-          href="https://twitter.com/intent/tweet?url={encodeURIComponent(
-            page.url.href,
-          )}&text={encodeURIComponent(post.title)}"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="inline-flex h-9 items-center justify-center gap-2 rounded-lg border border-adwaita-border bg-adwaita-card px-4 text-xs font-semibold text-adwaita-text transition-colors select-none hover:bg-adwaita-hover hover:text-adwaita-accent"
-          aria-label="Share on X (opens in a new tab)"
-          title="Share on X">
-          <i
-            class="bi bi-twitter-x"
-            aria-hidden="true"></i>
-          <span class="hidden sm:inline">X</span>
-        </a>
-        <a
-          href="https://www.facebook.com/sharer/sharer.php?u={encodeURIComponent(page.url.href)}"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="inline-flex h-9 items-center justify-center gap-2 rounded-lg border border-adwaita-border bg-adwaita-card px-4 text-xs font-semibold text-adwaita-text transition-colors select-none hover:bg-adwaita-hover hover:text-adwaita-accent"
-          aria-label="Share on Facebook (opens in a new tab)"
-          title="Share on Facebook">
-          <i
-            class="bi bi-facebook"
-            aria-hidden="true"></i>
-          <span class="hidden sm:inline">Facebook</span>
-        </a>
-        <a
-          href="https://www.linkedin.com/sharing/share-offsite/?url={encodeURIComponent(
-            page.url.href,
-          )}"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="inline-flex h-9 items-center justify-center gap-2 rounded-lg border border-adwaita-border bg-adwaita-card px-4 text-xs font-semibold text-adwaita-text transition-colors select-none hover:bg-adwaita-hover hover:text-adwaita-accent"
-          aria-label="Share on LinkedIn (opens in a new tab)"
-          title="Share on LinkedIn">
-          <i
-            class="bi bi-linkedin"
-            aria-hidden="true"></i>
-          <span class="hidden sm:inline">LinkedIn</span>
-        </a>
-        <a
-          href="mailto:?subject={encodeURIComponent(post.title)}&body={encodeURIComponent(
-            page.url.href,
-          )}"
-          class="inline-flex h-9 items-center justify-center gap-2 rounded-lg border border-adwaita-border bg-adwaita-card px-4 text-xs font-semibold text-adwaita-text transition-colors select-none hover:bg-adwaita-hover hover:text-adwaita-accent"
-          aria-label="Share via Email"
-          title="Share via Email">
-          <i
-            class="bi bi-envelope"
-            aria-hidden="true"></i>
-          <span class="hidden sm:inline">Email</span>
-        </a>
-      </div>
-    </div>
-
-    <div
-      class="mt-8 flex flex-col items-center gap-5 rounded-2xl border border-adwaita-border bg-adwaita-card/45 p-6 select-none sm:flex-row sm:items-start">
-      <img
-        src="/android-chrome-512x512.png"
-        alt="Farhan Kurnia Pratama"
-        class="h-20 w-20 shrink-0 rounded-full border border-adwaita-border object-cover object-top" />
-      <div class="min-w-0 flex-1 text-center sm:text-left">
-        <h4 class="text-base leading-snug font-bold text-adwaita-text">Farhan Kurnia Pratama</h4>
-        <p class="mt-0.5 text-xs font-semibold text-adwaita-subtitle">
-          Linux/Unix, FOSS, and Cybersecurity
-        </p>
-        <p class="mt-3 text-sm leading-relaxed text-adwaita-subtitle/90">
-          Security-focused Software Engineer with expertise in Linux/Unix and FOSS, dedicated to
-          building reliable, maintainable, and privacy-centric systems.
-        </p>
-
-        <div class="mt-4 flex items-center justify-center gap-4 sm:justify-start">
-          <a
-            href="https://github.com/farhnkrnapratma"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-adwaita-border bg-adwaita-card text-adwaita-subtitle transition-colors hover:bg-adwaita-hover hover:text-adwaita-accent"
-            aria-label="GitHub (opens in a new tab)">
-            <i
-              class="bi bi-github flex items-center justify-center text-base leading-none"
-              aria-hidden="true"></i>
-          </a>
-          <a
-            href="https://linkedin.com/in/farhnkrnapratma"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-adwaita-border bg-adwaita-card text-adwaita-subtitle transition-colors hover:bg-adwaita-hover hover:text-adwaita-accent"
-            aria-label="LinkedIn (opens in a new tab)">
-            <i
-              class="bi bi-linkedin flex items-center justify-center text-base leading-none"
-              aria-hidden="true"></i>
-          </a>
-          <a
-            href="https://x.com/farhnkrnapratma"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-adwaita-border bg-adwaita-card text-adwaita-subtitle transition-colors hover:bg-adwaita-hover hover:text-adwaita-accent"
-            aria-label="X (opens in a new tab)">
-            <i
-              class="bi bi-twitter-x flex items-center justify-center text-base leading-none"
-              aria-hidden="true"></i>
-          </a>
-          <a
-            href="https://facebook.com/farhnkrnapratma"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-adwaita-border bg-adwaita-card text-adwaita-subtitle transition-colors hover:bg-adwaita-hover hover:text-adwaita-accent"
-            aria-label="Facebook (opens in a new tab)">
-            <i
-              class="bi bi-facebook flex items-center justify-center text-base leading-none"
-              aria-hidden="true"></i>
-          </a>
-          <a
-            href="https://instagram.com/farhnkrnapratma"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-adwaita-border bg-adwaita-card text-adwaita-subtitle transition-colors hover:bg-adwaita-hover hover:text-adwaita-accent"
-            aria-label="Instagram (opens in a new tab)">
-            <i
-              class="bi bi-instagram flex items-center justify-center text-base leading-none"
-              aria-hidden="true"></i>
-          </a>
-          <a
-            href="https://threads.net/@farhnkrnapratma"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-adwaita-border bg-adwaita-card text-adwaita-subtitle transition-colors hover:bg-adwaita-hover hover:text-adwaita-accent"
-            aria-label="Threads (opens in a new tab)">
-            <i
-              class="bi bi-threads flex items-center justify-center text-base leading-none"
-              aria-hidden="true"></i>
-          </a>
-        </div>
-      </div>
-    </div>
-
-    <section class="mt-16 border-t border-adwaita-border pt-10">
-      <h2 class="mb-8 text-xl font-bold tracking-tight text-adwaita-text">
-        Comments ({comments.length})
-      </h2>
-
-      {#if feedbackMessage}
-        <div
-          class="mb-6 rounded-lg p-3 text-sm font-semibold {feedbackMessage.type === 'success' ?
-            'border border-palette-green/30 bg-palette-green/10 text-palette-green'
-          : 'border border-palette-coral/30 bg-palette-coral/10 text-palette-coral'}">
-          {feedbackMessage.text}
-        </div>
-      {/if}
-
-      {#if !replyTo}
-        <div
-          class="mb-8 rounded-2xl border border-adwaita-border bg-adwaita-card/45 p-5 text-left shadow-xs backdrop-blur-lg transition-colors duration-300">
-          <div class="mb-4 select-none">
-            <h3 class="text-sm font-bold text-adwaita-text">Leave a Comment</h3>
-          </div>
-
-          <form
-            novalidate
-            onsubmit={e => handleSubmit(e)}
-            class="flex flex-col gap-2.5">
-            <label
-              for="comment-anon"
-              class="flex cursor-pointer items-center gap-2 text-xs font-bold text-adwaita-label select-none">
-              <input
-                type="checkbox"
-                id="comment-anon"
-                bind:checked={isAnonymous}
-                aria-describedby="anon-help-main"
-                class="h-3.5 w-3.5 cursor-pointer rounded border-adwaita-border text-adwaita-accent focus:ring-adwaita-accent" />
-              Comment anonymously
-            </label>
-            <span
-              id="anon-help-main"
-              class="sr-only">
-              If checked, your name is hidden and your comment is posted as Anonymous.
+          {#if viewCount !== null}
+            <span class="inline-flex items-center gap-1.5 leading-none">
+              <i
+                class="bi bi-eye text-[11px] leading-none"
+                aria-hidden="true"></i>
+              {viewCount}
             </span>
-            <div class="flex flex-col gap-1">
+          {/if}
+        </div>
+      </header>
+
+      <div class="prose-custom w-full">
+        {@html html}
+      </div>
+
+      <div
+        class="mt-10 flex flex-col items-center justify-between gap-4 border-t border-adwaita-border pt-8 select-none sm:flex-row">
+        <div>
+          <h3 class="text-sm font-bold text-adwaita-text">Was this article helpful?</h3>
+          <p class="mt-0.5 text-xs text-adwaita-subtitle">
+            Help us improve by letting us know your thoughts.
+          </p>
+        </div>
+        <div class="flex items-center gap-3">
+          {#if helpfulnessFeedback === null}
+            <button
+              type="button"
+              onclick={() => handleHelpfulness('yes')}
+              class="inline-flex h-9 cursor-pointer items-center justify-center gap-2 rounded-lg border border-adwaita-border bg-adwaita-card px-4 text-xs font-bold text-adwaita-text transition-colors hover:bg-adwaita-hover focus:outline-2 focus:outline-adwaita-accent"
+              aria-label="Yes, this article was helpful">
+              <i class="bi bi-hand-thumbs-up text-sm"></i>
+              Yes
+            </button>
+
+            <button
+              type="button"
+              onclick={() => handleHelpfulness('no')}
+              class="inline-flex h-9 cursor-pointer items-center justify-center gap-2 rounded-lg border border-adwaita-border bg-adwaita-card px-4 text-xs font-bold text-adwaita-text transition-colors hover:bg-adwaita-hover focus:outline-2 focus:outline-adwaita-accent"
+              aria-label="No, this article was not helpful">
+              <i class="bi bi-hand-thumbs-down text-sm"></i>
+              No
+            </button>
+          {:else if helpfulnessFeedback === 'yes'}
+            <span
+              class="flex animate-pulse items-center gap-1.5 text-xs font-bold text-adwaita-accent">
+              <i class="bi bi-heart-fill"></i> Thank you for your feedback!
+            </span>
+          {:else}
+            <span class="flex items-center gap-1.5 text-xs font-bold text-adwaita-subtitle">
+              <i class="bi bi-emoji-neutral"></i> Redirecting to feedback...
+            </span>
+          {/if}
+        </div>
+      </div>
+
+      <div class="mt-12 border-t border-adwaita-border pt-8 select-none">
+        <h3 class="mb-4 text-sm font-bold tracking-tight text-adwaita-text">Share this Blog</h3>
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <button
+            onclick={copyToClipboard}
+            class="inline-flex h-9 cursor-pointer items-center justify-center gap-2 rounded-lg border border-adwaita-border bg-adwaita-card px-4 text-xs font-semibold text-adwaita-text transition-colors select-none hover:bg-adwaita-hover hover:text-adwaita-accent"
+            aria-label="Copy link to clipboard"
+            title="Copy Link">
+            <i
+              class="bi {showCopySuccess ? 'bi-check2 text-palette-green' : 'bi-link-45deg'}"
+              aria-hidden="true"></i>
+            <span class="hidden sm:inline">{showCopySuccess ? 'Copied!' : 'Copy'}</span>
+          </button>
+          <a
+            href="https://twitter.com/intent/tweet?url={encodeURIComponent(
+              page.url.href,
+            )}&text={encodeURIComponent(post.title)}"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex h-9 items-center justify-center gap-2 rounded-lg border border-adwaita-border bg-adwaita-card px-4 text-xs font-semibold text-adwaita-text transition-colors select-none hover:bg-adwaita-hover hover:text-adwaita-accent"
+            aria-label="Share on X (opens in a new tab)"
+            title="Share on X">
+            <i
+              class="bi bi-twitter-x"
+              aria-hidden="true"></i>
+            <span class="hidden sm:inline">X</span>
+          </a>
+          <a
+            href="https://www.facebook.com/sharer/sharer.php?u={encodeURIComponent(page.url.href)}"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex h-9 items-center justify-center gap-2 rounded-lg border border-adwaita-border bg-adwaita-card px-4 text-xs font-semibold text-adwaita-text transition-colors select-none hover:bg-adwaita-hover hover:text-adwaita-accent"
+            aria-label="Share on Facebook (opens in a new tab)"
+            title="Share on Facebook">
+            <i
+              class="bi bi-facebook"
+              aria-hidden="true"></i>
+            <span class="hidden sm:inline">Facebook</span>
+          </a>
+          <a
+            href="https://www.linkedin.com/sharing/share-offsite/?url={encodeURIComponent(
+              page.url.href,
+            )}"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex h-9 items-center justify-center gap-2 rounded-lg border border-adwaita-border bg-adwaita-card px-4 text-xs font-semibold text-adwaita-text transition-colors select-none hover:bg-adwaita-hover hover:text-adwaita-accent"
+            aria-label="Share on LinkedIn (opens in a new tab)"
+            title="Share on LinkedIn">
+            <i
+              class="bi bi-linkedin"
+              aria-hidden="true"></i>
+            <span class="hidden sm:inline">LinkedIn</span>
+          </a>
+          <a
+            href="mailto:?subject={encodeURIComponent(post.title)}&body={encodeURIComponent(
+              page.url.href,
+            )}"
+            class="inline-flex h-9 items-center justify-center gap-2 rounded-lg border border-adwaita-border bg-adwaita-card px-4 text-xs font-semibold text-adwaita-text transition-colors select-none hover:bg-adwaita-hover hover:text-adwaita-accent"
+            aria-label="Share via Email"
+            title="Share via Email">
+            <i
+              class="bi bi-envelope"
+              aria-hidden="true"></i>
+            <span class="hidden sm:inline">Email</span>
+          </a>
+        </div>
+      </div>
+
+      <div
+        class="mt-8 flex flex-col items-center gap-5 rounded-2xl border border-adwaita-border bg-adwaita-card/45 p-6 select-none sm:flex-row sm:items-start">
+        <img
+          src="/android-chrome-512x512.png"
+          alt="Farhan Kurnia Pratama"
+          class="h-20 w-20 shrink-0 rounded-full border border-adwaita-border object-cover object-top" />
+        <div class="min-w-0 flex-1 text-center sm:text-left">
+          <h4 class="text-base leading-snug font-bold text-adwaita-text">Farhan Kurnia Pratama</h4>
+          <p class="mt-0.5 text-xs font-semibold text-adwaita-subtitle">
+            Linux/Unix, FOSS, and Cybersecurity
+          </p>
+          <p class="mt-3 text-sm leading-relaxed text-adwaita-subtitle/90">
+            Security-focused Software Engineer with expertise in Linux/Unix and FOSS, dedicated to
+            building reliable, maintainable, and privacy-centric systems.
+          </p>
+
+          <div class="mt-4 flex items-center justify-center gap-4 sm:justify-start">
+            <a
+              href="https://github.com/farhnkrnapratma"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-adwaita-border bg-adwaita-card text-adwaita-subtitle transition-colors hover:bg-adwaita-hover hover:text-adwaita-accent"
+              aria-label="GitHub (opens in a new tab)">
+              <i
+                class="bi bi-github flex items-center justify-center text-base leading-none"
+                aria-hidden="true"></i>
+            </a>
+            <a
+              href="https://linkedin.com/in/farhnkrnapratma"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-adwaita-border bg-adwaita-card text-adwaita-subtitle transition-colors hover:bg-adwaita-hover hover:text-adwaita-accent"
+              aria-label="LinkedIn (opens in a new tab)">
+              <i
+                class="bi bi-linkedin flex items-center justify-center text-base leading-none"
+                aria-hidden="true"></i>
+            </a>
+            <a
+              href="https://x.com/farhnkrnapratma"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-adwaita-border bg-adwaita-card text-adwaita-subtitle transition-colors hover:bg-adwaita-hover hover:text-adwaita-accent"
+              aria-label="X (opens in a new tab)">
+              <i
+                class="bi bi-twitter-x flex items-center justify-center text-base leading-none"
+                aria-hidden="true"></i>
+            </a>
+            <a
+              href="https://facebook.com/farhnkrnapratma"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-adwaita-border bg-adwaita-card text-adwaita-subtitle transition-colors hover:bg-adwaita-hover hover:text-adwaita-accent"
+              aria-label="Facebook (opens in a new tab)">
+              <i
+                class="bi bi-facebook flex items-center justify-center text-base leading-none"
+                aria-hidden="true"></i>
+            </a>
+            <a
+              href="https://instagram.com/farhnkrnapratma"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-adwaita-border bg-adwaita-card text-adwaita-subtitle transition-colors hover:bg-adwaita-hover hover:text-adwaita-accent"
+              aria-label="Instagram (opens in a new tab)">
+              <i
+                class="bi bi-instagram flex items-center justify-center text-base leading-none"
+                aria-hidden="true"></i>
+            </a>
+            <a
+              href="https://threads.net/@farhnkrnapratma"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-adwaita-border bg-adwaita-card text-adwaita-subtitle transition-colors hover:bg-adwaita-hover hover:text-adwaita-accent"
+              aria-label="Threads (opens in a new tab)">
+              <i
+                class="bi bi-threads flex items-center justify-center text-base leading-none"
+                aria-hidden="true"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <section class="mt-16 border-t border-adwaita-border pt-10">
+        <h2 class="mb-8 text-xl font-bold tracking-tight text-adwaita-text">
+          Comments ({comments.length})
+        </h2>
+
+        {#if feedbackMessage}
+          <div
+            class="mb-6 rounded-lg p-3 text-sm font-semibold {feedbackMessage.type === 'success' ?
+              'border border-palette-green/30 bg-palette-green/10 text-palette-green'
+            : 'border border-palette-coral/30 bg-palette-coral/10 text-palette-coral'}">
+            {feedbackMessage.text}
+          </div>
+        {/if}
+
+        {#if !replyTo}
+          <div
+            class="mb-8 rounded-2xl border border-adwaita-border bg-adwaita-card/45 p-5 text-left shadow-xs backdrop-blur-lg transition-colors duration-300">
+            <div class="mb-4 select-none">
+              <h3 class="text-sm font-bold text-adwaita-text">Leave a Comment</h3>
+            </div>
+
+            <form
+              novalidate
+              onsubmit={e => handleSubmit(e)}
+              class="flex flex-col gap-2.5">
               <label
-                for="comment-author"
-                class="text-xs font-bold text-adwaita-label select-none">
-                Name {#if !isAnonymous}<span
+                for="comment-anon"
+                class="flex cursor-pointer items-center gap-2 text-xs font-bold text-adwaita-label select-none">
+                <input
+                  type="checkbox"
+                  id="comment-anon"
+                  bind:checked={isAnonymous}
+                  aria-describedby="anon-help-main"
+                  class="h-3.5 w-3.5 cursor-pointer rounded border-adwaita-border text-adwaita-accent focus:ring-adwaita-accent" />
+                Comment anonymously
+              </label>
+              <span
+                id="anon-help-main"
+                class="sr-only">
+                If checked, your name is hidden and your comment is posted as Anonymous.
+              </span>
+              <div class="flex flex-col gap-1">
+                <label
+                  for="comment-author"
+                  class="text-xs font-bold text-adwaita-label select-none">
+                  Name {#if !isAnonymous}<span
+                      aria-hidden="true"
+                      class="text-adwaita-error">*</span
+                    ><span class="sr-only">(required)</span>{/if}
+                </label>
+                <div class="w-full">
+                  <input
+                    type="text"
+                    id="comment-author"
+                    disabled={isAnonymous}
+                    aria-required={!isAnonymous}
+                    autocomplete="name"
+                    aria-invalid={!!errors.authorName}
+                    aria-describedby="comment-author-fb"
+                    placeholder={isAnonymous ? 'Anonymous' : 'Enter your name'}
+                    bind:value={authorName}
+                    oninput={() => {
+                      errors.authorName = '';
+                      valid.authorName = false;
+                      validateAuthorName();
+                    }}
+                    class="w-full rounded-lg border border-adwaita-border bg-adwaita-bg px-3 py-1.5 text-sm text-adwaita-text transition-colors placeholder:text-adwaita-label/70 disabled:opacity-60"
+                    class:border-adwaita-error={errors.authorName}
+                    class:input-valid={valid.authorName && !isAnonymous} />
+                  <div
+                    id="comment-author-fb"
+                    aria-live="polite"
+                    class="mt-1 h-4 text-xs leading-none font-medium">
+                    {#if errors.authorName}
+                      <span
+                        role="alert"
+                        class="flex items-center gap-1 text-adwaita-error">
+                        <i class="bi bi-exclamation-circle-fill"></i>{errors.authorName}
+                      </span>
+                    {:else if valid.authorName && !isAnonymous}
+                      <span class="flex items-center gap-1 text-adwaita-accent">
+                        <i class="bi bi-check-circle-fill"></i>Looks good
+                      </span>
+                    {/if}
+                  </div>
+                </div>
+              </div>
+
+              <div class="flex flex-col gap-1">
+                <label
+                  for="comment-msg"
+                  class="text-xs font-bold text-adwaita-label select-none">
+                  Message <span
                     aria-hidden="true"
                     class="text-adwaita-error">*</span
-                  ><span class="sr-only">(required)</span>{/if}
-              </label>
-              <div class="w-full">
-                <input
-                  type="text"
-                  id="comment-author"
-                  disabled={isAnonymous}
-                  aria-required={!isAnonymous}
-                  autocomplete="name"
-                  aria-invalid={!!errors.authorName}
-                  aria-describedby="comment-author-fb"
-                  placeholder={isAnonymous ? 'Anonymous' : 'Enter your name'}
-                  bind:value={authorName}
-                  oninput={() => { errors.authorName = ''; valid.authorName = false; validateAuthorName(); }}
-                  class="w-full rounded-lg border border-adwaita-border bg-adwaita-bg px-3 py-1.5 text-sm text-adwaita-text transition-colors placeholder:text-adwaita-label/70 disabled:opacity-60"
-                  class:border-adwaita-error={errors.authorName}
-                  class:input-valid={valid.authorName && !isAnonymous} />
-                <div id="comment-author-fb" aria-live="polite" class="mt-1 h-4 text-xs font-medium leading-none">
-                  {#if errors.authorName}
-                    <span role="alert" class="flex items-center gap-1 text-adwaita-error">
-                      <i class="bi bi-exclamation-circle-fill"></i>{errors.authorName}
+                  ><span class="sr-only">(required)</span>
+                </label>
+                <div class="relative w-full">
+                  <textarea
+                    use:autoResize={commentContent}
+                    id="comment-msg"
+                    rows="3"
+                    maxlength="1000"
+                    placeholder="Enter your message"
+                    bind:value={commentContent}
+                    oninput={() => {
+                      errors.commentContent = '';
+                      valid.commentContent = false;
+                      validateCommentContent();
+                    }}
+                    aria-required="true"
+                    aria-invalid={!!errors.commentContent}
+                    aria-describedby="comment-msg-count comment-msg-fb"
+                    class="no-scrollbar w-full resize-none overflow-hidden rounded-lg border border-adwaita-border bg-adwaita-bg px-3 py-1.5 pr-16 text-sm text-adwaita-text transition-colors placeholder:text-adwaita-label/70"
+                    class:border-adwaita-error={errors.commentContent}
+                    class:input-valid={valid.commentContent}></textarea>
+                  <div
+                    class="pointer-events-none absolute right-3 bottom-2.5 z-10 font-mono text-[10px] text-adwaita-label select-none"
+                    id="comment-msg-count"
+                    aria-live="polite">
+                    {commentContent.length}/1000
+                  </div>
+                </div>
+                <div
+                  id="comment-msg-fb"
+                  aria-live="polite"
+                  class="mt-0.5 h-4 text-xs leading-none font-medium">
+                  {#if errors.commentContent}
+                    <span
+                      role="alert"
+                      class="flex items-center gap-1 text-adwaita-error">
+                      <i class="bi bi-exclamation-circle-fill"></i>{errors.commentContent}
                     </span>
-                  {:else if valid.authorName && !isAnonymous}
+                  {:else if valid.commentContent}
                     <span class="flex items-center gap-1 text-adwaita-accent">
                       <i class="bi bi-check-circle-fill"></i>Looks good
                     </span>
                   {/if}
                 </div>
               </div>
-            </div>
 
-            <div class="flex flex-col gap-1">
-              <label
-                for="comment-msg"
-                class="text-xs font-bold text-adwaita-label select-none">
-                Message <span
-                  aria-hidden="true"
-                  class="text-adwaita-error">*</span
-                ><span class="sr-only">(required)</span>
-              </label>
-              <div class="relative w-full">
-                <textarea
-                  use:autoResize={commentContent}
-                  id="comment-msg"
-                  rows="3"
-                  maxlength="1000"
-                  placeholder="Enter your message"
-                  bind:value={commentContent}
-                  oninput={() => { errors.commentContent = ''; valid.commentContent = false; validateCommentContent(); }}
-                  aria-required="true"
-                  aria-invalid={!!errors.commentContent}
-                  aria-describedby="comment-msg-count comment-msg-fb"
-                  class="no-scrollbar w-full resize-none overflow-hidden rounded-lg border border-adwaita-border bg-adwaita-bg px-3 py-1.5 pr-16 text-sm text-adwaita-text transition-colors placeholder:text-adwaita-label/70"
-                  class:border-adwaita-error={errors.commentContent}
-                  class:input-valid={valid.commentContent}></textarea>
+              <div class="mt-2 flex justify-end">
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  class="inline-flex cursor-pointer items-center justify-center rounded-lg bg-adwaita-focus px-5 py-2 text-sm font-semibold text-white transition-colors select-none hover:bg-adwaita-focus/90 disabled:cursor-not-allowed disabled:opacity-55">
+                  {isSubmitting ? 'Validating...' : 'Post Comment'}
+                </button>
+              </div>
+            </form>
+          </div>
+        {/if}
+
+        {#if comments.length === 0}
+          <div class="boxed-list p-6 text-center text-adwaita-subtitle">No comments yet.</div>
+        {:else}
+          {#snippet commentNode(comment: FlatComment, depth: number, isLastChildOfParent: boolean)}
+            <div
+              class="relative flex flex-col gap-2.5"
+              use:trunkAction>
+              {#if comment.children && comment.children.length > 0}
                 <div
-                  class="pointer-events-none absolute right-3 bottom-2.5 z-10 font-mono text-[10px] text-adwaita-label select-none"
-                  id="comment-msg-count"
-                  aria-live="polite">
-                  {commentContent.length}/1000
+                  class="trunk-line-single absolute z-0 border-l border-adwaita-subtitle/10"
+                  style="left: 16px; width: 0px;">
                 </div>
-              </div>
-              <div id="comment-msg-fb" aria-live="polite" class="mt-0.5 h-4 text-xs font-medium leading-none">
-                {#if errors.commentContent}
-                  <span role="alert" class="flex items-center gap-1 text-adwaita-error">
-                    <i class="bi bi-exclamation-circle-fill"></i>{errors.commentContent}
-                  </span>
-                {:else if valid.commentContent}
-                  <span class="flex items-center gap-1 text-adwaita-accent">
-                    <i class="bi bi-check-circle-fill"></i>Looks good
-                  </span>
-                {/if}
-              </div>
-            </div>
+              {/if}
 
-            <div class="mt-2 flex justify-end">
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                class="inline-flex cursor-pointer items-center justify-center rounded-lg bg-adwaita-focus px-5 py-2 text-sm font-semibold text-white transition-colors select-none hover:bg-adwaita-focus/90 disabled:cursor-not-allowed disabled:opacity-55">
-                {isSubmitting ? 'Validating...' : 'Post Comment'}
-              </button>
-            </div>
-          </form>
-        </div>
-      {/if}
-
-      {#if comments.length === 0}
-        <div class="boxed-list p-6 text-center text-adwaita-subtitle">No comments yet.</div>
-      {:else}
-        {#snippet commentNode(comment: FlatComment, depth: number, isLastChildOfParent: boolean)}
-          <div
-            class="relative flex flex-col gap-2.5"
-            use:trunkAction>
-            {#if comment.children && comment.children.length > 0}
-              <div
-                class="trunk-line-single absolute z-0 border-l border-adwaita-subtitle/10"
-                style="left: 16px; width: 0px;">
-              </div>
-            {/if}
-
-            <div class="comment-row-wrapper relative flex items-start gap-3">
-              <div
-                class="z-10 flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-adwaita-border bg-adwaita-card text-adwaita-subtitle"
-                class:parent-avatar={comment.children && comment.children.length > 0}
-                class:last-reply-avatar={isLastChildOfParent}>
-                <span
-                  class="material-symbols-rounded text-sm"
-                  style="font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;"
-                  aria-hidden="true">
-                  {getCommentIcon(comment)}
-                </span>
-              </div>
-
-              <div class="min-w-0 flex-1">
+              <div class="comment-row-wrapper relative flex items-start gap-3">
                 <div
-                  class="inline-block max-w-full border border-adwaita-border bg-adwaita-card/50 px-4 py-2 text-left"
-                  style="border-radius: 18px;">
-                  <div class="text-xs font-bold text-adwaita-text/95">
-                    {getCommentAuthor(comment)}
-                  </div>
-                  <p class="mt-0.5 text-sm leading-relaxed text-adwaita-text/90">
-                    {#if comment.reply_to_author}
-                      <span class="mr-1.5 text-xs font-bold text-palette-green"
-                        >{comment.reply_to_author}</span>
-                    {/if}
-                    <span class="whitespace-pre-line">{comment.content}</span>
-                  </p>
+                  class="z-10 flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-adwaita-border bg-adwaita-card text-adwaita-subtitle"
+                  class:parent-avatar={comment.children && comment.children.length > 0}
+                  class:last-reply-avatar={isLastChildOfParent}>
+                  <span
+                    class="material-symbols-rounded text-sm"
+                    style="font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;"
+                    aria-hidden="true">
+                    {getCommentIcon(comment)}
+                  </span>
                 </div>
 
-                <div class="mt-1 ml-2 flex items-center gap-3 text-[10px] text-adwaita-subtitle">
-                  <span>{formatDate(comment.created_at)}</span>
-                  <button
-                    type="button"
-                    onclick={() => {
-                      replyTo = comment;
-                      feedbackMessage = null;
-                      commentContent = '';
-                    }}
-                    class="inline-flex h-6 cursor-pointer items-center rounded bg-adwaita-border/30 px-2 py-0.5 font-bold text-adwaita-text/70 transition-colors hover:bg-adwaita-border hover:text-adwaita-accent">
-                    Reply
-                  </button>
-                </div>
-
-                {#if replyTo?.id === comment.id}
-                  <form
-                    novalidate
-                    onsubmit={e => handleSubmit(e, comment.id)}
-                    class="mt-3 rounded-xl border border-adwaita-border bg-adwaita-bg/60 p-4">
-                    <div class="mb-3 flex items-center justify-between gap-3">
-                      <p class="text-xs font-semibold text-adwaita-subtitle">
-                        Replying to {getCommentAuthor(comment)}
-                      </p>
-                      <button
-                        type="button"
-                        onclick={cancelReply}
-                        class="inline-flex h-8 cursor-pointer items-center justify-center rounded-lg border border-adwaita-border bg-adwaita-card px-3 text-xs font-semibold text-adwaita-text transition-colors hover:bg-adwaita-hover">
-                        Cancel
-                      </button>
+                <div class="min-w-0 flex-1">
+                  <div
+                    class="inline-block max-w-full border border-adwaita-border bg-adwaita-card/50 px-4 py-2 text-left"
+                    style="border-radius: 18px;">
+                    <div class="text-xs font-bold text-adwaita-text/95">
+                      {getCommentAuthor(comment)}
                     </div>
+                    <p class="mt-0.5 text-sm leading-relaxed text-adwaita-text/90">
+                      {#if comment.reply_to_author}
+                        <span class="mr-1.5 text-xs font-bold text-palette-green"
+                          >{comment.reply_to_author}</span>
+                      {/if}
+                      <span class="whitespace-pre-line">{comment.content}</span>
+                    </p>
+                  </div>
 
-                    <div class="flex flex-col gap-4">
-                      <label
-                        for="reply-anon-{comment.id}"
-                        class="flex cursor-pointer items-center gap-2 text-xs font-bold text-adwaita-label select-none">
-                        <input
-                          type="checkbox"
-                          id="reply-anon-{comment.id}"
-                          bind:checked={isAnonymous}
-                          aria-describedby="anon-help-reply-{comment.id}"
-                          class="h-3.5 w-3.5 cursor-pointer rounded border-adwaita-border text-adwaita-accent focus:ring-adwaita-accent" />
-                        Comment anonymously
-                      </label>
-                      <span
-                        id="anon-help-reply-{comment.id}"
-                        class="sr-only">
-                        If checked, your name is hidden and your comment is posted as Anonymous.
-                      </span>
+                  <div class="mt-1 ml-2 flex items-center gap-3 text-[10px] text-adwaita-subtitle">
+                    <span>{formatDate(comment.created_at)}</span>
+                    <button
+                      type="button"
+                      onclick={() => {
+                        replyTo = comment;
+                        feedbackMessage = null;
+                        commentContent = '';
+                      }}
+                      class="inline-flex h-6 cursor-pointer items-center rounded bg-adwaita-border/30 px-2 py-0.5 font-bold text-adwaita-text/70 transition-colors hover:bg-adwaita-border hover:text-adwaita-accent">
+                      Reply
+                    </button>
+                  </div>
 
-                      <div class="flex flex-col gap-1">
+                  {#if replyTo?.id === comment.id}
+                    <form
+                      novalidate
+                      onsubmit={e => handleSubmit(e, comment.id)}
+                      class="mt-3 rounded-xl border border-adwaita-border bg-adwaita-bg/60 p-4">
+                      <div class="mb-3 flex items-center justify-between gap-3">
+                        <p class="text-xs font-semibold text-adwaita-subtitle">
+                          Replying to {getCommentAuthor(comment)}
+                        </p>
+                        <button
+                          type="button"
+                          onclick={cancelReply}
+                          class="inline-flex h-8 cursor-pointer items-center justify-center rounded-lg border border-adwaita-border bg-adwaita-card px-3 text-xs font-semibold text-adwaita-text transition-colors hover:bg-adwaita-hover">
+                          Cancel
+                        </button>
+                      </div>
+
+                      <div class="flex flex-col gap-4">
                         <label
-                          for="reply-author-{comment.id}"
-                          class="text-xs font-bold text-adwaita-label select-none">
-                          Name {#if !isAnonymous}<span
+                          for="reply-anon-{comment.id}"
+                          class="flex cursor-pointer items-center gap-2 text-xs font-bold text-adwaita-label select-none">
+                          <input
+                            type="checkbox"
+                            id="reply-anon-{comment.id}"
+                            bind:checked={isAnonymous}
+                            aria-describedby="anon-help-reply-{comment.id}"
+                            class="h-3.5 w-3.5 cursor-pointer rounded border-adwaita-border text-adwaita-accent focus:ring-adwaita-accent" />
+                          Comment anonymously
+                        </label>
+                        <span
+                          id="anon-help-reply-{comment.id}"
+                          class="sr-only">
+                          If checked, your name is hidden and your comment is posted as Anonymous.
+                        </span>
+
+                        <div class="flex flex-col gap-1">
+                          <label
+                            for="reply-author-{comment.id}"
+                            class="text-xs font-bold text-adwaita-label select-none">
+                            Name {#if !isAnonymous}<span
+                                aria-hidden="true"
+                                class="text-adwaita-error">*</span
+                              ><span class="sr-only">(required)</span>{/if}
+                          </label>
+                          <div class="w-full">
+                            <input
+                              type="text"
+                              id="reply-author-{comment.id}"
+                              disabled={isAnonymous}
+                              aria-required={!isAnonymous}
+                              autocomplete="name"
+                              aria-invalid={!!errors.authorName}
+                              aria-describedby="reply-author-fb-{comment.id}"
+                              placeholder={isAnonymous ? 'Anonymous' : 'Enter your name'}
+                              bind:value={authorName}
+                              oninput={() => {
+                                errors.authorName = '';
+                                valid.authorName = false;
+                                validateAuthorName();
+                              }}
+                              class="w-full rounded-lg border border-adwaita-border bg-adwaita-bg px-3 py-1.5 text-sm text-adwaita-text transition-colors placeholder:text-adwaita-label/70 disabled:opacity-60"
+                              class:border-adwaita-error={errors.authorName}
+                              class:input-valid={valid.authorName && !isAnonymous} />
+                            <div
+                              id="reply-author-fb-{comment.id}"
+                              aria-live="polite"
+                              class="mt-1 h-4 text-xs leading-none font-medium">
+                              {#if errors.authorName}
+                                <span
+                                  role="alert"
+                                  class="flex items-center gap-1 text-adwaita-error">
+                                  <i class="bi bi-exclamation-circle-fill"></i>{errors.authorName}
+                                </span>
+                              {:else if valid.authorName && !isAnonymous}
+                                <span class="flex items-center gap-1 text-adwaita-accent">
+                                  <i class="bi bi-check-circle-fill"></i>Looks good
+                                </span>
+                              {/if}
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="flex flex-col gap-1">
+                          <label
+                            for="reply-msg-{comment.id}"
+                            class="text-xs font-bold text-adwaita-label select-none">
+                            Message <span
                               aria-hidden="true"
                               class="text-adwaita-error">*</span
-                            ><span class="sr-only">(required)</span>{/if}
-                        </label>
-                        <div class="w-full">
-                          <input
-                            type="text"
-                            id="reply-author-{comment.id}"
-                            disabled={isAnonymous}
-                            aria-required={!isAnonymous}
-                            autocomplete="name"
-                            aria-invalid={!!errors.authorName}
-                            aria-describedby="reply-author-fb-{comment.id}"
-                            placeholder={isAnonymous ? 'Anonymous' : 'Enter your name'}
-                            bind:value={authorName}
-                            oninput={() => { errors.authorName = ''; valid.authorName = false; validateAuthorName(); }}
-                            class="w-full rounded-lg border border-adwaita-border bg-adwaita-bg px-3 py-1.5 text-sm text-adwaita-text transition-colors placeholder:text-adwaita-label/70 disabled:opacity-60"
-                            class:border-adwaita-error={errors.authorName}
-                            class:input-valid={valid.authorName && !isAnonymous} />
-                          <div id="reply-author-fb-{comment.id}" aria-live="polite" class="mt-1 h-4 text-xs font-medium leading-none">
-                            {#if errors.authorName}
-                              <span role="alert" class="flex items-center gap-1 text-adwaita-error">
-                                <i class="bi bi-exclamation-circle-fill"></i>{errors.authorName}
+                            ><span class="sr-only">(required)</span>
+                          </label>
+                          <div class="relative w-full">
+                            <textarea
+                              use:autoResize={commentContent}
+                              id="reply-msg-{comment.id}"
+                              rows="3"
+                              maxlength="1000"
+                              placeholder="Enter your message"
+                              bind:value={commentContent}
+                              oninput={() => {
+                                errors.commentContent = '';
+                                valid.commentContent = false;
+                                validateCommentContent();
+                              }}
+                              aria-required="true"
+                              aria-invalid={!!errors.commentContent}
+                              aria-describedby="reply-msg-count-{comment.id} reply-msg-fb-{comment.id}"
+                              class="no-scrollbar w-full resize-none overflow-hidden rounded-lg border border-adwaita-border bg-adwaita-bg px-3 py-1.5 pr-16 text-sm text-adwaita-text transition-colors placeholder:text-adwaita-label/70"
+                              class:border-adwaita-error={errors.commentContent}
+                              class:input-valid={valid.commentContent}></textarea>
+                            <div
+                              class="pointer-events-none absolute right-3 bottom-2.5 z-10 font-mono text-[10px] text-adwaita-label select-none"
+                              id="reply-msg-count-{comment.id}"
+                              aria-live="polite">
+                              {commentContent.length}/1000
+                            </div>
+                          </div>
+                          <div
+                            id="reply-msg-fb-{comment.id}"
+                            aria-live="polite"
+                            class="mt-0.5 h-4 text-xs leading-none font-medium">
+                            {#if errors.commentContent}
+                              <span
+                                role="alert"
+                                class="flex items-center gap-1 text-adwaita-error">
+                                <i class="bi bi-exclamation-circle-fill"></i>{errors.commentContent}
                               </span>
-                            {:else if valid.authorName && !isAnonymous}
+                            {:else if valid.commentContent}
                               <span class="flex items-center gap-1 text-adwaita-accent">
                                 <i class="bi bi-check-circle-fill"></i>Looks good
                               </span>
                             {/if}
                           </div>
                         </div>
-                      </div>
 
-                      <div class="flex flex-col gap-1">
-                        <label
-                          for="reply-msg-{comment.id}"
-                          class="text-xs font-bold text-adwaita-label select-none">
-                          Message <span
-                            aria-hidden="true"
-                            class="text-adwaita-error">*</span
-                          ><span class="sr-only">(required)</span>
-                        </label>
-                        <div class="relative w-full">
-                          <textarea
-                            use:autoResize={commentContent}
-                            id="reply-msg-{comment.id}"
-                            rows="3"
-                            maxlength="1000"
-                            placeholder="Enter your message"
-                            bind:value={commentContent}
-                            oninput={() => { errors.commentContent = ''; valid.commentContent = false; validateCommentContent(); }}
-                            aria-required="true"
-                            aria-invalid={!!errors.commentContent}
-                            aria-describedby="reply-msg-count-{comment.id} reply-msg-fb-{comment.id}"
-                            class="no-scrollbar w-full resize-none overflow-hidden rounded-lg border border-adwaita-border bg-adwaita-bg px-3 py-1.5 pr-16 text-sm text-adwaita-text transition-colors placeholder:text-adwaita-label/70"
-                            class:border-adwaita-error={errors.commentContent}
-                            class:input-valid={valid.commentContent}></textarea>
-                          <div
-                            class="pointer-events-none absolute right-3 bottom-2.5 z-10 font-mono text-[10px] text-adwaita-label select-none"
-                            id="reply-msg-count-{comment.id}"
-                            aria-live="polite">
-                            {commentContent.length}/1000
-                          </div>
-                        </div>
-                        <div id="reply-msg-fb-{comment.id}" aria-live="polite" class="mt-0.5 h-4 text-xs font-medium leading-none">
-                          {#if errors.commentContent}
-                            <span role="alert" class="flex items-center gap-1 text-adwaita-error">
-                              <i class="bi bi-exclamation-circle-fill"></i>{errors.commentContent}
-                            </span>
-                          {:else if valid.commentContent}
-                            <span class="flex items-center gap-1 text-adwaita-accent">
-                              <i class="bi bi-check-circle-fill"></i>Looks good
-                            </span>
-                          {/if}
+                        <div class="flex justify-end">
+                          <button
+                            type="submit"
+                            disabled={isSubmitting}
+                            class="inline-flex cursor-pointer items-center justify-center rounded-lg bg-adwaita-focus px-5 py-2 text-sm font-semibold text-white transition-colors select-none hover:bg-adwaita-focus/90 disabled:cursor-not-allowed disabled:opacity-55">
+                            {isSubmitting ? 'Validating...' : 'Post Reply'}
+                          </button>
                         </div>
                       </div>
-
-                      <div class="flex justify-end">
-                        <button
-                          type="submit"
-                          disabled={isSubmitting}
-                          class="inline-flex cursor-pointer items-center justify-center rounded-lg bg-adwaita-focus px-5 py-2 text-sm font-semibold text-white transition-colors select-none hover:bg-adwaita-focus/90 disabled:cursor-not-allowed disabled:opacity-55">
-                          {isSubmitting ? 'Validating...' : 'Post Reply'}
-                        </button>
-                      </div>
-                    </div>
-                  </form>
-                {/if}
+                    </form>
+                  {/if}
+                </div>
               </div>
+
+              {#if comment.children && comment.children.length > 0}
+                <div
+                  class="replies-container relative"
+                  style="padding-left: clamp(16px, 5vw, 44px);">
+                  {#each comment.children as child, i (child.id)}
+                    <div class="child-wrapper relative mt-4">
+                      <div
+                        class="absolute z-0 border-b border-l border-adwaita-subtitle/10"
+                        style="left: -28px; top: -16px; width: 28px; height: 32px; border-bottom-left-radius: 10px;">
+                      </div>
+                      {@render commentNode(child, depth + 1, i === comment.children.length - 1)}
+                    </div>
+                  {/each}
+                </div>
+              {/if}
             </div>
+          {/snippet}
 
-            {#if comment.children && comment.children.length > 0}
-              <div
-                class="replies-container relative"
-                style="padding-left: clamp(16px, 5vw, 44px);">
-                {#each comment.children as child, i (child.id)}
-                  <div class="child-wrapper relative mt-4">
-                    <div
-                      class="absolute z-0 border-b border-l border-adwaita-subtitle/10"
-                      style="left: -28px; top: -16px; width: 28px; height: 32px; border-bottom-left-radius: 10px;">
-                    </div>
-                    {@render commentNode(child, depth + 1, i === comment.children.length - 1)}
-                  </div>
-                {/each}
-              </div>
-            {/if}
+          <div class="flex flex-col gap-6">
+            {#each commentTree as rootComment (rootComment.id)}
+              {@render commentNode(rootComment, 0, false)}
+            {/each}
           </div>
-        {/snippet}
-
-        <div class="flex flex-col gap-6">
-          {#each commentTree as rootComment (rootComment.id)}
-            {@render commentNode(rootComment, 0, false)}
-          {/each}
-        </div>
-      {/if}
-    </section>
+        {/if}
+      </section>
     </article>
-    
-    <!-- Table of Contents Sidebar -->
-    <aside class="hidden xl:block xl:col-start-10 xl:col-span-3 sticky top-24 h-fit select-none">
-      <div class="boxed-list p-5 bg-adwaita-card/45 backdrop-blur-lg border border-adwaita-border">
-        <h3 class="text-xs font-bold text-adwaita-subtitle uppercase tracking-wider mb-3">In this article</h3>
-        
+
+    <aside class="sticky top-24 hidden h-fit select-none xl:col-span-3 xl:col-start-10 xl:block">
+      <div class="boxed-list border border-adwaita-border bg-adwaita-card/45 p-5 backdrop-blur-lg">
+        <h3 class="mb-3 text-xs font-bold tracking-wider text-adwaita-subtitle uppercase">
+          In this article
+        </h3>
+
         {#if headings.length === 0}
           <p class="text-xs text-adwaita-subtitle italic">No subheadings found.</p>
         {:else}
           <ul class="flex flex-col gap-2">
             {#each headings as heading, index (heading.id + '-' + index)}
-              <li class="text-xs" style="padding-left: {(heading.level - 2) * 12}px;">
+              <li
+                class="text-xs"
+                style="padding-left: {(heading.level - 2) * 12}px;">
                 <a
                   href="#{heading.id}"
-                  onclick={(e) => {
+                  onclick={e => {
                     e.preventDefault();
                     const target = document.getElementById(heading.id);
                     if (target) {
@@ -1164,11 +1238,11 @@
                       activeHeadingId = heading.id;
                     }
                   }}
-                  class="block transition-colors py-0.5 hover:text-adwaita-accent leading-normal {
-                    activeHeadingId === heading.id 
-                      ? 'text-adwaita-accent font-bold border-l-2 border-adwaita-accent pl-2' 
-                      : 'text-adwaita-subtitle pl-2'
-                  }">
+                  class="block py-0.5 leading-normal transition-colors hover:text-adwaita-accent {(
+                    activeHeadingId === heading.id
+                  ) ?
+                    'border-l-2 border-adwaita-accent pl-2 font-bold text-adwaita-accent'
+                  : 'pl-2 text-adwaita-subtitle'}">
                   {heading.text}
                 </a>
               </li>
@@ -1178,20 +1252,18 @@
       </div>
     </aside>
   </div>
-  
+
   <footer
-    class="relative z-10 mx-auto mt-auto w-full border-t border-adwaita-border px-6 pt-16 pb-12 text-xs text-adwaita-subtitle/75 md:w-[80%] lg:w-[50%] font-sans">
-    <div class="grid grid-cols-1 md:grid-cols-12 gap-8 pb-10">
-      <!-- Left Column: Brand & Socials -->
-      <div class="md:col-span-7 flex flex-col gap-4">
+    class="relative z-10 mx-auto mt-auto w-full border-t border-adwaita-border px-6 pt-16 pb-12 font-sans text-xs text-adwaita-subtitle/75 md:w-[80%] lg:w-[50%]">
+    <div class="grid grid-cols-1 gap-8 pb-10 md:grid-cols-12">
+      <div class="flex flex-col gap-4 md:col-span-7">
         <div>
           <h3 class="text-base font-bold text-adwaita-text">{name}</h3>
-          <p class="mt-2 text-xs leading-relaxed max-w-md text-adwaita-subtitle">
+          <p class="mt-2 max-w-md text-xs leading-relaxed text-adwaita-subtitle">
             {desc}
           </p>
         </div>
-        
-        <!-- Social Icons -->
+
         <div class="flex items-center gap-3">
           <a
             href="https://github.com/farhnkrnapratma"
@@ -1199,7 +1271,9 @@
             rel="noopener noreferrer"
             class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-adwaita-border bg-adwaita-card text-adwaita-subtitle transition-colors hover:bg-adwaita-hover hover:text-adwaita-accent"
             aria-label="GitHub (opens in a new tab)">
-            <i class="bi bi-github text-base leading-none" aria-hidden="true"></i>
+            <i
+              class="bi bi-github text-base leading-none"
+              aria-hidden="true"></i>
           </a>
           <a
             href="https://linkedin.com/in/farhnkrnapratma"
@@ -1207,7 +1281,9 @@
             rel="noopener noreferrer"
             class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-adwaita-border bg-adwaita-card text-adwaita-subtitle transition-colors hover:bg-adwaita-hover hover:text-adwaita-accent"
             aria-label="LinkedIn (opens in a new tab)">
-            <i class="bi bi-linkedin text-base leading-none" aria-hidden="true"></i>
+            <i
+              class="bi bi-linkedin text-base leading-none"
+              aria-hidden="true"></i>
           </a>
           <a
             href="https://x.com/farhnkrnapratma"
@@ -1215,7 +1291,9 @@
             rel="noopener noreferrer"
             class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-adwaita-border bg-adwaita-card text-adwaita-subtitle transition-colors hover:bg-adwaita-hover hover:text-adwaita-accent"
             aria-label="X (opens in a new tab)">
-            <i class="bi bi-twitter-x text-base leading-none" aria-hidden="true"></i>
+            <i
+              class="bi bi-twitter-x text-base leading-none"
+              aria-hidden="true"></i>
           </a>
           <a
             href="https://instagram.com/farhnkrnapratma"
@@ -1223,19 +1301,20 @@
             rel="noopener noreferrer"
             class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-adwaita-border bg-adwaita-card text-adwaita-subtitle transition-colors hover:bg-adwaita-hover hover:text-adwaita-accent"
             aria-label="Instagram (opens in a new tab)">
-            <i class="bi bi-instagram text-base leading-none" aria-hidden="true"></i>
+            <i
+              class="bi bi-instagram text-base leading-none"
+              aria-hidden="true"></i>
           </a>
         </div>
       </div>
 
-      <!-- Right Column: Navigation Links -->
-      <div class="md:col-span-5 flex flex-col md:pt-8 pt-1">
+      <div class="flex flex-col pt-1 md:col-span-5 md:pt-8">
         <ul class="grid grid-cols-2 gap-x-4 gap-y-2">
-          {#each footerNavItems as item}
+          {#each footerNavItems as item (item.url)}
             <li>
               <a
                 href={item.url}
-                class="hover:text-adwaita-accent transition-colors font-medium text-left cursor-pointer">
+                class="cursor-pointer text-left font-medium transition-colors hover:text-adwaita-accent">
                 {item.label}
               </a>
             </li>
@@ -1244,14 +1323,20 @@
       </div>
     </div>
 
-    <!-- Bottom Row: Divider & Copyright -->
-    <div class="border-t border-adwaita-border pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 select-none">
+    <div
+      class="flex flex-col items-center justify-between gap-4 border-t border-adwaita-border pt-6 select-none sm:flex-row">
       <p>&copy; {new Date().getFullYear()} {name}. All rights reserved</p>
       <div class="flex items-center gap-4 text-[11px] text-adwaita-subtitle">
-        <a href="/atom.xml" class="hover:text-[#f26522] transition-colors inline-flex items-center gap-1">
-          <i class="bi bi-rss-fill" aria-hidden="true"></i> RSS Feed
+        <a
+          href="/atom.xml"
+          class="inline-flex items-center gap-1 transition-colors hover:text-[#f26522]">
+          <i
+            class="bi bi-rss-fill"
+            aria-hidden="true"></i> RSS Feed
         </a>
-        <a href="/sitemap.xml" class="hover:text-adwaita-accent transition-colors">Sitemap</a>
+        <a
+          href="/sitemap.xml"
+          class="transition-colors hover:text-adwaita-accent">Sitemap</a>
       </div>
     </div>
   </footer>
@@ -1261,50 +1346,65 @@
   bind:isOpen={showYesFeedbackDialog}
   title="Would you like to share this article?">
   <div class="mt-4 flex flex-col gap-4">
-    <p class="text-xs text-adwaita-subtitle leading-normal text-left">
+    <p class="text-left text-xs leading-normal text-adwaita-subtitle">
       Great to hear this article helped you! Share it with your peers:
     </p>
-    
+
     <div class="grid grid-cols-2 gap-2 text-left">
       <button
-        onclick={() => { copyToClipboard(); showYesFeedbackDialog = false; }}
+        onclick={() => {
+          copyToClipboard();
+          showYesFeedbackDialog = false;
+        }}
         class="flex h-9.5 cursor-pointer items-center justify-center gap-2 rounded-lg border border-adwaita-border bg-adwaita-card px-3 text-xs font-semibold text-adwaita-text transition-colors hover:bg-adwaita-hover hover:text-adwaita-accent">
-        <i class="bi {showCopySuccess ? 'bi-check2 text-palette-green' : 'bi-link-45deg'} text-sm" aria-hidden="true"></i>
+        <i
+          class="bi {showCopySuccess ? 'bi-check2 text-palette-green' : 'bi-link-45deg'} text-sm"
+          aria-hidden="true"></i>
         <span>{showCopySuccess ? 'Copied!' : 'Copy Link'}</span>
       </button>
-      
+
       <a
-        href="https://twitter.com/intent/tweet?url={encodeURIComponent(page.url.href)}&text={encodeURIComponent(post.title)}"
+        href="https://twitter.com/intent/tweet?url={encodeURIComponent(
+          page.url.href,
+        )}&text={encodeURIComponent(post.title)}"
         target="_blank"
         rel="noopener noreferrer"
         onclick={() => (showYesFeedbackDialog = false)}
         class="flex h-9.5 items-center justify-center gap-2 rounded-lg border border-adwaita-border bg-adwaita-card px-3 text-xs font-semibold text-adwaita-text transition-colors hover:bg-adwaita-hover hover:text-adwaita-accent">
-        <i class="bi bi-twitter-x text-sm" aria-hidden="true"></i>
+        <i
+          class="bi bi-twitter-x text-sm"
+          aria-hidden="true"></i>
         <span>X</span>
       </a>
-      
+
       <a
         href="https://www.facebook.com/sharer/sharer.php?u={encodeURIComponent(page.url.href)}"
         target="_blank"
         rel="noopener noreferrer"
         onclick={() => (showYesFeedbackDialog = false)}
         class="flex h-9.5 items-center justify-center gap-2 rounded-lg border border-adwaita-border bg-adwaita-card px-3 text-xs font-semibold text-adwaita-text transition-colors hover:bg-adwaita-hover hover:text-adwaita-accent">
-        <i class="bi bi-facebook text-sm" aria-hidden="true"></i>
+        <i
+          class="bi bi-facebook text-sm"
+          aria-hidden="true"></i>
         <span>Facebook</span>
       </a>
-      
+
       <a
-        href="https://www.linkedin.com/sharing/share-offsite/?url={encodeURIComponent(page.url.href)}"
+        href="https://www.linkedin.com/sharing/share-offsite/?url={encodeURIComponent(
+          page.url.href,
+        )}"
         target="_blank"
         rel="noopener noreferrer"
         onclick={() => (showYesFeedbackDialog = false)}
         class="flex h-9.5 items-center justify-center gap-2 rounded-lg border border-adwaita-border bg-adwaita-card px-3 text-xs font-semibold text-adwaita-text transition-colors hover:bg-adwaita-hover hover:text-adwaita-accent">
-        <i class="bi bi-linkedin text-sm" aria-hidden="true"></i>
+        <i
+          class="bi bi-linkedin text-sm"
+          aria-hidden="true"></i>
         <span>LinkedIn</span>
       </a>
     </div>
 
-    <div class="flex items-center justify-end gap-3 mt-2">
+    <div class="mt-2 flex items-center justify-end gap-3">
       <button
         type="button"
         onclick={() => (showYesFeedbackDialog = false)}

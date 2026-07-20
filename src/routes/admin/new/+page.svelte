@@ -6,10 +6,9 @@
 
   let isCheckingAuth = $state(true);
   let title = $state('');
-  let slug = $state('');
+  let slug = $derived(generateSlug(title));
   let excerpt = $state('');
   let markdownContent = $state('# New Post\n\nWrite your markdown content here...');
-  let published = $state(false);
 
   let isSubmitting = $state(false);
   let errorMessage = $state<string | null>(null);
@@ -20,13 +19,11 @@
   let editId = $state<string | null>(null);
   let originalSlug = '';
 
-  // Banner image states
   let bannerFile = $state<File | null>(null);
   let bannerPreview = $state<string | null>(null);
   let bannerPath = $state<string | null>(null);
   let bannerError = $state<string | null>(null);
 
-  // Initial values for dirty checking
   let initialTitle = $state('');
   let initialExcerpt = $state('');
   let initialMarkdownContent = $state('');
@@ -34,17 +31,15 @@
 
   const isDirty = $derived(
     title.trim() !== initialTitle.trim() ||
-    excerpt.trim() !== initialExcerpt.trim() ||
-    markdownContent.trim() !== initialMarkdownContent.trim() ||
-    (bannerPath || '').trim() !== (initialBannerPath || '').trim() ||
-    bannerFile !== null
+      excerpt.trim() !== initialExcerpt.trim() ||
+      markdownContent.trim() !== initialMarkdownContent.trim() ||
+      (bannerPath || '').trim() !== (initialBannerPath || '').trim() ||
+      bannerFile !== null,
   );
 
-  // Validation state variables
   let titleError = $state('');
   let titleValid = $state(false);
 
-  // Dialog visibility states
   let showCancelDialog = $state(false);
   let showPublishDialog = $state(false);
   let showSaveDraftDialog = $state(false);
@@ -68,7 +63,7 @@
     }
   }
 
-  const IDLE_TIMEOUT_MS = 30 * 60 * 1000; // 30 minutes
+  const IDLE_TIMEOUT_MS = 30 * 60 * 1000;
   let idleTimer: ReturnType<typeof setTimeout>;
 
   function resetIdleTimer() {
@@ -106,13 +101,12 @@
       }
     })();
 
-    // Start idle timer
     resetIdleTimer();
-    ACTIVITY_EVENTS.forEach((evt) => window.addEventListener(evt, resetIdleTimer, { passive: true }));
+    ACTIVITY_EVENTS.forEach(evt => window.addEventListener(evt, resetIdleTimer, { passive: true }));
 
     return () => {
       clearTimeout(idleTimer);
-      ACTIVITY_EVENTS.forEach((evt) => window.removeEventListener(evt, resetIdleTimer));
+      ACTIVITY_EVENTS.forEach(evt => window.removeEventListener(evt, resetIdleTimer));
     };
   });
 
@@ -125,10 +119,8 @@
       }
 
       title = post.title;
-      slug = post.slug;
       originalSlug = post.slug;
       excerpt = post.excerpt || '';
-      published = post.published;
 
       const { data: fileData, error: fileError } = await supabase.storage
         .from('blog-posts')
@@ -162,19 +154,14 @@
     }
   }
 
-  // Automatic slug generation from title (a-z, - only)
   function generateSlug(text: string): string {
     return text
       .toLowerCase()
-      .replace(/[^a-z\s-]/g, '')      // keep only letters, spaces, and hyphens
-      .replace(/\s+/g, '-')          // convert spaces to hyphens
-      .replace(/-+/g, '-')           // normalize repeated hyphens
-      .replace(/^-+|-+$/g, '');      // trim leading/trailing hyphens
+      .replace(/[^a-z\s-]/g, '')
+      .replace(/\s+/g, '-')
+      .replace(/-+/g, '-')
+      .replace(/^-+|-+$/g, '');
   }
-
-  $effect(() => {
-    slug = generateSlug(title);
-  });
 
   $effect(() => {
     if (markdownContent) {
@@ -184,7 +171,6 @@
     }
   });
 
-  // 300ms delayed title validation
   function debounce<T extends unknown[]>(cb: (...args: T) => void, ms: number) {
     let timer: ReturnType<typeof setTimeout>;
     return (...args: T) => {
@@ -288,11 +274,10 @@
     errorMessage = null;
 
     try {
-      // Backend validation simulation (Supabase DB will also validate title length and slug format via CHECK constraints)
       if (title.trim().length > 60) {
         throw new Error('Title exceeds backend maximum length of 60 characters.');
       }
-      if (!/^[a-z\-]*$/.test(slug)) {
+      if (!/^[a-z-]*$/.test(slug)) {
         throw new Error('Slug contains invalid characters. Only a-z and - are allowed.');
       }
 
@@ -305,7 +290,6 @@
       let finalBannerPath = bannerPath;
 
       if (bannerFile) {
-        // Backend validation of PNG and size
         if (bannerFile.type !== 'image/png') {
           throw new Error('Backend Validation: Banner must be a PNG image.');
         }
@@ -352,10 +336,9 @@
         }
 
         if (originalSlug && originalSlug !== slug) {
-          await supabase.storage.from('blog-posts').remove([
-            `${originalSlug}.md`,
-            `banners/${originalSlug}.png`
-          ]);
+          await supabase.storage
+            .from('blog-posts')
+            .remove([`${originalSlug}.md`, `banners/${originalSlug}.png`]);
         }
       } else {
         const { error: uploadError } = await supabase.storage
@@ -527,11 +510,10 @@
       <form
         onsubmit={e => e.preventDefault()}
         class="flex flex-col gap-4">
-        <div class="boxed-list bg-zinc-950/1 p-5 text-left flex flex-col gap-2.5">
+        <div class="boxed-list flex flex-col gap-2.5 bg-zinc-950/1 p-5 text-left">
           <h2 class="text-sm font-bold text-adwaita-text select-none">Post Settings</h2>
-          
+
           <div class="flex flex-col gap-2.5">
-            <!-- Title -->
             <div class="flex flex-col gap-1">
               <div class="flex items-center justify-between">
                 <label
@@ -539,11 +521,13 @@
                   class="text-xs font-bold text-adwaita-subtitle">
                   Title <span class="text-adwaita-error">*</span>
                 </label>
-                <!-- Permalink preview -->
                 {#if slug}
-                  <div class="flex items-center gap-1 text-[10px] text-adwaita-subtitle select-none font-sans">
+                  <div
+                    class="flex items-center gap-1 font-sans text-[10px] text-adwaita-subtitle select-none">
                     <i class="bi bi-link-45deg text-xs text-adwaita-accent"></i>
-                    <span>fkp.my.id/blog/</span><span class="font-bold text-adwaita-accent bg-adwaita-accent/10 px-1.5 py-0.5 rounded-md">{slug}</span>
+                    <span>fkp.my.id/blog/</span><span
+                      class="rounded-md bg-adwaita-accent/10 px-1.5 py-0.5 font-bold text-adwaita-accent"
+                      >{slug}</span>
                   </div>
                 {/if}
               </div>
@@ -554,13 +538,19 @@
                 required
                 placeholder="Getting Started with Rust"
                 bind:value={title}
-                oninput={() => { titleError = ''; titleValid = false; validateTitleField(); }}
+                oninput={() => {
+                  titleError = '';
+                  titleValid = false;
+                  validateTitleField();
+                }}
                 class="w-full rounded-lg border border-adwaita-border bg-adwaita-bg px-3 py-2 text-sm text-adwaita-text transition-colors placeholder:text-adwaita-subtitle/70"
                 class:border-adwaita-error={titleError}
                 class:input-valid={titleValid} />
-              <!-- Fixed-height feedback area -->
               {#if titleError || titleValid}
-                <div id="post-title-fb" aria-live="polite" class="mt-1 text-xs font-medium leading-none">
+                <div
+                  id="post-title-fb"
+                  aria-live="polite"
+                  class="mt-1 text-xs leading-none font-medium">
                   {#if titleError}
                     <span class="flex items-center gap-1 text-adwaita-error">
                       <i class="bi bi-exclamation-circle-fill"></i>{titleError}
@@ -574,7 +564,6 @@
               {/if}
             </div>
 
-            <!-- Excerpt -->
             <div class="flex flex-col gap-1">
               <label
                 for="post-excerpt"
@@ -589,38 +578,48 @@
               ></textarea>
             </div>
 
-            <!-- Banner Image -->
             <div class="flex flex-col gap-1">
-              <span class="text-xs font-bold text-adwaita-subtitle select-none">Banner Image (PNG, 1280x640)</span>
-              
+              <span class="text-xs font-bold text-adwaita-subtitle select-none"
+                >Banner Image (PNG, 1280x640)</span>
+
               <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
                 <input
                   type="file"
                   id="post-banner"
                   accept="image/png"
                   onchange={handleBannerChange}
-                  class="block w-full text-xs text-adwaita-subtitle file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border file:border-adwaita-border file:bg-adwaita-card file:text-xs file:font-semibold file:text-adwaita-text file:cursor-pointer hover:file:bg-adwaita-hover focus:outline-2 focus:outline-adwaita-accent" />
-                
+                  class="block w-full text-xs text-adwaita-subtitle file:mr-4 file:cursor-pointer file:rounded-lg file:border file:border-adwaita-border file:bg-adwaita-card file:px-4 file:py-2 file:text-xs file:font-semibold file:text-adwaita-text hover:file:bg-adwaita-hover focus:outline-2 focus:outline-adwaita-accent" />
+
                 {#if bannerPreview}
-                  <div class="relative max-w-[200px] border border-adwaita-border rounded-lg overflow-hidden shrink-0">
-                    <img 
-                      src={bannerPreview} 
-                      alt="Banner preview" 
-                      class="w-full object-cover aspect-[2/1]" />
+                  <div
+                    class="relative max-w-[200px] shrink-0 overflow-hidden rounded-lg border border-adwaita-border">
+                    <img
+                      src={bannerPreview}
+                      alt="Banner preview"
+                      class="aspect-[2/1] w-full object-cover" />
                     <button
                       type="button"
-                      onclick={() => { bannerFile = null; bannerPreview = null; bannerPath = null; }}
-                      class="absolute top-1 right-1 bg-black/70 hover:bg-black/90 text-white rounded-full p-1 cursor-pointer w-6 h-6 flex items-center justify-center border border-white/20"
+                      onclick={() => {
+                        bannerFile = null;
+                        bannerPreview = null;
+                        bannerPath = null;
+                      }}
+                      class="absolute top-1 right-1 flex h-6 w-6 cursor-pointer items-center justify-center rounded-full border border-white/20 bg-black/70 p-1 text-white hover:bg-black/90"
                       aria-label="Remove banner">
                       <i class="bi bi-x text-xs"></i>
                     </button>
                   </div>
                 {/if}
               </div>
-              
+
               {#if bannerError}
-                <div id="post-banner-fb" aria-live="polite" class="mt-1 text-xs font-medium leading-none">
-                  <span role="alert" class="flex items-center gap-1 text-adwaita-error">
+                <div
+                  id="post-banner-fb"
+                  aria-live="polite"
+                  class="mt-1 text-xs leading-none font-medium">
+                  <span
+                    role="alert"
+                    class="flex items-center gap-1 text-adwaita-error">
                     <i class="bi bi-exclamation-circle-fill"></i>{bannerError}
                   </span>
                 </div>
@@ -672,7 +671,6 @@
           {/if}
         </div>
 
-        <!-- Buttons Action Placement -->
         <div class="mt-4 mb-10 flex justify-end gap-3 select-none">
           <button
             type="button"
@@ -680,7 +678,7 @@
             class="inline-flex h-10 items-center justify-center rounded-lg border border-adwaita-border bg-adwaita-card px-5 text-sm font-semibold text-adwaita-text transition-colors hover:bg-adwaita-hover">
             Cancel
           </button>
-          
+
           <button
             type="button"
             onclick={() => handleSaveClick(false)}
@@ -688,7 +686,7 @@
             class="inline-flex h-10 cursor-pointer items-center justify-center gap-2 rounded-lg border border-adwaita-border bg-adwaita-card px-5 text-sm font-semibold text-adwaita-text transition-colors hover:bg-adwaita-hover disabled:opacity-55">
             Save as Draft
           </button>
-          
+
           <button
             type="button"
             onclick={() => handleSaveClick(true)}

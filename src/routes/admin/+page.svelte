@@ -18,7 +18,6 @@
   let isLoggingOut = $state(false);
   let openActionMenuId = $state<string | null>(null);
 
-  // Deletion dialog states
   let showDeletePostDialog = $state(false);
   let postToDelete = $state<AdminPost | null>(null);
   let showDeleteCommentDialog = $state(false);
@@ -126,7 +125,7 @@
     }
   }
 
-  const IDLE_TIMEOUT_MS = 30 * 60 * 1000; // 30 minutes
+  const IDLE_TIMEOUT_MS = 30 * 60 * 1000;
   let idleTimer: ReturnType<typeof setTimeout>;
 
   function resetIdleTimer() {
@@ -154,13 +153,12 @@
       isLoading = false;
     })();
 
-    // Start idle timer
     resetIdleTimer();
-    ACTIVITY_EVENTS.forEach((evt) => window.addEventListener(evt, resetIdleTimer, { passive: true }));
+    ACTIVITY_EVENTS.forEach(evt => window.addEventListener(evt, resetIdleTimer, { passive: true }));
 
     return () => {
       clearTimeout(idleTimer);
-      ACTIVITY_EVENTS.forEach((evt) => window.removeEventListener(evt, resetIdleTimer));
+      ACTIVITY_EVENTS.forEach(evt => window.removeEventListener(evt, resetIdleTimer));
     };
   });
 
@@ -766,7 +764,9 @@
 <ConfirmationDialog
   bind:isOpen={showDeletePostDialog}
   title="Delete Blog Post?"
-  message={'Are you sure you want to permanently delete "' + (postToDelete?.title || '') + '"? This action is irreversible.'}
+  message={'Are you sure you want to permanently delete "' +
+    (postToDelete?.title || '') +
+    '"? This action is irreversible.'}
   confirmLabel="Delete"
   isDestructive={true}
   onConfirm={executeDeletePost} />

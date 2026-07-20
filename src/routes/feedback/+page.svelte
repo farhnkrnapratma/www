@@ -7,7 +7,6 @@
   let theme = $state<Theme>('auto');
   let themeDropdownOpen = $state(false);
 
-  // Form states
   let formName = $state('');
   let formEmail = $state('');
   let formUrl = $state('');
@@ -39,8 +38,7 @@
   onMount(() => {
     const saved = localStorage.getItem('theme') as Theme;
     theme = saved || 'auto';
-    
-    // Automatically pre-fill current URL if came from another page via referrer
+
     if (typeof document !== 'undefined' && document.referrer) {
       const refUrl = new URL(document.referrer);
       if (refUrl.origin === window.location.origin) {
@@ -49,7 +47,6 @@
     }
   });
 
-  // Debounce helper
   function debounce<T extends unknown[]>(cb: (...args: T) => void, ms: number) {
     let timer: ReturnType<typeof setTimeout>;
     return (...args: T) => {
@@ -123,7 +120,7 @@
     const emailErr = formEmail.trim() === '' ? 'Email is required.' : '';
     const urlErr = formUrl.trim() === '' ? 'URL/Page is required.' : '';
     const msgErr = formMessage.trim() === '' ? 'Message is required.' : '';
-    
+
     const emailFormatErr =
       !emailErr && !emailRegex.test(formEmail.trim()) ? 'Please enter a valid email address.' : '';
     const nameReservedErr =
@@ -135,7 +132,7 @@
       name: nameErr || nameReservedErr,
       email: emailErr || emailFormatErr,
       url: urlErr,
-      message: msgErr
+      message: msgErr,
     };
 
     if (formErrors.name) formValid.name = false;
@@ -261,56 +258,71 @@
       class="pointer-events-none absolute top-12.5 left-[50%] z-0 h-80 w-[320px] translate-x-[-50%] rounded-full bg-adwaita-accent/10 blur-[80px]">
     </div>
 
-    <!-- Intro Text -->
     <div class="relative z-10 text-center select-none">
       <h1 class="text-3xl font-bold tracking-tight text-adwaita-text md:text-4xl lg:text-5xl">
         Your Feedback Matters
       </h1>
-      <p class="mt-4 text-base leading-relaxed text-adwaita-subtitle/90 max-w-xl mx-auto">
-        Your valuable feedback helps improve the quality of articles and ensures the website's technical systems run reliably. Please let us know if you spot any issues.
+      <p class="mx-auto mt-4 max-w-xl text-base leading-relaxed text-adwaita-subtitle/90">
+        Your valuable feedback helps improve the quality of articles and ensures the website's
+        technical systems run reliably. Please let us know if you spot any issues.
       </p>
     </div>
 
-    <!-- Explanations Cards (Boxed List) -->
-    <div class="boxed-list relative z-10 text-left select-none bg-zinc-950/1">
-      <div class="p-5 flex flex-col gap-3">
+    <div class="boxed-list relative z-10 bg-zinc-950/1 text-left select-none">
+      <div class="flex flex-col gap-3 p-5">
         <h2 class="text-sm font-bold text-adwaita-text">Feedback Categories</h2>
         <ul class="flex flex-col gap-2.5 text-xs text-adwaita-subtitle/95">
           <li class="flex items-start gap-2">
-            <i class="bi bi-check-circle-fill text-adwaita-accent mt-0.5" aria-hidden="true"></i>
-            <span><strong>Writing errors:</strong> Grammatical mistakes, typos, spelling, or poor phrasing.</span>
+            <i
+              class="bi bi-check-circle-fill mt-0.5 text-adwaita-accent"
+              aria-hidden="true"></i>
+            <span
+              ><strong>Writing errors:</strong> Grammatical mistakes, typos, spelling, or poor phrasing.</span>
           </li>
           <li class="flex items-start gap-2">
-            <i class="bi bi-check-circle-fill text-adwaita-accent mt-0.5" aria-hidden="true"></i>
-            <span><strong>Technical inaccuracies:</strong> Code snippets that don't compile, wrong command usages, or faulty explanation logic.</span>
+            <i
+              class="bi bi-check-circle-fill mt-0.5 text-adwaita-accent"
+              aria-hidden="true"></i>
+            <span
+              ><strong>Technical inaccuracies:</strong> Code snippets that don't compile, wrong command
+              usages, or faulty explanation logic.</span>
           </li>
           <li class="flex items-start gap-2">
-            <i class="bi bi-check-circle-fill text-adwaita-accent mt-0.5" aria-hidden="true"></i>
-            <span><strong>Outdated information:</strong> Deprecated package API calls, tools that are no longer active, or outdated tutorial steps.</span>
+            <i
+              class="bi bi-check-circle-fill mt-0.5 text-adwaita-accent"
+              aria-hidden="true"></i>
+            <span
+              ><strong>Outdated information:</strong> Deprecated package API calls, tools that are no
+              longer active, or outdated tutorial steps.</span>
           </li>
           <li class="flex items-start gap-2">
-            <i class="bi bi-check-circle-fill text-adwaita-accent mt-0.5" aria-hidden="true"></i>
-            <span><strong>Broken links:</strong> 404 links, invalid references, or missing static download files.</span>
+            <i
+              class="bi bi-check-circle-fill mt-0.5 text-adwaita-accent"
+              aria-hidden="true"></i>
+            <span
+              ><strong>Broken links:</strong> 404 links, invalid references, or missing static download
+              files.</span>
           </li>
           <li class="flex items-start gap-2">
-            <i class="bi bi-check-circle-fill text-adwaita-accent mt-0.5" aria-hidden="true"></i>
-            <span><strong>Website issues:</strong> UI layout bugs, visual display mistakes, broken styling, accessibility complaints, or slow loading times.</span>
+            <i
+              class="bi bi-check-circle-fill mt-0.5 text-adwaita-accent"
+              aria-hidden="true"></i>
+            <span
+              ><strong>Website issues:</strong> UI layout bugs, visual display mistakes, broken styling,
+              accessibility complaints, or slow loading times.</span>
           </li>
         </ul>
       </div>
     </div>
 
-    <!-- Feedback Submission Form -->
     <form
       bind:this={feedbackFormElement}
       novalidate
       action="https://formsubmit.co/contact@fkp.my.id"
       method="POST"
       onsubmit={validateForm}
-      class="flex w-full flex-col gap-2 rounded-2xl border border-adwaita-border bg-adwaita-card/45 p-5 text-left shadow-xs backdrop-blur-lg transition-colors duration-300 relative z-10"
+      class="relative z-10 flex w-full flex-col gap-2 rounded-2xl border border-adwaita-border bg-adwaita-card/45 p-5 text-left shadow-xs backdrop-blur-lg transition-colors duration-300"
       autocomplete="off">
-      
-      <!-- hidden fields for formsubmit.co -->
       <input
         type="hidden"
         name="_subject"
@@ -335,12 +347,14 @@
         </p>
       </div>
 
-      <!-- Name -->
       <div class="flex flex-col gap-1">
         <label
           for="form-name"
           class="text-xs font-bold text-adwaita-label select-none">
-          Name <span aria-hidden="true" class="text-adwaita-error">*</span><span class="sr-only">(required)</span>
+          Name <span
+            aria-hidden="true"
+            class="text-adwaita-error">*</span
+          ><span class="sr-only">(required)</span>
         </label>
         <div class="w-full">
           <input
@@ -353,13 +367,22 @@
             aria-describedby="form-name-fb"
             placeholder="Enter your name"
             bind:value={formName}
-            oninput={() => { formErrors.name = ''; formValid.name = false; validateName(); }}
+            oninput={() => {
+              formErrors.name = '';
+              formValid.name = false;
+              validateName();
+            }}
             class="w-full rounded-lg border border-adwaita-border bg-adwaita-bg px-3 py-1.5 text-sm text-adwaita-text transition-colors placeholder:text-adwaita-label/70"
             class:border-adwaita-error={formErrors.name}
             class:input-valid={formValid.name} />
-          <div id="form-name-fb" aria-live="polite" class="mt-0.5 h-4 text-[11px] font-medium leading-none">
+          <div
+            id="form-name-fb"
+            aria-live="polite"
+            class="mt-0.5 h-4 text-[11px] leading-none font-medium">
             {#if formErrors.name}
-              <span role="alert" class="flex items-center gap-1 text-adwaita-error">
+              <span
+                role="alert"
+                class="flex items-center gap-1 text-adwaita-error">
                 <i class="bi bi-exclamation-circle-fill"></i>{formErrors.name}
               </span>
             {:else if formValid.name}
@@ -371,12 +394,14 @@
         </div>
       </div>
 
-      <!-- Email -->
       <div class="flex flex-col gap-1">
         <label
           for="form-email"
           class="text-xs font-bold text-adwaita-label select-none">
-          Email <span aria-hidden="true" class="text-adwaita-error">*</span><span class="sr-only">(required)</span>
+          Email <span
+            aria-hidden="true"
+            class="text-adwaita-error">*</span
+          ><span class="sr-only">(required)</span>
         </label>
         <div class="w-full">
           <input
@@ -389,13 +414,22 @@
             placeholder="Enter your email"
             autocomplete="email"
             bind:value={formEmail}
-            oninput={() => { formErrors.email = ''; formValid.email = false; validateEmail(); }}
+            oninput={() => {
+              formErrors.email = '';
+              formValid.email = false;
+              validateEmail();
+            }}
             class="w-full rounded-lg border border-adwaita-border bg-adwaita-bg px-3 py-1.5 text-sm text-adwaita-text transition-colors placeholder:text-adwaita-label/70"
             class:border-adwaita-error={formErrors.email}
             class:input-valid={formValid.email} />
-          <div id="form-email-fb" aria-live="polite" class="mt-0.5 h-4 text-[11px] font-medium leading-none">
+          <div
+            id="form-email-fb"
+            aria-live="polite"
+            class="mt-0.5 h-4 text-[11px] leading-none font-medium">
             {#if formErrors.email}
-              <span role="alert" class="flex items-center gap-1 text-adwaita-error">
+              <span
+                role="alert"
+                class="flex items-center gap-1 text-adwaita-error">
                 <i class="bi bi-exclamation-circle-fill"></i>{formErrors.email}
               </span>
             {:else if formValid.email}
@@ -407,12 +441,14 @@
         </div>
       </div>
 
-      <!-- URL/Page -->
       <div class="flex flex-col gap-1">
         <label
           for="form-url"
           class="text-xs font-bold text-adwaita-label select-none">
-          Which URL/page contains the issue? <span aria-hidden="true" class="text-adwaita-error">*</span><span class="sr-only">(required)</span>
+          Which URL/page contains the issue? <span
+            aria-hidden="true"
+            class="text-adwaita-error">*</span
+          ><span class="sr-only">(required)</span>
         </label>
         <div class="w-full">
           <input
@@ -424,13 +460,22 @@
             aria-describedby="form-url-fb"
             placeholder="/blog/some-article-slug"
             bind:value={formUrl}
-            oninput={() => { formErrors.url = ''; formValid.url = false; validateUrl(); }}
+            oninput={() => {
+              formErrors.url = '';
+              formValid.url = false;
+              validateUrl();
+            }}
             class="w-full rounded-lg border border-adwaita-border bg-adwaita-bg px-3 py-1.5 text-sm text-adwaita-text transition-colors placeholder:text-adwaita-label/70"
             class:border-adwaita-error={formErrors.url}
             class:input-valid={formValid.url} />
-          <div id="form-url-fb" aria-live="polite" class="mt-0.5 h-4 text-[11px] font-medium leading-none">
+          <div
+            id="form-url-fb"
+            aria-live="polite"
+            class="mt-0.5 h-4 text-[11px] leading-none font-medium">
             {#if formErrors.url}
-              <span role="alert" class="flex items-center gap-1 text-adwaita-error">
+              <span
+                role="alert"
+                class="flex items-center gap-1 text-adwaita-error">
                 <i class="bi bi-exclamation-circle-fill"></i>{formErrors.url}
               </span>
             {:else if formValid.url}
@@ -442,12 +487,14 @@
         </div>
       </div>
 
-      <!-- Message -->
       <div class="flex flex-col gap-1">
         <label
           for="form-message"
           class="text-xs font-bold text-adwaita-label select-none">
-          Message <span aria-hidden="true" class="text-adwaita-error">*</span><span class="sr-only">(required)</span>
+          Message <span
+            aria-hidden="true"
+            class="text-adwaita-error">*</span
+          ><span class="sr-only">(required)</span>
         </label>
         <div class="relative w-full">
           <textarea
@@ -458,7 +505,11 @@
             placeholder="Describe the issue in detail..."
             maxlength="1000"
             bind:value={formMessage}
-            oninput={() => { formErrors.message = ''; formValid.message = false; validateMessage(); }}
+            oninput={() => {
+              formErrors.message = '';
+              formValid.message = false;
+              validateMessage();
+            }}
             aria-required="true"
             aria-invalid={!!formErrors.message}
             aria-describedby="form-msg-count form-message-fb"
@@ -472,9 +523,14 @@
             {formMessage.length}/1000
           </div>
         </div>
-        <div id="form-message-fb" aria-live="polite" class="mt-0.5 h-4 text-[11px] font-medium leading-none">
+        <div
+          id="form-message-fb"
+          aria-live="polite"
+          class="mt-0.5 h-4 text-[11px] leading-none font-medium">
           {#if formErrors.message}
-            <span role="alert" class="flex items-center gap-1 text-adwaita-error">
+            <span
+              role="alert"
+              class="flex items-center gap-1 text-adwaita-error">
               <i class="bi bi-exclamation-circle-fill"></i>{formErrors.message}
             </span>
           {:else if formValid.message}
@@ -494,9 +550,9 @@
       </div>
     </form>
   </section>
-  
+
   <footer
-    class="w-full px-6 py-8 text-center font-sans text-xs text-adwaita-subtitle/75 select-none mt-auto">
+    class="mt-auto w-full px-6 py-8 text-center font-sans text-xs text-adwaita-subtitle/75 select-none">
     <p>&copy; {new Date().getFullYear()} Farhan Kurnia Pratama. All rights reserved</p>
   </footer>
 </main>

@@ -118,11 +118,17 @@
         </div>
       {/if}
 
-      <form novalidate onsubmit={handleLogin} class="flex flex-col gap-2.5">
-        <!-- Email -->
+      <form
+        novalidate
+        onsubmit={handleLogin}
+        class="flex flex-col gap-2.5">
         <div class="flex flex-col gap-1">
-          <label for="login-email" class="text-xs font-bold text-adwaita-label select-none">
-            Email <span aria-hidden="true" class="text-adwaita-error">*</span
+          <label
+            for="login-email"
+            class="text-xs font-bold text-adwaita-label select-none">
+            Email <span
+              aria-hidden="true"
+              class="text-adwaita-error">*</span
             ><span class="sr-only">(required)</span>
           </label>
           <input
@@ -131,7 +137,11 @@
             placeholder="Enter your email"
             autocomplete="username"
             bind:value={email}
-            oninput={() => { errors.email = ''; valid.email = false; validateEmailField(); }}
+            oninput={() => {
+              errors.email = '';
+              valid.email = false;
+              validateEmailField();
+            }}
             aria-required="true"
             aria-invalid={!!errors.email}
             aria-describedby="login-email-fb"
@@ -139,7 +149,10 @@
             class:border-adwaita-error={errors.email}
             class:input-valid={valid.email} />
           {#if errors.email || valid.email}
-            <div id="login-email-fb" aria-live="polite" class="mt-1 text-xs font-medium leading-none">
+            <div
+              id="login-email-fb"
+              aria-live="polite"
+              class="mt-1 text-xs leading-none font-medium">
               {#if errors.email}
                 <span class="flex items-center gap-1 text-adwaita-error">
                   <i class="bi bi-exclamation-circle-fill"></i>{errors.email}
@@ -153,10 +166,13 @@
           {/if}
         </div>
 
-        <!-- Password -->
         <div class="flex flex-col gap-1">
-          <label for="login-pass" class="text-xs font-bold text-adwaita-label select-none">
-            Password <span aria-hidden="true" class="text-adwaita-error">*</span
+          <label
+            for="login-pass"
+            class="text-xs font-bold text-adwaita-label select-none">
+            Password <span
+              aria-hidden="true"
+              class="text-adwaita-error">*</span
             ><span class="sr-only">(required)</span>
           </label>
           <div class="relative flex items-center">
@@ -166,7 +182,11 @@
               placeholder="••••••••"
               autocomplete="current-password"
               bind:value={password}
-              oninput={() => { errors.password = ''; valid.password = false; validatePasswordField(); }}
+              oninput={() => {
+                errors.password = '';
+                valid.password = false;
+                validatePasswordField();
+              }}
               aria-required="true"
               aria-invalid={!!errors.password}
               aria-describedby="login-pass-fb"
@@ -184,7 +204,10 @@
             </button>
           </div>
           {#if errors.password || valid.password}
-            <div id="login-pass-fb" aria-live="polite" class="mt-1 text-xs font-medium leading-none">
+            <div
+              id="login-pass-fb"
+              aria-live="polite"
+              class="mt-1 text-xs leading-none font-medium">
               {#if errors.password}
                 <span class="flex items-center gap-1 text-adwaita-error">
                   <i class="bi bi-exclamation-circle-fill"></i>{errors.password}
@@ -208,13 +231,16 @@
     </div>
 
     <div class="mt-4 text-center select-none">
-      <a href="/" class="text-xs font-semibold text-adwaita-subtitle hover:underline">
+      <a
+        href="/"
+        class="text-xs font-semibold text-adwaita-subtitle hover:underline">
         Back to Home
       </a>
     </div>
   </div>
 
-  <footer class="w-full px-6 py-8 text-center text-xs text-adwaita-subtitle/75 select-none font-sans">
+  <footer
+    class="w-full px-6 py-8 text-center font-sans text-xs text-adwaita-subtitle/75 select-none">
     <p>&copy; {new Date().getFullYear()} Farhan Kurnia Pratama. All rights reserved</p>
   </footer>
 </main>

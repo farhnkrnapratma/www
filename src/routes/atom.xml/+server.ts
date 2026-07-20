@@ -16,9 +16,8 @@ export const GET: RequestHandler = async ({ fetch }) => {
     .order('created_at', { ascending: false })
     .limit(20);
 
-  // Fetch content for each post to embed in the feed (or fall back to excerpt)
   const enriched = await Promise.all(
-    (posts ?? []).map(async (post) => {
+    (posts ?? []).map(async post => {
       let content = post.excerpt ?? '';
       try {
         const { data: urlData } = supabase.storage
@@ -27,7 +26,6 @@ export const GET: RequestHandler = async ({ fetch }) => {
         const fileRes = await fetch(urlData.publicUrl);
         if (fileRes.ok) {
           const md = await fileRes.text();
-          // Strip markdown for plain summary (take first 500 chars)
           content = md
             .replace(/^#{1,6}\s+.*/gm, '')
             .replace(/!\[.*?\]\(.*?\)/g, '')
@@ -39,7 +37,7 @@ export const GET: RequestHandler = async ({ fetch }) => {
           if (md.length > 500) content += '…';
         }
       } catch {
-        // fall back to excerpt
+        content = post.excerpt ?? '';
       }
       return { ...post, summary: content };
     }),
@@ -65,7 +63,7 @@ export const GET: RequestHandler = async ({ fetch }) => {
   <rights>© ${new Date().getFullYear()} ${escapeXml(AUTHOR_NAME)}. All rights reserved.</rights>
 ${enriched
   .map(
-    (post) => `  <entry>
+    post => `  <entry>
     <title>${escapeXml(post.title)}</title>
     <link href="${SITE_URL}/blog/${escapeXml(post.slug)}" rel="alternate" type="text/html"/>
     <id>${SITE_URL}/blog/${escapeXml(post.slug)}</id>

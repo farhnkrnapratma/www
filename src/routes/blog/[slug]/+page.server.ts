@@ -6,7 +6,7 @@ import type { PageServerLoad } from './$types';
 function injectHeadingIds(html: string): string {
   let index = 0;
   const usedIds = new Set<string>();
-  
+
   return html.replace(/<h([23])([^>]*)>(.*?)<\/h\1>/gi, (match, level, attrs, content) => {
     if (attrs.includes('id=')) {
       const idMatch = attrs.match(/id="([^"]*)"/);
@@ -15,26 +15,33 @@ function injectHeadingIds(html: string): string {
       }
       return match;
     }
-    
+
     const text = content.replace(/<[^>]*>/g, '');
-    const baseId = text
-      ? text
+    const baseId =
+      text ?
+        text
           .toLowerCase()
           .replace(/[^a-z0-9\s-]/g, '')
           .replace(/\s+/g, '-')
           .replace(/-+/g, '-')
           .trim()
       : `heading-${index++}`;
-      
+
     let id = baseId;
     let counter = 1;
     while (usedIds.has(id)) {
       id = `${baseId}-${counter++}`;
     }
     usedIds.add(id);
-    
+
     return `<h${level}${attrs} id="${id}">${content}</h${level}>`;
   });
+}
+
+function estimateReadTime(markdown: string): string {
+  const words = markdown.trim().split(/\s+/).filter(Boolean).length;
+  const minutes = Math.max(1, Math.ceil(words / 200));
+  return `${minutes} min${minutes > 1 ? 's' : ''} read`;
 }
 
 export const load: PageServerLoad = async ({ params, fetch }) => {
@@ -52,6 +59,7 @@ export const load: PageServerLoad = async ({ params, fetch }) => {
   }
 
   let html: string;
+  let readTime = '1 min read';
   try {
     const { data } = supabase.storage.from('blog-posts').getPublicUrl(post.storage_path);
     const fileRes = await fetch(data.publicUrl);
@@ -59,12 +67,12 @@ export const load: PageServerLoad = async ({ params, fetch }) => {
       throw new Error(`Failed to fetch markdown file: ${fileRes.statusText}`);
     }
     const markdown = await fileRes.text();
+    readTime = estimateReadTime(markdown);
     const rawHtml = await marked.parse(markdown);
     html = injectHeadingIds(rawHtml);
   } catch (err) {
     console.error('Error fetching/rendering markdown file:', err);
     html = '<p class="text-red-500">Error: Could not render post content.</p>';
-    post.read_time = '1 min read';
   }
 
   function decodeHtmlEntities(str: string): string {
@@ -76,7 +84,6 @@ export const load: PageServerLoad = async ({ params, fetch }) => {
       .replace(/&gt;/g, '>');
   }
 
-  // Extract headings for Table of Contents
   interface HeadingItem {
     id: string;
     text: string;
@@ -88,7 +95,7 @@ export const load: PageServerLoad = async ({ params, fetch }) => {
   while ((match = headingRegex.exec(html)) !== null) {
     const level = parseInt(match[1], 10);
     const id = match[2];
-    const text = decodeHtmlEntities(match[3].replace(/<[^>]*>/g, '').trim()); // strip HTML tags & decode
+    const text = decodeHtmlEntities(match[3].replace(/<[^>]*>/g, '').trim());
     headings.push({ id, text, level });
   }
 
@@ -104,7 +111,10 @@ export const load: PageServerLoad = async ({ params, fetch }) => {
   }
 
   return {
-    post,
+    post: {
+      ...post,
+      read_time: readTime,
+    },
     html,
     headings,
     comments: comments || [],
