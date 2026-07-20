@@ -79,7 +79,7 @@
       formErrors.name = '';
       formValid.name = true;
     }
-  }, 300);
+  }, 500);
 
   const validateEmail = debounce(() => {
     const val = formEmail.trim();
@@ -93,7 +93,7 @@
       formErrors.email = '';
       formValid.email = true;
     }
-  }, 300);
+  }, 500);
 
   const validateUrl = debounce(() => {
     const val = formUrl.trim();
@@ -104,7 +104,7 @@
       formErrors.url = '';
       formValid.url = true;
     }
-  }, 300);
+  }, 500);
 
   const validateMessage = debounce(() => {
     const val = formMessage.trim();
@@ -115,7 +115,7 @@
       formErrors.message = '';
       formValid.message = true;
     }
-  }, 300);
+  }, 500);
 
   function sanitizeInput(text: string): string {
     return text

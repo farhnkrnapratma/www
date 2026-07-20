@@ -48,7 +48,7 @@
       errors.email = '';
       valid.email = true;
     }
-  }, 300);
+  }, 500);
 
   const validatePasswordField = debounce(() => {
     if (password.trim() === '') {
@@ -58,7 +58,7 @@
       errors.password = '';
       valid.password = true;
     }
-  }, 300);
+  }, 500);
 
   function validate() {
     const emailErr = email.trim() === '' ? 'Email is required.' : '';

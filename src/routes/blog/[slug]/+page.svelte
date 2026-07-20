@@ -349,7 +349,7 @@
       errors.authorName = '';
       valid.authorName = true;
     }
-  }, 300);
+  }, 500);
 
   const validateCommentContent = debounce(() => {
     if (commentContent.trim() === '') {
@@ -359,7 +359,7 @@
       errors.commentContent = '';
       valid.commentContent = true;
     }
-  }, 300);
+  }, 500);
 
   function sanitizeInput(text: string): string {
     return text

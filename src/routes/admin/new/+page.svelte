@@ -1,7 +1,8 @@
 <script lang="ts">
   import { supabase } from '$lib/supabase';
-  import { onMount } from 'svelte';
+  import { onMount, tick } from 'svelte';
   import { marked } from 'marked';
+  import hljs from 'highlight.js';
   import { autoResize, ConfirmationDialog } from '$lib';
 
   let isCheckingAuth = $state(true);
@@ -99,6 +100,20 @@
         initialExcerpt = '';
         initialMarkdownContent = '# New Post\n\nWrite your markdown content here...';
       }
+
+      // Restore autosave draft
+      const key = id ? `autosave_edit_${id}` : 'autosave_new';
+      const savedDraft = localStorage.getItem(key);
+      if (savedDraft) {
+        try {
+          const parsed = JSON.parse(savedDraft);
+          title = parsed.title || title;
+          excerpt = parsed.excerpt || excerpt;
+          markdownContent = parsed.markdownContent || markdownContent;
+        } catch (e) {
+          console.error('Failed to parse autosave draft', e);
+        }
+      }
     })();
 
     resetIdleTimer();
@@ -171,6 +186,56 @@
     }
   });
 
+  // Syntax highlighting for markdown preview code snippets
+  $effect(() => {
+    if (previewHtml) {
+      tick().then(() => {
+        const blocks = document.querySelectorAll('.prose-custom pre code');
+        blocks.forEach((block) => {
+          hljs.highlightElement(block as HTMLElement);
+        });
+      });
+    }
+  });
+
+  const highlightedMarkdown = $derived(
+    hljs.highlight(markdownContent || '', { language: 'markdown' }).value
+  );
+
+  let preElement = $state<HTMLElement | null>(null);
+  let textareaElement = $state<HTMLTextAreaElement | null>(null);
+
+  function syncScroll() {
+    if (textareaElement && preElement) {
+      preElement.scrollTop = textareaElement.scrollTop;
+      preElement.scrollLeft = textareaElement.scrollLeft;
+    }
+  }
+
+  let autoSaveStatus = $state<'saving' | 'saved' | 'idle'>('idle');
+  let autoSaveTimer: ReturnType<typeof setTimeout>;
+
+  $effect(() => {
+    if (markdownContent && !isCheckingAuth) {
+      autoSaveStatus = 'saving';
+      clearTimeout(autoSaveTimer);
+      autoSaveTimer = setTimeout(() => {
+        const key = editId ? `autosave_edit_${editId}` : 'autosave_new';
+        const data = {
+          title,
+          excerpt,
+          markdownContent,
+          timestamp: Date.now()
+        };
+        localStorage.setItem(key, JSON.stringify(data));
+        autoSaveStatus = 'saved';
+        setTimeout(() => {
+          if (autoSaveStatus === 'saved') autoSaveStatus = 'idle';
+        }, 1500);
+      }, 500);
+    }
+  });
+
   function debounce<T extends unknown[]>(cb: (...args: T) => void, ms: number) {
     let timer: ReturnType<typeof setTimeout>;
     return (...args: T) => {
@@ -190,7 +255,7 @@
       titleError = '';
       titleValid = true;
     }
-  }, 300);
+  }, 500);
 
   function validateImageDimensions(file: File): Promise<boolean> {
     return new Promise(resolve => {
@@ -239,6 +304,16 @@
     if (titleVal.length > 60) {
       titleError = 'Title must be 60 characters or less.';
       titleValid = false;
+      return false;
+    }
+
+    const excerptVal = excerpt.trim();
+    if (excerptVal === '') {
+      errorMessage = 'Excerpt is required.';
+      return false;
+    }
+    if (excerptVal.length > 250) {
+      errorMessage = 'Excerpt must be 250 characters or less.';
       return false;
     }
 
@@ -367,6 +442,8 @@
         }
       }
 
+      const key = editId ? `autosave_edit_${editId}` : 'autosave_new';
+      localStorage.removeItem(key);
       window.location.href = '/admin';
     } catch (err) {
       const error = err as Error;
@@ -506,165 +583,206 @@
       <form
         onsubmit={e => e.preventDefault()}
         class="flex flex-col gap-4">
-        <div class="boxed-list flex flex-col gap-2.5 bg-zinc-950/1 p-5 text-left">
-          <h2 class="text-sm font-bold text-adwaita-text select-none">Post Settings</h2>
+        <div class="rounded-2xl border border-adwaita-border bg-adwaita-card/45 p-6 shadow-xs backdrop-blur-lg transition-colors duration-300 text-left">
+          <h2 class="text-base font-bold text-adwaita-text select-none mb-4">
+            {isEditMode ? 'Edit blog detail' : 'Write blog detail'}
+          </h2>
 
-          <div class="flex flex-col gap-2.5">
-            <div class="flex flex-col gap-1">
-              <div class="flex items-center justify-between">
-                <label
-                  for="post-title"
-                  class="text-xs font-bold text-adwaita-subtitle">
-                  Title <span class="text-adwaita-error">*</span>
-                </label>
-                {#if slug}
-                  <div
-                    class="flex items-center gap-1 font-sans text-[10px] text-adwaita-subtitle select-none">
-                    <i class="bi bi-link-45deg text-xs text-adwaita-accent"></i>
-                    <span>fkp.my.id/blog/</span><span
-                      class="rounded-md bg-adwaita-accent/10 px-1.5 py-0.5 font-bold text-adwaita-accent"
-                      >{slug}</span>
-                  </div>
-                {/if}
-              </div>
-              <input
-                type="text"
-                id="post-title"
-                maxlength="60"
-                required
-                placeholder="Getting Started with Rust"
-                bind:value={title}
-                oninput={() => {
-                  titleError = '';
-                  titleValid = false;
-                  validateTitleField();
-                }}
-                class="w-full rounded-lg border border-adwaita-border bg-adwaita-bg px-3 py-2 text-sm text-adwaita-text transition-colors placeholder:text-adwaita-subtitle/70"
-                class:border-adwaita-error={titleError}
-                class:input-valid={titleValid} />
-              {#if titleError || titleValid}
-                <div
-                  id="post-title-fb"
-                  aria-live="polite"
-                  class="mt-1 text-xs leading-none font-medium">
-                  {#if titleError}
-                    <span class="flex items-center gap-1 text-adwaita-error">
-                      <i class="bi bi-exclamation-circle-fill"></i>{titleError}
-                    </span>
-                  {:else if titleValid}
-                    <span class="flex items-center gap-1 text-adwaita-accent">
-                      <i class="bi bi-check-circle-fill"></i>Looks good
-                    </span>
-                  {/if}
-                </div>
-              {/if}
-            </div>
-
-            <div class="flex flex-col gap-1">
-              <label
-                for="post-excerpt"
-                class="text-xs font-bold text-adwaita-subtitle">Excerpt</label>
-              <textarea
-                use:autoResize={excerpt}
-                id="post-excerpt"
-                rows="2"
-                placeholder="Brief summary of the article..."
-                bind:value={excerpt}
-                class="w-full resize-none overflow-hidden rounded-lg border border-adwaita-border bg-adwaita-bg px-3 py-1.5 text-sm text-adwaita-text transition-colors placeholder:text-adwaita-subtitle/70 focus:border-adwaita-accent"
-              ></textarea>
-            </div>
-
-            <div class="flex flex-col gap-1">
-              <span class="text-xs font-bold text-adwaita-subtitle select-none"
-                >Banner Image (PNG, 1280x640)</span>
-
-              <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
-                <input
-                  type="file"
-                  id="post-banner"
-                  accept="image/png"
-                  onchange={handleBannerChange}
-                  class="block w-full text-xs text-adwaita-subtitle file:mr-4 file:cursor-pointer file:rounded-lg file:border file:border-adwaita-border file:bg-adwaita-card file:px-4 file:py-2 file:text-xs file:font-semibold file:text-adwaita-text hover:file:bg-adwaita-hover focus:outline-2 focus:outline-adwaita-accent" />
-
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            <!-- Left Side: Banner Upload & 1280x640 Preview -->
+            <div class="lg:col-span-5 flex flex-col gap-2">
+              <label for="post-banner" class="text-xs font-bold text-adwaita-subtitle select-none">
+                Banner image
+              </label>
+              
+              <div class="relative w-full aspect-[2/1] rounded-lg overflow-hidden border border-adwaita-border bg-adwaita-bg flex items-center justify-center select-none group">
                 {#if bannerPreview}
-                  <div
-                    class="relative max-w-[200px] shrink-0 overflow-hidden rounded-lg border border-adwaita-border">
-                    <img
-                      src={bannerPreview}
-                      alt="Banner preview"
-                      class="aspect-[2/1] w-full object-cover" />
-                    <button
-                      type="button"
-                      onclick={() => {
-                        bannerFile = null;
-                        bannerPreview = null;
-                        bannerPath = null;
-                      }}
-                      class="absolute top-1 right-1 flex h-6 w-6 cursor-pointer items-center justify-center rounded-full border border-white/20 bg-black/70 p-1 text-white hover:bg-black/90"
-                      aria-label="Remove banner">
-                      <i class="bi bi-x text-xs"></i>
-                    </button>
+                  <img
+                    src={bannerPreview}
+                    alt="Banner preview"
+                    class="w-full h-full object-cover" />
+                  <button
+                    type="button"
+                    onclick={() => {
+                      bannerFile = null;
+                      bannerPreview = null;
+                      bannerPath = null;
+                    }}
+                    class="absolute top-2 right-2 flex h-7 w-7 cursor-pointer items-center justify-center rounded-full border border-white/20 bg-black/70 p-1 text-white hover:bg-black/90 transition-all"
+                    aria-label="Remove banner">
+                    <i class="bi bi-x text-lg"></i>
+                  </button>
+                {:else}
+                  <div class="flex flex-col items-center gap-2 text-adwaita-subtitle/65">
+                    <i class="bi bi-image text-3xl"></i>
+                    <span class="text-[10px]">No banner uploaded</span>
                   </div>
                 {/if}
               </div>
+
+              <input
+                type="file"
+                id="post-banner"
+                accept="image/png"
+                onchange={handleBannerChange}
+                class="mt-2 block w-full text-xs text-adwaita-subtitle file:mr-4 file:cursor-pointer file:rounded-lg file:border file:border-adwaita-border file:bg-adwaita-card file:px-4 file:py-2 file:text-xs file:font-semibold file:text-adwaita-text hover:file:bg-adwaita-hover focus:outline-2 focus:outline-adwaita-accent" />
+              
+              <span class="text-[10px] text-adwaita-subtitle/75 leading-normal">
+                PNG, exactly 1280×640 pixels.
+              </span>
 
               {#if bannerError}
-                <div
-                  id="post-banner-fb"
-                  aria-live="polite"
-                  class="mt-1 text-xs leading-none font-medium">
-                  <span
-                    role="alert"
-                    class="flex items-center gap-1 text-adwaita-error">
+                <div id="post-banner-fb" aria-live="polite" class="mt-1 text-xs leading-none font-medium">
+                  <span role="alert" class="flex items-center gap-1 text-adwaita-error">
                     <i class="bi bi-exclamation-circle-fill"></i>{bannerError}
                   </span>
                 </div>
               {/if}
             </div>
+
+            <!-- Right Side: Title & Excerpt Editing -->
+            <div class="lg:col-span-7 flex flex-col gap-4">
+              <!-- Title Input -->
+              <div class="flex flex-col gap-1">
+                <div class="flex items-center justify-between">
+                  <label for="post-title" class="text-xs font-bold text-adwaita-subtitle">
+                    Title <span class="text-adwaita-error">*</span>
+                  </label>
+                  <span class="text-[10px] text-adwaita-subtitle/85 font-mono">{title.length}/60</span>
+                </div>
+                
+                <input
+                  type="text"
+                  id="post-title"
+                  maxlength="60"
+                  required
+                  placeholder="Getting Started with Rust"
+                  bind:value={title}
+                  oninput={() => {
+                    titleError = '';
+                    titleValid = false;
+                    validateTitleField();
+                  }}
+                  class="w-full rounded-lg border border-adwaita-border bg-adwaita-bg px-3 py-2 text-sm text-adwaita-text transition-colors placeholder:text-adwaita-subtitle/70 focus:outline-none focus:ring-1 focus:ring-adwaita-accent"
+                  class:border-adwaita-error={titleError}
+                  class:input-valid={titleValid} />
+
+                <div class="flex items-center justify-between mt-1 min-h-[16px]">
+                  {#if titleError || titleValid}
+                    <div id="post-title-fb" aria-live="polite" class="text-xs leading-none font-medium">
+                      {#if titleError}
+                        <span class="flex items-center gap-1 text-adwaita-error">
+                          <i class="bi bi-exclamation-circle-fill"></i>{titleError}
+                        </span>
+                      {:else if titleValid}
+                        <span class="flex items-center gap-1 text-adwaita-accent">
+                          <i class="bi bi-check-circle-fill"></i>Looks good
+                        </span>
+                      {/if}
+                    </div>
+                  {:else}
+                    <div></div>
+                  {/if}
+
+                  {#if slug}
+                    <div class="flex items-center gap-1 font-sans text-xs text-adwaita-subtitle select-none leading-none">
+                      <i class="bi bi-link-45deg text-sm text-adwaita-accent"></i>
+                      <span>fkp.my.id/blog/</span><span class="font-bold text-adwaita-accent">{slug}</span>
+                    </div>
+                  {/if}
+                </div>
+              </div>
+
+              <!-- Excerpt TextArea -->
+              <div class="flex flex-col gap-1">
+                <div class="flex items-center justify-between">
+                  <label for="post-excerpt" class="text-xs font-bold text-adwaita-subtitle">
+                    Excerpt <span class="text-adwaita-error">*</span>
+                  </label>
+                  <span class="text-[10px] text-adwaita-subtitle/85 font-mono">{excerpt.length}/250</span>
+                </div>
+                <textarea
+                  use:autoResize={excerpt}
+                  id="post-excerpt"
+                  rows="3"
+                  maxlength="250"
+                  required
+                  placeholder="Brief summary of the article (max 250 characters)..."
+                  bind:value={excerpt}
+                  class="w-full resize-none overflow-hidden rounded-lg border border-adwaita-border bg-adwaita-bg px-3 py-2 text-sm text-adwaita-text transition-colors placeholder:text-adwaita-subtitle/70 focus:outline-none focus:ring-1 focus:ring-adwaita-accent"
+                ></textarea>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div class="boxed-list flex min-h-100 flex-col overflow-hidden text-left">
-          <div class="flex border-b border-adwaita-border bg-adwaita-hover/30 px-3 py-1">
+        <div class="boxed-list flex flex-col overflow-hidden text-left">
+          <!-- GitHub-style Tab Bar -->
+          <div class="flex border-b border-adwaita-border bg-adwaita-card/10 px-4 pt-2.5 gap-1 select-none">
             <button
               type="button"
               onclick={() => (activeTab = 'editor')}
-              class="border-b-2 px-4 py-2 text-xs font-bold transition-colors {(
+              class="relative -mb-[1px] px-4 py-2 text-xs font-bold transition-all rounded-t-lg border-t border-x cursor-pointer {(
                 activeTab === 'editor'
               ) ?
-                'border-adwaita-accent text-adwaita-accent'
-              : 'border-transparent text-adwaita-subtitle hover:text-adwaita-text'}">
+                'border-adwaita-border bg-adwaita-bg text-adwaita-accent'
+              : 'border-transparent text-adwaita-subtitle hover:text-adwaita-text hover:bg-adwaita-hover/30'}">
               Markdown Editor
             </button>
             <button
               type="button"
               onclick={() => (activeTab = 'preview')}
-              class="border-b-2 px-4 py-2 text-xs font-bold transition-colors {(
+              class="relative -mb-[1px] px-4 py-2 text-xs font-bold transition-all rounded-t-lg border-t border-x cursor-pointer {(
                 activeTab === 'preview'
               ) ?
-                'border-adwaita-accent text-adwaita-accent'
-              : 'border-transparent text-adwaita-subtitle hover:text-adwaita-text'}">
+                'border-adwaita-border bg-adwaita-bg text-adwaita-accent'
+              : 'border-transparent text-adwaita-subtitle hover:text-adwaita-text hover:bg-adwaita-hover/30'}">
               Live HTML Preview
             </button>
-          </div>
 
-          {#if activeTab === 'editor'}
-            <textarea
-              use:autoResize={markdownContent}
-              required
-              aria-label="Markdown Content"
-              bind:value={markdownContent}
-              class="min-h-87.5 w-full flex-1 resize-none overflow-hidden bg-adwaita-bg p-5 font-mono text-sm leading-relaxed text-adwaita-text focus:ring-2 focus:ring-adwaita-accent focus:ring-inset"
-            ></textarea>
-          {:else}
-            <div class="prose-custom min-h-87.5 w-full overflow-y-auto bg-adwaita-bg p-6">
-              {#if previewHtml}
-                {@html previewHtml}
+            <!-- Auto-save Status Indicator -->
+            <div class="ml-auto flex items-center pr-2 text-[10px] text-adwaita-subtitle italic font-medium select-none">
+              {#if autoSaveStatus === 'saving'}
+                <span class="flex items-center gap-1"><i class="bi bi-arrow-repeat animate-spin"></i> Saving draft...</span>
               {:else}
-                <p class="text-adwaita-subtitle italic">Nothing to preview...</p>
+                <span class="flex items-center gap-1"><i class="bi bi-cloud-check"></i> Draft saved</span>
               {/if}
             </div>
-          {/if}
+          </div>
+
+          <!-- Content Panel -->
+          <div class="bg-adwaita-bg min-h-[500px]">
+            {#if activeTab === 'editor'}
+              <!-- Highlighted Markdown Editor -->
+              <div class="relative w-full h-[500px] overflow-hidden">
+                <!-- Highlighted Code Underneath -->
+                <pre
+                  bind:this={preElement}
+                  class="pre-highlight pointer-events-none absolute inset-0 m-0 p-5 whitespace-pre-wrap break-all overflow-y-auto leading-relaxed text-adwaita-text select-none border-0 bg-transparent font-mono text-sm"
+                  style="height: 100%;"
+                ><code class="language-markdown block w-full bg-transparent">{@html highlightedMarkdown}</code></pre>
+
+                <!-- Transparent Input Textarea Overlaid -->
+                <textarea
+                  bind:this={textareaElement}
+                  required
+                  aria-label="Markdown Content"
+                  bind:value={markdownContent}
+                  onscroll={syncScroll}
+                  class="absolute inset-0 w-full h-full resize-none overflow-y-auto bg-transparent p-5 text-transparent caret-adwaita-text font-mono text-sm leading-relaxed border-0 focus:outline-none focus:ring-0"
+                ></textarea>
+              </div>
+            {:else}
+              <!-- Live HTML Preview -->
+              <div class="prose-custom h-[500px] w-full overflow-y-auto bg-adwaita-bg p-6">
+                {#if previewHtml}
+                  {@html previewHtml}
+                {:else}
+                  <p class="text-adwaita-subtitle italic">Nothing to preview...</p>
+                {/if}
+              </div>
+            {/if}
+          </div>
         </div>
 
         <div class="mt-4 mb-10 flex justify-end gap-3 select-none">
@@ -719,3 +837,13 @@
   confirmLabel="Save Draft"
   isDestructive={false}
   onConfirm={() => executeSave(false)} />
+
+<style>
+  pre.pre-highlight::-webkit-scrollbar {
+    display: none !important;
+  }
+  pre.pre-highlight {
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
+  }
+</style>

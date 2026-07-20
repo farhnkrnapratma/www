@@ -259,7 +259,7 @@
       formErrors.name = '';
       formValid.name = true;
     }
-  }, 300);
+  }, 500);
 
   const validateEmail = debounce(() => {
     if (formEmail.trim() === '') {
@@ -272,7 +272,7 @@
       formErrors.email = '';
       formValid.email = true;
     }
-  }, 300);
+  }, 500);
 
   const validateMessage = debounce(() => {
     if (formMessage.trim() === '') {
@@ -282,7 +282,7 @@
       formErrors.message = '';
       formValid.message = true;
     }
-  }, 300);
+  }, 500);
 
   function sanitizeInput(text: string): string {
     return text
