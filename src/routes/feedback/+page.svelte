@@ -3,6 +3,18 @@
   import { autoResize, ConfirmationDialog } from '$lib';
   import { isNameReserved } from '$lib/nameValidator';
 
+  const name = 'Farhan Kurnia Pratama';
+  const desc =
+    'Security-focused Software Engineer with expertise in Linux/Unix, AI, and Open-Source Software, dedicated to building reliable, maintainable, and privacy-centric systems.';
+  const footerNavItems = [
+    { label: 'Home', url: '/' },
+    { label: 'Projects', url: '/#projects' },
+    { label: 'Blogs', url: '/#blogs' },
+    { label: 'CV', url: '/#cv' },
+    { label: 'Funding', url: '/#funding' },
+    { label: 'Contacts', url: '/#contacts' },
+  ];
+
   type Theme = 'auto' | 'dark' | 'light';
   let theme = $state<Theme>('auto');
   let themeDropdownOpen = $state(false);
@@ -552,8 +564,91 @@
   </section>
 
   <footer
-    class="mt-auto w-full px-6 py-8 text-center font-sans text-xs text-adwaita-subtitle/75 select-none">
-    <p>&copy; {new Date().getFullYear()} Farhan Kurnia Pratama. All rights reserved</p>
+    class="relative z-10 mx-auto mt-auto w-full border-t border-adwaita-border px-6 pt-16 pb-12 font-sans text-xs text-adwaita-subtitle/75 md:w-[80%] lg:w-[50%]">
+    <div class="grid grid-cols-1 gap-8 pb-10 md:grid-cols-12">
+      <div class="flex flex-col gap-4 md:col-span-7">
+        <div>
+          <h3 class="text-base font-bold text-adwaita-text">{name}</h3>
+          <p class="mt-2 max-w-md text-xs leading-relaxed text-adwaita-subtitle">
+            {desc}
+          </p>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <a
+            href="https://github.com/farhnkrnapratma"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-adwaita-border bg-adwaita-card text-adwaita-subtitle transition-colors hover:bg-adwaita-hover hover:text-adwaita-accent"
+            aria-label="GitHub (opens in a new tab)">
+            <i
+              class="bi bi-github text-base leading-none"
+              aria-hidden="true"></i>
+          </a>
+          <a
+            href="https://linkedin.com/in/farhnkrnapratma"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-adwaita-border bg-adwaita-card text-adwaita-subtitle transition-colors hover:bg-adwaita-hover hover:text-adwaita-accent"
+            aria-label="LinkedIn (opens in a new tab)">
+            <i
+              class="bi bi-linkedin text-base leading-none"
+              aria-hidden="true"></i>
+          </a>
+          <a
+            href="https://x.com/farhnkrnapratma"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-adwaita-border bg-adwaita-card text-adwaita-subtitle transition-colors hover:bg-adwaita-hover hover:text-adwaita-accent"
+            aria-label="X (opens in a new tab)">
+            <i
+              class="bi bi-twitter-x text-base leading-none"
+              aria-hidden="true"></i>
+          </a>
+          <a
+            href="https://instagram.com/farhnkrnapratma"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-adwaita-border bg-adwaita-card text-adwaita-subtitle transition-colors hover:bg-adwaita-hover hover:text-adwaita-accent"
+            aria-label="Instagram (opens in a new tab)">
+            <i
+              class="bi bi-instagram text-base leading-none"
+              aria-hidden="true"></i>
+          </a>
+        </div>
+      </div>
+
+      <div class="flex flex-col pt-1 md:col-span-5 md:pt-8">
+        <ul class="grid grid-cols-2 gap-x-4 gap-y-2">
+          {#each footerNavItems as item (item.url)}
+            <li>
+              <a
+                href={item.url}
+                class="cursor-pointer text-left font-medium transition-colors hover:text-adwaita-accent">
+                {item.label}
+              </a>
+            </li>
+          {/each}
+        </ul>
+      </div>
+    </div>
+
+    <div
+      class="flex flex-col items-center justify-between gap-4 border-t border-adwaita-border pt-6 select-none sm:flex-row">
+      <p>&copy; {new Date().getFullYear()} {name}. All rights reserved</p>
+      <div class="flex items-center gap-4 text-[11px] text-adwaita-subtitle">
+        <a
+          href="/atom.xml"
+          class="inline-flex items-center gap-1 transition-colors hover:text-[#f26522]">
+          <i
+            class="bi bi-rss-fill"
+            aria-hidden="true"></i> RSS Feed
+        </a>
+        <a
+          href="/sitemap.xml"
+          class="transition-colors hover:text-adwaita-accent">Sitemap</a>
+      </div>
+    </div>
   </footer>
 </main>
 

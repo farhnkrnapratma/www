@@ -12,7 +12,8 @@
   let scrollProgress = $state(0);
 
   const isPageWithFeedback = $derived(
-    page.url.pathname === '/admin/login' || !page.url.pathname.startsWith('/admin'),
+    page.url.pathname !== '/feedback' &&
+      (page.url.pathname === '/admin/login' || !page.url.pathname.startsWith('/admin')),
   );
 
   const postTitle = $derived(page.data.post?.title);
@@ -102,7 +103,7 @@
 
 {#if isPageWithFeedback}
   <a
-    href="mailto:contact@fkp.my.id?subject={encodeURIComponent(feedbackSubject)}"
+    href="/feedback"
     class="fixed bottom-6 left-6 z-50 inline-flex h-10 w-10 cursor-pointer items-center justify-center gap-2 rounded-lg border border-adwaita-border bg-adwaita-card px-0 text-xs font-semibold text-adwaita-body shadow-lg transition-all select-none hover:bg-adwaita-hover hover:text-adwaita-accent sm:w-auto sm:px-4 sm:text-sm"
     title="Give Feedback">
     <i
