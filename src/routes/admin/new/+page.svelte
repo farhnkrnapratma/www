@@ -101,7 +101,7 @@
         initialMarkdownContent = '# New Post\n\nWrite your markdown content here...';
       }
 
-      // Restore autosave draft
+      
       const key = id ? `autosave_edit_${id}` : 'autosave_new';
       const savedDraft = localStorage.getItem(key);
       if (savedDraft) {
@@ -186,7 +186,7 @@
     }
   });
 
-  // Syntax highlighting for markdown preview code snippets
+  
   $effect(() => {
     if (previewHtml) {
       tick().then(() => {
@@ -589,7 +589,7 @@
           </h2>
 
           <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-            <!-- Left Side: Banner Upload & 1280x640 Preview -->
+            
             <div class="lg:col-span-5 flex flex-col gap-2">
               <label for="post-banner" class="text-xs font-bold text-adwaita-subtitle select-none">
                 Banner image
@@ -640,9 +640,9 @@
               {/if}
             </div>
 
-            <!-- Right Side: Title & Excerpt Editing -->
+            
             <div class="lg:col-span-7 flex flex-col gap-4">
-              <!-- Title Input -->
+              
               <div class="flex flex-col gap-1">
                 <div class="flex items-center justify-between">
                   <label for="post-title" class="text-xs font-bold text-adwaita-subtitle">
@@ -693,7 +693,7 @@
                 </div>
               </div>
 
-              <!-- Excerpt TextArea -->
+              
               <div class="flex flex-col gap-1">
                 <div class="flex items-center justify-between">
                   <label for="post-excerpt" class="text-xs font-bold text-adwaita-subtitle">
@@ -717,7 +717,7 @@
         </div>
 
         <div class="boxed-list flex flex-col overflow-hidden text-left">
-          <!-- GitHub-style Tab Bar -->
+          
           <div class="flex border-b border-adwaita-border bg-adwaita-card/10 px-4 pt-2.5 gap-1 select-none">
             <button
               type="button"
@@ -740,7 +740,7 @@
               Live HTML Preview
             </button>
 
-            <!-- Auto-save Status Indicator -->
+            
             <div class="ml-auto flex items-center pr-2 text-[10px] text-adwaita-subtitle italic font-medium select-none">
               {#if autoSaveStatus === 'saving'}
                 <span class="flex items-center gap-1"><i class="bi bi-arrow-repeat animate-spin"></i> Saving draft...</span>
@@ -750,19 +750,19 @@
             </div>
           </div>
 
-          <!-- Content Panel -->
+          
           <div class="bg-adwaita-bg min-h-[500px]">
             {#if activeTab === 'editor'}
-              <!-- Highlighted Markdown Editor -->
+              
               <div class="relative w-full h-[500px] overflow-hidden">
-                <!-- Highlighted Code Underneath -->
+                
                 <pre
                   bind:this={preElement}
                   class="pre-highlight pointer-events-none absolute inset-0 m-0 p-5 whitespace-pre-wrap break-all overflow-y-auto leading-relaxed text-adwaita-text select-none border-0 bg-transparent font-mono text-sm"
                   style="height: 100%;"
                 ><code class="language-markdown block w-full bg-transparent">{@html highlightedMarkdown}</code></pre>
 
-                <!-- Transparent Input Textarea Overlaid -->
+                
                 <textarea
                   bind:this={textareaElement}
                   required
@@ -773,7 +773,7 @@
                 ></textarea>
               </div>
             {:else}
-              <!-- Live HTML Preview -->
+              
               <div class="prose-custom h-[500px] w-full overflow-y-auto bg-adwaita-bg p-6">
                 {#if previewHtml}
                   {@html previewHtml}
