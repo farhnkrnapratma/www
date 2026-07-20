@@ -223,7 +223,7 @@
   });
 
   const highlightedMarkdown = $derived(
-    hljs.highlight(markdownContent || '', { language: 'markdown' }).value
+    hljs.highlight(markdownContent || '', { language: 'markdown' }).value + (markdownContent.endsWith('\n') ? '\n ' : '')
   );
 
   let excerptTextareaElement = $state<HTMLTextAreaElement | null>(null);
@@ -868,6 +868,7 @@
                   aria-label="Markdown Content"
                   bind:value={markdownContent}
                   onscroll={syncScroll}
+                  oninput={syncScroll}
                   class="editor-textarea absolute inset-0 bg-transparent text-transparent caret-adwaita-text focus:outline-none focus:ring-0"
                 ></textarea>
               </div>
