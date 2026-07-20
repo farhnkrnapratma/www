@@ -235,6 +235,21 @@
     }
   });
 
+  let markdownTextareaElement = $state<HTMLTextAreaElement | null>(null);
+
+  $effect(() => {
+    if (markdownContent !== undefined && markdownTextareaElement) {
+      markdownTextareaElement.style.height = 'auto';
+      markdownTextareaElement.style.height = `${markdownTextareaElement.scrollHeight}px`;
+    }
+  });
+
+  $effect(() => {
+    if (markdownTextareaElement) {
+      textareaElement = markdownTextareaElement;
+    }
+  });
+
   let preElement = $state<HTMLElement | null>(null);
   let textareaElement = $state<HTMLTextAreaElement | null>(null);
 
@@ -809,27 +824,29 @@
 
         <div class="boxed-list flex flex-col overflow-hidden text-left">
           
-          <div class="flex border-b border-adwaita-border bg-adwaita-card/10 px-4 pt-2.5 gap-1 select-none">
-            <button
-              type="button"
-              onclick={() => (activeTab = 'editor')}
-              class="relative -mb-[1px] px-4 py-2 text-xs font-semibold rounded-t-md border-t border-x cursor-pointer transition-colors duration-150 {(
-                activeTab === 'editor'
-              ) ?
-                'border-adwaita-border bg-adwaita-bg text-adwaita-text'
-              : 'border-transparent text-adwaita-subtitle hover:text-adwaita-text hover:bg-adwaita-hover/30'}">
-              Edit
-            </button>
-            <button
-              type="button"
-              onclick={() => (activeTab = 'preview')}
-              class="relative -mb-[1px] px-4 py-2 text-xs font-semibold rounded-t-md border-t border-x cursor-pointer transition-colors duration-150 {(
-                activeTab === 'preview'
-              ) ?
-                'border-adwaita-border bg-adwaita-bg text-adwaita-text'
-              : 'border-transparent text-adwaita-subtitle hover:text-adwaita-text hover:bg-adwaita-hover/30'}">
-              Preview
-            </button>
+          <div class="flex border-b border-adwaita-border bg-adwaita-card/10 px-4 py-2.5 items-center select-none">
+            <div class="inline-flex rounded-lg border border-adwaita-border bg-adwaita-switcher-bg p-1 gap-0.5">
+              <button
+                type="button"
+                onclick={() => (activeTab = 'editor')}
+                class="px-4 py-1.5 text-xs font-semibold rounded-md transition-all cursor-pointer {(
+                  activeTab === 'editor'
+                ) ?
+                  'bg-adwaita-switcher-active text-adwaita-text shadow-xs border border-adwaita-border/10'
+                : 'text-adwaita-subtitle hover:text-adwaita-text hover:bg-adwaita-hover/30'}">
+                Edit
+              </button>
+              <button
+                type="button"
+                onclick={() => (activeTab = 'preview')}
+                class="px-4 py-1.5 text-xs font-semibold rounded-md transition-all cursor-pointer {(
+                  activeTab === 'preview'
+                ) ?
+                  'bg-adwaita-switcher-active text-adwaita-text shadow-xs border border-adwaita-border/10'
+                : 'text-adwaita-subtitle hover:text-adwaita-text hover:bg-adwaita-hover/30'}">
+                Preview
+              </button>
+            </div>
 
             
             <div class="ml-auto flex items-center pr-2 text-xs text-adwaita-subtitle italic font-medium select-none">
@@ -854,7 +871,7 @@
           <div class="bg-adwaita-bg min-h-[500px]">
             {#if activeTab === 'editor'}
               
-              <div class="relative w-full h-[500px] overflow-hidden">
+              <div class="relative w-full overflow-hidden">
                 
                 <pre
                   bind:this={preElement}
@@ -863,18 +880,19 @@
 
                 
                 <textarea
-                  bind:this={textareaElement}
+                  bind:this={markdownTextareaElement}
                   required
                   aria-label="Markdown Content"
                   bind:value={markdownContent}
                   onscroll={syncScroll}
                   oninput={syncScroll}
-                  class="editor-textarea absolute inset-0 bg-transparent text-transparent caret-adwaita-text focus:outline-none focus:ring-0"
+                  class="editor-textarea relative w-full bg-transparent text-transparent caret-adwaita-text focus:outline-none focus:ring-0"
+                  style="overflow-y: hidden; resize: none;"
                 ></textarea>
               </div>
             {:else}
               
-              <div class="prose-custom h-[500px] w-full overflow-y-auto bg-adwaita-bg p-6">
+              <div class="prose-custom w-full bg-adwaita-bg p-6">
                 {#if previewHtml}
                   {@html previewHtml}
                 {:else}
@@ -957,10 +975,11 @@
     border: 0 !important;
     box-sizing: border-box !important;
     width: 100% !important;
-    height: 100% !important;
-    white-space: pre-wrap !important;
-    word-break: break-all !important;
-    overflow-wrap: break-word !important;
+    white-space: pre !important;
+    word-break: normal !important;
+    overflow-wrap: normal !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
   }
 
   .editor-pre code {
@@ -971,8 +990,8 @@
     margin: 0 !important;
     display: block !important;
     background: transparent !important;
-    white-space: pre-wrap !important;
-    word-break: break-all !important;
-    overflow-wrap: break-word !important;
+    white-space: pre !important;
+    word-break: normal !important;
+    overflow-wrap: normal !important;
   }
 </style>
