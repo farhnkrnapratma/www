@@ -1,5 +1,4 @@
 <script lang="ts">
-  import type { Snippet } from 'svelte';
   import { cn } from '../utils/cn';
 
   interface Column {
@@ -11,7 +10,7 @@
   interface Props {
     caption?: string;
     columns: Column[];
-    data: Record<string, any>[];
+    data: Record<string, unknown>[];
     class?: string;
   }
 

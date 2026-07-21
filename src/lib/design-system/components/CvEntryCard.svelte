@@ -57,7 +57,7 @@
   <!-- Key Highlights Bullet List -->
   {#if highlights.length > 0}
     <ul class="list-disc space-y-1 pl-4 text-xs text-text-secondary">
-      {#each highlights as item}
+      {#each highlights as item (item)}
         <li>{item}</li>
       {/each}
     </ul>
@@ -66,7 +66,7 @@
   <!-- Tech Tags -->
   {#if tags.length > 0}
     <TagGroup class="mt-1 border-t border-border-subtle/40 pt-3">
-      {#each tags as t}
+      {#each tags as t (t)}
         <Tag
           variant="neutral"
           size="sm">{t}</Tag>

@@ -1,5 +1,4 @@
 <script lang="ts">
-  import type { Snippet } from 'svelte';
   import Tag from '../components/Tag.svelte';
   import { cn } from '../utils/cn';
 

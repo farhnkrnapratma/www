@@ -4,7 +4,6 @@
   import { marked } from 'marked';
   import hljs from 'highlight.js';
   import {
-    autoResize,
     SkipLink,
     LoadingState,
     StatusBanner,
@@ -364,7 +363,6 @@
 
       while ((match = tagRegex.exec(line)) !== null) {
         const fullTag = match[0];
-        const tagName = match[1].toLowerCase();
         if (fullTag.startsWith('</')) {
           currentOpen.pop();
         } else if (!fullTag.endsWith('/>')) {
@@ -857,7 +855,7 @@
         <div
           role="menu"
           class="absolute top-11 right-0 z-50 flex min-w-[7.75rem] flex-col rounded-xl border border-border-subtle bg-surface-elevated py-1.5 shadow-lg">
-          {#each [['auto', 'bi-circle-half', 'Auto'], ['light', 'bi-sun-fill', 'Light'], ['dark', 'bi-moon-stars-fill', 'Dark']] as const as [val, icon, label]}
+          {#each [['auto', 'bi-circle-half', 'Auto'], ['light', 'bi-sun-fill', 'Light'], ['dark', 'bi-moon-stars-fill', 'Dark']] as const as [val, icon, label] (val)}
             <button
               type="button"
               role="menuitem"
@@ -1116,7 +1114,7 @@
                     <div
                       role="menu"
                       class="absolute top-8.5 right-0 z-50 flex min-w-[120px] flex-col rounded-lg border border-border-subtle bg-surface-elevated py-1 text-xs shadow-lg">
-                      {#each ['spaces', 'tabs'] as const as mode}
+                      {#each ['spaces', 'tabs'] as const as mode (mode)}
                         <button
                           type="button"
                           role="menuitem"
@@ -1198,7 +1196,7 @@
                     <div
                       role="menu"
                       class="absolute top-8.5 right-0 z-50 flex min-w-[120px] flex-col rounded-lg border border-border-subtle bg-surface-elevated py-1 text-xs shadow-lg">
-                      {#each ['soft', 'none'] as const as mode}
+                      {#each ['soft', 'none'] as const as mode (mode)}
                         <button
                           type="button"
                           role="menuitem"
@@ -1292,7 +1290,7 @@
                 class="flex items-center gap-1"
                 role="toolbar"
                 aria-label="Formatting tools">
-                {#each [{ action: () => insertMarkdown('# '), icon: 'format_h1', label: 'H1 heading' }, { action: () => insertMarkdown('## '), icon: 'format_h2', label: 'H2 heading' }, { action: () => insertMarkdown('### '), icon: 'format_h3', label: 'H3 heading' }] as const as item}
+                {#each [{ action: () => insertMarkdown('# '), icon: 'format_h1', label: 'H1 heading' }, { action: () => insertMarkdown('## '), icon: 'format_h2', label: 'H2 heading' }, { action: () => insertMarkdown('### '), icon: 'format_h3', label: 'H3 heading' }] as const as item (item.icon)}
                   <button
                     type="button"
                     onclick={item.action}
@@ -1307,7 +1305,7 @@
                   class="mx-1 h-4 w-px bg-border-subtle"
                   aria-hidden="true">
                 </div>
-                {#each [{ action: () => insertMarkdown('**', '**'), icon: 'format_bold', label: 'Bold' }, { action: () => insertMarkdown('*', '*'), icon: 'format_italic', label: 'Italic' }, { action: () => insertMarkdown('<u>', '</u>'), icon: 'format_underlined', label: 'Underline' }, { action: () => insertMarkdown('~~', '~~'), icon: 'format_strikethrough', label: 'Strikethrough' }] as const as item}
+                {#each [{ action: () => insertMarkdown('**', '**'), icon: 'format_bold', label: 'Bold' }, { action: () => insertMarkdown('*', '*'), icon: 'format_italic', label: 'Italic' }, { action: () => insertMarkdown('<u>', '</u>'), icon: 'format_underlined', label: 'Underline' }, { action: () => insertMarkdown('~~', '~~'), icon: 'format_strikethrough', label: 'Strikethrough' }] as const as item (item.icon)}
                   <button
                     type="button"
                     onclick={item.action}
@@ -1338,7 +1336,7 @@
                   onchange={handleImageUpload}
                   class="hidden"
                   aria-label="Upload image file" />
-                {#each [{ action: () => insertMarkdown('[', '](url)'), icon: 'link', label: 'Insert link' }, { action: () => insertMarkdown('1. '), icon: 'format_list_numbered', label: 'Numbered list' }, { action: () => insertMarkdown('- '), icon: 'format_list_bulleted', label: 'Bulleted list' }, { action: () => insertMarkdown('```\n', '\n```'), icon: 'code_blocks', label: 'Code block' }] as const as item}
+                {#each [{ action: () => insertMarkdown('[', '](url)'), icon: 'link', label: 'Insert link' }, { action: () => insertMarkdown('1. '), icon: 'format_list_numbered', label: 'Numbered list' }, { action: () => insertMarkdown('- '), icon: 'format_list_bulleted', label: 'Bulleted list' }, { action: () => insertMarkdown('```\n', '\n```'), icon: 'code_blocks', label: 'Code block' }] as const as item (item.icon)}
                   <button
                     type="button"
                     onclick={item.action}

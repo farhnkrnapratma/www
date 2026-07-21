@@ -6,7 +6,6 @@
   import hljs from 'highlight.js';
   import { isNameReserved } from '$lib/nameValidator';
   import {
-    autoResize,
     SkipLink,
     SpotlightSearch,
     Button,
@@ -650,7 +649,7 @@
         <div
           role="menu"
           class="absolute top-11 right-0 z-50 flex min-w-[7.75rem] flex-col rounded-xl border border-border-subtle bg-surface-elevated py-1.5 shadow-lg">
-          {#each [['auto', 'bi-circle-half', 'Auto'], ['light', 'bi-sun-fill', 'Light'], ['dark', 'bi-moon-stars-fill', 'Dark']] as const as [val, icon, label]}
+          {#each [['auto', 'bi-circle-half', 'Auto'], ['light', 'bi-sun-fill', 'Light'], ['dark', 'bi-moon-stars-fill', 'Dark']] as const as [val, icon, label] (val)}
             <button
               type="button"
               role="menuitem"
@@ -786,7 +785,7 @@
               aria-hidden="true"></i>
             <span class="hidden sm:inline">{showCopySuccess ? 'Copied!' : 'Copy link'}</span>
           </button>
-          {#each [{ href: `https://twitter.com/intent/tweet?url=${encodeURIComponent(page.url.href)}&text=${encodeURIComponent(post.title)}`, icon: 'bi-twitter-x', label: 'Share on X (opens in a new tab)', text: 'X' }, { href: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(page.url.href)}`, icon: 'bi-facebook', label: 'Share on Facebook (opens in a new tab)', text: 'Facebook' }, { href: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(page.url.href)}`, icon: 'bi-linkedin', label: 'Share on LinkedIn (opens in a new tab)', text: 'LinkedIn' }, { href: `mailto:?subject=${encodeURIComponent(post.title)}&body=${encodeURIComponent(page.url.href)}`, icon: 'bi-envelope', label: 'Share via email', text: 'Email' }] as item}
+          {#each [{ href: `https://twitter.com/intent/tweet?url=${encodeURIComponent(page.url.href)}&text=${encodeURIComponent(post.title)}`, icon: 'bi-twitter-x', label: 'Share on X (opens in a new tab)', text: 'X' }, { href: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(page.url.href)}`, icon: 'bi-facebook', label: 'Share on Facebook (opens in a new tab)', text: 'Facebook' }, { href: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(page.url.href)}`, icon: 'bi-linkedin', label: 'Share on LinkedIn (opens in a new tab)', text: 'LinkedIn' }, { href: `mailto:?subject=${encodeURIComponent(post.title)}&body=${encodeURIComponent(page.url.href)}`, icon: 'bi-envelope', label: 'Share via email', text: 'Email' }] as item (item.text)}
             <a
               href={item.href}
               target={item.href.startsWith('mailto') ? undefined : '_blank'}
@@ -1291,7 +1290,7 @@
         </div>
 
         <div class="flex items-center gap-3">
-          {#each [{ href: 'https://github.com/farhnkrnapratma', icon: 'bi-github', label: 'GitHub (opens in a new tab)' }, { href: 'https://linkedin.com/in/farhnkrnapratma', icon: 'bi-linkedin', label: 'LinkedIn (opens in a new tab)' }, { href: 'https://x.com/farhnkrnapratma', icon: 'bi-twitter-x', label: 'X (opens in a new tab)' }, { href: 'https://instagram.com/farhnkrnapratma', icon: 'bi-instagram', label: 'Instagram (opens in a new tab)' }] as social}
+          {#each [{ href: 'https://github.com/farhnkrnapratma', icon: 'bi-github', label: 'GitHub (opens in a new tab)' }, { href: 'https://linkedin.com/in/farhnkrnapratma', icon: 'bi-linkedin', label: 'LinkedIn (opens in a new tab)' }, { href: 'https://x.com/farhnkrnapratma', icon: 'bi-twitter-x', label: 'X (opens in a new tab)' }, { href: 'https://instagram.com/farhnkrnapratma', icon: 'bi-instagram', label: 'Instagram (opens in a new tab)' }] as social (social.href)}
             <a
               href={social.href}
               target="_blank"
@@ -1361,34 +1360,32 @@
     showYesFeedbackDialog = false;
     helpfulnessFeedback = null;
   }}>
-  {#snippet children()}
-    <div class="grid grid-cols-2 gap-2 text-left">
-      <button
-        onclick={() => {
-          copyToClipboard();
-          showYesFeedbackDialog = false;
-        }}
-        class="col-span-2 flex h-9.5 cursor-pointer items-center justify-center gap-2 rounded-lg border border-border-subtle bg-surface-card px-3 text-xs font-semibold text-text-primary transition-colors hover:bg-surface-hover hover:text-accent">
+  <div class="grid grid-cols-2 gap-2 text-left">
+    <button
+      onclick={() => {
+        copyToClipboard();
+        showYesFeedbackDialog = false;
+      }}
+      class="col-span-2 flex h-9.5 cursor-pointer items-center justify-center gap-2 rounded-lg border border-border-subtle bg-surface-card px-3 text-xs font-semibold text-text-primary transition-colors hover:bg-surface-hover hover:text-accent">
+      <i
+        class="bi {showCopySuccess ? 'bi-check2 text-success' : 'bi-link-45deg'} text-sm"
+        aria-hidden="true"></i>
+      <span>{showCopySuccess ? 'Copied!' : 'Copy link'}</span>
+    </button>
+    {#each [{ href: `https://twitter.com/intent/tweet?url=${encodeURIComponent(page.url.href)}&text=${encodeURIComponent(post.title)}`, icon: 'bi-twitter-x', text: 'X' }, { href: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(page.url.href)}`, icon: 'bi-linkedin', text: 'LinkedIn' }, { href: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(page.url.href)}`, icon: 'bi-facebook', text: 'Facebook' }, { href: `mailto:?subject=${encodeURIComponent(post.title)}&body=${encodeURIComponent(page.url.href)}`, icon: 'bi-envelope', text: 'Email' }] as item (item.text)}
+      <a
+        href={item.href}
+        target={item.href.startsWith('mailto') ? undefined : '_blank'}
+        rel="noopener noreferrer"
+        onclick={() => (showYesFeedbackDialog = false)}
+        class="flex h-9.5 items-center justify-center gap-2 rounded-lg border border-border-subtle bg-surface-card px-3 text-xs font-semibold text-text-primary transition-colors hover:bg-surface-hover hover:text-accent">
         <i
-          class="bi {showCopySuccess ? 'bi-check2 text-success' : 'bi-link-45deg'} text-sm"
+          class="bi {item.icon} text-sm"
           aria-hidden="true"></i>
-        <span>{showCopySuccess ? 'Copied!' : 'Copy link'}</span>
-      </button>
-      {#each [{ href: `https://twitter.com/intent/tweet?url=${encodeURIComponent(page.url.href)}&text=${encodeURIComponent(post.title)}`, icon: 'bi-twitter-x', text: 'X' }, { href: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(page.url.href)}`, icon: 'bi-linkedin', text: 'LinkedIn' }, { href: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(page.url.href)}`, icon: 'bi-facebook', text: 'Facebook' }, { href: `mailto:?subject=${encodeURIComponent(post.title)}&body=${encodeURIComponent(page.url.href)}`, icon: 'bi-envelope', text: 'Email' }] as item}
-        <a
-          href={item.href}
-          target={item.href.startsWith('mailto') ? undefined : '_blank'}
-          rel="noopener noreferrer"
-          onclick={() => (showYesFeedbackDialog = false)}
-          class="flex h-9.5 items-center justify-center gap-2 rounded-lg border border-border-subtle bg-surface-card px-3 text-xs font-semibold text-text-primary transition-colors hover:bg-surface-hover hover:text-accent">
-          <i
-            class="bi {item.icon} text-sm"
-            aria-hidden="true"></i>
-          <span>{item.text}</span>
-        </a>
-      {/each}
-    </div>
-  {/snippet}
+        <span>{item.text}</span>
+      </a>
+    {/each}
+  </div>
   {#snippet footer()}
     <Button
       variant="secondary"

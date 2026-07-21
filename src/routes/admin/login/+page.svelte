@@ -1,7 +1,7 @@
 <script lang="ts">
   import { supabase } from '$lib/supabase';
   import { onMount } from 'svelte';
-  import { Card, FormField, Input, Button, IconButton, SkipLink, StatusBanner } from '$lib';
+  import { Card, FormField, Input, Button, IconButton, SkipLink } from '$lib';
 
   let email = $state('');
   let password = $state('');

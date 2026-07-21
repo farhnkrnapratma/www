@@ -5,16 +5,12 @@
   import type { BlogPost } from './+page.server';
   import { isNameReserved } from '$lib/nameValidator';
   import {
-    autoResize,
     SkipLink,
     SpotlightSearch,
     FormField,
     Input,
     Textarea,
     Button,
-    IconButton,
-    Badge,
-    Card,
     Dialog,
     EmptyState,
   } from '$lib';
@@ -590,7 +586,7 @@
           aria-label="Close theme menu"></button>
         <div
           class="absolute top-12 right-0 z-50 hidden min-w-[7.75rem] flex-col rounded-xl border border-border-subtle bg-surface-elevated py-1.5 shadow-lg md:flex">
-          {#each [['auto', 'bi-circle-half', 'Auto'], ['light', 'bi-sun-fill', 'Light'], ['dark', 'bi-moon-stars-fill', 'Dark']] as const as [val, icon, label]}
+          {#each [['auto', 'bi-circle-half', 'Auto'], ['light', 'bi-sun-fill', 'Light'], ['dark', 'bi-moon-stars-fill', 'Dark']] as const as [val, icon, label] (val)}
             <button
               onclick={() => {
                 applyTheme(val);

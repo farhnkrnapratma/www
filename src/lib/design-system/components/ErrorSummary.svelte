@@ -29,7 +29,7 @@
       <span>{title}</span>
     </div>
     <ul class="mt-2 flex list-disc flex-col gap-1 pl-5 font-medium text-danger">
-      {#each errors as error}
+      {#each errors as error (error)}
         <li>{error}</li>
       {/each}
     </ul>

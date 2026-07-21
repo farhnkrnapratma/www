@@ -1,5 +1,4 @@
 <script lang="ts">
-  import type { Snippet } from 'svelte';
   import { cn } from '../utils/cn';
 
   interface NavItem {
