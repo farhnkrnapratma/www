@@ -268,6 +268,8 @@
 
   let lineCount = $derived(markdownContent.split('\n').length);
 
+  let lineEnding = $derived(markdownContent.includes('\r\n') ? 'CRLF' : 'LF');
+
   function updateCursorPosition() {
     if (!textareaElement) return;
     const textBeforeCursor = markdownContent.substring(0, textareaElement.selectionStart);
@@ -1228,6 +1230,8 @@
                   <span class="material-symbols-rounded text-[14px]">space_bar</span>
                   {indentSize}
                 </span>
+                <span class="text-[12.5px] font-semibold tracking-wide">UTF-8</span>
+                <span class="text-[12.5px] font-semibold tracking-wide">{lineEnding}</span>
                 <span class="relative group cursor-help flex items-center">
                   <span class="material-symbols-rounded text-[16px]">markdown</span>
                   <span class="absolute bottom-full mb-1.5 right-0 hidden group-hover:block bg-adwaita-card text-adwaita-text text-[10px] px-2 py-1 rounded-md border border-adwaita-border whitespace-nowrap shadow-md font-sans">
