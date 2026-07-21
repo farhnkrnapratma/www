@@ -9,6 +9,16 @@
   let showPassword = $state(false);
   let errors = $state({ email: '', password: '' });
   let valid = $state({ email: false, password: false });
+  let showToast = $state(false);
+  let toastMessage = $state('');
+
+  function triggerToast(msg: string) {
+    toastMessage = msg;
+    showToast = true;
+    setTimeout(() => {
+      showToast = false;
+    }, 4000);
+  }
 
   onMount(async () => {
     const { data } = await supabase.auth.getSession();
@@ -91,7 +101,7 @@
     } catch (err) {
       const error = err as Error;
       console.error('Login failed:', error);
-      errorMessage = error.message || 'Invalid email or password.';
+      triggerToast(error.message || 'Invalid email or password.');
     } finally {
       isSubmitting = false;
     }
@@ -111,21 +121,15 @@
         <p class="mt-1 text-xs text-adwaita-subtitle">Sign in to manage your blog posts</p>
       </div>
 
-      {#if errorMessage}
-        <div
-          class="mb-4 rounded-lg border border-palette-coral/30 bg-palette-coral/10 p-3 text-xs font-semibold text-palette-coral">
-          {errorMessage}
-        </div>
-      {/if}
 
       <form
         novalidate
         onsubmit={handleLogin}
-        class="flex flex-col gap-2.5">
-        <div class="flex flex-col gap-1">
+        class="flex flex-col gap-2">
+        <div class="relative flex flex-col pb-5.5">
           <label
             for="login-email"
-            class="text-xs font-bold text-adwaita-label select-none">
+            class="text-xs font-bold text-adwaita-label select-none mb-1">
             Email <span
               aria-hidden="true"
               class="text-adwaita-error">*</span
@@ -152,7 +156,7 @@
             <div
               id="login-email-fb"
               aria-live="polite"
-              class="mt-1 text-xs leading-none font-medium">
+              class="absolute bottom-0.5 left-0 text-xs leading-none font-medium">
               {#if errors.email}
                 <span class="flex items-center gap-1 text-adwaita-error">
                   <i class="bi bi-exclamation-circle-fill"></i>{errors.email}
@@ -166,10 +170,10 @@
           {/if}
         </div>
 
-        <div class="flex flex-col gap-1">
+        <div class="relative flex flex-col pb-5.5">
           <label
             for="login-pass"
-            class="text-xs font-bold text-adwaita-label select-none">
+            class="text-xs font-bold text-adwaita-label select-none mb-1">
             Password <span
               aria-hidden="true"
               class="text-adwaita-error">*</span
@@ -207,7 +211,7 @@
             <div
               id="login-pass-fb"
               aria-live="polite"
-              class="mt-1 text-xs leading-none font-medium">
+              class="absolute bottom-0.5 left-0 text-xs leading-none font-medium">
               {#if errors.password}
                 <span class="flex items-center gap-1 text-adwaita-error">
                   <i class="bi bi-exclamation-circle-fill"></i>{errors.password}
@@ -224,7 +228,7 @@
         <button
           type="submit"
           disabled={isSubmitting}
-          class="inline-flex w-full cursor-pointer items-center justify-center gap-2 rounded-lg bg-adwaita-accent px-5 py-2.5 text-sm font-semibold text-white transition-colors select-none hover:bg-adwaita-accent-hover disabled:opacity-55">
+          class="inline-flex w-full cursor-pointer items-center justify-center gap-2 rounded-lg bg-adwaita-accent px-5 py-2.5 text-sm font-semibold text-white transition-colors select-none hover:bg-adwaita-accent-hover disabled:opacity-55 mt-1">
           {isSubmitting ? 'Signing in...' : 'Sign In'}
         </button>
       </form>
@@ -243,4 +247,11 @@
     class="w-full px-6 py-8 text-center font-sans text-xs text-adwaita-subtitle/75 select-none">
     <p>&copy; {new Date().getFullYear()} Farhan Kurnia Pratama. All rights reserved</p>
   </footer>
+
+  {#if showToast}
+    <div class="fixed bottom-6 left-1/2 z-50 flex -translate-x-1/2 items-center gap-2 rounded-full border border-adwaita-border bg-adwaita-card/90 px-4 py-2 text-xs font-semibold text-adwaita-text shadow-lg backdrop-blur-md transition-all duration-300">
+      <i class="bi bi-exclamation-circle-fill text-palette-coral text-sm" aria-hidden="true"></i>
+      {toastMessage}
+    </div>
+  {/if}
 </main>

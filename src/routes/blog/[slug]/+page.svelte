@@ -715,32 +715,32 @@
         {/if}
         <div
           class="no-scrollbar mt-4 flex w-full items-center gap-x-2.5 overflow-x-auto font-sans text-[11px] font-semibold whitespace-nowrap text-adwaita-subtitle select-none">
-          <span class="inline-flex items-center gap-1 leading-none">
+          <span class="inline-flex items-center gap-1">
             <span
-              class="material-symbols-rounded inline-block text-[10px] leading-none font-thin"
-              style="font-variation-settings: 'wght' 100; transform: scale(0.72); transform-origin: center;"
+              class="material-symbols-rounded inline-block text-[11px] leading-none"
+              style="font-variation-settings: 'wght' 275; transform: scale(0.82); transform-origin: center;"
               aria-hidden="true">calendar_clock</span>
             {formatDate(post.created_at)}
           </span>
-          <span class="inline-flex items-center gap-1 leading-none">
+          <span class="inline-flex items-center gap-1">
             <span
-              class="material-symbols-rounded inline-block text-[10px] leading-none font-thin"
-              style="font-variation-settings: 'wght' 100; transform: scale(0.72); transform-origin: center;"
+              class="material-symbols-rounded inline-block text-[11px] leading-none"
+              style="font-variation-settings: 'wght' 275; transform: scale(0.82); transform-origin: center;"
               aria-hidden="true">av_timer</span>
             {formatReadTime(post.read_time)}
           </span>
-          <span class="inline-flex items-center gap-1 leading-none">
+          <span class="inline-flex items-center gap-1">
             <span
-              class="material-symbols-rounded inline-block text-[10px] leading-none font-thin"
-              style="font-variation-settings: 'wght' 100; transform: scale(0.72); transform-origin: center;"
+              class="material-symbols-rounded inline-block text-[11px] leading-none"
+              style="font-variation-settings: 'wght' 275; transform: scale(0.82); transform-origin: center;"
               aria-hidden="true">forum</span>
             {comments.length}
           </span>
           {#if viewCount !== null}
-            <span class="inline-flex items-center gap-1 leading-none">
+            <span class="inline-flex items-center gap-1">
               <span
-                class="material-symbols-rounded inline-block text-[10px] leading-none font-thin"
-                style="font-variation-settings: 'wght' 100; transform: scale(0.72); transform-origin: center;"
+                class="material-symbols-rounded inline-block text-[11px] leading-none"
+                style="font-variation-settings: 'wght' 275; transform: scale(0.82); transform-origin: center;"
                 aria-hidden="true">visibility</span>
               {viewCount}
             </span>

@@ -779,29 +779,29 @@
                 <div class="flex flex-1 flex-col gap-1 font-sans">
                   <div
                     class="no-scrollbar flex w-full items-center gap-x-2.5 overflow-x-auto font-sans text-[11px] font-semibold whitespace-nowrap text-adwaita-subtitle select-none">
-                    <span class="inline-flex items-center gap-1 leading-none"
+                    <span class="inline-flex items-center gap-1"
                       ><span
-                        class="material-symbols-rounded inline-block text-[10px] leading-none font-thin"
-                        style="font-variation-settings: 'wght' 100; transform: scale(0.72); transform-origin: center;"
+                        class="material-symbols-rounded inline-block text-[11px] leading-none"
+                        style="font-variation-settings: 'wght' 275; transform: scale(0.82); transform-origin: center;"
                         aria-hidden="true">calendar_clock</span>
                       {getPostDate(post)}</span>
-                    <span class="inline-flex items-center gap-1 leading-none"
+                    <span class="inline-flex items-center gap-1"
                       ><span
-                        class="material-symbols-rounded inline-block text-[10px] leading-none font-thin"
-                        style="font-variation-settings: 'wght' 100; transform: scale(0.72); transform-origin: center;"
+                        class="material-symbols-rounded inline-block text-[11px] leading-none"
+                        style="font-variation-settings: 'wght' 275; transform: scale(0.82); transform-origin: center;"
                         aria-hidden="true">av_timer</span>
                       {(post.read_time || '').replace(/\s*read\s*/gi, '')}</span>
-                    <span class="inline-flex items-center gap-1 leading-none"
+                    <span class="inline-flex items-center gap-1"
                       ><span
-                        class="material-symbols-rounded inline-block text-[10px] leading-none font-thin"
-                        style="font-variation-settings: 'wght' 100; transform: scale(0.72); transform-origin: center;"
+                        class="material-symbols-rounded inline-block text-[11px] leading-none"
+                        style="font-variation-settings: 'wght' 275; transform: scale(0.82); transform-origin: center;"
                         aria-hidden="true">forum</span>
                       {post.comment_count || 0}</span>
                     {#if post.views_count !== undefined}
-                      <span class="inline-flex items-center gap-1 leading-none"
+                      <span class="inline-flex items-center gap-1"
                         ><span
-                          class="material-symbols-rounded inline-block text-[10px] leading-none font-thin"
-                          style="font-variation-settings: 'wght' 100; transform: scale(0.72); transform-origin: center;"
+                          class="material-symbols-rounded inline-block text-[11px] leading-none"
+                          style="font-variation-settings: 'wght' 275; transform: scale(0.82); transform-origin: center;"
                           aria-hidden="true">visibility</span>
                         {post.views_count}</span>
                     {/if}
@@ -1182,29 +1182,29 @@
               <div class="flex flex-1 flex-col gap-1 font-sans">
                 <div
                   class="no-scrollbar flex w-full items-center gap-x-2.5 overflow-x-auto font-sans text-[11px] font-semibold whitespace-nowrap text-adwaita-subtitle select-none">
-                  <span class="inline-flex items-center gap-1 leading-none"
+                  <span class="inline-flex items-center gap-1"
                     ><span
-                      class="material-symbols-rounded inline-block text-[10px] leading-none font-thin"
-                      style="font-variation-settings: 'wght' 100; transform: scale(0.72); transform-origin: center;"
+                      class="material-symbols-rounded inline-block text-[11px] leading-none"
+                      style="font-variation-settings: 'wght' 275; transform: scale(0.82); transform-origin: center;"
                       aria-hidden="true">calendar_clock</span>
                     {getPostDate(post)}</span>
-                  <span class="inline-flex items-center gap-1 leading-none"
+                  <span class="inline-flex items-center gap-1"
                     ><span
-                      class="material-symbols-rounded inline-block text-[10px] leading-none font-thin"
-                      style="font-variation-settings: 'wght' 100; transform: scale(0.72); transform-origin: center;"
+                      class="material-symbols-rounded inline-block text-[11px] leading-none"
+                      style="font-variation-settings: 'wght' 275; transform: scale(0.82); transform-origin: center;"
                       aria-hidden="true">av_timer</span>
                     {(post.read_time || '').replace(/\s*read\s*/gi, '')}</span>
-                  <span class="inline-flex items-center gap-1 leading-none"
+                  <span class="inline-flex items-center gap-1"
                     ><span
-                      class="material-symbols-rounded inline-block text-[10px] leading-none font-thin"
-                      style="font-variation-settings: 'wght' 100; transform: scale(0.72); transform-origin: center;"
+                      class="material-symbols-rounded inline-block text-[11px] leading-none"
+                      style="font-variation-settings: 'wght' 275; transform: scale(0.82); transform-origin: center;"
                       aria-hidden="true">forum</span>
                     {post.comment_count || 0}</span>
                   {#if post.views_count !== undefined}
-                    <span class="inline-flex items-center gap-1 leading-none"
+                    <span class="inline-flex items-center gap-1"
                       ><span
-                        class="material-symbols-rounded inline-block text-[10px] leading-none font-thin"
-                        style="font-variation-settings: 'wght' 100; transform: scale(0.72); transform-origin: center;"
+                        class="material-symbols-rounded inline-block text-[11px] leading-none"
+                        style="font-variation-settings: 'wght' 275; transform: scale(0.82); transform-origin: center;"
                         aria-hidden="true">visibility</span>
                       {post.views_count}</span>
                   {/if}
