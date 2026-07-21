@@ -44,20 +44,19 @@
   onClose={close}>
   {#if children}
     {@render children()}
-  {:else}
-    {#snippet footer()}
-      <Button
-        variant="secondary"
-        size="md"
-        onclick={close}>
-        {cancelLabel}
-      </Button>
-      <Button
-        variant={isDestructive ? 'destructive' : 'primary'}
-        size="md"
-        onclick={confirm}>
-        {confirmLabel || (isDestructive ? 'Delete' : 'Confirm')}
-      </Button>
-    {/snippet}
   {/if}
+  {#snippet footer()}
+    <Button
+      variant="secondary"
+      size="md"
+      onclick={close}>
+      {cancelLabel}
+    </Button>
+    <Button
+      variant={isDestructive ? 'destructive' : 'primary'}
+      size="md"
+      onclick={confirm}>
+      {confirmLabel || (isDestructive ? 'Delete' : 'Confirm')}
+    </Button>
+  {/snippet}
 </Dialog>
