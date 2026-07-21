@@ -879,9 +879,9 @@
                       bannerPreview = null;
                       bannerPath = null;
                     }}
-                    class="absolute top-2 right-2 flex h-7 w-7 cursor-pointer items-center justify-center rounded-full border border-white/20 bg-black/70 p-1 text-white hover:bg-black/90 transition-all"
+                    class="absolute top-2 right-2 flex h-7 w-7 cursor-pointer items-center justify-center rounded-full border border-white/20 bg-black/70 text-white hover:bg-black/90 transition-colors"
                     aria-label="Remove banner">
-                    <i class="bi bi-x text-lg"></i>
+                    <span class="material-symbols-rounded text-base leading-none">close</span>
                   </button>
                 {:else}
                   <div class="flex flex-col items-center gap-2 text-adwaita-subtitle/65">
