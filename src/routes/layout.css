@@ -3,7 +3,7 @@
 
 @layer base {
   html {
-    @apply text-[122%] scroll-pt-[4.25rem] scroll-pb-[5.25rem] scroll-smooth;
+    @apply scroll-pt-[4.25rem] scroll-pb-[5.25rem] scroll-smooth text-[122%];
   }
 
   body {
@@ -144,7 +144,7 @@
 }
 
 .prose-custom a {
-  @apply underline text-[var(--color-link)];
+  @apply text-[var(--color-link)] underline;
 }
 
 .prose-custom a:hover {
@@ -225,7 +225,7 @@ select:focus-visible,
 details:focus-visible,
 summary:focus-visible,
 [tabindex='0']:focus-visible {
-  @apply !outline-2 !outline-[var(--color-adwaita-accent)] !outline-offset-2;
+  @apply !outline-2 !outline-offset-2 !outline-[var(--color-adwaita-accent)];
   border-radius: 6px;
 }
 

@@ -73,7 +73,7 @@
       cs: 'C#',
       sql: 'SQL',
       dockerfile: 'Docker',
-      docker: 'Docker'
+      docker: 'Docker',
     };
     return map[lang] || lang.charAt(0).toUpperCase() + lang.slice(1);
   }
@@ -82,7 +82,7 @@
     const container = document.querySelector('.prose-custom');
     if (!container) return;
     const preBlocks = container.querySelectorAll('pre');
-    preBlocks.forEach((el) => {
+    preBlocks.forEach(el => {
       const pre = el as HTMLElement;
       if (pre.previousElementSibling?.classList.contains('code-header-bar')) return;
 
@@ -91,30 +91,39 @@
       const prettyLang = getPrettyLanguage(langClass);
 
       const headerBar = document.createElement('div');
-      headerBar.className = 'code-header-bar flex items-center justify-between bg-adwaita-bg/95 border border-adwaita-border rounded-t-lg px-4 py-1 text-xs text-adwaita-subtitle font-semibold select-none mt-6';
-      
+      headerBar.className =
+        'code-header-bar flex items-center justify-between bg-adwaita-bg/95 border border-adwaita-border rounded-t-lg px-4 py-1 text-xs text-adwaita-subtitle font-semibold select-none mt-6';
+
       const leftSpan = document.createElement('span');
-      leftSpan.className = 'text-[12.5px] font-sans font-bold uppercase tracking-wider text-adwaita-subtitle leading-none';
+      leftSpan.className =
+        'text-[12.5px] font-sans font-bold uppercase tracking-wider text-adwaita-subtitle leading-none';
       leftSpan.innerText = prettyLang;
       headerBar.appendChild(leftSpan);
 
       const copyBtn = document.createElement('button');
       copyBtn.type = 'button';
-      copyBtn.className = 'flex h-5 w-5 items-center justify-center rounded-md border border-adwaita-border/30 hover:bg-adwaita-hover/30 hover:text-adwaita-text transition-colors cursor-pointer text-adwaita-subtitle leading-none';
-      copyBtn.innerHTML = '<span class="material-symbols-rounded text-[10.5px] font-bold leading-none" style="font-variation-settings: \'wght\' 800;">content_copy</span>';
-      
+      copyBtn.className =
+        'flex h-5 w-5 items-center justify-center rounded-md border border-adwaita-border/30 hover:bg-adwaita-hover/30 hover:text-adwaita-text transition-colors cursor-pointer text-adwaita-subtitle leading-none';
+      copyBtn.innerHTML =
+        '<span class="material-symbols-rounded text-[10.5px] font-bold leading-none" style="font-variation-settings: \'wght\' 800;">content_copy</span>';
+
       copyBtn.addEventListener('click', () => {
         if (!codeElement) return;
         const codeText = codeElement.innerText || codeElement.textContent || '';
-        navigator.clipboard.writeText(codeText).then(() => {
-          copyBtn.innerHTML = '<span class="material-symbols-rounded text-[10.5px] font-bold leading-none text-palette-green" style="font-variation-settings: \'wght\' 800;">check_small</span>';
-          triggerToast('Code copied to clipboard!');
-          setTimeout(() => {
-            copyBtn.innerHTML = '<span class="material-symbols-rounded text-[10.5px] font-bold leading-none" style="font-variation-settings: \'wght\' 800;">content_copy</span>';
-          }, 2000);
-        }).catch(err => {
-          console.error('Failed to copy code: ', err);
-        });
+        navigator.clipboard
+          .writeText(codeText)
+          .then(() => {
+            copyBtn.innerHTML =
+              '<span class="material-symbols-rounded text-[10.5px] font-bold leading-none text-palette-green" style="font-variation-settings: \'wght\' 800;">check_small</span>';
+            triggerToast('Code copied to clipboard!');
+            setTimeout(() => {
+              copyBtn.innerHTML =
+                '<span class="material-symbols-rounded text-[10.5px] font-bold leading-none" style="font-variation-settings: \'wght\' 800;">content_copy</span>';
+            }, 2000);
+          })
+          .catch(err => {
+            console.error('Failed to copy code: ', err);
+          });
       });
 
       headerBar.appendChild(copyBtn);
@@ -705,24 +714,24 @@
           </p>
         {/if}
         <div
-          class="mt-4 flex items-center gap-x-2.5 font-sans text-[11px] font-semibold text-adwaita-subtitle select-none whitespace-nowrap overflow-x-auto no-scrollbar w-full">
+          class="no-scrollbar mt-4 flex w-full items-center gap-x-2.5 overflow-x-auto font-sans text-[11px] font-semibold whitespace-nowrap text-adwaita-subtitle select-none">
           <span class="inline-flex items-center gap-1 leading-none">
             <span
-              class="material-symbols-rounded inline-block text-[10px] font-thin leading-none"
+              class="material-symbols-rounded inline-block text-[10px] leading-none font-thin"
               style="font-variation-settings: 'wght' 100; transform: scale(0.72); transform-origin: center;"
               aria-hidden="true">calendar_clock</span>
             {formatDate(post.created_at)}
           </span>
           <span class="inline-flex items-center gap-1 leading-none">
             <span
-              class="material-symbols-rounded inline-block text-[10px] font-thin leading-none"
+              class="material-symbols-rounded inline-block text-[10px] leading-none font-thin"
               style="font-variation-settings: 'wght' 100; transform: scale(0.72); transform-origin: center;"
               aria-hidden="true">av_timer</span>
             {formatReadTime(post.read_time)}
           </span>
           <span class="inline-flex items-center gap-1 leading-none">
             <span
-              class="material-symbols-rounded inline-block text-[10px] font-thin leading-none"
+              class="material-symbols-rounded inline-block text-[10px] leading-none font-thin"
               style="font-variation-settings: 'wght' 100; transform: scale(0.72); transform-origin: center;"
               aria-hidden="true">forum</span>
             {comments.length}
@@ -730,7 +739,7 @@
           {#if viewCount !== null}
             <span class="inline-flex items-center gap-1 leading-none">
               <span
-                class="material-symbols-rounded inline-block text-[10px] font-thin leading-none"
+                class="material-symbols-rounded inline-block text-[10px] leading-none font-thin"
                 style="font-variation-settings: 'wght' 100; transform: scale(0.72); transform-origin: center;"
                 aria-hidden="true">visibility</span>
               {viewCount}
@@ -1448,8 +1457,11 @@
 </main>
 
 {#if showToast}
-  <div class="fixed bottom-6 left-1/2 z-50 flex -translate-x-1/2 items-center gap-2 rounded-full border border-adwaita-border bg-adwaita-card/90 px-4 py-2 text-xs font-semibold text-adwaita-text shadow-lg backdrop-blur-md transition-all duration-300">
-    <i class="bi bi-check-circle-fill text-adwaita-accent text-sm" aria-hidden="true"></i>
+  <div
+    class="fixed bottom-6 left-1/2 z-50 flex -translate-x-1/2 items-center gap-2 rounded-full border border-adwaita-border bg-adwaita-card/90 px-4 py-2 text-xs font-semibold text-adwaita-text shadow-lg backdrop-blur-md transition-all duration-300">
+    <i
+      class="bi bi-check-circle-fill text-sm text-adwaita-accent"
+      aria-hidden="true"></i>
     {toastMessage}
   </div>
 {/if}
@@ -1519,7 +1531,9 @@
       </a>
 
       <a
-        href="mailto:?subject={encodeURIComponent(post.title)}&body={encodeURIComponent(page.url.href)}"
+        href="mailto:?subject={encodeURIComponent(post.title)}&body={encodeURIComponent(
+          page.url.href,
+        )}"
         onclick={() => (showYesFeedbackDialog = false)}
         class="flex h-9.5 items-center justify-center gap-2 rounded-lg border border-adwaita-border bg-adwaita-card px-3 text-xs font-semibold text-adwaita-text transition-colors hover:bg-adwaita-hover hover:text-adwaita-accent">
         <i

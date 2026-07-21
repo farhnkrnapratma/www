@@ -189,7 +189,7 @@
     aria-hidden="true"></i>
   <span class="hidden sm:inline">Search</span>
   <kbd
-    class="ml-1.5 hidden inline-flex h-5 items-center justify-center rounded border border-adwaita-border bg-adwaita-bg px-1.5 font-mono text-[11px] font-semibold text-adwaita-subtitle leading-none sm:inline-flex align-middle">
+    class="ml-1.5 hidden inline-flex h-5 items-center justify-center rounded border border-adwaita-border bg-adwaita-bg px-1.5 align-middle font-mono text-[11px] leading-none font-semibold text-adwaita-subtitle sm:inline-flex">
     Ctrl+K
   </kbd>
 </button>
@@ -389,7 +389,7 @@
         <div class="flex items-center gap-3.5 text-xs text-adwaita-subtitle/65">
           <span class="flex items-center gap-1.5">
             <kbd
-              class="inline-flex h-5.5 w-5.5 items-center justify-center rounded border border-adwaita-border bg-adwaita-bg text-adwaita-subtitle/85 text-[11px] font-semibold align-middle">
+              class="inline-flex h-5.5 w-5.5 items-center justify-center rounded border border-adwaita-border bg-adwaita-bg align-middle text-[11px] font-semibold text-adwaita-subtitle/85">
               <i
                 class="bi bi-arrow-down-up text-[11px]"
                 aria-hidden="true"></i>
@@ -398,7 +398,7 @@
           </span>
           <span class="flex items-center gap-1.5">
             <kbd
-              class="inline-flex h-5.5 w-5.5 items-center justify-center rounded border border-adwaita-border bg-adwaita-bg text-adwaita-subtitle/85 text-[11px] font-semibold align-middle">
+              class="inline-flex h-5.5 w-5.5 items-center justify-center rounded border border-adwaita-border bg-adwaita-bg align-middle text-[11px] font-semibold text-adwaita-subtitle/85">
               <i
                 class="bi bi-arrow-return-left text-[11px]"
                 aria-hidden="true"></i>
@@ -407,7 +407,7 @@
           </span>
           <span class="flex items-center gap-1.5">
             <kbd
-              class="inline-flex h-5.5 items-center justify-center rounded border border-adwaita-border bg-adwaita-bg px-1.5 font-mono text-[11px] font-semibold text-adwaita-subtitle/85 uppercase align-middle">
+              class="inline-flex h-5.5 items-center justify-center rounded border border-adwaita-border bg-adwaita-bg px-1.5 align-middle font-mono text-[11px] font-semibold text-adwaita-subtitle/85 uppercase">
               esc
             </kbd>
             close

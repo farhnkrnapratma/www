@@ -125,7 +125,6 @@
         initialMarkdownContent = '# New Post\n\nWrite your markdown content here...';
       }
 
-      
       const key = id ? `autosave_edit_${id}` : 'autosave_new';
       const savedDraft = localStorage.getItem(key);
       if (savedDraft) {
@@ -210,7 +209,6 @@
     }
   });
 
-  
   let showToast = $state(false);
   let toastMessage = $state('');
 
@@ -255,7 +253,7 @@
       cs: 'C#',
       sql: 'SQL',
       dockerfile: 'Docker',
-      docker: 'Docker'
+      docker: 'Docker',
     };
     return map[lang] || lang.charAt(0).toUpperCase() + lang.slice(1);
   }
@@ -264,7 +262,7 @@
     const container = document.querySelector('.prose-custom');
     if (!container) return;
     const preBlocks = container.querySelectorAll('pre');
-    preBlocks.forEach((el) => {
+    preBlocks.forEach(el => {
       const pre = el as HTMLElement;
       if (pre.previousElementSibling?.classList.contains('code-header-bar')) return;
 
@@ -273,30 +271,39 @@
       const prettyLang = getPrettyLanguage(langClass);
 
       const headerBar = document.createElement('div');
-      headerBar.className = 'code-header-bar flex items-center justify-between bg-adwaita-bg/95 border border-adwaita-border rounded-t-lg px-4 py-1 text-xs text-adwaita-subtitle font-semibold select-none mt-6';
-      
+      headerBar.className =
+        'code-header-bar flex items-center justify-between bg-adwaita-bg/95 border border-adwaita-border rounded-t-lg px-4 py-1 text-xs text-adwaita-subtitle font-semibold select-none mt-6';
+
       const leftSpan = document.createElement('span');
-      leftSpan.className = 'text-[12.5px] font-sans font-bold uppercase tracking-wider text-adwaita-subtitle leading-none';
+      leftSpan.className =
+        'text-[12.5px] font-sans font-bold uppercase tracking-wider text-adwaita-subtitle leading-none';
       leftSpan.innerText = prettyLang;
       headerBar.appendChild(leftSpan);
 
       const copyBtn = document.createElement('button');
       copyBtn.type = 'button';
-      copyBtn.className = 'flex h-5 w-5 items-center justify-center rounded-md border border-adwaita-border/30 hover:bg-adwaita-hover/30 hover:text-adwaita-text transition-colors cursor-pointer text-adwaita-subtitle leading-none';
-      copyBtn.innerHTML = '<span class="material-symbols-rounded text-[10.5px] font-bold leading-none" style="font-variation-settings: \'wght\' 800;">content_copy</span>';
-      
+      copyBtn.className =
+        'flex h-5 w-5 items-center justify-center rounded-md border border-adwaita-border/30 hover:bg-adwaita-hover/30 hover:text-adwaita-text transition-colors cursor-pointer text-adwaita-subtitle leading-none';
+      copyBtn.innerHTML =
+        '<span class="material-symbols-rounded text-[10.5px] font-bold leading-none" style="font-variation-settings: \'wght\' 800;">content_copy</span>';
+
       copyBtn.addEventListener('click', () => {
         if (!codeElement) return;
         const codeText = codeElement.innerText || codeElement.textContent || '';
-        navigator.clipboard.writeText(codeText).then(() => {
-          copyBtn.innerHTML = '<span class="material-symbols-rounded text-[10.5px] font-bold leading-none text-palette-green" style="font-variation-settings: \'wght\' 800;">check_small</span>';
-          triggerToast('Code copied to clipboard!');
-          setTimeout(() => {
-            copyBtn.innerHTML = '<span class="material-symbols-rounded text-[10.5px] font-bold leading-none" style="font-variation-settings: \'wght\' 800;">content_copy</span>';
-          }, 2000);
-        }).catch(err => {
-          console.error('Failed to copy code: ', err);
-        });
+        navigator.clipboard
+          .writeText(codeText)
+          .then(() => {
+            copyBtn.innerHTML =
+              '<span class="material-symbols-rounded text-[10.5px] font-bold leading-none text-palette-green" style="font-variation-settings: \'wght\' 800;">check_small</span>';
+            triggerToast('Code copied to clipboard!');
+            setTimeout(() => {
+              copyBtn.innerHTML =
+                '<span class="material-symbols-rounded text-[10.5px] font-bold leading-none" style="font-variation-settings: \'wght\' 800;">content_copy</span>';
+            }, 2000);
+          })
+          .catch(err => {
+            console.error('Failed to copy code: ', err);
+          });
       });
 
       headerBar.appendChild(copyBtn);
@@ -315,7 +322,7 @@
     if (activeTab === 'preview' && previewHtml) {
       tick().then(() => {
         const blocks = document.querySelectorAll('.prose-custom pre code');
-        blocks.forEach((block) => {
+        blocks.forEach(block => {
           hljs.highlightElement(block as HTMLElement);
         });
         setupCodeHeaderBars();
@@ -324,7 +331,8 @@
   });
 
   const highlightedMarkdown = $derived(
-    hljs.highlight(markdownContent || '', { language: 'markdown' }).value + (markdownContent.endsWith('\n') ? '\n ' : '')
+    hljs.highlight(markdownContent || '', { language: 'markdown' }).value +
+      (markdownContent.endsWith('\n') ? '\n ' : ''),
   );
 
   let excerptTextareaElement = $state<HTMLTextAreaElement | null>(null);
@@ -386,7 +394,8 @@
       const start = target.selectionStart;
       const end = target.selectionEnd;
       const indentStr = indentMode === 'spaces' ? ' '.repeat(indentSize) : '\t';
-      markdownContent = markdownContent.substring(0, start) + indentStr + markdownContent.substring(end);
+      markdownContent =
+        markdownContent.substring(0, start) + indentStr + markdownContent.substring(end);
       tick().then(() => {
         target.selectionStart = target.selectionEnd = start + indentStr.length;
         syncScroll();
@@ -401,7 +410,8 @@
     const end = textareaElement.selectionEnd;
     const selectedText = markdownContent.substring(start, end);
     const replacement = prefix + selectedText + suffix;
-    markdownContent = markdownContent.substring(0, start) + replacement + markdownContent.substring(end);
+    markdownContent =
+      markdownContent.substring(0, start) + replacement + markdownContent.substring(end);
     tick().then(() => {
       textareaElement!.focus();
       textareaElement!.selectionStart = start + prefix.length;
@@ -430,17 +440,13 @@
     try {
       const ext = file.name.split('.').pop() || 'png';
       const path = `images/${slug || 'post'}-${Date.now()}.${ext}`;
-      const { error: uploadError } = await supabase.storage
-        .from('blog-posts')
-        .upload(path, file, {
-          cacheControl: '3600',
-          upsert: true
-        });
+      const { error: uploadError } = await supabase.storage.from('blog-posts').upload(path, file, {
+        cacheControl: '3600',
+        upsert: true,
+      });
       if (uploadError) throw uploadError;
-      const { data: urlData } = supabase.storage
-        .from('blog-posts')
-        .getPublicUrl(path);
-      insertMarkdown(`![${file.name.replace(/\.[^/.]+$/, "")}](${urlData.publicUrl})`);
+      const { data: urlData } = supabase.storage.from('blog-posts').getPublicUrl(path);
+      insertMarkdown(`![${file.name.replace(/\.[^/.]+$/, '')}](${urlData.publicUrl})`);
     } catch (err) {
       const error = err as Error;
       errorMessage = error.message || 'Failed to upload image.';
@@ -470,7 +476,7 @@
           title,
           excerpt,
           markdownContent,
-          timestamp: Date.now()
+          timestamp: Date.now(),
         };
         localStorage.setItem(key, JSON.stringify(data));
         autoSaveStatus = 'saved';
@@ -854,24 +860,27 @@
       <form
         onsubmit={e => e.preventDefault()}
         class="flex flex-col gap-4">
-        <div class="rounded-2xl border border-adwaita-border bg-adwaita-card/45 p-6 shadow-xs backdrop-blur-lg transition-colors duration-300 text-left">
-          <h2 class="text-base font-bold text-adwaita-text select-none mb-4">
+        <div
+          class="rounded-2xl border border-adwaita-border bg-adwaita-card/45 p-6 text-left shadow-xs backdrop-blur-lg transition-colors duration-300">
+          <h2 class="mb-4 text-base font-bold text-adwaita-text select-none">
             {isEditMode ? 'Edit blog detail' : 'Write blog detail'}
           </h2>
 
-          <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-            
-            <div class="lg:col-span-5 flex flex-col gap-2">
-              <label for="post-banner" class="text-xs font-bold text-adwaita-subtitle select-none">
+          <div class="grid grid-cols-1 gap-6 lg:grid-cols-12">
+            <div class="flex flex-col gap-2 lg:col-span-5">
+              <label
+                for="post-banner"
+                class="text-xs font-bold text-adwaita-subtitle select-none">
                 Banner image
               </label>
-              
-              <div class="relative w-full aspect-[2/1] rounded-lg overflow-hidden border border-adwaita-border bg-adwaita-bg flex items-center justify-center select-none group">
+
+              <div
+                class="group relative flex aspect-[2/1] w-full items-center justify-center overflow-hidden rounded-lg border border-adwaita-border bg-adwaita-bg select-none">
                 {#if bannerPreview}
                   <img
                     src={bannerPreview}
                     alt="Banner preview"
-                    class="w-full h-full object-cover" />
+                    class="h-full w-full object-cover" />
                   <button
                     type="button"
                     onclick={() => {
@@ -879,7 +888,7 @@
                       bannerPreview = null;
                       bannerPath = null;
                     }}
-                    class="absolute top-2 right-2 flex h-7 w-7 cursor-pointer items-center justify-center rounded-full border border-white/20 bg-black/70 text-white hover:bg-black/90 transition-colors"
+                    class="absolute top-2 right-2 flex h-7 w-7 cursor-pointer items-center justify-center rounded-full border border-white/20 bg-black/70 text-white transition-colors hover:bg-black/90"
                     aria-label="Remove banner">
                     <span class="material-symbols-rounded text-base leading-none">close</span>
                   </button>
@@ -897,35 +906,43 @@
                 accept="image/png"
                 onchange={handleBannerChange}
                 class="mt-2 block w-full text-xs text-adwaita-subtitle file:mr-4 file:cursor-pointer file:rounded-lg file:border file:border-adwaita-border file:bg-adwaita-card file:px-4 file:py-2 file:text-xs file:font-semibold file:text-adwaita-text hover:file:bg-adwaita-hover focus:outline-2 focus:outline-adwaita-accent" />
-              
-              <span class="text-[10px] text-adwaita-subtitle/75 leading-normal">
+
+              <span class="text-[10px] leading-normal text-adwaita-subtitle/75">
                 PNG, exactly 1280×640 pixels.
               </span>
 
               {#if bannerError}
-                <div id="post-banner-fb" aria-live="polite" class="mt-1 text-xs leading-none font-medium">
-                  <span role="alert" class="flex items-center gap-1 text-adwaita-error">
+                <div
+                  id="post-banner-fb"
+                  aria-live="polite"
+                  class="mt-1 text-xs leading-none font-medium">
+                  <span
+                    role="alert"
+                    class="flex items-center gap-1 text-adwaita-error">
                     <i class="bi bi-exclamation-circle-fill"></i>{bannerError}
                   </span>
                 </div>
               {/if}
             </div>
 
-            
-            <div class="lg:col-span-7 flex flex-col gap-4">
+            <div class="flex flex-col gap-4 lg:col-span-7">
               <div class="flex flex-col gap-1">
-                <div class="flex items-center justify-between min-h-[20px]">
-                  <label for="post-title" class="text-xs font-bold text-adwaita-subtitle">
+                <div class="flex min-h-[20px] items-center justify-between">
+                  <label
+                    for="post-title"
+                    class="text-xs font-bold text-adwaita-subtitle">
                     Title <span class="text-adwaita-error">*</span>
                   </label>
                   {#if slug}
-                    <div class="flex items-center gap-1 font-sans text-xs text-adwaita-subtitle select-none leading-none">
+                    <div
+                      class="flex items-center gap-1 font-sans text-xs leading-none text-adwaita-subtitle select-none">
                       <i class="bi bi-link-45deg text-sm text-adwaita-accent"></i>
-                      <span>fkp.my.id/blog/</span><span class="font-bold text-adwaita-accent">{slug}</span>
+                      <span>fkp.my.id/blog/</span><span class="font-bold text-adwaita-accent"
+                        >{slug}</span>
                     </div>
                   {/if}
                 </div>
-                
+
                 <div class="relative">
                   <input
                     type="text"
@@ -939,17 +956,21 @@
                       titleValid = false;
                       validateTitleField();
                     }}
-                    class="w-full rounded-lg border border-adwaita-border bg-adwaita-bg pl-3 pr-16 py-2 text-sm text-adwaita-text transition-colors placeholder:text-adwaita-subtitle/70 focus:outline-none focus:ring-1 focus:ring-adwaita-accent"
+                    class="w-full rounded-lg border border-adwaita-border bg-adwaita-bg py-2 pr-16 pl-3 text-sm text-adwaita-text transition-colors placeholder:text-adwaita-subtitle/70 focus:ring-1 focus:ring-adwaita-accent focus:outline-none"
                     class:border-adwaita-error={titleError}
                     class:input-valid={titleValid} />
-                  <span class="absolute right-2.5 top-1/2 -translate-y-1/2 text-[10px] text-adwaita-subtitle/50 font-mono pointer-events-none select-none">
+                  <span
+                    class="pointer-events-none absolute top-1/2 right-2.5 -translate-y-1/2 font-mono text-[10px] text-adwaita-subtitle/50 select-none">
                     {title.length}/60
                   </span>
                 </div>
 
-                <div class="flex items-center justify-between min-h-[16px]">
+                <div class="flex min-h-[16px] items-center justify-between">
                   {#if titleError || titleValid}
-                    <div id="post-title-fb" aria-live="polite" class="text-xs leading-none font-medium">
+                    <div
+                      id="post-title-fb"
+                      aria-live="polite"
+                      class="text-xs leading-none font-medium">
                       {#if titleError}
                         <span class="flex items-center gap-1 text-adwaita-error">
                           <i class="bi bi-exclamation-circle-fill"></i>{titleError}
@@ -968,7 +989,9 @@
 
               <div class="flex flex-col gap-1">
                 <div class="flex items-center justify-between">
-                  <label for="post-excerpt" class="text-xs font-bold text-adwaita-subtitle">
+                  <label
+                    for="post-excerpt"
+                    class="text-xs font-bold text-adwaita-subtitle">
                     Excerpt <span class="text-adwaita-error">*</span>
                   </label>
                 </div>
@@ -987,19 +1010,26 @@
                       excerptValid = false;
                       validateExcerptField();
                     }}
-                    class="no-scrollbar w-full resize-none overflow-hidden rounded-lg border border-adwaita-border bg-adwaita-bg pl-3 pr-14 py-1.5 text-sm text-adwaita-text transition-colors placeholder:text-adwaita-subtitle/70 focus:outline-none focus:ring-1 focus:ring-adwaita-accent"
+                    class="no-scrollbar w-full resize-none overflow-hidden rounded-lg border border-adwaita-border bg-adwaita-bg py-1.5 pr-14 pl-3 text-sm text-adwaita-text transition-colors placeholder:text-adwaita-subtitle/70 focus:ring-1 focus:ring-adwaita-accent focus:outline-none"
                     class:border-adwaita-error={excerptError}
                     class:input-valid={excerptValid}
-                    style="overflow: hidden; resize: none;"
-                  ></textarea>
-                  <span class="absolute right-2.5 bottom-2 text-[10px] font-mono pointer-events-none select-none {excerptError ? 'text-adwaita-error' : 'text-adwaita-subtitle/50'}">
+                    style="overflow: hidden; resize: none;"></textarea>
+                  <span
+                    class="pointer-events-none absolute right-2.5 bottom-2 font-mono text-[10px] select-none {(
+                      excerptError
+                    ) ?
+                      'text-adwaita-error'
+                    : 'text-adwaita-subtitle/50'}">
                     {excerpt.length}/250
                   </span>
                 </div>
 
-                <div class="flex items-center justify-between mt-1 min-h-[16px]">
+                <div class="mt-1 flex min-h-[16px] items-center justify-between">
                   {#if excerptError || excerptValid}
-                    <div id="post-excerpt-fb" aria-live="polite" class="text-xs leading-none font-medium">
+                    <div
+                      id="post-excerpt-fb"
+                      aria-live="polite"
+                      class="text-xs leading-none font-medium">
                       {#if excerptError}
                         <span class="flex items-center gap-1 text-adwaita-error">
                           <i class="bi bi-exclamation-circle-fill"></i>{excerptError}
@@ -1020,52 +1050,66 @@
         </div>
 
         <div class="boxed-list flex flex-col overflow-hidden text-left">
-          
-          <div class="flex border-b border-adwaita-border bg-adwaita-card/10 px-4 py-2.5 items-center select-none">
-            <div class="inline-flex rounded-lg border border-adwaita-border bg-adwaita-switcher-bg p-1 gap-0.5">
+          <div
+            class="flex items-center border-b border-adwaita-border bg-adwaita-card/10 px-4 py-2.5 select-none">
+            <div
+              class="inline-flex gap-0.5 rounded-lg border border-adwaita-border bg-adwaita-switcher-bg p-1">
               <button
                 type="button"
                 onclick={() => (activeTab = 'editor')}
-                class="px-4 py-1.5 text-xs font-semibold rounded-md transition-all cursor-pointer {(
+                class="cursor-pointer rounded-md px-4 py-1.5 text-xs font-semibold transition-all {(
                   activeTab === 'editor'
                 ) ?
-                  'bg-adwaita-switcher-active text-adwaita-text shadow-xs border border-adwaita-border/10'
-                : 'text-adwaita-subtitle hover:text-adwaita-text hover:bg-adwaita-hover/30'}">
+                  'border border-adwaita-border/10 bg-adwaita-switcher-active text-adwaita-text shadow-xs'
+                : 'text-adwaita-subtitle hover:bg-adwaita-hover/30 hover:text-adwaita-text'}">
                 Edit
               </button>
               <button
                 type="button"
                 onclick={() => (activeTab = 'preview')}
-                class="px-4 py-1.5 text-xs font-semibold rounded-md transition-all cursor-pointer {(
+                class="cursor-pointer rounded-md px-4 py-1.5 text-xs font-semibold transition-all {(
                   activeTab === 'preview'
                 ) ?
-                  'bg-adwaita-switcher-active text-adwaita-text shadow-xs border border-adwaita-border/10'
-                : 'text-adwaita-subtitle hover:text-adwaita-text hover:bg-adwaita-hover/30'}">
+                  'border border-adwaita-border/10 bg-adwaita-switcher-active text-adwaita-text shadow-xs'
+                : 'text-adwaita-subtitle hover:bg-adwaita-hover/30 hover:text-adwaita-text'}">
                 Preview
               </button>
             </div>
 
-            
             <div class="ml-auto flex items-center gap-2 select-none">
-              <div class="text-xs text-adwaita-subtitle font-medium pr-1.5 flex items-center">
+              <div class="flex items-center pr-1.5 text-xs font-medium text-adwaita-subtitle">
                 {#if autoSaveStatus === 'saving'}
                   <span class="inline-flex items-center gap-1.5">
-                    <svg class="animate-spin h-3.5 w-3.5 text-adwaita-subtitle" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    <svg
+                      class="h-3.5 w-3.5 animate-spin text-adwaita-subtitle"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24">
+                      <circle
+                        class="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        stroke-width="4"></circle>
+                      <path
+                        class="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                      ></path>
                     </svg>
                     Saving...
                   </span>
                 {:else}
                   <span class="inline-flex items-center gap-1.5">
-                    <span class="material-symbols-rounded text-[13px] text-adwaita-subtitle">cloud_done</span>
+                    <span class="material-symbols-rounded text-[13px] text-adwaita-subtitle"
+                      >cloud_done</span>
                     Saved
                   </span>
                 {/if}
               </div>
 
               {#if activeTab === 'editor'}
-                
                 <div class="relative">
                   <button
                     type="button"
@@ -1074,22 +1118,26 @@
                       indentSizeDropdownOpen = false;
                       wrapModeDropdownOpen = false;
                     }}
-                    class="px-4 py-1.5 text-xs font-semibold rounded-md border border-adwaita-border bg-adwaita-card text-adwaita-subtitle hover:text-adwaita-text hover:bg-adwaita-hover transition-colors cursor-pointer flex items-center gap-1.5 h-7.5"
+                    class="flex h-7.5 cursor-pointer items-center gap-1.5 rounded-md border border-adwaita-border bg-adwaita-card px-4 py-1.5 text-xs font-semibold text-adwaita-subtitle transition-colors hover:bg-adwaita-hover hover:text-adwaita-text"
                     aria-haspopup="true"
                     aria-expanded={indentModeDropdownOpen}>
                     {indentMode === 'spaces' ? 'Spaces' : 'Tabs'}
                     <i class="bi bi-chevron-down text-[9px]"></i>
                   </button>
                   {#if indentModeDropdownOpen}
-                    <button class="fixed inset-0 z-40 cursor-default" onclick={() => (indentModeDropdownOpen = false)} aria-label="Close menu"></button>
-                    <div class="absolute top-8.5 right-0 z-50 flex min-w-[120px] flex-col rounded-lg border border-adwaita-border bg-adwaita-card py-1 shadow-lg text-xs">
+                    <button
+                      class="fixed inset-0 z-40 cursor-default"
+                      onclick={() => (indentModeDropdownOpen = false)}
+                      aria-label="Close menu"></button>
+                    <div
+                      class="absolute top-8.5 right-0 z-50 flex min-w-[120px] flex-col rounded-lg border border-adwaita-border bg-adwaita-card py-1 text-xs shadow-lg">
                       <button
                         type="button"
                         onclick={() => {
                           indentMode = 'spaces';
                           indentModeDropdownOpen = false;
                         }}
-                        class="flex w-full items-center justify-between px-3 py-1.5 text-left text-xs text-adwaita-text hover:bg-adwaita-hover transition-colors cursor-pointer">
+                        class="flex w-full cursor-pointer items-center justify-between px-3 py-1.5 text-left text-xs text-adwaita-text transition-colors hover:bg-adwaita-hover">
                         <span>Spaces</span>
                         {#if indentMode === 'spaces'}
                           <i class="bi bi-check text-adwaita-accent"></i>
@@ -1101,7 +1149,7 @@
                           indentMode = 'tabs';
                           indentModeDropdownOpen = false;
                         }}
-                        class="flex w-full items-center justify-between px-3 py-1.5 text-left text-xs text-adwaita-text hover:bg-adwaita-hover transition-colors cursor-pointer">
+                        class="flex w-full cursor-pointer items-center justify-between px-3 py-1.5 text-left text-xs text-adwaita-text transition-colors hover:bg-adwaita-hover">
                         <span>Tabs</span>
                         {#if indentMode === 'tabs'}
                           <i class="bi bi-check text-adwaita-accent"></i>
@@ -1111,7 +1159,6 @@
                   {/if}
                 </div>
 
-                
                 <div class="relative">
                   <button
                     type="button"
@@ -1120,15 +1167,19 @@
                       indentModeDropdownOpen = false;
                       wrapModeDropdownOpen = false;
                     }}
-                    class="px-4 py-1.5 text-xs font-semibold rounded-md border border-adwaita-border bg-adwaita-card text-adwaita-subtitle hover:text-adwaita-text hover:bg-adwaita-hover transition-colors cursor-pointer flex items-center gap-1.5 h-7.5"
+                    class="flex h-7.5 cursor-pointer items-center gap-1.5 rounded-md border border-adwaita-border bg-adwaita-card px-4 py-1.5 text-xs font-semibold text-adwaita-subtitle transition-colors hover:bg-adwaita-hover hover:text-adwaita-text"
                     aria-haspopup="true"
                     aria-expanded={indentSizeDropdownOpen}>
                     {indentSize}
                     <i class="bi bi-chevron-down text-[9px]"></i>
                   </button>
                   {#if indentSizeDropdownOpen}
-                    <button class="fixed inset-0 z-40 cursor-default" onclick={() => (indentSizeDropdownOpen = false)} aria-label="Close menu"></button>
-                    <div class="absolute top-8.5 right-0 z-50 flex min-w-[80px] flex-col rounded-lg border border-adwaita-border bg-adwaita-card py-1 shadow-lg text-xs">
+                    <button
+                      class="fixed inset-0 z-40 cursor-default"
+                      onclick={() => (indentSizeDropdownOpen = false)}
+                      aria-label="Close menu"></button>
+                    <div
+                      class="absolute top-8.5 right-0 z-50 flex min-w-[80px] flex-col rounded-lg border border-adwaita-border bg-adwaita-card py-1 text-xs shadow-lg">
                       {#each [2, 4, 8] as size}
                         <button
                           type="button"
@@ -1136,7 +1187,7 @@
                             indentSize = size;
                             indentSizeDropdownOpen = false;
                           }}
-                          class="flex w-full items-center justify-between px-3 py-1.5 text-left text-xs text-adwaita-text hover:bg-adwaita-hover transition-colors cursor-pointer">
+                          class="flex w-full cursor-pointer items-center justify-between px-3 py-1.5 text-left text-xs text-adwaita-text transition-colors hover:bg-adwaita-hover">
                           <span>{size}</span>
                           {#if indentSize === size}
                             <i class="bi bi-check text-adwaita-accent"></i>
@@ -1147,7 +1198,6 @@
                   {/if}
                 </div>
 
-                
                 <div class="relative">
                   <button
                     type="button"
@@ -1156,22 +1206,26 @@
                       indentModeDropdownOpen = false;
                       indentSizeDropdownOpen = false;
                     }}
-                    class="px-4 py-1.5 text-xs font-semibold rounded-md border border-adwaita-border bg-adwaita-card text-adwaita-subtitle hover:text-adwaita-text hover:bg-adwaita-hover transition-colors cursor-pointer flex items-center gap-1.5 h-7.5"
+                    class="flex h-7.5 cursor-pointer items-center gap-1.5 rounded-md border border-adwaita-border bg-adwaita-card px-4 py-1.5 text-xs font-semibold text-adwaita-subtitle transition-colors hover:bg-adwaita-hover hover:text-adwaita-text"
                     aria-haspopup="true"
                     aria-expanded={wrapModeDropdownOpen}>
                     {lineWrapMode === 'soft' ? 'Soft wrap' : 'No wrap'}
                     <i class="bi bi-chevron-down text-[9px]"></i>
                   </button>
                   {#if wrapModeDropdownOpen}
-                    <button class="fixed inset-0 z-40 cursor-default" onclick={() => (wrapModeDropdownOpen = false)} aria-label="Close menu"></button>
-                    <div class="absolute top-8.5 right-0 z-50 flex min-w-[120px] flex-col rounded-lg border border-adwaita-border bg-adwaita-card py-1 shadow-lg text-xs">
+                    <button
+                      class="fixed inset-0 z-40 cursor-default"
+                      onclick={() => (wrapModeDropdownOpen = false)}
+                      aria-label="Close menu"></button>
+                    <div
+                      class="absolute top-8.5 right-0 z-50 flex min-w-[120px] flex-col rounded-lg border border-adwaita-border bg-adwaita-card py-1 text-xs shadow-lg">
                       <button
                         type="button"
                         onclick={() => {
                           lineWrapMode = 'soft';
                           wrapModeDropdownOpen = false;
                         }}
-                        class="flex w-full items-center justify-between px-3 py-1.5 text-left text-xs text-adwaita-text hover:bg-adwaita-hover transition-colors cursor-pointer">
+                        class="flex w-full cursor-pointer items-center justify-between px-3 py-1.5 text-left text-xs text-adwaita-text transition-colors hover:bg-adwaita-hover">
                         <span>Soft wrap</span>
                         {#if lineWrapMode === 'soft'}
                           <i class="bi bi-check text-adwaita-accent"></i>
@@ -1183,7 +1237,7 @@
                           lineWrapMode = 'none';
                           wrapModeDropdownOpen = false;
                         }}
-                        class="flex w-full items-center justify-between px-3 py-1.5 text-left text-xs text-adwaita-text hover:bg-adwaita-hover transition-colors cursor-pointer">
+                        class="flex w-full cursor-pointer items-center justify-between px-3 py-1.5 text-left text-xs text-adwaita-text transition-colors hover:bg-adwaita-hover">
                         <span>No wrap</span>
                         {#if lineWrapMode === 'none'}
                           <i class="bi bi-check text-adwaita-accent"></i>
@@ -1196,13 +1250,18 @@
             </div>
           </div>
 
-          
           <div class="bg-adwaita-bg">
             {#if activeTab === 'editor'}
-              <div class="flex flex-row items-stretch w-full overflow-hidden">
-                <div class="editor-line-numbers select-none pt-[20px] pb-[20px] border-r border-adwaita-border/20 bg-adwaita-card/10 select-none">
+              <div class="flex w-full flex-row items-stretch overflow-hidden">
+                <div
+                  class="editor-line-numbers border-r border-adwaita-border/20 bg-adwaita-card/10 pt-[20px] pb-[20px] select-none">
                   {#each Array(lineCount) as _, i}
-                    <div class="line-num-item text-right transition-colors pr-3.5 pl-4 {currentLine === i + 1 ? 'text-adwaita-accent bg-adwaita-accent/10 font-bold border-r-2 border-adwaita-accent -mr-[1px]' : 'text-adwaita-subtitle/40'}">
+                    <div
+                      class="line-num-item pr-3.5 pl-4 text-right transition-colors {(
+                        currentLine === i + 1
+                      ) ?
+                        '-mr-[1px] border-r-2 border-adwaita-accent bg-adwaita-accent/10 font-bold text-adwaita-accent'
+                      : 'text-adwaita-subtitle/40'}">
                       {i + 1}
                     </div>
                   {/each}
@@ -1211,8 +1270,13 @@
                 <div class="relative flex-1 overflow-hidden">
                   <pre
                     bind:this={preElement}
-                    class="editor-pre no-scrollbar pointer-events-none absolute inset-0 text-adwaita-text select-none bg-transparent !pt-[20px] !pb-[20px] !pr-[20px] !pl-[16px] !m-0 !border-0 !box-border !w-full !overflow-y-hidden {lineWrapMode === 'soft' ? 'whitespace-pre-wrap! break-normal! break-words! overflow-x-hidden!' : 'whitespace-pre! break-normal! overflow-x-auto!'}"
-                  ><code class="!p-0 !m-0 !block !bg-transparent whitespace-inherit! break-inherit! overflow-wrap-inherit! language-markdown">{@html highlightedMarkdown}</code></pre>
+                    class="editor-pre no-scrollbar pointer-events-none absolute inset-0 !m-0 !box-border !w-full !overflow-y-hidden !border-0 bg-transparent !pt-[20px] !pr-[20px] !pb-[20px] !pl-[16px] text-adwaita-text select-none {(
+                      lineWrapMode === 'soft'
+                    ) ?
+                      'overflow-x-hidden! break-normal! break-words! whitespace-pre-wrap!'
+                    : 'overflow-x-auto! break-normal! whitespace-pre!'}"><code
+                      class="whitespace-inherit! break-inherit! overflow-wrap-inherit! language-markdown !m-0 !block !bg-transparent !p-0"
+                      >{@html highlightedMarkdown}</code></pre>
 
                   <textarea
                     bind:this={markdownTextareaElement}
@@ -1220,14 +1284,20 @@
                     aria-label="Markdown Content"
                     bind:value={markdownContent}
                     onscroll={syncScroll}
-                    oninput={() => { syncScroll(); updateCursorPosition(); }}
+                    oninput={() => {
+                      syncScroll();
+                      updateCursorPosition();
+                    }}
                     onclick={updateCursorPosition}
                     onkeyup={updateCursorPosition}
                     onfocus={updateCursorPosition}
                     onkeydown={handleTextareaKeyDown}
-                    class="editor-textarea relative w-full bg-transparent text-transparent caret-adwaita-text focus:outline-none focus:ring-0 focus:border-transparent! focus:shadow-none! focus:outline-none! !pt-[20px] !pb-[20px] !pr-[20px] !pl-[16px] !m-0 !border-0 !box-border !w-full !overflow-y-hidden {lineWrapMode === 'soft' ? 'whitespace-pre-wrap! break-normal! break-words! overflow-x-hidden!' : 'whitespace-pre! break-normal! overflow-x-auto!'}"
-                    style="resize: none;"
-                  ></textarea>
+                    class="editor-textarea relative !m-0 !box-border !w-full w-full !overflow-y-hidden !border-0 bg-transparent !pt-[20px] !pr-[20px] !pb-[20px] !pl-[16px] text-transparent caret-adwaita-text focus:border-transparent! focus:shadow-none! focus:ring-0 focus:outline-none focus:outline-none! {(
+                      lineWrapMode === 'soft'
+                    ) ?
+                      'overflow-x-hidden! break-normal! break-words! whitespace-pre-wrap!'
+                    : 'overflow-x-auto! break-normal! whitespace-pre!'}"
+                    style="resize: none;"></textarea>
                 </div>
               </div>
             {:else}
@@ -1241,66 +1311,66 @@
             {/if}
           </div>
 
-          
           {#if activeTab === 'editor'}
-            <div class="flex flex-wrap items-center justify-between border-t border-adwaita-border bg-adwaita-card/10 px-3 py-1.5 select-none text-xs text-adwaita-subtitle">
+            <div
+              class="flex flex-wrap items-center justify-between border-t border-adwaita-border bg-adwaita-card/10 px-3 py-1.5 text-xs text-adwaita-subtitle select-none">
               <div class="flex items-center gap-1">
                 <button
                   type="button"
                   onclick={() => insertMarkdown('# ')}
                   title="H1 Header"
-                  class="flex h-7 w-7 items-center justify-center rounded-md hover:bg-adwaita-hover/30 hover:text-adwaita-text transition-colors cursor-pointer">
+                  class="flex h-7 w-7 cursor-pointer items-center justify-center rounded-md transition-colors hover:bg-adwaita-hover/30 hover:text-adwaita-text">
                   <span class="material-symbols-rounded text-base">format_h1</span>
                 </button>
                 <button
                   type="button"
                   onclick={() => insertMarkdown('## ')}
                   title="H2 Header"
-                  class="flex h-7 w-7 items-center justify-center rounded-md hover:bg-adwaita-hover/30 hover:text-adwaita-text transition-colors cursor-pointer">
+                  class="flex h-7 w-7 cursor-pointer items-center justify-center rounded-md transition-colors hover:bg-adwaita-hover/30 hover:text-adwaita-text">
                   <span class="material-symbols-rounded text-base">format_h2</span>
                 </button>
                 <button
                   type="button"
                   onclick={() => insertMarkdown('### ')}
                   title="H3 Header"
-                  class="flex h-7 w-7 items-center justify-center rounded-md hover:bg-adwaita-hover/30 hover:text-adwaita-text transition-colors cursor-pointer">
+                  class="flex h-7 w-7 cursor-pointer items-center justify-center rounded-md transition-colors hover:bg-adwaita-hover/30 hover:text-adwaita-text">
                   <span class="material-symbols-rounded text-base">format_h3</span>
                 </button>
-                <div class="h-4 w-px bg-adwaita-border mx-1"></div>
+                <div class="mx-1 h-4 w-px bg-adwaita-border"></div>
                 <button
                   type="button"
                   onclick={() => insertMarkdown('**', '**')}
                   title="Bold"
-                  class="flex h-7 w-7 items-center justify-center rounded-md hover:bg-adwaita-hover/30 hover:text-adwaita-text transition-colors cursor-pointer">
+                  class="flex h-7 w-7 cursor-pointer items-center justify-center rounded-md transition-colors hover:bg-adwaita-hover/30 hover:text-adwaita-text">
                   <span class="material-symbols-rounded text-base">format_bold</span>
                 </button>
                 <button
                   type="button"
                   onclick={() => insertMarkdown('*', '*')}
                   title="Italic"
-                  class="flex h-7 w-7 items-center justify-center rounded-md hover:bg-adwaita-hover/30 hover:text-adwaita-text transition-colors cursor-pointer">
+                  class="flex h-7 w-7 cursor-pointer items-center justify-center rounded-md transition-colors hover:bg-adwaita-hover/30 hover:text-adwaita-text">
                   <span class="material-symbols-rounded text-base">format_italic</span>
                 </button>
                 <button
                   type="button"
                   onclick={() => insertMarkdown('<u>', '</u>')}
                   title="Underline"
-                  class="flex h-7 w-7 items-center justify-center rounded-md hover:bg-adwaita-hover/30 hover:text-adwaita-text transition-colors cursor-pointer">
+                  class="flex h-7 w-7 cursor-pointer items-center justify-center rounded-md transition-colors hover:bg-adwaita-hover/30 hover:text-adwaita-text">
                   <span class="material-symbols-rounded text-base">format_underlined</span>
                 </button>
                 <button
                   type="button"
                   onclick={() => insertMarkdown('~~', '~~')}
                   title="Strikethrough"
-                  class="flex h-7 w-7 items-center justify-center rounded-md hover:bg-adwaita-hover/30 hover:text-adwaita-text transition-colors cursor-pointer">
+                  class="flex h-7 w-7 cursor-pointer items-center justify-center rounded-md transition-colors hover:bg-adwaita-hover/30 hover:text-adwaita-text">
                   <span class="material-symbols-rounded text-base">format_strikethrough</span>
                 </button>
-                <div class="h-4 w-px bg-adwaita-border mx-1"></div>
+                <div class="mx-1 h-4 w-px bg-adwaita-border"></div>
                 <button
                   type="button"
                   onclick={() => imageFileInput?.click()}
                   title="Insert Image"
-                  class="flex h-7 w-7 items-center justify-center rounded-md hover:bg-adwaita-hover/30 hover:text-adwaita-text transition-colors cursor-pointer">
+                  class="flex h-7 w-7 cursor-pointer items-center justify-center rounded-md transition-colors hover:bg-adwaita-hover/30 hover:text-adwaita-text">
                   <span class="material-symbols-rounded text-base">add_photo_alternate</span>
                 </button>
                 <input
@@ -1311,38 +1381,47 @@
                   class="hidden" />
                 <button
                   type="button"
+                  onclick={() => insertMarkdown('[', '](url)')}
+                  title="Insert Link"
+                  class="flex h-7 w-7 cursor-pointer items-center justify-center rounded-md transition-colors hover:bg-adwaita-hover/30 hover:text-adwaita-text">
+                  <span class="material-symbols-rounded text-base">link</span>
+                </button>
+                <button
+                  type="button"
                   onclick={() => insertMarkdown('1. ')}
                   title="Numbered List"
-                  class="flex h-7 w-7 items-center justify-center rounded-md hover:bg-adwaita-hover/30 hover:text-adwaita-text transition-colors cursor-pointer">
+                  class="flex h-7 w-7 cursor-pointer items-center justify-center rounded-md transition-colors hover:bg-adwaita-hover/30 hover:text-adwaita-text">
                   <span class="material-symbols-rounded text-base">format_list_numbered</span>
                 </button>
                 <button
                   type="button"
                   onclick={() => insertMarkdown('- ')}
                   title="Bulleted List"
-                  class="flex h-7 w-7 items-center justify-center rounded-md hover:bg-adwaita-hover/30 hover:text-adwaita-text transition-colors cursor-pointer">
+                  class="flex h-7 w-7 cursor-pointer items-center justify-center rounded-md transition-colors hover:bg-adwaita-hover/30 hover:text-adwaita-text">
                   <span class="material-symbols-rounded text-base">format_list_bulleted</span>
                 </button>
                 <button
                   type="button"
                   onclick={() => insertMarkdown('```\n', '\n```')}
                   title="Code Block"
-                  class="flex h-7 w-7 items-center justify-center rounded-md hover:bg-adwaita-hover/30 hover:text-adwaita-text transition-colors cursor-pointer">
+                  class="flex h-7 w-7 cursor-pointer items-center justify-center rounded-md transition-colors hover:bg-adwaita-hover/30 hover:text-adwaita-text">
                   <span class="material-symbols-rounded text-base">code_blocks</span>
                 </button>
               </div>
 
-              <div class="flex items-center gap-4 text-[11px] font-mono select-none">
-                <span class="text-[12.5px] font-semibold tracking-wide">{currentLine}:{currentColumn}</span>
+              <div class="flex items-center gap-4 font-mono text-[11px] select-none">
+                <span class="text-[12.5px] font-semibold tracking-wide"
+                  >{currentLine}:{currentColumn}</span>
                 <span class="flex items-center gap-1 text-[12.5px] font-semibold tracking-wide">
                   <span class="material-symbols-rounded text-[14px]">space_bar</span>
                   {indentSize}
                 </span>
                 <span class="text-[12.5px] font-semibold tracking-wide">UTF-8</span>
                 <span class="text-[12.5px] font-semibold tracking-wide">{lineEnding}</span>
-                <span class="relative group cursor-help flex items-center">
+                <span class="group relative flex cursor-help items-center">
                   <span class="material-symbols-rounded text-[16px]">markdown</span>
-                  <span class="absolute bottom-full mb-1.5 right-0 hidden group-hover:block bg-adwaita-card text-adwaita-text text-[10px] px-2 py-1 rounded-md border border-adwaita-border whitespace-nowrap shadow-md font-sans">
+                  <span
+                    class="absolute right-0 bottom-full mb-1.5 hidden rounded-md border border-adwaita-border bg-adwaita-card px-2 py-1 font-sans text-[10px] whitespace-nowrap text-adwaita-text shadow-md group-hover:block">
                     Styling with Markdown is supported
                   </span>
                 </span>
@@ -1405,8 +1484,11 @@
   onConfirm={() => executeSave(false)} />
 
 {#if showToast}
-  <div class="fixed bottom-6 left-1/2 z-50 flex -translate-x-1/2 items-center gap-2 rounded-full border border-adwaita-border bg-adwaita-card/90 px-4 py-2 text-xs font-semibold text-adwaita-text shadow-lg backdrop-blur-md transition-all duration-300">
-    <i class="bi bi-check-circle-fill text-adwaita-accent text-sm" aria-hidden="true"></i>
+  <div
+    class="fixed bottom-6 left-1/2 z-50 flex -translate-x-1/2 items-center gap-2 rounded-full border border-adwaita-border bg-adwaita-card/90 px-4 py-2 text-xs font-semibold text-adwaita-text shadow-lg backdrop-blur-md transition-all duration-300">
+    <i
+      class="bi bi-check-circle-fill text-sm text-adwaita-accent"
+      aria-hidden="true"></i>
     {toastMessage}
   </div>
 {/if}
@@ -1430,16 +1512,22 @@
   }
 
   .editor-textarea {
-    @apply !border-0 !m-0 !outline-none !box-border;
+    @apply !m-0 !box-border !border-0 !outline-none;
+  }
+
+  .editor-textarea:focus,
+  .editor-textarea:focus-visible {
+    @apply !border-transparent !shadow-none !ring-0 !outline-none;
+    outline: none !important;
+    box-shadow: none !important;
+    border-color: transparent !important;
   }
 
   .line-num-item {
-    @apply !h-[24px] !block;
+    @apply !block !h-[24px];
   }
 
   .prose-custom > :global(*:first-child) {
     @apply !mt-0;
   }
 </style>
-
-
