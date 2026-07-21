@@ -1099,9 +1099,9 @@
           <div class="bg-adwaita-bg">
             {#if activeTab === 'editor'}
               <div class="flex flex-row items-stretch w-full overflow-hidden">
-                <div class="editor-line-numbers select-none font-mono pt-[20px] pb-[20px] border-r border-adwaita-border/20 bg-adwaita-card/10 select-none">
+                <div class="editor-line-numbers select-none pt-[20px] pb-[20px] border-r border-adwaita-border/20 bg-adwaita-card/10 select-none">
                   {#each Array(lineCount) as _, i}
-                    <div class="line-num-item h-6 leading-[24px] text-right text-[15px] transition-colors pr-3.5 pl-4 {currentLine === i + 1 ? 'text-adwaita-accent bg-adwaita-accent/10 font-bold border-r-2 border-adwaita-accent -mr-[1px]' : 'text-adwaita-subtitle/40'}">
+                    <div class="line-num-item text-right transition-colors pr-3.5 pl-4 {currentLine === i + 1 ? 'text-adwaita-accent bg-adwaita-accent/10 font-bold border-r-2 border-adwaita-accent -mr-[1px]' : 'text-adwaita-subtitle/40'}">
                       {i + 1}
                     </div>
                   {/each}
@@ -1110,8 +1110,8 @@
                 <div class="relative flex-1 overflow-hidden">
                   <pre
                     bind:this={preElement}
-                    class="editor-pre no-scrollbar pointer-events-none absolute inset-0 text-adwaita-text select-none bg-transparent !font-mono !text-[14px] !leading-[24px] !pt-[20px] !pb-[20px] !pr-[20px] !pl-[16px] !m-0 !border-0 !box-border !w-full !overflow-y-hidden {lineWrapMode === 'soft' ? 'whitespace-pre-wrap! break-normal! break-words! overflow-x-hidden!' : 'whitespace-pre! break-normal! overflow-x-auto!'}"
-                  ><code class="!font-mono !text-[14px] !leading-[24px] !p-0 !m-0 !block !bg-transparent whitespace-inherit! break-inherit! overflow-wrap-inherit! language-markdown">{@html highlightedMarkdown}</code></pre>
+                    class="editor-pre no-scrollbar pointer-events-none absolute inset-0 text-adwaita-text select-none bg-transparent !pt-[20px] !pb-[20px] !pr-[20px] !pl-[16px] !m-0 !border-0 !box-border !w-full !overflow-y-hidden {lineWrapMode === 'soft' ? 'whitespace-pre-wrap! break-normal! break-words! overflow-x-hidden!' : 'whitespace-pre! break-normal! overflow-x-auto!'}"
+                  ><code class="!p-0 !m-0 !block !bg-transparent whitespace-inherit! break-inherit! overflow-wrap-inherit! language-markdown">{@html highlightedMarkdown}</code></pre>
 
                   <textarea
                     bind:this={markdownTextareaElement}
@@ -1124,7 +1124,7 @@
                     onkeyup={updateCursorPosition}
                     onfocus={updateCursorPosition}
                     onkeydown={handleTextareaKeyDown}
-                    class="editor-textarea relative w-full bg-transparent text-transparent caret-adwaita-text focus:outline-none focus:ring-0 focus:border-transparent! focus:shadow-none! focus:outline-none! !font-mono !text-[14px] !leading-[24px] !pt-[20px] !pb-[20px] !pr-[20px] !pl-[16px] !m-0 !border-0 !box-border !w-full !overflow-y-hidden {lineWrapMode === 'soft' ? 'whitespace-pre-wrap! break-normal! break-words! overflow-x-hidden!' : 'whitespace-pre! break-normal! overflow-x-auto!'}"
+                    class="editor-textarea relative w-full bg-transparent text-transparent caret-adwaita-text focus:outline-none focus:ring-0 focus:border-transparent! focus:shadow-none! focus:outline-none! !pt-[20px] !pb-[20px] !pr-[20px] !pl-[16px] !m-0 !border-0 !box-border !w-full !overflow-y-hidden {lineWrapMode === 'soft' ? 'whitespace-pre-wrap! break-normal! break-words! overflow-x-hidden!' : 'whitespace-pre! break-normal! overflow-x-auto!'}"
                     style="resize: none;"
                   ></textarea>
                 </div>
