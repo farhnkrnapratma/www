@@ -1222,6 +1222,13 @@
                   class="flex h-7 w-7 items-center justify-center rounded-md hover:bg-adwaita-hover/30 hover:text-adwaita-text transition-colors cursor-pointer">
                   <span class="material-symbols-rounded text-base">format_list_bulleted</span>
                 </button>
+                <button
+                  type="button"
+                  onclick={() => insertMarkdown('```\n', '\n```')}
+                  title="Code Block"
+                  class="flex h-7 w-7 items-center justify-center rounded-md hover:bg-adwaita-hover/30 hover:text-adwaita-text transition-colors cursor-pointer">
+                  <span class="material-symbols-rounded text-base">code_blocks</span>
+                </button>
               </div>
 
               <div class="flex items-center gap-4 text-[11px] font-mono select-none">
