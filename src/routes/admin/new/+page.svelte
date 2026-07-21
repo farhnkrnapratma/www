@@ -1099,7 +1099,7 @@
               <div class="flex flex-row items-stretch w-full overflow-hidden">
                 <div class="editor-line-numbers select-none font-mono pt-[20px] pb-[20px] border-r border-adwaita-border/20 bg-adwaita-card/10 select-none">
                   {#each Array(lineCount) as _, i}
-                    <div class="h-6 leading-[24px] text-right text-[15px] transition-colors pr-3.5 pl-4 {currentLine === i + 1 ? 'text-adwaita-accent bg-adwaita-accent/10 font-bold border-r-2 border-adwaita-accent -mr-[1px]' : 'text-adwaita-subtitle/40'}">
+                    <div class="line-num-item h-6 leading-[24px] text-right text-[15px] transition-colors pr-3.5 pl-4 {currentLine === i + 1 ? 'text-adwaita-accent bg-adwaita-accent/10 font-bold border-r-2 border-adwaita-accent -mr-[1px]' : 'text-adwaita-subtitle/40'}">
                       {i + 1}
                     </div>
                   {/each}
@@ -1291,5 +1291,29 @@
   confirmLabel="Save Draft"
   isDestructive={false}
   onConfirm={() => executeSave(false)} />
+
+<style>
+  .editor-textarea,
+  .editor-pre,
+  .editor-pre code,
+  .editor-pre :global(span),
+  .line-num-item {
+    font-family: var(--font-mono) !important;
+    font-size: 14.5px !important;
+    line-height: 24px !important;
+  }
+
+  .editor-textarea {
+    border: 0 !important;
+    margin: 0 !important;
+    outline: none !important;
+    box-sizing: border-box !important;
+  }
+
+  .line-num-item {
+    height: 24px !important;
+    display: block !important;
+  }
+</style>
 
 
