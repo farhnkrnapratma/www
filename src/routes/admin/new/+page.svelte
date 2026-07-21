@@ -1412,7 +1412,7 @@
 {/if}
 
 <style>
-  @import 'tailwindcss';
+  @reference "tailwindcss";
 
   .editor-textarea,
   .editor-pre,
