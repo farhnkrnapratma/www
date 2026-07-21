@@ -780,29 +780,37 @@
                   <div
                     class="no-scrollbar flex w-full items-center gap-x-2.5 overflow-x-auto font-sans text-[11px] font-semibold whitespace-nowrap text-adwaita-subtitle select-none">
                     <span class="inline-flex items-center gap-1"
-                      ><span
-                        class="material-symbols-rounded text-[10px] leading-none"
-                        style="font-variation-settings: 'wght' 300;"
-                        aria-hidden="true">calendar_clock</span>
+                      ><span class="flex items-center justify-center w-[10px] h-[10px] shrink-0"
+                        ><span
+                          class="material-symbols-rounded leading-none"
+                          style="font-size: 10px; font-variation-settings: 'wght' 300; transform: scale(0.8); transform-origin: center;"
+                          aria-hidden="true">schedule_send</span></span
+                      >
                       {getPostDate(post)}</span>
                     <span class="inline-flex items-center gap-1"
-                      ><span
-                        class="material-symbols-rounded text-[10px] leading-none"
-                        style="font-variation-settings: 'wght' 300;"
-                        aria-hidden="true">av_timer</span>
+                      ><span class="flex items-center justify-center w-[10px] h-[10px] shrink-0"
+                        ><span
+                          class="material-symbols-rounded leading-none"
+                          style="font-size: 10px; font-variation-settings: 'wght' 300; transform: scale(0.8); transform-origin: center;"
+                          aria-hidden="true">acute</span></span
+                      >
                       {(post.read_time || '').replace(/\s*read\s*/gi, '')}</span>
                     <span class="inline-flex items-center gap-1"
-                      ><span
-                        class="material-symbols-rounded text-[10px] leading-none"
-                        style="font-variation-settings: 'wght' 300;"
-                        aria-hidden="true">forum</span>
+                      ><span class="flex items-center justify-center w-[10px] h-[10px] shrink-0"
+                        ><span
+                          class="material-symbols-rounded leading-none"
+                          style="font-size: 10px; font-variation-settings: 'wght' 300; transform: scale(0.8); transform-origin: center;"
+                          aria-hidden="true">chat_bubble</span></span
+                      >
                       {post.comment_count || 0}</span>
                     {#if post.views_count !== undefined}
                       <span class="inline-flex items-center gap-1"
-                        ><span
-                          class="material-symbols-rounded text-[10px] leading-none"
-                          style="font-variation-settings: 'wght' 300;"
-                          aria-hidden="true">visibility</span>
+                        ><span class="flex items-center justify-center w-[10px] h-[10px] shrink-0"
+                          ><span
+                            class="material-symbols-rounded leading-none"
+                            style="font-size: 10px; font-variation-settings: 'wght' 300; transform: scale(0.8); transform-origin: center;"
+                            aria-hidden="true">visibility</span></span
+                        >
                         {post.views_count}</span>
                     {/if}
                   </div>
@@ -1183,29 +1191,37 @@
                 <div
                   class="no-scrollbar flex w-full items-center gap-x-2.5 overflow-x-auto font-sans text-[11px] font-semibold whitespace-nowrap text-adwaita-subtitle select-none">
                   <span class="inline-flex items-center gap-1"
-                    ><span
-                      class="material-symbols-rounded text-[10px] leading-none"
-                      style="font-variation-settings: 'wght' 300;"
-                      aria-hidden="true">calendar_clock</span>
+                    ><span class="flex items-center justify-center w-[10px] h-[10px] shrink-0"
+                      ><span
+                        class="material-symbols-rounded leading-none"
+                        style="font-size: 10px; font-variation-settings: 'wght' 300; transform: scale(0.8); transform-origin: center;"
+                        aria-hidden="true">schedule_send</span></span
+                    >
                     {getPostDate(post)}</span>
                   <span class="inline-flex items-center gap-1"
-                    ><span
-                      class="material-symbols-rounded text-[10px] leading-none"
-                      style="font-variation-settings: 'wght' 300;"
-                      aria-hidden="true">av_timer</span>
+                    ><span class="flex items-center justify-center w-[10px] h-[10px] shrink-0"
+                      ><span
+                        class="material-symbols-rounded leading-none"
+                        style="font-size: 10px; font-variation-settings: 'wght' 300; transform: scale(0.8); transform-origin: center;"
+                        aria-hidden="true">acute</span></span
+                    >
                     {(post.read_time || '').replace(/\s*read\s*/gi, '')}</span>
                   <span class="inline-flex items-center gap-1"
-                    ><span
-                      class="material-symbols-rounded text-[10px] leading-none"
-                      style="font-variation-settings: 'wght' 300;"
-                      aria-hidden="true">forum</span>
+                    ><span class="flex items-center justify-center w-[10px] h-[10px] shrink-0"
+                      ><span
+                        class="material-symbols-rounded leading-none"
+                        style="font-size: 10px; font-variation-settings: 'wght' 300; transform: scale(0.8); transform-origin: center;"
+                        aria-hidden="true">chat_bubble</span></span
+                    >
                     {post.comment_count || 0}</span>
                   {#if post.views_count !== undefined}
                     <span class="inline-flex items-center gap-1"
-                      ><span
-                        class="material-symbols-rounded text-[10px] leading-none"
-                        style="font-variation-settings: 'wght' 300;"
-                        aria-hidden="true">visibility</span>
+                      ><span class="flex items-center justify-center w-[10px] h-[10px] shrink-0"
+                        ><span
+                          class="material-symbols-rounded leading-none"
+                          style="font-size: 10px; font-variation-settings: 'wght' 300; transform: scale(0.8); transform-origin: center;"
+                          aria-hidden="true">visibility</span></span
+                      >
                       {post.views_count}</span>
                   {/if}
                 </div>
