@@ -955,7 +955,7 @@
                   </span>
                 {:else}
                   <span class="inline-flex items-center gap-1.5">
-                    <span class="material-symbols-rounded text-[15px] text-adwaita-subtitle">cloud_done</span>
+                    <span class="material-symbols-rounded text-[13px] text-adwaita-subtitle">cloud_done</span>
                     Saved
                   </span>
                 {/if}
@@ -1099,7 +1099,7 @@
               <div class="flex flex-row items-stretch w-full overflow-hidden">
                 <div class="editor-line-numbers select-none font-mono pt-[20px] pb-[20px] border-r border-adwaita-border/20 bg-adwaita-card/10 select-none">
                   {#each Array(lineCount) as _, i}
-                    <div class="h-6 flex items-center justify-end text-[15px] transition-colors pr-3.5 pl-4 {currentLine === i + 1 ? 'text-adwaita-accent bg-adwaita-accent/10 font-bold border-r-2 border-adwaita-accent -mr-[1px]' : 'text-adwaita-subtitle/40'}">
+                    <div class="h-6 leading-[24px] text-right text-[15px] transition-colors pr-3.5 pl-4 {currentLine === i + 1 ? 'text-adwaita-accent bg-adwaita-accent/10 font-bold border-r-2 border-adwaita-accent -mr-[1px]' : 'text-adwaita-subtitle/40'}">
                       {i + 1}
                     </div>
                   {/each}
