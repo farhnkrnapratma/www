@@ -1,4 +1,5 @@
 @import 'tailwindcss';
+@import '../lib/design-system/tokens.css';
 @import 'bootstrap-icons/font/bootstrap-icons.css';
 
 @layer base {
@@ -25,6 +26,17 @@
   .action-row {
     @apply flex items-center justify-between px-4 py-3.5 transition-all hover:bg-adwaita-hover;
   }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    ::before,
+    ::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
 }
 
 @theme {
@@ -34,6 +46,7 @@
   --font-serif-text: 'Libertinus Serif', ui-serif, Georgia, serif;
   --font-mono: 'Fira Code', monospace;
 
+  /* Legacy Adwaita Tokens (Preserved for compatibility) */
   --color-adwaita-bg: #f2f5f3;
   --color-adwaita-card: #ffffff;
   --color-adwaita-border: #e4ebe6;
@@ -47,13 +60,44 @@
   --color-adwaita-focus: #08872b;
   --color-adwaita-switcher-bg: rgba(228, 235, 230, 0.5);
   --color-adwaita-switcher-active: #ffffff;
-  --color-adwaita-hover: rgba(16, 20, 17, 0.015);
+  --color-adwaita-hover: rgba(16, 20, 17, 0.025);
 
   --color-palette-primary: #0fbf3e;
   --color-palette-green: #5fed83;
   --color-palette-yellow: #d8bd0e;
   --color-palette-coral: #fe4c25;
   --color-palette-slate: #909692;
+
+  /* AWDS Semantic Token Mapping */
+  --color-surface-base: #f2f5f3;
+  --color-surface-card: #ffffff;
+  --color-surface-elevated: #ffffff;
+  --color-surface-subtle: #eaefec;
+  --color-surface-hover: rgba(16, 20, 17, 0.03);
+  --color-surface-switcher: rgba(228, 235, 230, 0.5);
+  --color-surface-switcher-active: #ffffff;
+
+  --color-text-primary: #101411;
+  --color-text-secondary: #5c625e;
+  --color-text-muted: #838a85;
+  --color-text-on-accent: #ffffff;
+
+  --color-border-subtle: #e4ebe6;
+  --color-border-default: #d1dad4;
+  --color-border-strong: #9ca6a0;
+
+  --color-accent: #08872b;
+  --color-accent-hover: #055c1d;
+  --color-accent-subtle: rgba(8, 135, 43, 0.08);
+
+  --color-success: #15803d;
+  --color-warning: #b45309;
+  --color-danger: #c73a1d;
+  --color-danger-hover: #a12c14;
+  --color-danger-subtle: rgba(199, 58, 29, 0.08);
+
+  --color-overlay-backdrop: rgba(0, 0, 0, 0.55);
+  --color-focus-ring: #08872b;
 }
 
 :root.dark {
@@ -68,7 +112,40 @@
   --color-adwaita-focus: #0fbf3e;
   --color-adwaita-switcher-bg: rgba(16, 20, 17, 0.5);
   --color-adwaita-switcher-active: #232925;
-  --color-adwaita-hover: rgba(255, 255, 255, 0.02);
+  --color-adwaita-hover: rgba(255, 255, 255, 0.03);
+  --color-adwaita-accent: #26d058;
+  --color-adwaita-accent-hover: #1db94c;
+
+  /* AWDS Semantic Tokens (Dark Mode) */
+  --color-surface-base: #101411;
+  --color-surface-card: #181d19;
+  --color-surface-elevated: #232925;
+  --color-surface-subtle: #1c221e;
+  --color-surface-hover: rgba(255, 255, 255, 0.04);
+  --color-surface-switcher: rgba(16, 20, 17, 0.5);
+  --color-surface-switcher-active: #232925;
+
+  --color-text-primary: #f2f5f3;
+  --color-text-secondary: #b6bfb8;
+  --color-text-muted: #7e8780;
+  --color-text-on-accent: #ffffff;
+
+  --color-border-subtle: rgba(182, 191, 184, 0.15);
+  --color-border-default: rgba(182, 191, 184, 0.25);
+  --color-border-strong: rgba(182, 191, 184, 0.45);
+
+  --color-accent: #26d058;
+  --color-accent-hover: #1db94c;
+  --color-accent-subtle: rgba(38, 208, 88, 0.12);
+
+  --color-success: #22c55e;
+  --color-warning: #f59e0b;
+  --color-danger: #ff7b6b;
+  --color-danger-hover: #e06354;
+  --color-danger-subtle: rgba(255, 123, 107, 0.12);
+
+  --color-overlay-backdrop: rgba(0, 0, 0, 0.70);
+  --color-focus-ring: #26d058;
 }
 
 .no-scrollbar::-webkit-scrollbar {

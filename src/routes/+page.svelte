@@ -4,7 +4,7 @@
   import { onMount } from 'svelte';
   import type { BlogPost } from './+page.server';
   import { isNameReserved } from '$lib/nameValidator';
-  import { autoResize, ConfirmationDialog, SpotlightSearch } from '$lib';
+  import { autoResize, SkipLink, SpotlightSearch, FormField, Input, Textarea, Button, IconButton, Badge, Card, Dialog, EmptyState } from '$lib';
   import { supabase } from '$lib/supabase';
   import { SvelteMap } from 'svelte/reactivity';
 
@@ -476,18 +476,21 @@
     aria-label="Close menu"></button>
 {/if}
 
+<SkipLink />
+
 <nav
-  class="fixed top-0 z-40 flex h-15 w-full items-center justify-between border-b border-adwaita-border bg-adwaita-card px-3 font-sans shadow-xs backdrop-blur-lg transition-colors duration-300 sm:px-5 md:bg-adwaita-card/60">
+  class="fixed top-0 z-40 flex h-15 w-full items-center justify-between border-b border-border-subtle bg-surface-card px-3 font-sans shadow-xs backdrop-blur-lg transition-colors duration-300 sm:px-5 md:bg-surface-card/60"
+  aria-label="Main navigation">
   <button
     onclick={() => navigate('home')}
-    class="max-w-[calc(100vw-5rem)] min-w-0 cursor-pointer truncate text-left text-base font-bold tracking-tight text-adwaita-text transition-colors hover:text-adwaita-accent sm:max-w-none">
+    class="max-w-[calc(100vw-5rem)] min-w-0 cursor-pointer truncate text-left text-base font-bold tracking-tight text-text-primary transition-colors hover:text-accent sm:max-w-none">
     {name}
   </button>
 
   <div class="flex items-center gap-2 sm:gap-3">
     <ul
       id="mobile-menu"
-      class="fixed top-16 right-5 z-40 flex w-56 origin-top-right flex-col items-start gap-1 rounded-xl border border-adwaita-border bg-adwaita-card p-2 shadow-lg transition-all duration-200 md:pointer-events-auto md:static md:h-auto md:w-auto md:translate-x-0 md:scale-100 md:flex-row md:items-center md:gap-0.5 md:rounded-lg md:border md:border-adwaita-border md:bg-adwaita-switcher-bg md:p-1 md:opacity-100 md:shadow-none"
+      class="fixed top-16 right-5 z-40 flex w-56 origin-top-right flex-col items-start gap-1 rounded-xl border border-border-subtle bg-surface-card p-2 shadow-lg transition-all duration-200 md:pointer-events-auto md:static md:h-auto md:w-auto md:translate-x-0 md:scale-100 md:flex-row md:items-center md:gap-0.5 md:rounded-lg md:border md:border-border-subtle md:bg-surface-switcher md:p-1 md:opacity-100 md:shadow-none"
       class:opacity-0={!menuOpen}
       class:scale-95={!menuOpen}
       class:pointer-events-none={!menuOpen}
@@ -497,7 +500,7 @@
         <div class="relative w-full">
           <button
             onclick={() => (themeDropdownOpen = !themeDropdownOpen)}
-            class="flex h-11 w-full cursor-pointer items-center justify-between rounded-lg px-4 text-sm font-semibold text-adwaita-text transition-colors hover:bg-adwaita-hover"
+            class="flex h-11 w-full cursor-pointer items-center justify-between rounded-lg px-4 text-sm font-semibold text-text-primary transition-colors hover:bg-surface-hover"
             aria-label="Change theme"
             aria-haspopup="true"
             aria-expanded={themeDropdownOpen}>
@@ -507,28 +510,24 @@
                 aria-hidden="true"></i>
               {getThemeLabel()}
             </span>
-            <i
-              class="bi bi-chevron-down text-xs text-adwaita-subtitle"
-              aria-hidden="true"></i>
+            <i class="bi bi-chevron-down text-xs text-text-muted" aria-hidden="true"></i>
           </button>
 
           {#if themeDropdownOpen}
             <div
-              class="absolute top-12 right-0 left-0 z-50 flex w-full flex-col rounded-lg border border-adwaita-border bg-adwaita-card p-1 shadow-lg">
+              class="absolute top-12 right-0 left-0 z-50 flex w-full flex-col rounded-lg border border-border-subtle bg-surface-card p-1 shadow-lg">
               {#each ['auto', 'light', 'dark'] as themeOption (themeOption)}
                 <button
                   onclick={() => {
                     applyTheme(themeOption as Theme);
                     themeDropdownOpen = false;
                   }}
-                  class="flex h-9 w-full cursor-pointer items-center gap-3 rounded-md px-3 text-left text-xs font-bold transition-colors hover:bg-adwaita-hover {(
+                  class="flex h-9 w-full cursor-pointer items-center gap-3 rounded-md px-3 text-left text-xs font-bold transition-colors hover:bg-surface-hover {(
                     theme === themeOption
                   ) ?
-                    'text-adwaita-accent'
-                  : 'text-adwaita-text'}">
-                  <i
-                    class="bi {getThemeIcon(themeOption as Theme)} text-sm"
-                    aria-hidden="true"></i>
+                    'text-accent'
+                  : 'text-text-primary'}">
+                  <i class="bi {getThemeIcon(themeOption as Theme)} text-sm" aria-hidden="true"></i>
                   {getThemeLabel(themeOption as Theme)}
                 </button>
               {/each}
@@ -547,8 +546,8 @@
             class="flex h-11 w-full cursor-pointer items-center justify-start rounded-lg border-0 px-4 text-sm leading-none font-medium whitespace-nowrap transition-all md:h-7.5 md:justify-center md:rounded-md md:px-3.5 {(
               activeSection === item.id
             ) ?
-              'bg-adwaita-accent font-semibold text-white hover:bg-adwaita-accent/90 md:bg-adwaita-switcher-active md:text-adwaita-accent md:shadow-xs md:hover:bg-adwaita-switcher-active'
-            : 'text-adwaita-text hover:bg-adwaita-hover md:text-adwaita-subtitle md:hover:bg-adwaita-hover md:hover:text-adwaita-text'}">
+              'bg-accent font-semibold text-white hover:bg-accent/90 md:bg-surface-switcher-active md:text-accent md:shadow-xs md:hover:bg-surface-switcher-active'
+            : 'text-text-primary hover:bg-surface-hover md:text-text-muted md:hover:bg-surface-hover md:hover:text-text-primary'}">
             {item.label}
           </button>
         </li>
@@ -558,7 +557,7 @@
     <div class="relative">
       <button
         onclick={() => (themeDropdownOpen = !themeDropdownOpen)}
-        class="hidden h-10 w-10 cursor-pointer items-center justify-center rounded-full text-lg text-adwaita-text transition-colors hover:bg-adwaita-hover md:flex"
+        class="hidden h-10 w-10 cursor-pointer items-center justify-center rounded-full text-lg text-text-primary transition-colors hover:bg-surface-hover md:flex"
         aria-label="Change theme"
         aria-haspopup="true"
         aria-expanded={themeDropdownOpen}>
@@ -573,52 +572,15 @@
           onclick={() => (themeDropdownOpen = false)}
           aria-label="Close theme menu"></button>
         <div
-          class="absolute top-12 right-0 z-50 hidden min-w-31.25 flex-col rounded-xl border border-adwaita-border bg-adwaita-card py-1.5 shadow-lg md:flex">
-          <button
-            onclick={() => {
-              applyTheme('auto');
-              themeDropdownOpen = false;
-            }}
-            class="flex w-full cursor-pointer items-center gap-3 px-4 py-2.5 text-left text-xs font-bold transition-colors hover:bg-adwaita-hover {(
-              theme === 'auto'
-            ) ?
-              'text-adwaita-accent'
-            : 'text-adwaita-text'}">
-            <i
-              class="bi bi-circle-half text-sm"
-              aria-hidden="true"></i>
-            Auto
-          </button>
-          <button
-            onclick={() => {
-              applyTheme('light');
-              themeDropdownOpen = false;
-            }}
-            class="flex w-full cursor-pointer items-center gap-3 px-4 py-2.5 text-left text-xs font-bold transition-colors hover:bg-adwaita-hover {(
-              theme === 'light'
-            ) ?
-              'text-adwaita-accent'
-            : 'text-adwaita-text'}">
-            <i
-              class="bi bi-sun-fill text-sm"
-              aria-hidden="true"></i>
-            Light
-          </button>
-          <button
-            onclick={() => {
-              applyTheme('dark');
-              themeDropdownOpen = false;
-            }}
-            class="flex w-full cursor-pointer items-center gap-3 px-4 py-2.5 text-left text-xs font-bold transition-colors hover:bg-adwaita-hover {(
-              theme === 'dark'
-            ) ?
-              'text-adwaita-accent'
-            : 'text-adwaita-text'}">
-            <i
-              class="bi bi-moon-stars-fill text-sm"
-              aria-hidden="true"></i>
-            Dark
-          </button>
+          class="absolute top-12 right-0 z-50 hidden min-w-[7.75rem] flex-col rounded-xl border border-border-subtle bg-surface-elevated py-1.5 shadow-lg md:flex">
+          {#each ([['auto', 'bi-circle-half', 'Auto'], ['light', 'bi-sun-fill', 'Light'], ['dark', 'bi-moon-stars-fill', 'Dark']] as const) as [val, icon, label]}
+            <button
+              onclick={() => { applyTheme(val); themeDropdownOpen = false; }}
+              class="flex w-full cursor-pointer items-center gap-3 px-4 py-2.5 text-left text-xs font-bold transition-colors hover:bg-surface-hover {theme === val ? 'text-accent' : 'text-text-primary'}">
+              <i class="bi {icon} text-sm" aria-hidden="true"></i>
+              {label}
+            </button>
+          {/each}
         </div>
       {/if}
     </div>
@@ -626,37 +588,36 @@
     <SpotlightSearch projects={data.projects} />
 
     <button
-      class="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full text-xl transition-colors hover:bg-adwaita-hover md:hidden"
+      class="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full text-xl transition-colors hover:bg-surface-hover md:hidden"
       onclick={() => (menuOpen = !menuOpen)}
       aria-label={menuOpen ? 'Close menu' : 'Open menu'}
       aria-expanded={menuOpen}
       aria-controls="mobile-menu">
-      <i
-        class="bi {menuOpen ? 'bi-x-lg' : 'bi-list'} text-adwaita-text"
-        aria-hidden="true"></i>
+      <i class="bi {menuOpen ? 'bi-x-lg' : 'bi-list'} text-text-primary" aria-hidden="true"></i>
     </button>
   </div>
 </nav>
 
-<main class="flex min-h-[calc(100vh-3.75rem)] flex-col pt-15 font-sans">
+<main id="main-content" class="flex min-h-[calc(100vh-3.75rem)] flex-col pt-15 font-sans">
   {#if activeSection === 'home'}
     <section
       class="relative z-10 mx-auto flex w-full flex-col gap-8 px-6 pt-10 pb-24 md:w-[80%] md:max-w-none md:pt-14 md:pb-28 lg:w-[50%]">
       <div
-        class="pointer-events-none absolute top-12.5 left-[50%] z-0 h-80 w-[320px] translate-x-[-50%] rounded-full bg-adwaita-accent/10 blur-[80px]">
+        class="pointer-events-none absolute top-12.5 left-[50%] z-0 h-80 w-[320px] translate-x-[-50%] rounded-full bg-accent/10 blur-[80px]">
       </div>
 
       <div class="relative z-10 flex flex-col items-center justify-center text-center">
         <img
           src="/android-chrome-512x512.png"
           alt="Farhan Kurnia Pratama"
-          class="relative z-10 mb-6 h-28 w-28 rounded-full border-2 border-adwaita-accent object-cover object-top shadow-[0_0_20px_rgba(120,101,217,0.25)] transition-all duration-300 dark:shadow-[0_0_25px_rgba(120,101,217,0.35)]" />
+          loading="lazy"
+          class="relative z-10 mb-6 h-28 w-28 rounded-full border-2 border-accent object-cover object-top shadow-[0_0_20px_rgba(120,101,217,0.25)] transition-all duration-300 dark:shadow-[0_0_25px_rgba(120,101,217,0.35)]" />
         <h1
-          class="relative z-10 text-3xl font-bold tracking-tight whitespace-nowrap text-adwaita-text md:text-4xl lg:text-5xl">
+          class="relative z-10 text-3xl font-bold tracking-tight whitespace-nowrap text-text-primary md:text-4xl lg:text-5xl">
           {name}
         </h1>
-        <p class="relative z-10 mt-3 mb-2 text-lg font-medium text-adwaita-subtitle">{headline}</p>
-        <p class="relative z-10 mt-4 max-w-xl text-base leading-relaxed text-adwaita-subtitle/90">
+        <p class="relative z-10 mt-3 mb-2 text-lg font-medium text-text-secondary">{headline}</p>
+        <p class="relative z-10 mt-4 max-w-xl text-base leading-relaxed text-text-secondary/90">
           {desc}
         </p>
 
@@ -665,209 +626,243 @@
           <a
             href="/cv.pdf"
             download="Farhan_Kurnia_Pratama_CV.pdf"
-            class="inline-flex w-full cursor-pointer items-center justify-center rounded-lg bg-adwaita-accent py-2 text-xs font-semibold whitespace-nowrap text-white transition-colors hover:bg-adwaita-accent-hover sm:w-48 sm:text-sm">
+            class="inline-flex w-full cursor-pointer items-center justify-center rounded-lg bg-accent py-2 text-xs font-semibold whitespace-nowrap text-white transition-colors hover:bg-accent-hover sm:w-48 sm:text-sm">
             Download CV
           </a>
           <button
             onclick={() => navigate('projects')}
-            class="inline-flex w-full cursor-pointer items-center justify-center rounded-lg border border-adwaita-border bg-adwaita-card py-2 text-xs font-semibold whitespace-nowrap text-adwaita-text transition-colors hover:bg-adwaita-hover sm:w-48 sm:text-sm">
-            Browse Projects
+            class="inline-flex w-full cursor-pointer items-center justify-center rounded-lg border border-border-subtle bg-surface-card py-2 text-xs font-semibold whitespace-nowrap text-text-primary transition-colors hover:bg-surface-hover sm:w-48 sm:text-sm">
+            Browse projects
           </button>
           <button
             onclick={() => navigate('contacts')}
-            class="inline-flex w-full cursor-pointer items-center justify-center rounded-lg border border-adwaita-border bg-adwaita-card py-2 text-xs font-semibold whitespace-nowrap text-adwaita-text transition-colors hover:bg-adwaita-hover sm:mt-0 sm:w-48 sm:text-sm">
-            Get in Touch
+            class="inline-flex w-full cursor-pointer items-center justify-center rounded-lg border border-border-subtle bg-surface-card py-2 text-xs font-semibold whitespace-nowrap text-text-primary transition-colors hover:bg-surface-hover sm:mt-0 sm:w-48 sm:text-sm">
+            Get in touch
           </button>
         </div>
       </div>
 
       <div>
-        <h3 class="mb-4 text-lg font-bold tracking-tight text-adwaita-text">Top Projects</h3>
+        <h3 class="mb-4 text-lg font-bold tracking-tight text-text-primary">Top projects</h3>
         <div class="boxed-list text-left">
-          {#each projects.slice(0, 3) as project (project.name)}
-            <div class="action-row group relative flex flex-col items-stretch gap-2 text-left">
-              <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-                <div class="flex items-center gap-2">
-                  <h4
-                    class="text-base leading-none font-bold text-adwaita-text transition-colors group-hover:text-adwaita-accent">
-                    <a
-                      href={project.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      title="Opens in a new tab"
-                      class="after:absolute after:inset-0 after:z-10">
-                      {project.name}
-                    </a>
-                  </h4>
-                  {#if langColors[project.lang]}
-                    <span
-                      class="rounded bg-adwaita-accent/15 px-2 py-0.5 text-[11px] font-semibold text-adwaita-accent"
-                      title="Language: {project.lang}">{project.lang}</span>
-                  {/if}
-                </div>
+          <ul class="divide-y divide-border-subtle">
+            {#each projects.slice(0, 3) as project (project.name)}
+              <li
+                class="group relative flex flex-col gap-3 p-5 text-left transition-all duration-200 hover:bg-surface-hover/40 active:scale-[0.995]">
+                <article class="contents">
+                  <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                    <div class="flex flex-wrap items-center gap-0.5">
+                      <h4
+                        class="text-base leading-snug font-bold text-text-primary transition-colors group-hover:text-accent">
+                        <a
+                          href={project.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          class="rounded-xs outline-none after:absolute after:inset-0 focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-surface-card">
+                          {project.name}
+                        </a>
+                      </h4>
+                      {#if project.lang}
+                        <span class="inline-flex items-center gap-1 select-none">
+                          <span
+                            class="h-1.5 w-1.5 rounded-full"
+                            style="background-color: {langColors[project.lang] ||
+                              'var(--color-accent)'}"></span>
+                          <span
+                            class="rounded-md bg-border-subtle/30 px-1.5 py-0.5 text-xs font-semibold text-text-muted">
+                            {project.lang}
+                          </span>
+                        </span>
+                      {/if}
+                    </div>
 
-                <div
-                  class="relative z-20 flex shrink-0 flex-wrap items-center gap-3 sm:justify-end">
-                  {#if project.licenseName}
-                    <span
-                      class="text-xs font-semibold whitespace-nowrap text-adwaita-subtitle"
-                      title="License: {project.licenseName}">
-                      {project.licenseName} License
-                    </span>
-                  {/if}
-
-                  <div class="flex items-center gap-1 text-xs font-semibold text-adwaita-subtitle">
-                    <i
-                      class="bi bi-star-fill text-[12px] text-amber-600"
-                      aria-hidden="true"></i>
-                    {project.stars}
+                    <div
+                      class="no-scrollbar relative z-20 flex items-center gap-x-3 overflow-x-auto font-sans text-xs font-semibold whitespace-nowrap text-text-muted select-none sm:justify-end">
+                      {#if project.licenseName}
+                        <span class="inline-flex items-center gap-1">
+                          <span
+                            class="material-symbols-rounded text-xs leading-none"
+                            style="font-variation-settings: 'wght' 300, 'opsz' 20;"
+                            aria-hidden="true">balance</span>
+                          {project.licenseName} License
+                        </span>
+                      {/if}
+                      <span class="inline-flex items-center gap-1">
+                        <span
+                          class="material-symbols-rounded text-xs leading-none"
+                          style="font-variation-settings: 'wght' 300, 'opsz' 20;"
+                          aria-hidden="true">star_shine</span>
+                        {project.stars} stars
+                      </span>
+                    </div>
                   </div>
-                  <i
-                    class="bi bi-chevron-right text-sm text-zinc-400 opacity-80 transition-transform group-hover:translate-x-0.5"
-                    aria-hidden="true"></i>
-                </div>
-              </div>
-              <p class="text-sm leading-relaxed text-adwaita-subtitle">{project.desc}</p>
-              <div class="relative z-20 mt-0.5 flex flex-wrap items-center gap-1.5">
-                {#each project.tags as tag (tag)}
-                  <span
-                    class="rounded bg-adwaita-border/40 px-2 py-0.5 text-[11px] font-medium text-adwaita-subtitle"
-                    >{tag}</span>
-                {/each}
-              </div>
-            </div>
-          {/each}
-          <button
-            onclick={() => navigate('projects')}
-            class="action-row group flex w-full cursor-pointer items-center justify-between text-left">
-            <span class="text-sm font-bold text-adwaita-accent group-hover:underline"
-              >View all projects</span>
-            <i
-              class="bi bi-chevron-right text-sm text-adwaita-accent transition-transform group-hover:translate-x-0.5"
-              aria-hidden="true"></i>
-          </button>
-        </div>
-      </div>
 
-      <div>
-        <h3 class="mb-4 text-lg font-bold tracking-tight text-adwaita-text">Recent Blog Posts</h3>
-        <div class="boxed-list text-left">
-          {#if posts.length === 0}
-            <div class="p-6 text-center text-sm text-adwaita-subtitle">
-              No blog posts published yet.
-            </div>
-          {:else}
-            {#each posts.slice(0, 2) as post (post.title)}
-              <a
-                href="/blog/{post.slug}"
-                class="action-row group flex w-full cursor-pointer flex-col items-stretch gap-4 text-left sm:flex-row sm:items-center">
-                {#if post.banner_path}
+                  <p
+                    class="line-clamp-2 text-xs leading-normal text-text-muted dark:text-zinc-300">
+                    {project.desc}
+                  </p>
+
                   <div
-                    class="aspect-[2/1] w-full shrink-0 overflow-hidden rounded-lg border border-adwaita-border bg-adwaita-hover/20 select-none sm:w-40 md:w-48">
-                    <img
-                      src={getBannerUrl(post.banner_path)}
-                      alt=""
-                      class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-103" />
-                  </div>
-                {:else}
-                  <div
-                    class="to-palette-purple/15 flex aspect-[2/1] w-full shrink-0 items-center justify-center rounded-lg border border-adwaita-border bg-gradient-to-br from-adwaita-accent/15 select-none sm:w-40 md:w-48">
-                    <i class="bi bi-journal-text text-xl text-adwaita-accent/50"></i>
-                  </div>
-                {/if}
+                    class="mt-1 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
+                    <div class="relative z-20 flex flex-wrap items-center gap-1.5">
+                      {#each project.tags as tag (tag)}
+                        <span
+                          class="rounded-md bg-border-subtle/30 px-2.5 py-0.5 text-xs font-medium text-text-muted">
+                          {tag}
+                        </span>
+                      {/each}
+                    </div>
 
-                <div class="flex flex-1 flex-col gap-1 font-sans">
-                  <div
-                    class="no-scrollbar flex w-full items-center gap-x-2.5 overflow-x-auto font-sans text-[11px] font-semibold whitespace-nowrap text-adwaita-subtitle select-none">
-                    <span class="inline-flex items-center gap-1"
-                      ><span class="flex items-center justify-center w-[10px] h-[10px] shrink-0"
-                        ><span
-                          class="material-symbols-rounded leading-none"
-                          style="font-size: 10px; font-variation-settings: 'wght' 300; transform: scale(0.8); transform-origin: center;"
-                          aria-hidden="true">schedule_send</span></span
-                      >
-                      {getPostDate(post)}</span>
-                    <span class="inline-flex items-center gap-1"
-                      ><span class="flex items-center justify-center w-[10px] h-[10px] shrink-0"
-                        ><span
-                          class="material-symbols-rounded leading-none"
-                          style="font-size: 10px; font-variation-settings: 'wght' 300; transform: scale(0.8); transform-origin: center;"
-                          aria-hidden="true">acute</span></span
-                      >
-                      {(post.read_time || '').replace(/\s*read\s*/gi, '')}</span>
-                    <span class="inline-flex items-center gap-1"
-                      ><span class="flex items-center justify-center w-[10px] h-[10px] shrink-0"
-                        ><span
-                          class="material-symbols-rounded leading-none"
-                          style="font-size: 10px; font-variation-settings: 'wght' 300; transform: scale(0.8); transform-origin: center;"
-                          aria-hidden="true">chat_bubble</span></span
-                      >
-                      {post.comment_count || 0}</span>
-                    {#if post.views_count !== undefined}
-                      <span class="inline-flex items-center gap-1"
-                        ><span class="flex items-center justify-center w-[10px] h-[10px] shrink-0"
-                          ><span
-                            class="material-symbols-rounded leading-none"
-                            style="font-size: 10px; font-variation-settings: 'wght' 300; transform: scale(0.8); transform-origin: center;"
-                            aria-hidden="true">visibility</span></span
-                        >
-                        {post.views_count}</span>
-                    {/if}
+                    <div class="flex items-center gap-1.5 text-xs font-bold text-accent">
+                      <span>View repository</span>
+                      <i class="bi bi-arrow-right transition-transform group-hover:translate-x-0.5"
+                      ></i>
+                    </div>
                   </div>
-                  <h4
-                    class="text-base leading-snug font-bold text-adwaita-text transition-colors group-hover:text-adwaita-accent">
-                    {post.title}
-                  </h4>
-                  {#if post.excerpt}
-                    <p class="mt-1 line-clamp-2 text-xs leading-normal text-adwaita-subtitle">
-                      {post.excerpt}
-                    </p>
-                  {/if}
-                </div>
-
-                <div class="ml-2 hidden shrink-0 items-center sm:flex">
-                  <i
-                    class="bi bi-chevron-right text-sm text-zinc-400 transition-all group-hover:translate-x-0.5 group-hover:text-adwaita-accent"
-                    aria-hidden="true"></i>
-                </div>
-              </a>
+                </article>
+              </li>
             {/each}
+          </ul>
+        </div>
+        {#if projects.length > 0}
+          <div class="mt-4 flex justify-end">
             <button
-              onclick={() => navigate('blogs')}
-              class="action-row group flex w-full cursor-pointer items-center justify-between text-left">
-              <span class="text-sm font-bold text-adwaita-accent group-hover:underline"
-                >View all posts</span>
+              onclick={() => navigate('projects')}
+              class="group inline-flex cursor-pointer items-center gap-1.5 text-xs font-bold text-accent hover:underline">
+              <span>View all projects</span>
               <i
-                class="bi bi-chevron-right text-sm text-adwaita-accent transition-transform group-hover:translate-x-0.5"
+                class="bi bi-arrow-right transition-transform group-hover:translate-x-0.5"
                 aria-hidden="true"></i>
             </button>
-          {/if}
-        </div>
+          </div>
+        {/if}
       </div>
 
-      <div class="boxed-list border-adwaita-accent/30 bg-adwaita-accent/5 text-left">
+      <div>
+        <h3 class="mb-4 text-lg font-bold tracking-tight text-text-primary">Recent posts</h3>
+        <div class="boxed-list text-left">
+          {#if posts.length === 0}
+            <EmptyState
+              icon="bi-journal-text"
+              title="No posts yet"
+              description="Check back soon for new articles." />
+          {:else}
+            <ul class="divide-y divide-border-subtle">
+              {#each posts.slice(0, 2) as post (post.title)}
+                <li
+                  class="group relative flex w-full flex-col gap-5 p-5 text-left transition-all duration-200 hover:bg-surface-hover/40 active:scale-[0.995] sm:flex-row sm:items-start">
+                  <div
+                    class="relative aspect-video w-full shrink-0 overflow-hidden rounded-lg border border-border-subtle bg-surface-card/60 animate-pulse select-none sm:w-40 md:w-48">
+                    {#if post.banner_path}
+                      <img
+                        src={getBannerUrl(post.banner_path)}
+                        alt=""
+                        loading="lazy"
+                        onload={(e) => (e.currentTarget.closest('.animate-pulse') as HTMLElement | null)?.classList.remove('animate-pulse')}
+                        class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-103" />
+                    {:else}
+                      <div
+                        class="to-palette-purple/15 flex h-full w-full items-center justify-center bg-gradient-to-br from-accent/15 select-none">
+                        <i class="bi bi-journal-text text-xl text-accent/50"></i>
+                      </div>
+                    {/if}
+                  </div>
+
+                  <div class="flex flex-1 flex-col gap-2 font-sans">
+                    <div
+                      class="no-scrollbar flex w-full items-center gap-x-2.5 overflow-x-auto font-sans text-[11px] font-semibold whitespace-nowrap text-text-muted select-none">
+                      <span class="inline-flex items-center gap-1"
+                        ><span
+                          class="material-symbols-rounded text-[10px] leading-none"
+                          style="font-variation-settings: 'wght' 300, 'opsz' 20;"
+                          aria-hidden="true">calendar_today</span>
+                        {getPostDate(post)}</span>
+                      <span class="inline-flex items-center gap-1"
+                        ><span
+                          class="material-symbols-rounded text-[10px] leading-none"
+                          style="font-variation-settings: 'wght' 300, 'opsz' 20;"
+                          aria-hidden="true">schedule</span>
+                        {(post.read_time || '').replace(/\s*read\s*/gi, '')}</span>
+                      <span class="inline-flex items-center gap-1"
+                        ><span
+                          class="material-symbols-rounded text-[10px] leading-none"
+                          style="font-variation-settings: 'wght' 300, 'opsz' 20;"
+                          aria-hidden="true">forum</span>
+                        {post.comment_count || 0}</span>
+                      {#if post.views_count !== undefined}
+                        <span class="inline-flex items-center gap-1"
+                          ><span
+                            class="material-symbols-rounded text-[10px] leading-none"
+                            style="font-variation-settings: 'wght' 300, 'opsz' 20;"
+                            aria-hidden="true">visibility</span>
+                          {post.views_count}</span>
+                      {/if}
+                    </div>
+                    <div class="mt-1">
+                      <h4
+                        class="text-base leading-snug font-bold text-text-primary transition-colors group-hover:text-accent">
+                        <a
+                          href="/blog/{post.slug}"
+                          class="rounded-xs outline-none after:absolute after:inset-0 focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-surface-card">
+                          {post.title}
+                        </a>
+                      </h4>
+                    </div>
+                    {#if post.excerpt}
+                      <p
+                        class="line-clamp-2 text-xs leading-normal text-text-muted dark:text-zinc-300">
+                        {post.excerpt}
+                      </p>
+                    {/if}
+                    <div
+                      class="mt-1 flex items-center gap-1.5 text-xs font-bold text-accent">
+                      <span>Read article</span>
+                      <i class="bi bi-arrow-right transition-transform group-hover:translate-x-0.5"
+                      ></i>
+                    </div>
+                  </div>
+                </li>
+              {/each}
+            </ul>
+          {/if}
+        </div>
+        {#if posts.length > 0}
+          <div class="mt-4 flex justify-end">
+            <button
+              onclick={() => navigate('blogs')}
+              class="group inline-flex cursor-pointer items-center gap-1.5 text-xs font-bold text-accent hover:underline">
+              <span>View all posts</span>
+              <i
+                class="bi bi-arrow-right transition-transform group-hover:translate-x-0.5"
+                aria-hidden="true"></i>
+            </button>
+          </div>
+        {/if}
+      </div>
+
+      <div class="boxed-list border-accent/30 bg-accent/5 text-left">
         <div class="flex flex-col justify-between gap-4 px-5 py-4 sm:flex-row sm:items-center">
           <div class="flex items-start gap-4">
             <i
-              class="bi bi-heart-fill mt-0.5 shrink-0 text-2xl text-adwaita-accent"
+              class="bi bi-heart-fill mt-0.5 shrink-0 text-2xl text-accent"
               aria-hidden="true"></i>
             <div>
               <h4 class="text-sm font-bold">
                 <ShinyText
                   text="Support Open Source Work"
-                  color="var(--color-adwaita-accent)"
-                  shineColor="var(--color-adwaita-card)"
+                  color="var(--color-accent)"
+                  shineColor="var(--color-surface-card)"
                   speed={1.5} />
               </h4>
-              <p class="mt-0.5 text-xs leading-relaxed text-adwaita-subtitle">
+              <p class="mt-0.5 text-xs leading-relaxed text-text-secondary">
                 Your support helps maintain and improve these open-source projects
               </p>
             </div>
           </div>
           <button
             onclick={() => navigate('funding')}
-            class="inline-flex shrink-0 cursor-pointer items-center justify-center rounded-lg bg-adwaita-accent px-4 py-2 text-xs font-semibold text-white transition-colors hover:bg-adwaita-accent-hover">
-            Become a Sponsor
+            class="inline-flex shrink-0 cursor-pointer items-center justify-center rounded-lg bg-accent px-4 py-2 text-xs font-semibold text-white transition-colors hover:bg-accent-hover">
+            Become a sponsor
           </button>
         </div>
       </div>
@@ -878,7 +873,7 @@
         action="https://formsubmit.co/contact@fkp.my.id"
         method="POST"
         onsubmit={validateForm}
-        class="flex w-full flex-col gap-2 rounded-2xl border border-adwaita-border bg-adwaita-card/45 p-5 text-left shadow-xs backdrop-blur-lg transition-colors duration-300"
+        class="flex w-full flex-col gap-3 rounded-2xl border border-border-subtle bg-surface-card/60 p-6 text-left shadow-xs backdrop-blur-lg transition-colors duration-300"
         autocomplete="off">
         <input
           type="hidden"
@@ -898,166 +893,88 @@
           value="https://fkp.my.id/" />
 
         <div class="mb-2 select-none">
-          <h2 class="text-sm font-bold text-adwaita-text">Send a Message</h2>
-          <p class="mt-0.5 text-xs text-adwaita-label">
+          <h2 class="text-sm font-bold text-text-primary">Send a Message</h2>
+          <p class="mt-0.5 text-xs text-text-muted">
             Feel free to drop me a line. I'll get back to you as soon as possible.
           </p>
         </div>
 
-        <div class="flex flex-col gap-1">
-          <label
-            for="form-name"
-            class="text-xs font-bold text-adwaita-label select-none">
-            Name <span
-              aria-hidden="true"
-              class="text-adwaita-error">*</span
-            ><span class="sr-only">(required)</span>
-          </label>
-          <div class="w-full">
-            <input
-              type="text"
-              id="form-name"
-              name="name"
-              aria-required="true"
-              autocomplete="name"
-              aria-invalid={!!formErrors.name}
-              aria-describedby="form-name-fb"
-              placeholder="Enter your name"
-              bind:value={formName}
-              oninput={() => {
-                formErrors.name = '';
-                formValid.name = false;
-                validateName();
-              }}
-              class="w-full rounded-lg border border-adwaita-border bg-adwaita-bg px-3 py-1.5 text-sm text-adwaita-text transition-colors placeholder:text-adwaita-label/70"
-              class:border-adwaita-error={formErrors.name}
-              class:input-valid={formValid.name} />
-            <div
-              id="form-name-fb"
-              aria-live="polite"
-              class="mt-0.5 h-4 text-[11px] leading-none font-medium">
-              {#if formErrors.name}
-                <span
-                  role="alert"
-                  class="flex items-center gap-1 text-adwaita-error">
-                  <i class="bi bi-exclamation-circle-fill"></i>{formErrors.name}
-                </span>
-              {:else if formValid.name}
-                <span class="flex items-center gap-1 text-adwaita-accent">
-                  <i class="bi bi-check-circle-fill"></i>Looks good
-                </span>
-              {/if}
-            </div>
-          </div>
-        </div>
+        <FormField
+          id="form-name"
+          label="Name"
+          required
+          error={formErrors.name}
+          valid={formValid.name}>
+        <Input
+            type="text"
+            id="form-name"
+            name="name"
+            aria-required="true"
+            autocomplete="name"
+            placeholder="Your name"
+            bind:value={formName}
+            error={!!formErrors.name}
+            valid={formValid.name}
+            oninput={() => {
+              formErrors.name = '';
+              formValid.name = false;
+              validateName();
+            }}
+          />
+        </FormField>
 
-        <div class="flex flex-col gap-1">
-          <label
-            for="form-email"
-            class="text-xs font-bold text-adwaita-label select-none">
-            Email <span
-              aria-hidden="true"
-              class="text-adwaita-error">*</span
-            ><span class="sr-only">(required)</span>
-          </label>
-          <div class="w-full">
-            <input
-              type="email"
-              id="form-email"
-              name="email"
-              aria-required="true"
-              aria-invalid={!!formErrors.email}
-              aria-describedby="form-email-fb"
-              placeholder="Enter your email"
-              autocomplete="email"
-              bind:value={formEmail}
-              oninput={() => {
-                formErrors.email = '';
-                formValid.email = false;
-                validateEmail();
-              }}
-              class="w-full rounded-lg border border-adwaita-border bg-adwaita-bg px-3 py-1.5 text-sm text-adwaita-text transition-colors placeholder:text-adwaita-label/70"
-              class:border-adwaita-error={formErrors.email}
-              class:input-valid={formValid.email} />
-            <div
-              id="form-email-fb"
-              aria-live="polite"
-              class="mt-0.5 h-4 text-[11px] leading-none font-medium">
-              {#if formErrors.email}
-                <span
-                  role="alert"
-                  class="flex items-center gap-1 text-adwaita-error">
-                  <i class="bi bi-exclamation-circle-fill"></i>{formErrors.email}
-                </span>
-              {:else if formValid.email}
-                <span class="flex items-center gap-1 text-adwaita-accent">
-                  <i class="bi bi-check-circle-fill"></i>Looks good
-                </span>
-              {/if}
-            </div>
-          </div>
-        </div>
+        <FormField
+          id="form-email"
+          label="Email"
+          required
+          error={formErrors.email}
+          valid={formValid.email}>
+          <Input
+            type="email"
+            id="form-email"
+            name="email"
+            aria-required="true"
+            autocomplete="email"
+            placeholder="your@email.com"
+            bind:value={formEmail}
+            error={!!formErrors.email}
+            valid={formValid.email}
+            oninput={() => {
+              formErrors.email = '';
+              formValid.email = false;
+              validateEmail();
+            }}
+          />
+        </FormField>
 
-        <div class="flex flex-col gap-1">
-          <label
-            for="form-message"
-            class="text-xs font-bold text-adwaita-label select-none">
-            Message <span
-              aria-hidden="true"
-              class="text-adwaita-error">*</span
-            ><span class="sr-only">(required)</span>
-          </label>
-          <div class="relative w-full">
-            <textarea
-              use:autoResize={formMessage}
-              id="form-message"
-              name="message"
-              rows="4"
-              placeholder="Enter your message"
-              maxlength="1000"
-              bind:value={formMessage}
-              oninput={() => {
-                formErrors.message = '';
-                formValid.message = false;
-                validateMessage();
-              }}
-              aria-required="true"
-              aria-invalid={!!formErrors.message}
-              aria-describedby="form-msg-count form-message-fb"
-              class="no-scrollbar w-full resize-none overflow-hidden rounded-lg border border-adwaita-border bg-adwaita-bg px-3 py-1.5 pr-16 text-sm text-adwaita-text transition-colors placeholder:text-adwaita-label/70"
-              class:border-adwaita-error={formErrors.message}
-              class:input-valid={formValid.message}></textarea>
-            <div
-              class="pointer-events-none absolute right-3 bottom-2.5 z-10 font-mono text-[10px] text-adwaita-subtitle/50 select-none"
-              id="form-msg-count"
-              aria-live="polite">
-              {formMessage.length}/1000
-            </div>
-          </div>
-          <div
-            id="form-message-fb"
-            aria-live="polite"
-            class="mt-0.5 h-4 text-[11px] leading-none font-medium">
-            {#if formErrors.message}
-              <span
-                role="alert"
-                class="flex items-center gap-1 text-adwaita-error">
-                <i class="bi bi-exclamation-circle-fill"></i>{formErrors.message}
-              </span>
-            {:else if formValid.message}
-              <span class="flex items-center gap-1 text-adwaita-accent">
-                <i class="bi bi-check-circle-fill"></i>Looks good
-              </span>
-            {/if}
-          </div>
-        </div>
+        <FormField
+          id="form-message"
+          label="Message"
+          required
+          error={formErrors.message}
+          valid={formValid.message}
+          counter="{1000 - formMessage.length} left">
+          <Textarea
+            id="form-message"
+            name="message"
+            rows={4}
+            maxlength={1000}
+            placeholder="Write your message…"
+            bind:value={formMessage}
+            error={!!formErrors.message}
+            valid={formValid.message}
+            oninput={() => {
+              formErrors.message = '';
+              formValid.message = false;
+              validateMessage();
+            }}
+          />
+        </FormField>
 
         <div class="mt-2 flex justify-end">
-          <button
-            type="submit"
-            class="inline-flex cursor-pointer items-center justify-center rounded-lg bg-adwaita-accent px-5 py-2 text-sm font-semibold text-white transition-colors select-none hover:bg-adwaita-accent-hover disabled:cursor-not-allowed disabled:opacity-55">
-            Send Message
-          </button>
+          <Button type="submit" variant="primary" size="md">
+            Send message
+          </Button>
         </div>
       </form>
     </section>
@@ -1075,47 +992,47 @@
       class="relative z-10 mx-auto w-full px-6 pt-10 pb-24 md:w-[80%] md:max-w-none md:pt-14 md:pb-28 lg:w-[50%]">
       <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 class="text-3xl font-bold tracking-tight text-adwaita-text">Curriculum Vitae</h1>
-          <p class="mt-2 text-sm text-adwaita-subtitle">Security-focused Software Engineer.</p>
+          <h1 class="text-3xl font-bold tracking-tight text-text-primary">Curriculum Vitae</h1>
+          <p class="mt-2 text-sm text-text-secondary">Security-focused Software Engineer.</p>
         </div>
         <a
           href="/cv.pdf"
           download="Farhan_Kurnia_Pratama_CV.pdf"
-          class="inline-flex items-center justify-center rounded-lg bg-adwaita-accent px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-adwaita-accent-hover">
+          class="inline-flex items-center justify-center rounded-lg bg-accent px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-accent-hover">
           Download PDF
         </a>
       </div>
 
       <div class="mt-10">
-        <h2 class="text-sm font-bold text-adwaita-subtitle">Experience</h2>
+        <h2 class="text-sm font-bold text-text-secondary uppercase tracking-wider">Experience</h2>
         <div class="boxed-list mt-4">
           {#each experiences as exp (exp.role)}
-            <div class="flex flex-col gap-2 px-6 py-5 transition-all hover:bg-adwaita-hover">
+            <div class="flex flex-col gap-2 px-6 py-5 transition-all hover:bg-surface-hover">
               <div class="flex items-start justify-between gap-4">
                 <div>
-                  <h3 class="text-base font-bold text-adwaita-text">{exp.role}</h3>
-                  <p class="text-sm font-medium text-adwaita-subtitle">{exp.company}</p>
+                  <h3 class="text-base font-bold text-text-primary">{exp.role}</h3>
+                  <p class="text-sm font-medium text-text-secondary">{exp.company}</p>
                 </div>
-                <p class="shrink-0 text-xs font-semibold text-adwaita-subtitle">{exp.period}</p>
+                <p class="shrink-0 text-xs font-semibold text-text-secondary">{exp.period}</p>
               </div>
-              <p class="mt-1.5 text-sm leading-relaxed text-adwaita-subtitle">{exp.desc}</p>
+              <p class="mt-1.5 text-sm leading-relaxed text-text-secondary">{exp.desc}</p>
             </div>
           {/each}
         </div>
       </div>
 
       <div class="mt-10">
-        <h2 class="text-sm font-bold text-adwaita-subtitle">Education</h2>
+        <h2 class="text-sm font-bold text-text-secondary uppercase tracking-wider">Education</h2>
         <div class="boxed-list mt-4">
           {#each education as edu (`${edu.degree}-${edu.university}`)}
-            <div class="flex flex-col gap-1.5 px-6 py-5 transition-all hover:bg-adwaita-hover">
+            <div class="flex flex-col gap-1.5 px-6 py-5 transition-all hover:bg-surface-hover">
               <div class="flex items-start justify-between gap-4">
                 <div>
-                  <h3 class="text-base font-bold text-adwaita-text">{edu.degree} in {edu.major}</h3>
-                  <p class="text-sm text-adwaita-subtitle">{edu.faculty}</p>
-                  <p class="mt-1 text-sm font-semibold text-adwaita-text">{edu.university}</p>
+                  <h3 class="text-base font-bold text-text-primary">{edu.degree} in {edu.major}</h3>
+                  <p class="text-sm text-text-secondary">{edu.faculty}</p>
+                  <p class="mt-1 text-sm font-semibold text-text-primary">{edu.university}</p>
                 </div>
-                <p class="shrink-0 text-xs font-semibold text-adwaita-subtitle">{edu.period}</p>
+                <p class="shrink-0 text-xs font-semibold text-text-secondary">{edu.period}</p>
               </div>
             </div>
           {/each}
@@ -1123,11 +1040,11 @@
       </div>
 
       <div class="mt-10">
-        <h2 class="text-sm font-bold text-adwaita-subtitle">Skills</h2>
+        <h2 class="text-sm font-bold text-text-secondary uppercase tracking-wider">Skills</h2>
         <div class="mt-4 flex flex-wrap gap-2">
           {#each skills as group (group.category)}
             <span
-              class="cursor-default rounded-full bg-adwaita-border/40 px-4 py-2 text-sm font-bold text-adwaita-text transition-colors hover:bg-adwaita-border/60">
+              class="cursor-default rounded-full bg-border-subtle/40 px-4 py-2 text-sm font-bold text-text-primary transition-colors hover:bg-border-subtle/60">
               {group.category}
               <span class="font-normal opacity-85">({group.items.join(', ')})</span>
             </span>
@@ -1142,8 +1059,8 @@
       class="relative z-10 mx-auto w-full px-6 pt-10 pb-24 md:w-[80%] md:max-w-none md:pt-14 md:pb-28 lg:w-[50%]">
       <div class="flex items-end justify-between gap-4">
         <div>
-          <h1 class="text-3xl font-bold tracking-tight text-adwaita-text">Blogs</h1>
-          <p class="mt-2 text-sm text-adwaita-subtitle">
+          <h1 class="text-3xl font-bold tracking-tight text-text-primary">Blogs</h1>
+          <p class="mt-2 text-sm text-text-secondary">
             Thoughts on Linux, security, and open source.
           </p>
         </div>
@@ -1152,97 +1069,94 @@
           target="_blank"
           rel="noopener noreferrer"
           title="Subscribe via Atom/RSS feed"
-          class="mb-0.5 flex h-9 shrink-0 items-center justify-center gap-1.5 rounded-lg border border-adwaita-border bg-adwaita-card px-3 text-xs font-semibold text-adwaita-subtitle transition-colors select-none hover:bg-adwaita-hover hover:text-[#f26522]">
-          <i
-            class="bi bi-rss-fill flex items-center justify-center text-sm leading-none"
-            aria-hidden="true"></i>
+          class="mb-0.5 flex h-9 shrink-0 items-center justify-center gap-1.5 rounded-lg border border-border-subtle bg-surface-card px-3 text-xs font-semibold text-text-muted transition-colors select-none hover:bg-surface-hover hover:text-[#f26522]">
+          <i class="bi bi-rss-fill flex items-center justify-center text-sm leading-none" aria-hidden="true"></i>
           <span class="flex hidden items-center leading-none sm:inline">Feed</span>
         </a>
       </div>
       <div class="boxed-list mt-8">
         {#if posts.length === 0}
-          <div class="p-8 text-center text-adwaita-subtitle">
-            <i
-              class="bi bi-journal-x mb-2 block text-3xl opacity-60"
-              aria-hidden="true"></i>
-            No blog posts published yet.
-          </div>
+            <EmptyState
+              icon="bi-journal-x"
+              title="No posts yet"
+              description="Articles will appear here once published." />
         {:else}
-          {#each posts as post (post.id)}
-            <a
-              href="/blog/{post.slug}"
-              class="action-row group flex w-full cursor-pointer flex-col items-stretch gap-4 text-left sm:flex-row sm:items-center">
-              {#if post.banner_path}
+          <ul class="divide-y divide-border-subtle">
+            {#each posts as post (post.id)}
+              <li
+                class="group relative flex w-full flex-col gap-5 p-5 text-left transition-all duration-200 hover:bg-surface-hover/40 active:scale-[0.995] sm:flex-row sm:items-start">
                 <div
-                  class="aspect-[2/1] w-full shrink-0 overflow-hidden rounded-lg border border-adwaita-border bg-adwaita-hover/20 select-none sm:w-40 md:w-48">
-                  <img
-                    src={getBannerUrl(post.banner_path)}
-                    alt=""
-                    class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-103" />
-                </div>
-              {:else}
-                <div
-                  class="to-palette-purple/15 flex aspect-[2/1] w-full shrink-0 items-center justify-center rounded-lg border border-adwaita-border bg-gradient-to-br from-adwaita-accent/15 select-none sm:w-40 md:w-48">
-                  <i class="bi bi-journal-text text-xl text-adwaita-accent/50"></i>
-                </div>
-              {/if}
-
-              <div class="flex flex-1 flex-col gap-1 font-sans">
-                <div
-                  class="no-scrollbar flex w-full items-center gap-x-2.5 overflow-x-auto font-sans text-[11px] font-semibold whitespace-nowrap text-adwaita-subtitle select-none">
-                  <span class="inline-flex items-center gap-1"
-                    ><span class="flex items-center justify-center w-[10px] h-[10px] shrink-0"
-                      ><span
-                        class="material-symbols-rounded leading-none"
-                        style="font-size: 10px; font-variation-settings: 'wght' 300; transform: scale(0.8); transform-origin: center;"
-                        aria-hidden="true">schedule_send</span></span
-                    >
-                    {getPostDate(post)}</span>
-                  <span class="inline-flex items-center gap-1"
-                    ><span class="flex items-center justify-center w-[10px] h-[10px] shrink-0"
-                      ><span
-                        class="material-symbols-rounded leading-none"
-                        style="font-size: 10px; font-variation-settings: 'wght' 300; transform: scale(0.8); transform-origin: center;"
-                        aria-hidden="true">acute</span></span
-                    >
-                    {(post.read_time || '').replace(/\s*read\s*/gi, '')}</span>
-                  <span class="inline-flex items-center gap-1"
-                    ><span class="flex items-center justify-center w-[10px] h-[10px] shrink-0"
-                      ><span
-                        class="material-symbols-rounded leading-none"
-                        style="font-size: 10px; font-variation-settings: 'wght' 300; transform: scale(0.8); transform-origin: center;"
-                        aria-hidden="true">chat_bubble</span></span
-                    >
-                    {post.comment_count || 0}</span>
-                  {#if post.views_count !== undefined}
-                    <span class="inline-flex items-center gap-1"
-                      ><span class="flex items-center justify-center w-[10px] h-[10px] shrink-0"
-                        ><span
-                          class="material-symbols-rounded leading-none"
-                          style="font-size: 10px; font-variation-settings: 'wght' 300; transform: scale(0.8); transform-origin: center;"
-                          aria-hidden="true">visibility</span></span
-                      >
-                      {post.views_count}</span>
+                  class="relative aspect-video w-full shrink-0 overflow-hidden rounded-lg border border-border-subtle bg-surface-card/60 animate-pulse select-none sm:w-40 md:w-48">
+                  {#if post.banner_path}
+                    <img
+                      src={getBannerUrl(post.banner_path)}
+                      alt=""
+                      loading="lazy"
+                      onload={(e) => (e.currentTarget.closest('.animate-pulse') as HTMLElement | null)?.classList.remove('animate-pulse')}
+                      class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-103" />
+                  {:else}
+                    <div
+                      class="to-palette-purple/15 flex h-full w-full items-center justify-center bg-gradient-to-br from-accent/15 select-none">
+                      <i class="bi bi-journal-text text-xl text-accent/50" aria-hidden="true"></i>
+                    </div>
                   {/if}
                 </div>
-                <h2
-                  class="text-lg leading-snug font-bold text-adwaita-text transition-colors group-hover:text-adwaita-accent">
-                  {post.title}
-                </h2>
-                {#if post.excerpt}
-                  <p class="mt-1 line-clamp-2 text-xs leading-normal text-adwaita-subtitle">
-                    {post.excerpt}
-                  </p>
-                {/if}
-              </div>
 
-              <div class="ml-2 hidden shrink-0 items-center sm:flex">
-                <i
-                  class="bi bi-chevron-right text-sm text-zinc-400 transition-all group-hover:translate-x-0.5 group-hover:text-adwaita-accent"
-                  aria-hidden="true"></i>
-              </div>
-            </a>
-          {/each}
+                <div class="flex flex-1 flex-col gap-2 font-sans">
+                  <div
+                    class="no-scrollbar flex w-full items-center gap-x-2.5 overflow-x-auto font-sans text-[11px] font-semibold whitespace-nowrap text-text-muted select-none">
+                    <span class="inline-flex items-center gap-1"
+                      ><span
+                        class="material-symbols-rounded text-[10px] leading-none"
+                        style="font-variation-settings: 'wght' 300, 'opsz' 20;"
+                        aria-hidden="true">calendar_today</span>
+                      {getPostDate(post)}</span>
+                    <span class="inline-flex items-center gap-1"
+                      ><span
+                        class="material-symbols-rounded text-[10px] leading-none"
+                        style="font-variation-settings: 'wght' 300, 'opsz' 20;"
+                        aria-hidden="true">schedule</span>
+                      {(post.read_time || '').replace(/\s*read\s*/gi, '')}</span>
+                    <span class="inline-flex items-center gap-1"
+                      ><span
+                        class="material-symbols-rounded text-[10px] leading-none"
+                        style="font-variation-settings: 'wght' 300, 'opsz' 20;"
+                        aria-hidden="true">forum</span>
+                      {post.comment_count || 0}</span>
+                    {#if post.views_count !== undefined}
+                      <span class="inline-flex items-center gap-1"
+                        ><span
+                          class="material-symbols-rounded text-[10px] leading-none"
+                          style="font-variation-settings: 'wght' 300, 'opsz' 20;"
+                          aria-hidden="true">visibility</span>
+                        {post.views_count}</span>
+                    {/if}
+                  </div>
+                  <div class="mt-1">
+                    <h2
+                      class="text-lg leading-snug font-bold text-text-primary transition-colors group-hover:text-accent">
+                      <a
+                        href="/blog/{post.slug}"
+                        class="rounded-xs outline-none after:absolute after:inset-0 focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-surface-card">
+                        {post.title}
+                      </a>
+                    </h2>
+                  </div>
+                  {#if post.excerpt}
+                    <p
+                      class="line-clamp-2 text-xs leading-normal text-text-muted dark:text-zinc-300">
+                      {post.excerpt}
+                    </p>
+                  {/if}
+                  <div class="mt-1 flex items-center gap-1.5 text-xs font-bold text-accent">
+                    <span>Read article</span>
+                    <i class="bi bi-arrow-right transition-transform group-hover:translate-x-0.5"
+                    ></i>
+                  </div>
+                </div>
+              </li>
+            {/each}
+          </ul>
         {/if}
       </div>
     </section>
@@ -1251,98 +1165,123 @@
   {#if activeSection === 'projects'}
     <section
       class="relative z-10 mx-auto w-full px-6 pt-10 pb-24 md:w-[80%] md:max-w-none md:pt-14 md:pb-28 lg:w-[50%]">
-      <h1 class="text-3xl font-bold tracking-tight text-adwaita-text">Projects</h1>
-      <p class="mt-2 text-sm text-adwaita-subtitle">Open source work on GitHub.</p>
+      <h1 class="text-3xl font-bold tracking-tight text-text-primary">Projects</h1>
+      <p class="mt-2 text-sm text-text-secondary">Open source work on GitHub.</p>
 
       {#if projectTags.length > 0}
         <div class="mt-6 flex flex-wrap gap-2 select-none">
           <button
             type="button"
             onclick={() => (activeProjectTag = null)}
-            class="cursor-pointer rounded-full px-3 py-1 text-xs font-semibold transition-all focus:outline-2 focus:outline-adwaita-accent {(
+            class="cursor-pointer rounded-full px-3 py-1 text-xs font-semibold transition-all focus:outline-2 focus:outline-accent {(
               activeProjectTag === null
             ) ?
-              'bg-adwaita-accent text-white shadow-xs'
-            : 'bg-adwaita-border/40 text-adwaita-subtitle hover:bg-adwaita-hover hover:text-adwaita-text'}">
+              'bg-accent text-white shadow-xs'
+            : 'bg-border-subtle/40 text-text-muted hover:bg-surface-hover hover:text-text-primary'}">
             All
           </button>
           {#each projectTags as tag (tag)}
             <button
               type="button"
               onclick={() => (activeProjectTag = activeProjectTag === tag ? null : tag)}
-              class="cursor-pointer rounded-full px-3 py-1 text-xs font-semibold transition-all focus:outline-2 focus:outline-adwaita-accent {(
+              class="cursor-pointer rounded-full px-3 py-1 text-xs font-semibold transition-all focus:outline-2 focus:outline-accent {(
                 activeProjectTag === tag
               ) ?
-                'bg-adwaita-accent text-white shadow-xs'
-              : 'bg-adwaita-border/40 text-adwaita-subtitle hover:bg-adwaita-hover hover:text-adwaita-text'}">
-              #{tag}
+                'bg-accent text-white shadow-xs'
+              : 'bg-border-subtle/40 text-text-muted hover:bg-surface-hover hover:text-text-primary'}">
+              {tag}
             </button>
           {/each}
         </div>
       {/if}
 
       <div class="boxed-list mt-8">
-        {#each filteredProjects as project (project.name)}
-          <div class="action-row group relative flex flex-col items-stretch gap-2 text-left">
-            <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-              <div class="flex items-center gap-2">
-                <h3
-                  class="text-base leading-none font-bold text-adwaita-text transition-colors group-hover:text-adwaita-accent">
-                  <a
-                    href={project.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    title="Opens in a new tab"
-                    class="after:absolute after:inset-0 after:z-10">
-                    {project.name}
-                  </a>
-                </h3>
-                {#if langColors[project.lang]}
-                  <span
-                    class="rounded bg-adwaita-accent/15 px-2 py-0.5 text-[11px] font-semibold text-adwaita-accent"
-                    title="Language: {project.lang}">{project.lang}</span>
-                {/if}
-              </div>
+        <ul class="divide-y divide-border-subtle">
+          {#each filteredProjects as project (project.name)}
+            <li
+              class="group relative flex flex-col gap-3 p-5 text-left transition-all duration-200 hover:bg-surface-hover/40 active:scale-[0.995]">
+              <article class="contents">
+                <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                  <div class="flex flex-wrap items-center gap-0.5">
+                    <h3
+                      class="text-base leading-snug font-bold text-text-primary transition-colors group-hover:text-accent">
+                      <a
+                        href={project.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="rounded-xs outline-none after:absolute after:inset-0 focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-surface-card">
+                        {project.name}
+                      </a>
+                    </h3>
+                    {#if project.lang}
+                      <span class="inline-flex items-center gap-1 select-none">
+                        <span
+                          class="h-1.5 w-1.5 rounded-full"
+                          style="background-color: {langColors[project.lang] ||
+                            'var(--color-accent)'}"></span>
+                        <span
+                          class="rounded-md bg-border-subtle/30 px-1.5 py-0.5 text-xs font-semibold text-text-muted">
+                          {project.lang}
+                        </span>
+                      </span>
+                    {/if}
+                  </div>
 
-              <div class="relative z-20 flex shrink-0 flex-wrap items-center gap-2 sm:justify-end">
-                {#if project.licenseName}
-                  <span
-                    class="text-xs font-semibold whitespace-nowrap text-adwaita-subtitle"
-                    title="License: {project.licenseName}">
-                    {project.licenseName} License
-                  </span>
-                {/if}
-
-                <div class="flex items-center gap-1 text-xs font-semibold text-adwaita-subtitle">
-                  <i
-                    class="bi bi-star-fill text-[12px] text-amber-600"
-                    aria-hidden="true"></i>
-                  {project.stars}
+                  <div
+                    class="no-scrollbar relative z-20 flex items-center gap-x-3 overflow-x-auto font-sans text-xs font-semibold whitespace-nowrap text-text-muted select-none sm:justify-end">
+                    {#if project.licenseName}
+                      <span class="inline-flex items-center gap-1">
+                        <span
+                          class="material-symbols-rounded text-xs leading-none"
+                          style="font-variation-settings: 'wght' 300, 'opsz' 20;"
+                          aria-hidden="true">balance</span>
+                        {project.licenseName} License
+                      </span>
+                    {/if}
+                    <span class="inline-flex items-center gap-1">
+                      <span
+                        class="material-symbols-rounded text-xs leading-none"
+                        style="font-variation-settings: 'wght' 300, 'opsz' 20;"
+                        aria-hidden="true">star_shine</span>
+                      {project.stars} stars
+                    </span>
+                  </div>
                 </div>
-                <i
-                  class="bi bi-chevron-right text-sm text-zinc-400 opacity-80 transition-transform group-hover:translate-x-0.5"
-                  aria-hidden="true"></i>
-              </div>
-            </div>
-            <p class="text-sm leading-relaxed text-adwaita-subtitle">{project.desc}</p>
-            <div class="relative z-20 mt-0.5 flex flex-wrap items-center gap-1.5">
-              {#each project.tags as tag (tag)}
-                <button
-                  type="button"
-                  onclick={() =>
-                    (activeProjectTag =
-                      activeProjectTag === tag.toLowerCase() ? null : tag.toLowerCase())}
-                  class="cursor-pointer rounded bg-adwaita-border/40 px-2 py-0.5 text-[11px] font-medium transition-colors hover:bg-adwaita-hover hover:text-adwaita-accent {(
-                    activeProjectTag === tag.toLowerCase()
-                  ) ?
-                    'font-semibold text-adwaita-accent'
-                  : 'text-adwaita-subtitle'}">
-                  #{tag}
-                </button>
-              {/each}
-            </div>
-          </div>
-        {/each}
+
+                <p
+                  class="line-clamp-2 text-xs leading-normal text-text-muted dark:text-zinc-300">
+                  {project.desc}
+                </p>
+
+                <div
+                  class="mt-1 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
+                  <div class="relative z-20 flex flex-wrap items-center gap-1.5">
+                    {#each project.tags as tag (tag)}
+                      <button
+                        type="button"
+                        onclick={() =>
+                          (activeProjectTag =
+                            activeProjectTag === tag.toLowerCase() ? null : tag.toLowerCase())}
+                        class="cursor-pointer rounded-md bg-border-subtle/30 px-2.5 py-0.5 text-xs font-medium transition-colors hover:bg-surface-hover hover:text-accent {(
+                          activeProjectTag === tag.toLowerCase()
+                        ) ?
+                          'font-semibold text-accent'
+                        : 'text-text-muted'}">
+                        {tag}
+                      </button>
+                    {/each}
+                  </div>
+
+                  <div class="flex items-center gap-1.5 text-xs font-bold text-accent">
+                    <span>View repository</span>
+                    <i class="bi bi-arrow-right transition-transform group-hover:translate-x-0.5"
+                    ></i>
+                  </div>
+                </div>
+              </article>
+            </li>
+          {/each}
+        </ul>
       </div>
     </section>
   {/if}
@@ -1355,12 +1294,12 @@
   {/if}
 
   <footer
-    class="relative z-10 mx-auto mt-auto w-full border-t border-adwaita-border px-6 pt-16 pb-12 font-sans text-xs text-adwaita-subtitle/75 md:w-[80%] lg:w-[50%]">
+    class="relative z-10 mx-auto mt-auto w-full border-t border-border-subtle px-6 pt-16 pb-12 font-sans text-xs text-text-muted/75 md:w-[80%] lg:w-[50%]">
     <div class="grid grid-cols-1 gap-8 pb-10 md:grid-cols-12">
       <div class="flex flex-col gap-4 md:col-span-7">
         <div>
-          <h3 class="text-base font-bold text-adwaita-text">{name}</h3>
-          <p class="mt-2 max-w-md text-xs leading-relaxed text-adwaita-subtitle">
+          <h3 class="text-base font-bold text-text-primary">{name}</h3>
+          <p class="mt-2 max-w-md text-xs leading-relaxed text-text-secondary">
             {desc}
           </p>
         </div>
@@ -1370,7 +1309,7 @@
             href="https://github.com/farhnkrnapratma"
             target="_blank"
             rel="noopener noreferrer"
-            class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-adwaita-border bg-adwaita-card text-adwaita-subtitle transition-colors hover:bg-adwaita-hover hover:text-adwaita-accent"
+            class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-border-subtle bg-surface-card text-text-secondary transition-colors hover:bg-surface-hover hover:text-accent"
             aria-label="GitHub (opens in a new tab)">
             <i
               class="bi bi-github text-base leading-none"
@@ -1380,7 +1319,7 @@
             href="https://linkedin.com/in/farhnkrnapratma"
             target="_blank"
             rel="noopener noreferrer"
-            class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-adwaita-border bg-adwaita-card text-adwaita-subtitle transition-colors hover:bg-adwaita-hover hover:text-adwaita-accent"
+            class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-border-subtle bg-surface-card text-text-secondary transition-colors hover:bg-surface-hover hover:text-accent"
             aria-label="LinkedIn (opens in a new tab)">
             <i
               class="bi bi-linkedin text-base leading-none"
@@ -1390,7 +1329,7 @@
             href="https://x.com/farhnkrnapratma"
             target="_blank"
             rel="noopener noreferrer"
-            class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-adwaita-border bg-adwaita-card text-adwaita-subtitle transition-colors hover:bg-adwaita-hover hover:text-adwaita-accent"
+            class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-border-subtle bg-surface-card text-text-secondary transition-colors hover:bg-surface-hover hover:text-accent"
             aria-label="X (opens in a new tab)">
             <i
               class="bi bi-twitter-x text-base leading-none"
@@ -1400,7 +1339,7 @@
             href="https://instagram.com/farhnkrnapratma"
             target="_blank"
             rel="noopener noreferrer"
-            class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-adwaita-border bg-adwaita-card text-adwaita-subtitle transition-colors hover:bg-adwaita-hover hover:text-adwaita-accent"
+            class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-border-subtle bg-surface-card text-text-secondary transition-colors hover:bg-surface-hover hover:text-accent"
             aria-label="Instagram (opens in a new tab)">
             <i
               class="bi bi-instagram text-base leading-none"
@@ -1418,7 +1357,7 @@
                   navigate(item.id);
                   window.scrollTo({ top: 0, behavior: 'smooth' });
                 }}
-                class="cursor-pointer text-left font-medium transition-colors hover:text-adwaita-accent">
+                class="cursor-pointer text-left font-medium transition-colors hover:text-accent">
                 {item.label}
               </button>
             </li>
@@ -1428,28 +1367,29 @@
     </div>
 
     <div
-      class="flex flex-col items-center justify-between gap-4 border-t border-adwaita-border pt-6 select-none sm:flex-row">
-      <p>&copy; {new Date().getFullYear()} {name}. All rights reserved</p>
-      <div class="flex items-center gap-4 text-[11px] text-adwaita-subtitle">
+      class="flex flex-col items-center justify-between gap-4 border-t border-border-subtle pt-6 select-none sm:flex-row">
+      <p>&copy; {new Date().getFullYear()} {name}. All rights reserved.</p>
+      <div class="flex items-center gap-4 text-[11px] text-text-muted">
         <a
           href="/atom.xml"
           class="inline-flex items-center gap-1 transition-colors hover:text-[#f26522]">
-          <i
-            class="bi bi-rss-fill"
-            aria-hidden="true"></i> RSS Feed
+          <i class="bi bi-rss-fill" aria-hidden="true"></i> RSS feed
         </a>
         <a
           href="/sitemap.xml"
-          class="transition-colors hover:text-adwaita-accent">Sitemap</a>
+          class="transition-colors hover:text-accent">Sitemap</a>
       </div>
     </div>
   </footer>
 </main>
 
-<ConfirmationDialog
+<Dialog
   bind:isOpen={showSendMessageDialog}
-  title="Send Message?"
-  message="Are you sure you want to send this message?"
-  confirmLabel="Send"
-  isDestructive={false}
-  onConfirm={executeSendMessage} />
+  title="Send message?"
+  description="Are you sure you want to send this message?"
+  onClose={() => (showSendMessageDialog = false)}>
+  {#snippet footer()}
+    <Button variant="secondary" size="md" onclick={() => (showSendMessageDialog = false)}>Cancel</Button>
+    <Button variant="primary" size="md" onclick={executeSendMessage}>Send message</Button>
+  {/snippet}
+</Dialog>

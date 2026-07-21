@@ -173,7 +173,7 @@
     const escaped = q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     return text.replace(
       new RegExp(`(${escaped})`, 'gi'),
-      '<mark class="bg-adwaita-accent/20 text-adwaita-accent rounded-[2px] px-[1px] not-italic font-semibold">$1</mark>',
+      '<mark class="bg-accent/20 text-accent rounded-[2px] px-[1px] not-italic font-semibold">$1</mark>',
     );
   }
 </script>
@@ -181,7 +181,7 @@
 <button
   type="button"
   onclick={open}
-  class="group flex h-9 cursor-pointer items-center justify-center gap-2 rounded-lg border border-adwaita-border bg-adwaita-card px-3 text-xs font-semibold text-adwaita-subtitle transition-colors hover:bg-adwaita-hover hover:text-adwaita-text"
+  class="group flex h-9 cursor-pointer items-center justify-center gap-2 rounded-lg border border-border-subtle bg-surface-card px-3 text-xs font-semibold text-text-secondary transition-colors hover:bg-surface-hover hover:text-text-primary"
   aria-label="Open spotlight search (Ctrl+K)"
   title="Search (Ctrl+K)">
   <i
@@ -189,7 +189,7 @@
     aria-hidden="true"></i>
   <span class="hidden sm:inline">Search</span>
   <kbd
-    class="ml-1.5 hidden inline-flex h-5 items-center justify-center rounded border border-adwaita-border bg-adwaita-bg px-1.5 align-middle font-mono text-[11px] leading-none font-semibold text-adwaita-subtitle sm:inline-flex">
+    class="ml-1.5 hidden inline-flex h-5 items-center justify-center rounded border border-border-subtle bg-surface-canvas px-1.5 align-middle font-mono text-[11px] leading-none font-semibold text-text-secondary sm:inline-flex">
     Ctrl+K
   </kbd>
 </button>
@@ -203,18 +203,18 @@
       onclick={close}></button>
 
     <div
-      class="relative z-10 w-full max-w-xl overflow-hidden rounded-2xl border border-adwaita-border bg-adwaita-card shadow-2xl"
+      class="relative z-10 w-full max-w-xl overflow-hidden rounded-2xl border border-border-subtle bg-surface-card shadow-2xl"
       role="dialog"
       tabindex="-1"
       aria-modal="true"
       aria-label="Spotlight Search"
       onkeydown={handleKeydown}>
-      <div class="border-b border-adwaita-border px-4 py-3">
+      <div class="border-b border-border-subtle px-4 py-2">
         <div
-          class="flex items-center gap-3 rounded-xl border border-adwaita-border bg-adwaita-bg/40 px-3.5 py-2 transition-all duration-150 focus-within:border-adwaita-accent/60 focus-within:ring-1 focus-within:ring-adwaita-accent/20">
+          class="flex items-center gap-3 rounded-xl border border-border-subtle bg-surface-canvas/40 px-3 py-1.5 transition-all duration-150 focus-within:border-accent/60 focus-within:ring-1 focus-within:ring-accent/20">
           {#if isLoading}
             <svg
-              class="h-4 w-4 shrink-0 animate-spin text-adwaita-accent"
+              class="h-4 w-4 shrink-0 animate-spin text-accent"
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
@@ -233,7 +233,7 @@
             </svg>
           {:else}
             <i
-              class="bi bi-search shrink-0 text-sm text-adwaita-subtitle"
+              class="bi bi-search shrink-0 text-sm text-text-secondary"
               aria-hidden="true"></i>
           {/if}
 
@@ -245,7 +245,7 @@
             spellcheck="false"
             autocomplete="off"
             placeholder="Search posts & projects…"
-            class="search-input w-full bg-transparent text-base font-semibold text-adwaita-text placeholder:font-medium placeholder:text-adwaita-subtitle/70 focus:outline-none"
+            class="search-input w-full bg-transparent text-base font-semibold text-text-primary placeholder:font-medium placeholder:text-text-muted focus:outline-none"
             aria-label="Search query"
             aria-autocomplete="list"
             aria-controls="search-results"
@@ -257,19 +257,19 @@
         <div
           class="flex flex-col items-center justify-center gap-2 px-4 py-12 text-center select-none">
           <i
-            class="bi bi-search text-3xl text-adwaita-subtitle/30"
+            class="bi bi-search text-3xl text-text-muted/30"
             aria-hidden="true"></i>
-          <p class="text-xs text-adwaita-subtitle/70">Start typing to search posts & projects</p>
+          <p class="text-xs text-text-muted">Start typing to search posts & projects</p>
         </div>
       {:else}
         {#if results.length === 0 && !isLoading}
           <div
             class="flex flex-col items-center justify-center gap-2 px-4 py-12 text-center select-none">
             <i
-              class="bi bi-search text-3xl text-adwaita-subtitle/30"
+              class="bi bi-search text-3xl text-text-muted/30"
               aria-hidden="true"></i>
-            <p class="text-xs font-medium text-adwaita-subtitle">
-              No results for "<span class="text-adwaita-text">{query}</span>"
+            <p class="text-xs font-medium text-text-secondary">
+              No results for "<span class="text-text-primary">{query}</span>"
             </p>
           </div>
         {:else if results.length > 0}
@@ -282,8 +282,8 @@
             {#if results.some(r => r.type === 'post')}
               <li class="px-4 pt-2.5 pb-1">
                 <span
-                  class="text-[11px] font-bold tracking-widest text-adwaita-subtitle/60 uppercase select-none"
-                  >Blog Posts</span>
+                  class="text-[11px] font-bold tracking-widest text-text-muted uppercase select-none"
+                  >Blog posts</span>
               </li>
               {#each results.filter(r => r.type === 'post') as result, i (i)}
                 {@const globalIdx = results.indexOf(result)}
@@ -299,27 +299,27 @@
                   class="group mx-1.5 flex cursor-pointer items-center gap-3 rounded-xl px-3 py-2.5 transition-colors {(
                     activeIndex === globalIdx
                   ) ?
-                    'bg-adwaita-accent/10'
-                  : 'hover:bg-adwaita-hover'}">
+                    'bg-accent/10'
+                  : 'hover:bg-surface-hover'}">
                   <span
-                    class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-adwaita-accent/10 text-adwaita-accent">
+                    class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-accent/10 text-accent">
                     <i
                       class="bi bi-file-earmark-text text-base"
                       aria-hidden="true"></i>
                   </span>
                   <div class="min-w-0 flex-1">
-                    <p class="truncate text-sm font-semibold text-adwaita-text">
+                    <p class="truncate text-sm font-semibold text-text-primary">
                       {@html highlight(result.title, query)}
                     </p>
                     {#if result.subtitle}
-                      <p class="mt-0.5 truncate text-xs text-adwaita-subtitle">{result.subtitle}</p>
+                      <p class="mt-0.5 truncate text-xs text-text-secondary">{result.subtitle}</p>
                     {/if}
                   </div>
                   <i
-                    class="bi bi-arrow-right shrink-0 text-xs text-adwaita-subtitle/0 transition-colors group-hover:text-adwaita-subtitle/60 {(
+                    class="bi bi-arrow-right shrink-0 text-xs text-text-muted/0 transition-colors group-hover:text-text-muted {(
                       activeIndex === globalIdx
                     ) ?
-                      'text-adwaita-subtitle/60'
+                      'text-text-muted'
                     : ''}"
                     aria-hidden="true"></i>
                 </li>
@@ -329,8 +329,8 @@
             {#if results.some(r => r.type === 'project')}
               <li class="mt-1 px-4 pt-2.5 pb-1">
                 <span
-                  class="text-[11px] font-bold tracking-widest text-adwaita-subtitle/60 uppercase select-none"
-                  >GitHub Projects</span>
+                  class="text-[11px] font-bold tracking-widest text-text-muted uppercase select-none"
+                  >GitHub projects</span>
               </li>
               {#each results.filter(r => r.type === 'project') as result, i (i)}
                 {@const globalIdx = results.indexOf(result)}
@@ -346,35 +346,35 @@
                   class="group mx-1.5 flex cursor-pointer items-center gap-3 rounded-xl px-3 py-2.5 transition-colors {(
                     activeIndex === globalIdx
                   ) ?
-                    'bg-adwaita-accent/10'
-                  : 'hover:bg-adwaita-hover'}">
+                    'bg-accent/10'
+                  : 'hover:bg-surface-hover'}">
                   <span
-                    class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-adwaita-subtitle/10 text-adwaita-subtitle">
+                    class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-surface-hover text-text-secondary">
                     <i
                       class="bi bi-github text-base"
                       aria-hidden="true"></i>
                   </span>
                   <div class="min-w-0 flex-1">
-                    <p class="truncate text-sm font-semibold text-adwaita-text">
+                    <p class="truncate text-sm font-semibold text-text-primary">
                       {@html highlight(result.title, query)}
                     </p>
                     {#if result.tags && result.tags.length > 0}
                       <div class="mt-1 flex flex-wrap gap-1">
                         {#each result.tags as tag (tag)}
                           <span
-                            class="rounded-full bg-adwaita-bg px-1.5 py-0.5 font-mono text-[10px] text-adwaita-subtitle"
+                            class="rounded-full bg-surface-canvas px-1.5 py-0.5 font-mono text-[10px] text-text-muted"
                             >{tag}</span>
                         {/each}
                       </div>
                     {:else if result.subtitle}
-                      <p class="mt-0.5 truncate text-xs text-adwaita-subtitle">{result.subtitle}</p>
+                      <p class="mt-0.5 truncate text-xs text-text-secondary">{result.subtitle}</p>
                     {/if}
                   </div>
                   <i
-                    class="bi bi-box-arrow-up-right shrink-0 text-xs text-adwaita-subtitle/0 transition-colors group-hover:text-adwaita-subtitle/60 {(
+                    class="bi bi-box-arrow-up-right shrink-0 text-xs text-text-muted/0 transition-colors group-hover:text-text-muted {(
                       activeIndex === globalIdx
                     ) ?
-                      'text-adwaita-subtitle/60'
+                      'text-text-muted'
                     : ''}"
                     aria-hidden="true"></i>
                 </li>
@@ -385,11 +385,11 @@
       {/if}
 
       <div
-        class="flex items-center justify-end border-t border-adwaita-border bg-adwaita-bg/15 px-4 py-2.5 select-none">
-        <div class="flex items-center gap-3.5 text-xs text-adwaita-subtitle/65">
+        class="flex items-center justify-end border-t border-border-subtle bg-surface-canvas/15 px-4 py-2.5 select-none">
+        <div class="flex items-center gap-3.5 text-xs text-text-muted">
           <span class="flex items-center gap-1.5">
             <kbd
-              class="inline-flex h-5.5 w-5.5 items-center justify-center rounded border border-adwaita-border bg-adwaita-bg align-middle text-[11px] font-semibold text-adwaita-subtitle/85">
+              class="inline-flex h-5.5 w-5.5 items-center justify-center rounded border border-border-subtle bg-surface-canvas align-middle text-[11px] font-semibold text-text-secondary">
               <i
                 class="bi bi-arrow-down-up text-[11px]"
                 aria-hidden="true"></i>
@@ -398,7 +398,7 @@
           </span>
           <span class="flex items-center gap-1.5">
             <kbd
-              class="inline-flex h-5.5 w-5.5 items-center justify-center rounded border border-adwaita-border bg-adwaita-bg align-middle text-[11px] font-semibold text-adwaita-subtitle/85">
+              class="inline-flex h-5.5 w-5.5 items-center justify-center rounded border border-border-subtle bg-surface-canvas align-middle text-[11px] font-semibold text-text-secondary">
               <i
                 class="bi bi-arrow-return-left text-[11px]"
                 aria-hidden="true"></i>
@@ -407,7 +407,7 @@
           </span>
           <span class="flex items-center gap-1.5">
             <kbd
-              class="inline-flex h-5.5 items-center justify-center rounded border border-adwaita-border bg-adwaita-bg px-1.5 align-middle font-mono text-[11px] font-semibold text-adwaita-subtitle/85 uppercase">
+              class="inline-flex h-5.5 items-center justify-center rounded border border-border-subtle bg-surface-canvas px-1.5 align-middle font-mono text-[11px] font-semibold text-text-secondary uppercase">
               esc
             </kbd>
             close
@@ -436,3 +436,4 @@
     display: none;
   }
 </style>
+

@@ -16,11 +16,6 @@
       (page.url.pathname === '/admin/login' || !page.url.pathname.startsWith('/admin')),
   );
 
-  const postTitle = $derived(page.data.post?.title);
-  const feedbackSubject = $derived(
-    postTitle ? `Feedback on Post: ${postTitle}` : 'Feedback on portfolio website',
-  );
-
   function applyTheme(newTheme: Theme) {
     if (typeof window !== 'undefined') {
       const isDark =
@@ -82,7 +77,7 @@
 </script>
 
 <div
-  class="pointer-events-none fixed top-15 left-0 z-50 h-[2px] bg-adwaita-accent transition-all duration-75 ease-out select-none"
+  class="pointer-events-none fixed top-15 left-0 z-50 h-[2px] bg-accent transition-all duration-75 ease-out select-none"
   style="width: {scrollProgress}%">
 </div>
 
@@ -91,12 +86,14 @@
 {#if showScrollTop}
   <button
     transition:fade={{ duration: 150 }}
-    class="fixed right-6 bottom-6 z-50 inline-flex h-10 w-10 cursor-pointer items-center justify-center gap-2 rounded-lg border border-adwaita-border bg-adwaita-card px-0 text-xs font-semibold text-adwaita-body shadow-lg transition-all select-none hover:bg-adwaita-hover hover:text-adwaita-accent sm:w-auto sm:px-4 sm:text-sm"
+    class="fixed right-6 bottom-6 z-50 inline-flex h-10 w-10 cursor-pointer items-center justify-center gap-2 rounded-lg border border-border-subtle bg-surface-card px-0 text-xs font-semibold text-text-primary shadow-lg transition-all select-none hover:bg-surface-hover hover:text-accent sm:w-auto sm:px-4 sm:text-sm"
     onclick={scrollToTop}
-    title="Scroll to Top">
-    <i
-      class="bi bi-arrow-up text-sm"
-      aria-hidden="true"></i>
+    title="Scroll to top"
+    aria-label="Scroll to top">
+    <span
+      class="material-symbols-rounded text-sm"
+      style="font-variation-settings: 'wght' 300, 'opsz' 20;"
+      aria-hidden="true">vertical_align_top</span>
     <span class="hidden sm:inline">Scroll to top</span>
   </button>
 {/if}
@@ -104,11 +101,13 @@
 {#if isPageWithFeedback}
   <a
     href="/feedback"
-    class="fixed bottom-6 left-6 z-50 inline-flex h-10 w-10 cursor-pointer items-center justify-center gap-2 rounded-lg border border-adwaita-border bg-adwaita-card px-0 text-xs font-semibold text-adwaita-body shadow-lg transition-all select-none hover:bg-adwaita-hover hover:text-adwaita-accent sm:w-auto sm:px-4 sm:text-sm"
-    title="Give Feedback">
-    <i
-      class="bi bi-chat-left-text text-sm"
-      aria-hidden="true"></i>
+    class="fixed bottom-6 left-6 z-50 inline-flex h-10 w-10 cursor-pointer items-center justify-center gap-2 rounded-lg border border-border-subtle bg-surface-card px-0 text-xs font-semibold text-text-primary shadow-lg transition-all select-none hover:bg-surface-hover hover:text-accent sm:w-auto sm:px-4 sm:text-sm"
+    title="Report an issue or give feedback">
+    <span
+      class="material-symbols-rounded text-sm"
+      style="font-variation-settings: 'wght' 300, 'opsz' 20;"
+      aria-hidden="true">feedback</span>
     <span class="hidden sm:inline">Feedback</span>
   </a>
 {/if}
+

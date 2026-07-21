@@ -1,0 +1,75 @@
+/* AWDS Global Design Tokens - Single Source of Truth */
+
+@theme {
+  --color-background: #f2f5f3;
+  --color-surface: #ffffff;
+  --color-surface-card: #ffffff;
+  --color-surface-subtle: #eaefec;
+  --color-surface-elevated: #ffffff;
+  --color-surface-hover: rgba(16, 20, 17, 0.03);
+
+  --color-text-primary: #101411;
+  --color-text-secondary: #5c625e;
+  --color-text-muted: #838a85;
+  --color-text-on-accent: #ffffff;
+
+  --color-border-subtle: #e4ebe6;
+  --color-border-default: #d1dad4;
+  --color-border-strong: #9ca6a0;
+
+  --color-accent: #08872b;
+  --color-accent-hover: #055c1d;
+  --color-accent-active: #044716;
+  --color-accent-subtle: rgba(8, 135, 43, 0.08);
+
+  --color-success: #15803d;
+  --color-success-subtle: rgba(21, 128, 61, 0.08);
+
+  --color-warning: #b45309;
+  --color-warning-subtle: rgba(180, 83, 9, 0.08);
+
+  --color-danger: #c73a1d;
+  --color-danger-hover: #a12c14;
+  --color-danger-subtle: rgba(199, 58, 29, 0.08);
+
+  --color-overlay: rgba(0, 0, 0, 0.55);
+  --color-overlay-backdrop: rgba(0, 0, 0, 0.55);
+  --color-focus-ring: #08872b;
+}
+
+:root.dark {
+  --color-background: #101411;
+  --color-surface: #181d19;
+  --color-surface-card: #181d19;
+  --color-surface-subtle: #1c221e;
+  --color-surface-elevated: #232925;
+  --color-surface-hover: rgba(255, 255, 255, 0.04);
+
+  --color-text-primary: #f2f5f3;
+  --color-text-secondary: #b6bfb8;
+  --color-text-muted: #7e8780;
+  --color-text-on-accent: #ffffff;
+
+  --color-border-subtle: rgba(182, 191, 184, 0.15);
+  --color-border-default: rgba(182, 191, 184, 0.25);
+  --color-border-strong: rgba(182, 191, 184, 0.45);
+
+  --color-accent: #26d058;
+  --color-accent-hover: #1db94c;
+  --color-accent-active: #179b3e;
+  --color-accent-subtle: rgba(38, 208, 88, 0.12);
+
+  --color-success: #22c55e;
+  --color-success-subtle: rgba(34, 197, 94, 0.12);
+
+  --color-warning: #f59e0b;
+  --color-warning-subtle: rgba(245, 158, 11, 0.12);
+
+  --color-danger: #ff7b6b;
+  --color-danger-hover: #e06354;
+  --color-danger-subtle: rgba(255, 123, 107, 0.12);
+
+  --color-overlay: rgba(0, 0, 0, 0.70);
+  --color-overlay-backdrop: rgba(0, 0, 0, 0.70);
+  --color-focus-ring: #26d058;
+}

@@ -2,7 +2,17 @@
   import { supabase } from '$lib/supabase';
   import { onMount } from 'svelte';
   import { SvelteMap, SvelteSet } from 'svelte/reactivity';
-  import { ConfirmationDialog } from '$lib';
+  import {
+    Dialog,
+    Button,
+    IconButton,
+    Badge,
+    Textarea,
+    FormField,
+    LoadingState,
+    EmptyState,
+    SkipLink,
+  } from '$lib';
 
   interface AdminPost {
     id: string;
@@ -104,7 +114,7 @@
       }
     } catch (err) {
       console.error('Error saving admin reply:', err);
-      alert('Failed to post reply.');
+      alert('Failed to post reply. Please try again.');
     } finally {
       isSubmitting = false;
     }
@@ -200,7 +210,7 @@
     if (!error) {
       posts = posts.map(p => (p.id === post.id ? { ...p, published: newStatus } : p));
     } else {
-      alert('Failed to update post status.');
+      alert('Failed to update post status. Please try again.');
     }
   }
 
@@ -228,7 +238,7 @@
       posts = posts.filter(p => p.id !== post.id);
       comments = comments.filter(comment => comment.post_id !== post.id);
     } else {
-      alert('Failed to delete post from database.');
+      alert('Failed to delete post. Please try again.');
     }
   }
 
@@ -248,7 +258,7 @@
       const deletedIds = getDescendantCommentIds(id, comments);
       comments = comments.filter(c => !deletedIds.has(c.id));
     } else {
-      alert('Failed to delete comment.');
+      alert('Failed to delete comment. Please try again.');
     }
   }
 
@@ -360,33 +370,37 @@
   }
 </script>
 
+<svelte:head>
+  <title>Console — Admin</title>
+</svelte:head>
+
+<SkipLink />
+
+<!-- Admin Navigation Bar -->
 <nav
-  class="fixed top-0 z-40 flex h-15 w-full items-center justify-between border-b border-adwaita-border bg-adwaita-card/60 px-5 font-sans shadow-xs backdrop-blur-lg transition-colors duration-300">
-  <div class="flex items-center gap-3">
-    <div class="flex items-center gap-2">
-      <span class="material-symbols-rounded text-lg text-adwaita-accent select-none">code</span>
-      <span class="text-sm font-bold text-adwaita-text select-none">Console</span>
-    </div>
+  class="fixed top-0 z-40 flex h-15 w-full items-center justify-between border-b border-border-subtle bg-surface-card/60 px-5 font-sans shadow-xs backdrop-blur-lg transition-colors duration-300"
+  aria-label="Admin navigation">
+  <div class="flex items-center gap-2">
+    <span class="material-symbols-rounded text-lg text-accent select-none" aria-hidden="true">code</span>
+    <span class="text-sm font-bold text-text-primary select-none">Console</span>
   </div>
 
   <div class="flex items-center gap-2">
+    <!-- Theme Picker -->
     <div class="relative">
-      <button
+      <IconButton
+        ariaLabel="Change theme"
+        variant="default"
+        size="md"
         onclick={() => (themeDropdownOpen = !themeDropdownOpen)}
-        class="flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg border border-adwaita-border bg-adwaita-card text-sm text-adwaita-text transition-colors hover:bg-adwaita-hover"
-        aria-label="Change theme"
         aria-haspopup="true"
         aria-expanded={themeDropdownOpen}>
         {#if theme === 'auto'}
-          <i
-            class="bi bi-circle-half"
-            aria-hidden="true"></i>
+          <i class="bi bi-circle-half" aria-hidden="true"></i>
         {:else}
-          <i
-            class="bi {theme === 'dark' ? 'bi-moon-stars-fill' : 'bi-sun-fill'}"
-            aria-hidden="true"></i>
+          <i class="bi {theme === 'dark' ? 'bi-moon-stars-fill' : 'bi-sun-fill'}" aria-hidden="true"></i>
         {/if}
-      </button>
+      </IconButton>
 
       {#if themeDropdownOpen}
         <button
@@ -394,168 +408,114 @@
           onclick={() => (themeDropdownOpen = false)}
           aria-label="Close theme menu"></button>
         <div
-          class="absolute top-11 right-0 z-50 flex min-w-31.25 flex-col rounded-xl border border-adwaita-border bg-adwaita-card py-1.5 shadow-lg">
-          <button
-            type="button"
-            onclick={() => {
-              applyTheme('auto');
-              themeDropdownOpen = false;
-            }}
-            class="flex w-full cursor-pointer items-center gap-3 px-4 py-2.5 text-left text-xs font-bold transition-colors hover:bg-adwaita-hover {(
-              theme === 'auto'
-            ) ?
-              'text-adwaita-accent'
-            : 'text-adwaita-text'}">
-            <i
-              class="bi bi-circle-half text-sm"
-              aria-hidden="true"></i>
-            Auto
-          </button>
-          <button
-            type="button"
-            onclick={() => {
-              applyTheme('light');
-              themeDropdownOpen = false;
-            }}
-            class="flex w-full cursor-pointer items-center gap-3 px-4 py-2.5 text-left text-xs font-bold transition-colors hover:bg-adwaita-hover {(
-              theme === 'light'
-            ) ?
-              'text-adwaita-accent'
-            : 'text-adwaita-text'}">
-            <i
-              class="bi bi-sun-fill text-sm"
-              aria-hidden="true"></i>
-            Light
-          </button>
-          <button
-            type="button"
-            onclick={() => {
-              applyTheme('dark');
-              themeDropdownOpen = false;
-            }}
-            class="flex w-full cursor-pointer items-center gap-3 px-4 py-2.5 text-left text-xs font-bold transition-colors hover:bg-adwaita-hover {(
-              theme === 'dark'
-            ) ?
-              'text-adwaita-accent'
-            : 'text-adwaita-text'}">
-            <i
-              class="bi bi-moon-stars-fill text-sm"
-              aria-hidden="true"></i>
-            Dark
-          </button>
+          role="menu"
+          class="absolute top-11 right-0 z-50 flex min-w-[7.75rem] flex-col rounded-xl border border-border-subtle bg-surface-elevated py-1.5 shadow-lg">
+          {#each ([['auto', 'bi-circle-half', 'Auto'], ['light', 'bi-sun-fill', 'Light'], ['dark', 'bi-moon-stars-fill', 'Dark']] as const) as [val, icon, label]}
+            <button
+              type="button"
+              role="menuitem"
+              onclick={() => { applyTheme(val); themeDropdownOpen = false; }}
+              class="flex w-full cursor-pointer items-center gap-3 px-4 py-2.5 text-left text-xs font-bold transition-colors hover:bg-surface-hover {theme === val ? 'text-accent' : 'text-text-primary'}">
+              <i class="bi {icon} text-sm" aria-hidden="true"></i>
+              {label}
+            </button>
+          {/each}
         </div>
       {/if}
     </div>
 
-    <button
+    <Button
+      variant="secondary"
+      size="md"
       onclick={handleLogout}
       disabled={isLoggingOut}
-      class="inline-flex h-9 items-center justify-center rounded-lg border border-adwaita-border bg-adwaita-card px-4 text-xs font-semibold text-adwaita-text transition-colors select-none hover:bg-adwaita-hover disabled:opacity-50">
-      Logout
-    </button>
+      isLoading={isLoggingOut}>
+      Sign out
+    </Button>
   </div>
 </nav>
 
-<main class="flex min-h-[calc(100vh-3.75rem)] flex-col pt-15 font-sans">
-  <section class="mx-auto w-full flex-1 px-6 py-14 md:w-[80%] md:max-w-none lg:w-[50%]">
+<!-- Main Content -->
+<main id="main-content" class="flex min-h-[calc(100vh-3.75rem)] flex-col pt-15 font-sans">
+  <section class="mx-auto w-full flex-1 px-6 py-14 md:w-[80%] md:max-w-none lg:w-[50%]" aria-label="Blog posts">
+
     {#if isLoading}
-      <div class="flex flex-col items-center justify-center py-20 text-adwaita-subtitle">
-        <svg
-          class="mb-3 h-8 w-8 animate-spin text-adwaita-subtitle select-none"
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24">
-          <circle
-            class="opacity-25"
-            cx="12"
-            cy="12"
-            r="10"
-            stroke="currentColor"
-            stroke-width="4"></circle>
-          <path
-            class="opacity-75"
-            fill="currentColor"
-            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-          ></path>
-        </svg>
-        Loading dashboard data...
-      </div>
+      <LoadingState label="Loading dashboard data..." size="lg" class="py-20" />
     {:else}
-      <div class="mb-8 flex items-center justify-between">
-        <h1 class="text-3xl font-bold tracking-tight text-adwaita-text">Blog Posts</h1>
-        <a
-          href="/admin/new"
-          class="inline-flex h-9 items-center justify-center rounded-lg bg-adwaita-accent px-4 text-xs font-semibold text-white transition-colors hover:bg-adwaita-accent-hover">
-          New Post
+      <!-- Page Header -->
+      <div class="mb-8 flex items-center justify-between gap-4">
+        <h1 class="text-2xl font-bold tracking-tight text-text-primary sm:text-3xl">Posts</h1>
+        <a href="/admin/new">
+          <Button variant="primary" size="md" leadingIcon="bi-plus-lg">
+            New post
+          </Button>
         </a>
       </div>
 
+      <!-- Post List -->
       {#if posts.length === 0}
-        <div class="boxed-list p-8 text-center text-adwaita-subtitle">
-          <i
-            class="bi bi-journal-plus mb-2 block text-3xl opacity-60"
-            aria-hidden="true"></i>
-          No posts found.
-        </div>
+        <EmptyState
+          title="No posts yet"
+          description="You haven't published any posts. Create your first article to get started."
+          icon="bi-journal-plus">
+          {#snippet actions()}
+            <a href="/admin/new">
+              <Button variant="primary" size="sm" leadingIcon="bi-plus-lg">New post</Button>
+            </a>
+          {/snippet}
+        </EmptyState>
       {:else}
-        <div class="boxed-list text-left">
+        <div class="boxed-list text-left" role="list" aria-label="Blog posts list">
           {#each posts as post (post.id)}
             {@const postComments = getPostComments(post.id)}
-            <div class="action-row group flex flex-col items-stretch gap-4 py-4">
+            <div class="action-row group flex flex-col items-stretch gap-4 py-4" role="listitem">
               <div class="flex items-start justify-between gap-3">
+                <!-- Post Meta -->
                 <div class="flex min-w-0 flex-1 flex-col gap-1">
                   <div class="flex flex-wrap items-center gap-2">
-                    <span class="text-xs font-semibold text-adwaita-subtitle"
-                      >{formatDate(post.created_at)}</span>
+                    <span class="text-xs font-semibold text-text-secondary">
+                      {formatDate(post.created_at)}
+                    </span>
                     {#if post.published}
-                      <span
-                        class="rounded border border-palette-green/30 bg-palette-green/15 px-2 py-0.5 text-[10px] font-bold text-palette-green"
-                        >Published</span>
+                      <Badge variant="success">Published</Badge>
                     {:else}
-                      <span
-                        class="rounded border border-palette-yellow/30 bg-palette-yellow/15 px-2 py-0.5 text-[10px] font-bold text-palette-yellow"
-                        >Draft</span>
+                      <Badge variant="warning">Draft</Badge>
                     {/if}
                     {#if postComments.length > 0}
                       <button
                         type="button"
                         onclick={() => toggleComments(post.id)}
-                        class="inline-flex h-6 cursor-pointer items-center gap-1 rounded bg-adwaita-border/40 px-2 text-[10px] font-semibold text-adwaita-subtitle transition-colors hover:bg-adwaita-border"
-                        title="{expandedPostIds.has(post.id) ? 'Hide' : (
-                          'Show'
-                        )} {postComments.length} comments">
-                        <i
-                          class="bi bi-chat-left-text-fill text-[10px] text-adwaita-accent"
-                          aria-hidden="true"></i>
-                        {expandedPostIds.has(post.id) ? 'Hide' : 'Show'} Comments ({postComments.length})
+                        aria-expanded={expandedPostIds.has(post.id)}
+                        aria-controls="comments-{post.id}"
+                        class="inline-flex h-6 cursor-pointer items-center gap-1 rounded-lg bg-border-subtle/40 px-2 text-[10px] font-semibold text-text-secondary transition-colors hover:bg-border-subtle focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">
+                        <i class="bi bi-chat-left-text-fill text-[10px] text-accent" aria-hidden="true"></i>
+                        {expandedPostIds.has(post.id) ? 'Hide' : 'Show'} comments ({postComments.length})
                       </button>
                     {/if}
                   </div>
-                  <h2 class="text-base font-bold text-adwaita-text">{post.title}</h2>
-                  <p class="line-clamp-1 font-mono text-xs text-adwaita-subtitle">
+                  <h2 class="text-base font-bold text-text-primary">{post.title}</h2>
+                  <p class="line-clamp-1 font-mono text-xs text-text-muted" aria-label="Storage path">
                     {post.storage_path}
                   </p>
                 </div>
 
+                <!-- Post Actions -->
                 <div class="flex shrink-0 items-center gap-2">
-                  <a
-                    href="/admin/new?id={post.id}"
-                    class="inline-flex h-8 items-center justify-center rounded-lg border border-adwaita-border bg-adwaita-card px-3 text-xs font-semibold text-adwaita-text transition-colors hover:bg-adwaita-hover">
-                    Edit
+                  <a href="/admin/new?id={post.id}" aria-label="Edit post: {post.title}">
+                    <Button variant="secondary" size="sm">Edit post</Button>
                   </a>
 
+                  <!-- Overflow Menu -->
                   <div class="relative">
-                    <button
-                      onclick={() =>
-                        (openActionMenuId = openActionMenuId === post.id ? null : post.id)}
-                      class="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border border-adwaita-border bg-adwaita-card text-adwaita-text transition-colors hover:bg-adwaita-hover"
-                      aria-label="More actions"
+                    <IconButton
+                      ariaLabel="More actions for {post.title}"
+                      variant="default"
+                      size="sm"
+                      onclick={() => (openActionMenuId = openActionMenuId === post.id ? null : post.id)}
                       aria-haspopup="true"
                       aria-expanded={openActionMenuId === post.id}>
-                      <i
-                        class="bi bi-three-dots-vertical text-sm"
-                        aria-hidden="true"></i>
-                    </button>
+                      <i class="bi bi-three-dots-vertical text-sm" aria-hidden="true"></i>
+                    </IconButton>
 
                     {#if openActionMenuId === post.id}
                       <button
@@ -563,30 +523,24 @@
                         onclick={() => (openActionMenuId = null)}
                         aria-label="Close menu"></button>
                       <div
-                        class="absolute top-9 right-0 z-50 flex min-w-36 flex-col rounded-xl border border-adwaita-border bg-adwaita-card py-1.5 shadow-lg">
+                        role="menu"
+                        aria-label="Post actions"
+                        class="absolute top-9 right-0 z-50 flex min-w-36 flex-col rounded-xl border border-border-subtle bg-surface-elevated py-1.5 shadow-lg">
                         <button
                           type="button"
-                          onclick={() => {
-                            togglePublish(post);
-                            openActionMenuId = null;
-                          }}
-                          class="flex w-full cursor-pointer items-center gap-2.5 px-4 py-2.5 text-left text-xs font-bold text-adwaita-text transition-colors hover:bg-adwaita-hover">
-                          <i
-                            class="bi {post.published ? 'bi-eye-slash' : 'bi-eye'} text-sm"
-                            aria-hidden="true"></i>
-                          {post.published ? 'Unpublish' : 'Publish'}
+                          role="menuitem"
+                          onclick={() => { togglePublish(post); openActionMenuId = null; }}
+                          class="flex w-full cursor-pointer items-center gap-2.5 px-4 py-2.5 text-left text-xs font-bold text-text-primary transition-colors hover:bg-surface-hover">
+                          <i class="bi {post.published ? 'bi-eye-slash' : 'bi-eye'} text-sm" aria-hidden="true"></i>
+                          {post.published ? 'Unpublish' : 'Publish post'}
                         </button>
                         <button
                           type="button"
-                          onclick={() => {
-                            openActionMenuId = null;
-                            confirmDeletePost(post);
-                          }}
-                          class="flex w-full cursor-pointer items-center gap-2.5 px-4 py-2.5 text-left text-xs font-bold text-palette-coral transition-colors hover:bg-palette-coral/10">
-                          <i
-                            class="bi bi-trash3 text-sm"
-                            aria-hidden="true"></i>
-                          Delete
+                          role="menuitem"
+                          onclick={() => { openActionMenuId = null; confirmDeletePost(post); }}
+                          class="flex w-full cursor-pointer items-center gap-2.5 px-4 py-2.5 text-left text-xs font-bold text-danger transition-colors hover:bg-danger-subtle">
+                          <i class="bi bi-trash3 text-sm" aria-hidden="true"></i>
+                          Delete post
                         </button>
                       </div>
                     {/if}
@@ -594,8 +548,9 @@
                 </div>
               </div>
 
+              <!-- Comments Thread (expandable) -->
               {#if postComments.length > 0 && expandedPostIds.has(post.id)}
-                <div class="flex flex-col gap-6 p-4">
+                <div id="comments-{post.id}" class="flex flex-col gap-6 p-4">
                   {#snippet commentNode(
                     comment: FlatAdminComment,
                     depth: number,
@@ -606,119 +561,101 @@
                       use:trunkAction>
                       {#if comment.children && comment.children.length > 0}
                         <div
-                          class="trunk-line-single absolute z-0 border-l border-adwaita-subtitle/10"
+                          class="trunk-line-single absolute z-0 border-l border-border-subtle"
                           style="left: 16px; width: 0px;">
                         </div>
                       {/if}
 
                       <div class="comment-row-wrapper relative flex items-start gap-3">
                         <div
-                          class="z-10 flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-adwaita-border bg-adwaita-card text-adwaita-subtitle"
+                          class="z-10 flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-border-subtle bg-surface-elevated text-text-secondary"
                           class:parent-avatar={comment.children && comment.children.length > 0}
-                          class:last-reply-avatar={isLastChildOfParent}>
+                          class:last-reply-avatar={isLastChildOfParent}
+                          aria-hidden="true">
                           <span
-                            class="material-symbols-rounded text-sm text-adwaita-subtitle"
-                            style="font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;"
-                            aria-hidden="true">
+                            class="material-symbols-rounded text-sm text-text-secondary"
+                            style="font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;">
                             {getCommentIcon(comment)}
                           </span>
                         </div>
 
                         <div class="min-w-0 flex-1">
                           <div
-                            class="inline-block max-w-full border border-adwaita-border bg-adwaita-card/50 px-4 py-2 text-left"
-                            style="border-radius: 18px;">
-                            <div class="text-xs font-bold text-adwaita-text/95">
+                            class="inline-block max-w-full border border-border-subtle bg-surface-card/70 px-4 py-2.5 text-left rounded-2xl">
+                            <div class="text-xs font-bold text-text-primary">
                               {getCommentAuthor(comment)}
                             </div>
-                            <p class="mt-0.5 text-sm leading-relaxed text-adwaita-text/90">
+                            <p class="mt-0.5 text-sm leading-relaxed text-text-secondary">
                               {#if comment.reply_to_author}
-                                <span class="mr-1.5 text-xs font-bold text-palette-green"
-                                  >{comment.reply_to_author}</span>
+                                <span class="mr-1.5 text-xs font-bold text-accent">
+                                  {comment.reply_to_author}
+                                </span>
                               {/if}
                               <span class="whitespace-pre-line">{comment.content}</span>
                             </p>
                           </div>
 
-                          <div
-                            class="mt-1 ml-2 flex flex-wrap items-center gap-3 text-[10px] text-adwaita-subtitle">
+                          <div class="mt-1.5 ml-2 flex flex-wrap items-center gap-3 text-[10px] text-text-muted">
                             <span>{formatDate(comment.created_at)}</span>
                             {#if !comment.is_approved}
-                              <span
-                                class="rounded border border-palette-yellow/30 bg-palette-yellow/15 px-2 py-0.5 text-[10px] font-bold text-palette-yellow">
-                                Hidden
-                              </span>
+                              <Badge variant="warning">Hidden</Badge>
                             {/if}
                             {#if comment.is_approved}
                               <button
                                 type="button"
-                                onclick={() => {
-                                  replyTo = comment;
-                                  commentContent = '';
-                                }}
-                                class="inline-flex h-6 cursor-pointer items-center rounded bg-adwaita-border/30 px-2 py-0.5 font-bold text-adwaita-text/70 transition-colors hover:bg-adwaita-border hover:text-adwaita-accent">
+                                onclick={() => { replyTo = comment; commentContent = ''; }}
+                                class="inline-flex h-6 cursor-pointer items-center rounded-lg bg-border-subtle/30 px-2 py-0.5 font-bold text-text-secondary transition-colors hover:bg-border-subtle hover:text-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">
                                 Reply
                               </button>
                             {/if}
                             <button
                               type="button"
                               onclick={() => confirmDeleteComment(comment.id)}
-                              class="ml-auto inline-flex h-6 cursor-pointer items-center rounded border border-palette-coral/20 bg-palette-coral/10 px-2 py-0.5 font-bold text-palette-coral transition-colors hover:bg-palette-coral/20">
+                              aria-label="Delete comment by {getCommentAuthor(comment)}"
+                              class="ml-auto inline-flex h-6 cursor-pointer items-center rounded-lg border border-danger/20 bg-danger-subtle px-2 py-0.5 font-bold text-danger transition-colors hover:bg-danger/20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-danger">
                               Delete
                             </button>
                           </div>
 
+                          <!-- Inline Reply Form -->
                           {#if replyTo?.id === comment.id}
                             <form
                               onsubmit={e => handleAdminSubmit(e, comment.id, post.id)}
-                              class="mt-3 rounded-xl border border-adwaita-border bg-adwaita-bg/60 p-4">
+                              class="mt-3 rounded-xl border border-border-subtle bg-surface-base p-4">
                               <div class="mb-3 flex items-center justify-between gap-3">
-                                <p class="text-xs font-semibold text-adwaita-subtitle">
-                                  Replying as Admin to {getCommentAuthor(comment)}
+                                <p class="text-xs font-semibold text-text-secondary">
+                                  Replying as Admin to <span class="text-text-primary font-bold">{getCommentAuthor(comment)}</span>
                                 </p>
-                                <button
-                                  type="button"
-                                  onclick={() => {
-                                    replyTo = null;
-                                    commentContent = '';
-                                  }}
-                                  class="inline-flex h-8 cursor-pointer items-center justify-center rounded-lg border border-adwaita-border bg-adwaita-card px-3 text-xs font-semibold text-adwaita-text transition-colors hover:bg-adwaita-hover">
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  onclick={() => { replyTo = null; commentContent = ''; }}>
                                   Cancel
-                                </button>
+                                </Button>
                               </div>
 
                               <div class="flex flex-col gap-2.5">
-                                <div class="flex flex-col gap-2">
-                                  <label
-                                    for="reply-msg-{comment.id}"
-                                    class="text-xs font-bold text-adwaita-subtitle select-none">
-                                    Message
-                                  </label>
-                                  <div class="relative w-full">
-                                    <textarea
-                                      id="reply-msg-{comment.id}"
-                                      required
-                                      rows="3"
-                                      maxlength="1000"
-                                      placeholder="Enter your message"
-                                      bind:value={commentContent}
-                                      class="no-scrollbar w-full resize-none rounded-lg border border-adwaita-border bg-adwaita-bg px-3 py-1.5 pr-8 text-sm text-adwaita-text transition-colors placeholder:text-adwaita-subtitle/70 focus:border-adwaita-accent"
-                                    ></textarea>
-                                    {#if commentContent.length > 0}
-                                      <div
-                                        class="pointer-events-none absolute right-3 bottom-2.5 z-10 font-mono text-[10px] text-adwaita-subtitle/80 select-none">
-                                        {1000 - commentContent.length}
-                                      </div>
-                                    {/if}
-                                  </div>
-                                </div>
+                                <FormField
+                                  id="reply-msg-{comment.id}"
+                                  label="Message"
+                                  counter="{1000 - commentContent.length} characters left">
+                                  <Textarea
+                                    id="reply-msg-{comment.id}"
+                                    required
+                                    rows={3}
+                                    maxlength={1000}
+                                    placeholder="Write your reply…"
+                                    bind:value={commentContent}
+                                  />
+                                </FormField>
                                 <div class="flex justify-end">
-                                  <button
+                                  <Button
                                     type="submit"
-                                    disabled={isSubmitting}
-                                    class="inline-flex cursor-pointer items-center justify-center rounded-lg bg-adwaita-accent px-5 py-2 text-sm font-semibold text-white transition-colors select-none hover:bg-adwaita-accent-hover disabled:cursor-not-allowed disabled:opacity-55">
-                                    {isSubmitting ? 'Posting...' : 'Post Reply'}
-                                  </button>
+                                    variant="primary"
+                                    size="sm"
+                                    isLoading={isSubmitting}>
+                                    {isSubmitting ? 'Posting…' : 'Post reply'}
+                                  </Button>
                                 </div>
                               </div>
                             </form>
@@ -733,14 +670,11 @@
                           {#each comment.children as child, i (child.id)}
                             <div class="child-wrapper relative mt-4">
                               <div
-                                class="absolute z-0 border-b border-l border-adwaita-subtitle/10"
-                                style="left: -28px; top: -16px; width: 28px; height: 32px; border-bottom-left-radius: 10px;">
+                                class="absolute z-0 border-b border-l border-border-subtle"
+                                style="left: -28px; top: -16px; width: 28px; height: 32px; border-bottom-left-radius: 10px;"
+                                aria-hidden="true">
                               </div>
-                              {@render commentNode(
-                                child,
-                                depth + 1,
-                                i === comment.children.length - 1,
-                              )}
+                              {@render commentNode(child, depth + 1, i === comment.children.length - 1)}
                             </div>
                           {/each}
                         </div>
@@ -761,20 +695,46 @@
   </section>
 </main>
 
-<ConfirmationDialog
+<!-- Delete Post Confirmation Dialog -->
+<Dialog
   bind:isOpen={showDeletePostDialog}
-  title="Delete Blog Post?"
-  message={'Are you sure you want to permanently delete "' +
-    (postToDelete?.title || '') +
-    '"? This action is irreversible.'}
-  confirmLabel="Delete"
-  isDestructive={true}
-  onConfirm={executeDeletePost} />
+  title="Delete post?"
+  description={'Permanently delete "' + (postToDelete?.title || '') + '"? This cannot be undone.'}
+  onClose={() => (showDeletePostDialog = false)}>
+  {#snippet footer()}
+    <Button
+      variant="secondary"
+      size="md"
+      onclick={() => (showDeletePostDialog = false)}>
+      Cancel
+    </Button>
+    <Button
+      variant="destructive"
+      size="md"
+      onclick={executeDeletePost}>
+      Delete post
+    </Button>
+  {/snippet}
+</Dialog>
 
-<ConfirmationDialog
+<!-- Delete Comment Confirmation Dialog -->
+<Dialog
   bind:isOpen={showDeleteCommentDialog}
-  title="Delete Comment?"
-  message="Are you sure you want to permanently delete this comment and all its replies? This action is irreversible."
-  confirmLabel="Delete"
-  isDestructive={true}
-  onConfirm={executeDeleteComment} />
+  title="Delete comment?"
+  description="Permanently delete this comment and all its replies? This cannot be undone."
+  onClose={() => (showDeleteCommentDialog = false)}>
+  {#snippet footer()}
+    <Button
+      variant="secondary"
+      size="md"
+      onclick={() => (showDeleteCommentDialog = false)}>
+      Cancel
+    </Button>
+    <Button
+      variant="destructive"
+      size="md"
+      onclick={executeDeleteComment}>
+      Delete comment
+    </Button>
+  {/snippet}
+</Dialog>

@@ -1,0 +1,40 @@
+<script lang="ts">
+  import type { HTMLTextareaAttributes } from 'svelte/elements';
+  import { autoResize } from '$lib/actions';
+
+  interface Props extends HTMLTextareaAttributes {
+    value?: string;
+    error?: boolean;
+    valid?: boolean;
+    useAutoResize?: boolean;
+  }
+
+  let {
+    value = $bindable(''),
+    error = false,
+    valid = false,
+    useAutoResize = true,
+    rows = 4,
+    class: className = '',
+    ...restProps
+  }: Props = $props();
+</script>
+
+{#if useAutoResize}
+  <textarea
+    use:autoResize={value}
+    bind:value
+    {rows}
+    class="no-scrollbar w-full resize-none overflow-hidden rounded-lg border border-border-default bg-surface-base px-3 py-2 text-sm text-text-primary placeholder:text-text-muted transition-colors focus:border-accent focus:ring-2 focus:ring-accent/20 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed {error
+      ? '!border-danger !ring-danger/20'
+      : ''} {valid && !error ? '!border-accent' : ''} {className}"
+    {...restProps}></textarea>
+{:else}
+  <textarea
+    bind:value
+    {rows}
+    class="w-full rounded-lg border border-border-default bg-surface-base px-3 py-2 text-sm text-text-primary placeholder:text-text-muted transition-colors focus:border-accent focus:ring-2 focus:ring-accent/20 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed {error
+      ? '!border-danger !ring-danger/20'
+      : ''} {valid && !error ? '!border-accent' : ''} {className}"
+    {...restProps}></textarea>
+{/if}

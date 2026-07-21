@@ -3,6 +3,17 @@ import { error } from '@sveltejs/kit';
 import { marked } from 'marked';
 import type { PageServerLoad } from './$types';
 
+export interface BlogComment {
+  id: string;
+  post_id: string;
+  parent_id: string | null;
+  author_name: string;
+  content: string;
+  is_anonymous?: boolean;
+  is_approved: boolean;
+  created_at: string;
+}
+
 function injectHeadingIds(html: string): string {
   let index = 0;
   const usedIds = new Set<string>();
@@ -60,8 +71,9 @@ export const load: PageServerLoad = async ({ params, fetch }) => {
       throw error(404, 'Blog post not found');
     }
     post = data;
-  } catch (err: any) {
-    if (err && err.status) throw err;
+  } catch (err: unknown) {
+    const errorObj = err as { status?: number };
+    if (errorObj && errorObj.status) throw err;
     console.error(`Database error fetching post: ${slug}`, err);
     throw error(500, 'Internal Server Error: Could not retrieve post.');
   }
@@ -107,7 +119,7 @@ export const load: PageServerLoad = async ({ params, fetch }) => {
     headings.push({ id, text, level });
   }
 
-  let comments: any[] = [];
+  let comments: BlogComment[] = [];
   try {
     const { data, error: commentsError } = await supabase
       .from('comments')

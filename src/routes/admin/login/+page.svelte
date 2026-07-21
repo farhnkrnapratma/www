@@ -1,11 +1,11 @@
 <script lang="ts">
   import { supabase } from '$lib/supabase';
   import { onMount } from 'svelte';
+  import { Card, FormField, Input, Button, IconButton, SkipLink, StatusBanner } from '$lib';
 
   let email = $state('');
   let password = $state('');
   let isSubmitting = $state(false);
-  let errorMessage = $state<string | null>(null);
   let showPassword = $state(false);
   let errors = $state({ email: '', password: '' });
   let valid = $state({ email: false, password: false });
@@ -88,7 +88,6 @@
     if (!validate()) return;
 
     isSubmitting = true;
-    errorMessage = null;
 
     try {
       const { error } = await supabase.auth.signInWithPassword({
@@ -108,39 +107,39 @@
   }
 </script>
 
-<main class="flex min-h-[calc(100vh-3.75rem)] flex-col items-center justify-center pt-15 font-sans">
+<SkipLink />
+
+<main id="main-content" class="flex min-h-[calc(100vh-3.75rem)] flex-col items-center justify-center pt-15 font-sans">
   <div class="flex w-full max-w-sm flex-1 flex-col justify-center px-6 py-10">
-    <div
-      class="rounded-2xl border border-adwaita-border bg-adwaita-card/45 p-6 shadow-xs backdrop-blur-lg transition-colors duration-300">
+    <Card variant="glass" class="p-6">
       <div class="mb-6 flex flex-col items-center text-center select-none">
         <div class="flex items-center gap-2">
-          <span class="material-symbols-rounded text-2xl text-adwaita-accent select-none"
-            >code</span>
-          <h1 class="text-xl font-bold text-adwaita-text">Console</h1>
+          <span class="material-symbols-rounded text-2xl text-accent select-none" aria-hidden="true"
+            >code</span
+          >
+          <h1 class="text-xl font-bold text-text-primary">Console</h1>
         </div>
-        <p class="mt-1 text-xs text-adwaita-subtitle">Sign in to manage your blog posts</p>
+        <p class="mt-1 text-xs text-text-secondary">Sign in to manage your blog posts</p>
       </div>
-
 
       <form
         novalidate
         onsubmit={handleLogin}
-        class="flex flex-col gap-2">
-        <div class="relative flex flex-col pb-5.5">
-          <label
-            for="login-email"
-            class="text-xs font-bold text-adwaita-label select-none mb-1">
-            Email <span
-              aria-hidden="true"
-              class="text-adwaita-error">*</span
-            ><span class="sr-only">(required)</span>
-          </label>
-          <input
+        class="flex flex-col gap-3">
+        <FormField
+          id="login-email"
+          label="Email"
+          required
+          error={errors.email}
+          valid={valid.email}>
+          <Input
             type="email"
             id="login-email"
-            placeholder="Enter your email"
+            placeholder="your@email.com"
             autocomplete="username"
             bind:value={email}
+            error={!!errors.email}
+            valid={valid.email}
             oninput={() => {
               errors.email = '';
               valid.email = false;
@@ -148,44 +147,24 @@
             }}
             aria-required="true"
             aria-invalid={!!errors.email}
-            aria-describedby="login-email-fb"
-            class="w-full rounded-lg border border-adwaita-border bg-adwaita-bg px-3 py-2 text-sm text-adwaita-text transition-colors"
-            class:border-adwaita-error={errors.email}
-            class:input-valid={valid.email} />
-          {#if errors.email || valid.email}
-            <div
-              id="login-email-fb"
-              aria-live="polite"
-              class="absolute bottom-0.5 left-0 text-xs leading-none font-medium">
-              {#if errors.email}
-                <span class="flex items-center gap-1 text-adwaita-error">
-                  <i class="bi bi-exclamation-circle-fill"></i>{errors.email}
-                </span>
-              {:else if valid.email}
-                <span class="flex items-center gap-1 text-adwaita-accent">
-                  <i class="bi bi-check-circle-fill"></i>Looks good
-                </span>
-              {/if}
-            </div>
-          {/if}
-        </div>
+          />
+        </FormField>
 
-        <div class="relative flex flex-col pb-5.5">
-          <label
-            for="login-pass"
-            class="text-xs font-bold text-adwaita-label select-none mb-1">
-            Password <span
-              aria-hidden="true"
-              class="text-adwaita-error">*</span
-            ><span class="sr-only">(required)</span>
-          </label>
+        <FormField
+          id="login-pass"
+          label="Password"
+          required
+          error={errors.password}
+          valid={valid.password}>
           <div class="relative flex items-center">
-            <input
+            <Input
               type={showPassword ? 'text' : 'password'}
               id="login-pass"
               placeholder="••••••••"
               autocomplete="current-password"
               bind:value={password}
+              error={!!errors.password}
+              valid={valid.password}
               oninput={() => {
                 errors.password = '';
                 valid.password = false;
@@ -193,65 +172,57 @@
               }}
               aria-required="true"
               aria-invalid={!!errors.password}
-              aria-describedby="login-pass-fb"
-              class="w-full rounded-lg border border-adwaita-border bg-adwaita-bg py-2 pr-10 pl-3 text-sm text-adwaita-text transition-colors"
-              class:border-adwaita-error={errors.password}
-              class:input-valid={valid.password} />
-            <button
-              type="button"
-              onclick={() => (showPassword = !showPassword)}
-              class="absolute right-1 flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg text-adwaita-label transition-colors select-none hover:text-adwaita-text"
-              aria-label={showPassword ? 'Hide password' : 'Show password'}>
-              <span class="material-symbols-rounded text-base">
-                {showPassword ? 'visibility_off' : 'visibility'}
-              </span>
-            </button>
-          </div>
-          {#if errors.password || valid.password}
-            <div
-              id="login-pass-fb"
-              aria-live="polite"
-              class="absolute bottom-0.5 left-0 text-xs leading-none font-medium">
-              {#if errors.password}
-                <span class="flex items-center gap-1 text-adwaita-error">
-                  <i class="bi bi-exclamation-circle-fill"></i>{errors.password}
+              class="pr-10"
+            />
+            <div class="absolute right-1">
+              <IconButton
+                ariaLabel={showPassword ? 'Hide password' : 'Show password'}
+                variant="ghost"
+                size="sm"
+                onclick={() => (showPassword = !showPassword)}>
+                <span class="material-symbols-rounded text-base" aria-hidden="true">
+                  {showPassword ? 'visibility_off' : 'visibility'}
                 </span>
-              {:else if valid.password}
-                <span class="flex items-center gap-1 text-adwaita-accent">
-                  <i class="bi bi-check-circle-fill"></i>Looks good
-                </span>
-              {/if}
+              </IconButton>
             </div>
-          {/if}
-        </div>
+          </div>
+        </FormField>
 
-        <button
+        <Button
           type="submit"
-          disabled={isSubmitting}
-          class="inline-flex w-full cursor-pointer items-center justify-center gap-2 rounded-lg bg-adwaita-accent px-5 py-2.5 text-sm font-semibold text-white transition-colors select-none hover:bg-adwaita-accent-hover disabled:opacity-55 mt-1">
-          {isSubmitting ? 'Signing in...' : 'Sign In'}
-        </button>
+          variant="primary"
+          size="lg"
+          isLoading={isSubmitting}
+          class="mt-2 w-full">
+          {isSubmitting ? 'Signing in…' : 'Sign in'}
+        </Button>
       </form>
-    </div>
+    </Card>
 
     <div class="mt-4 text-center select-none">
       <a
         href="/"
-        class="text-xs font-semibold text-adwaita-subtitle hover:underline">
-        Back to Home
+        class="text-xs font-semibold text-text-secondary hover:text-accent transition-colors hover:underline">
+        Back to home
       </a>
     </div>
   </div>
 
   <footer
-    class="w-full px-6 py-8 text-center font-sans text-xs text-adwaita-subtitle/75 select-none">
-    <p>&copy; {new Date().getFullYear()} Farhan Kurnia Pratama. All rights reserved</p>
+    class="w-full px-6 py-8 text-center font-sans text-xs text-text-muted select-none">
+    <p>&copy; {new Date().getFullYear()} Farhan Kurnia Pratama. All rights reserved.</p>
   </footer>
 
   {#if showToast}
-    <div class="fixed bottom-6 left-1/2 z-50 flex -translate-x-1/2 items-center gap-2 rounded-full border border-adwaita-border bg-adwaita-card/90 px-4 py-2 text-xs font-semibold text-adwaita-text shadow-lg backdrop-blur-md transition-all duration-300">
-      <i class="bi bi-exclamation-circle-fill text-palette-coral text-sm" aria-hidden="true"></i>
+    <div
+      role="status"
+      aria-live="polite"
+      class="fixed bottom-6 left-1/2 z-[110] flex -translate-x-1/2 items-center gap-2 rounded-full border border-border-subtle bg-surface-elevated/90 px-4 py-2 text-xs font-semibold text-text-primary shadow-lg backdrop-blur-md transition-all duration-300">
+      <i
+        class="bi bi-exclamation-circle-fill text-sm text-danger"
+        aria-hidden="true"></i>
       {toastMessage}
     </div>
   {/if}
 </main>
+
