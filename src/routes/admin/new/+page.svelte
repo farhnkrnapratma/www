@@ -212,7 +212,7 @@
 
   
   $effect(() => {
-    if (previewHtml) {
+    if (activeTab === 'preview' && previewHtml) {
       tick().then(() => {
         const blocks = document.querySelectorAll('.prose-custom pre code');
         blocks.forEach((block) => {
@@ -1110,7 +1110,7 @@
                 <div class="relative flex-1 overflow-hidden">
                   <pre
                     bind:this={preElement}
-                    class="editor-pre no-scrollbar pointer-events-none absolute inset-0 text-adwaita-text select-none bg-transparent !font-mono !text-[14px] !leading-[24px] !pt-[20px] !pb-[20px] !pr-[20px] !pl-[16px] !m-0 !border-0 !box-border !w-full !overflow-y-hidden {lineWrapMode === 'soft' ? 'whitespace-pre-wrap! break-all! break-words! overflow-x-hidden!' : 'whitespace-pre! break-normal! overflow-x-auto!'}"
+                    class="editor-pre no-scrollbar pointer-events-none absolute inset-0 text-adwaita-text select-none bg-transparent !font-mono !text-[14px] !leading-[24px] !pt-[20px] !pb-[20px] !pr-[20px] !pl-[16px] !m-0 !border-0 !box-border !w-full !overflow-y-hidden {lineWrapMode === 'soft' ? 'whitespace-pre-wrap! break-normal! break-words! overflow-x-hidden!' : 'whitespace-pre! break-normal! overflow-x-auto!'}"
                   ><code class="!font-mono !text-[14px] !leading-[24px] !p-0 !m-0 !block !bg-transparent whitespace-inherit! break-inherit! overflow-wrap-inherit! language-markdown">{@html highlightedMarkdown}</code></pre>
 
                   <textarea
@@ -1124,7 +1124,7 @@
                     onkeyup={updateCursorPosition}
                     onfocus={updateCursorPosition}
                     onkeydown={handleTextareaKeyDown}
-                    class="editor-textarea relative w-full bg-transparent text-transparent caret-adwaita-text focus:outline-none focus:ring-0 focus:border-transparent! focus:shadow-none! focus:outline-none! !font-mono !text-[14px] !leading-[24px] !pt-[20px] !pb-[20px] !pr-[20px] !pl-[16px] !m-0 !border-0 !box-border !w-full !overflow-y-hidden {lineWrapMode === 'soft' ? 'whitespace-pre-wrap! break-all! break-words! overflow-x-hidden!' : 'whitespace-pre! break-normal! overflow-x-auto!'}"
+                    class="editor-textarea relative w-full bg-transparent text-transparent caret-adwaita-text focus:outline-none focus:ring-0 focus:border-transparent! focus:shadow-none! focus:outline-none! !font-mono !text-[14px] !leading-[24px] !pt-[20px] !pb-[20px] !pr-[20px] !pl-[16px] !m-0 !border-0 !box-border !w-full !overflow-y-hidden {lineWrapMode === 'soft' ? 'whitespace-pre-wrap! break-normal! break-words! overflow-x-hidden!' : 'whitespace-pre! break-normal! overflow-x-auto!'}"
                     style="resize: none;"
                   ></textarea>
                 </div>
@@ -1312,6 +1312,16 @@
     font-family: var(--font-mono) !important;
     font-size: 14.5px !important;
     line-height: 24px !important;
+    letter-spacing: normal !important;
+    font-variant-ligatures: none !important;
+    font-feature-settings: normal !important;
+  }
+
+  .editor-textarea,
+  .editor-pre {
+    word-break: normal !important;
+    word-wrap: break-word !important;
+    overflow-wrap: break-word !important;
   }
 
   .editor-textarea {
