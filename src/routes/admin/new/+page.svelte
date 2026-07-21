@@ -854,7 +854,7 @@
           aria-label="Close theme menu"></button>
         <div
           role="menu"
-          class="absolute top-11 right-0 z-50 flex min-w-[7.75rem] flex-col rounded-xl border border-border-subtle bg-surface-elevated py-1.5 shadow-lg">
+          class="absolute top-11 right-0 z-50 flex min-w-31 flex-col rounded-xl border border-border-subtle bg-surface-elevated py-1.5 shadow-lg">
           {#each [['auto', 'bi-circle-half', 'Auto'], ['light', 'bi-sun-fill', 'Light'], ['dark', 'bi-moon-stars-fill', 'Dark']] as const as [val, icon, label] (val)}
             <button
               type="button"

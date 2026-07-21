@@ -585,7 +585,7 @@
           onclick={() => (themeDropdownOpen = false)}
           aria-label="Close theme menu"></button>
         <div
-          class="absolute top-12 right-0 z-50 hidden min-w-[7.75rem] flex-col rounded-xl border border-border-subtle bg-surface-elevated py-1.5 shadow-lg md:flex">
+          class="absolute top-12 right-0 z-50 hidden min-w-31 flex-col rounded-xl border border-border-subtle bg-surface-elevated py-1.5 shadow-lg md:flex">
           {#each [['auto', 'bi-circle-half', 'Auto'], ['light', 'bi-sun-fill', 'Light'], ['dark', 'bi-moon-stars-fill', 'Dark']] as const as [val, icon, label] (val)}
             <button
               onclick={() => {
@@ -790,7 +790,7 @@
                         class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-103" />
                     {:else}
                       <div
-                        class="to-palette-purple/15 flex h-full w-full items-center justify-center bg-gradient-to-br from-accent/15 select-none">
+                        class="to-palette-purple/15 flex h-full w-full items-center justify-center bg-linear-to-br from-accent/15 select-none">
                         <i class="bi bi-journal-text text-xl text-accent/50"></i>
                       </div>
                     {/if}
@@ -1100,7 +1100,7 @@
           <i
             class="bi bi-rss-fill flex items-center justify-center text-sm leading-none"
             aria-hidden="true"></i>
-          <span class="flex hidden items-center leading-none sm:inline">Feed</span>
+          <span class="hidden items-center leading-none sm:inline">Feed</span>
         </a>
       </div>
       <div class="boxed-list mt-8">
@@ -1128,7 +1128,7 @@
                       class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-103" />
                   {:else}
                     <div
-                      class="to-palette-purple/15 flex h-full w-full items-center justify-center bg-gradient-to-br from-accent/15 select-none">
+                      class="to-palette-purple/15 flex h-full w-full items-center justify-center bg-linear-to-br from-accent/15 select-none">
                       <i
                         class="bi bi-journal-text text-xl text-accent/50"
                         aria-hidden="true"></i>

@@ -189,7 +189,7 @@
     aria-hidden="true"></i>
   <span class="hidden sm:inline">Search</span>
   <kbd
-    class="bg-surface-canvas ml-1.5 hidden inline-flex h-5 items-center justify-center rounded border border-border-subtle px-1.5 align-middle font-mono text-[11px] leading-none font-semibold text-text-secondary sm:inline-flex">
+    class="bg-surface-canvas ml-1.5 hidden h-5 items-center justify-center rounded border border-border-subtle px-1.5 align-middle font-mono text-[11px] leading-none font-semibold text-text-secondary sm:inline-flex">
     Ctrl+K
   </kbd>
 </button>

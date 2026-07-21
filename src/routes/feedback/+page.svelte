@@ -205,7 +205,7 @@
           onclick={() => (themeDropdownOpen = false)}
           aria-label="Close theme menu"></button>
         <div
-          class="absolute top-11 right-0 z-50 flex min-w-[7.75rem] flex-col rounded-xl border border-border-subtle bg-surface-elevated py-1.5 shadow-lg">
+          class="absolute top-11 right-0 z-50 flex min-w-31 flex-col rounded-xl border border-border-subtle bg-surface-elevated py-1.5 shadow-lg">
           <button
             type="button"
             onclick={() => {
