@@ -29,6 +29,48 @@
       });
   }
 
+  let toastMessage = $state('');
+  let showToast = $state(false);
+
+  function triggerToast(message: string) {
+    toastMessage = message;
+    showToast = true;
+    setTimeout(() => {
+      showToast = false;
+    }, 2000);
+  }
+
+  function setupCodeCopyButtons() {
+    const preBlocks = document.querySelectorAll('.prose-custom pre');
+    preBlocks.forEach((el) => {
+      const pre = el as HTMLElement;
+      if (pre.querySelector('.copy-code-btn')) return;
+      pre.style.position = 'relative';
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'copy-code-btn absolute right-2.5 top-2.5 flex h-7 w-7 items-center justify-center rounded-md border border-adwaita-border/40 bg-adwaita-card/65 text-adwaita-subtitle transition-all hover:text-adwaita-accent hover:bg-adwaita-card shadow-xs cursor-pointer z-10';
+      btn.setAttribute('aria-label', 'Copy code');
+      const icon = document.createElement('i');
+      icon.className = 'bi bi-clipboard text-xs transition-transform duration-150';
+      btn.appendChild(icon);
+      btn.addEventListener('click', () => {
+        const codeElement = pre.querySelector('code');
+        if (!codeElement) return;
+        const codeText = codeElement.innerText || codeElement.textContent || '';
+        navigator.clipboard.writeText(codeText).then(() => {
+          icon.className = 'bi bi-check-lg text-xs text-adwaita-accent scale-110';
+          triggerToast('Code copied to clipboard!');
+          setTimeout(() => {
+            icon.className = 'bi bi-clipboard text-xs transition-transform duration-150';
+          }, 2000);
+        }).catch(err => {
+          console.error('Failed to copy code: ', err);
+        });
+      });
+      pre.appendChild(btn);
+    });
+  }
+
   interface BlogComment {
     id: string;
     post_id: string;
@@ -121,6 +163,7 @@
     tick().then(() => {
       const container = document.querySelector('.prose-custom');
       if (container) {
+        setupCodeCopyButtons();
         const elements = container.querySelectorAll('h2, h3');
         if (elements.length === 0) return;
 
@@ -1341,6 +1384,13 @@
     </div>
   </footer>
 </main>
+
+{#if showToast}
+  <div class="fixed bottom-6 left-1/2 z-50 flex -translate-x-1/2 items-center gap-2 rounded-full border border-adwaita-border bg-adwaita-card/90 px-4 py-2 text-xs font-semibold text-adwaita-text shadow-lg backdrop-blur-md transition-all duration-300">
+    <i class="bi bi-check-circle-fill text-adwaita-accent text-sm" aria-hidden="true"></i>
+    {toastMessage}
+  </div>
+{/if}
 
 <ConfirmationDialog
   bind:isOpen={showYesFeedbackDialog}

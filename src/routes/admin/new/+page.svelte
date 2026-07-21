@@ -253,6 +253,94 @@
   let preElement = $state<HTMLElement | null>(null);
   let textareaElement = $state<HTMLTextAreaElement | null>(null);
 
+  let indentMode = $state<'spaces' | 'tabs'>('spaces');
+  let indentSize = $state(4);
+  let lineWrapMode = $state<'soft' | 'none'>('soft');
+
+  let currentLine = $state(1);
+  let currentColumn = $state(1);
+
+  let imageFileInput = $state<HTMLInputElement | null>(null);
+
+  function updateCursorPosition() {
+    if (!textareaElement) return;
+    const textBeforeCursor = markdownContent.substring(0, textareaElement.selectionStart);
+    const lines = textBeforeCursor.split('\n');
+    currentLine = lines.length;
+    currentColumn = lines[lines.length - 1].length + 1;
+  }
+
+  function handleTextareaKeyDown(e: KeyboardEvent) {
+    if (e.key === 'Tab') {
+      e.preventDefault();
+      const target = e.currentTarget as HTMLTextAreaElement;
+      const start = target.selectionStart;
+      const end = target.selectionEnd;
+      const indentStr = indentMode === 'spaces' ? ' '.repeat(indentSize) : '\t';
+      markdownContent = markdownContent.substring(0, start) + indentStr + markdownContent.substring(end);
+      tick().then(() => {
+        target.selectionStart = target.selectionEnd = start + indentStr.length;
+        syncScroll();
+        updateCursorPosition();
+      });
+    }
+  }
+
+  function insertMarkdown(prefix: string, suffix: string = '') {
+    if (!textareaElement) return;
+    const start = textareaElement.selectionStart;
+    const end = textareaElement.selectionEnd;
+    const selectedText = markdownContent.substring(start, end);
+    const replacement = prefix + selectedText + suffix;
+    markdownContent = markdownContent.substring(0, start) + replacement + markdownContent.substring(end);
+    tick().then(() => {
+      textareaElement!.focus();
+      textareaElement!.selectionStart = start + prefix.length;
+      textareaElement!.selectionEnd = start + prefix.length + selectedText.length;
+      syncScroll();
+      updateCursorPosition();
+    });
+  }
+
+  async function handleImageUpload(e: Event) {
+    const target = e.target as HTMLInputElement;
+    const files = target.files;
+    if (!files || files.length === 0) return;
+    const file = files[0];
+    const allowedTypes = ['image/png', 'image/webp', 'image/jpeg', 'image/jpg'];
+    if (!allowedTypes.includes(file.type)) {
+      errorMessage = 'Supported image formats are PNG, WebP, JPEG, JPG.';
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      errorMessage = 'Image size must be 5MB or less.';
+      return;
+    }
+    isSubmitting = true;
+    errorMessage = null;
+    try {
+      const ext = file.name.split('.').pop() || 'png';
+      const path = `images/${slug || 'post'}-${Date.now()}.${ext}`;
+      const { error: uploadError } = await supabase.storage
+        .from('blog-posts')
+        .upload(path, file, {
+          cacheControl: '3600',
+          upsert: true
+        });
+      if (uploadError) throw uploadError;
+      const { data: urlData } = supabase.storage
+        .from('blog-posts')
+        .getPublicUrl(path);
+      insertMarkdown(`![${file.name.replace(/\.[^/.]+$/, "")}](${urlData.publicUrl})`);
+    } catch (err) {
+      const error = err as Error;
+      errorMessage = error.message || 'Failed to upload image.';
+    } finally {
+      isSubmitting = false;
+      target.value = '';
+    }
+  }
+
   function syncScroll() {
     if (textareaElement && preElement) {
       preElement.scrollTop = textareaElement.scrollTop;
@@ -870,28 +958,177 @@
           
           <div class="bg-adwaita-bg min-h-[500px]">
             {#if activeTab === 'editor'}
-              
+              <div class="flex flex-wrap items-center gap-4 bg-adwaita-card/10 px-4 py-2 border-b border-adwaita-border select-none">
+                <div class="flex items-center gap-2">
+                  <span class="text-[11px] font-semibold text-adwaita-subtitle">Indent mode</span>
+                  <div class="inline-flex rounded-lg border border-adwaita-border bg-adwaita-switcher-bg p-0.5 gap-0.5">
+                    <button
+                      type="button"
+                      onclick={() => indentMode = 'spaces'}
+                      class="px-2 py-0.5 text-[10px] font-semibold rounded transition-all cursor-pointer {indentMode === 'spaces' ? 'bg-adwaita-switcher-active text-adwaita-text shadow-xs border border-adwaita-border/10' : 'text-adwaita-subtitle hover:text-adwaita-text hover:bg-adwaita-hover/30'}">
+                      Spaces
+                    </button>
+                    <button
+                      type="button"
+                      onclick={() => indentMode = 'tabs'}
+                      class="px-2 py-0.5 text-[10px] font-semibold rounded transition-all cursor-pointer {indentMode === 'tabs' ? 'bg-adwaita-switcher-active text-adwaita-text shadow-xs border border-adwaita-border/10' : 'text-adwaita-subtitle hover:text-adwaita-text hover:bg-adwaita-hover/30'}">
+                      Tabs
+                    </button>
+                  </div>
+                </div>
+
+                <div class="flex items-center gap-2">
+                  <span class="text-[11px] font-semibold text-adwaita-subtitle">Indent size</span>
+                  <div class="inline-flex rounded-lg border border-adwaita-border bg-adwaita-switcher-bg p-0.5 gap-0.5">
+                    {#each [2, 4, 8] as size}
+                      <button
+                        type="button"
+                        onclick={() => indentSize = size}
+                        class="px-2 py-0.5 text-[10px] font-semibold rounded transition-all cursor-pointer {indentSize === size ? 'bg-adwaita-switcher-active text-adwaita-text shadow-xs border border-adwaita-border/10' : 'text-adwaita-subtitle hover:text-adwaita-text hover:bg-adwaita-hover/30'}">
+                        {size}
+                      </button>
+                    {/each}
+                  </div>
+                </div>
+
+                <div class="flex items-center gap-2">
+                  <span class="text-[11px] font-semibold text-adwaita-subtitle">Wrap mode</span>
+                  <div class="inline-flex rounded-lg border border-adwaita-border bg-adwaita-switcher-bg p-0.5 gap-0.5">
+                    <button
+                      type="button"
+                      onclick={() => lineWrapMode = 'soft'}
+                      class="px-2 py-0.5 text-[10px] font-semibold rounded transition-all cursor-pointer {lineWrapMode === 'soft' ? 'bg-adwaita-switcher-active text-adwaita-text shadow-xs border border-adwaita-border/10' : 'text-adwaita-subtitle hover:text-adwaita-text hover:bg-adwaita-hover/30'}">
+                      Soft wrap
+                    </button>
+                    <button
+                      type="button"
+                      onclick={() => lineWrapMode = 'none'}
+                      class="px-2 py-0.5 text-[10px] font-semibold rounded transition-all cursor-pointer {lineWrapMode === 'none' ? 'bg-adwaita-switcher-active text-adwaita-text shadow-xs border border-adwaita-border/10' : 'text-adwaita-subtitle hover:text-adwaita-text hover:bg-adwaita-hover/30'}">
+                      No wrap
+                    </button>
+                  </div>
+                </div>
+              </div>
+
               <div class="relative w-full overflow-hidden">
-                
                 <pre
                   bind:this={preElement}
                   class="editor-pre pre-highlight pointer-events-none absolute inset-0 text-adwaita-text select-none bg-transparent"
                 ><code class="language-markdown">{@html highlightedMarkdown}</code></pre>
 
-                
                 <textarea
                   bind:this={markdownTextareaElement}
                   required
                   aria-label="Markdown Content"
                   bind:value={markdownContent}
                   onscroll={syncScroll}
-                  oninput={syncScroll}
-                  class="editor-textarea relative w-full bg-transparent text-transparent caret-adwaita-text focus:outline-none focus:ring-0"
+                  oninput={() => { syncScroll(); updateCursorPosition(); }}
+                  onclick={updateCursorPosition}
+                  onkeyup={updateCursorPosition}
+                  onfocus={updateCursorPosition}
+                  onkeydown={handleTextareaKeyDown}
+                  class="editor-textarea relative w-full bg-transparent text-transparent caret-adwaita-text focus:outline-none focus:ring-0 {lineWrapMode === 'soft' ? 'wrap-soft' : 'wrap-none'}"
                   style="overflow-y: hidden; resize: none;"
                 ></textarea>
               </div>
+
+              <div class="flex flex-wrap items-center justify-between border-t border-adwaita-border bg-adwaita-card/10 px-3 py-1.5 select-none text-xs text-adwaita-subtitle">
+                <div class="flex items-center gap-1">
+                  <button
+                    type="button"
+                    onclick={() => insertMarkdown('# ')}
+                    title="H1 Header"
+                    class="flex h-7 w-7 items-center justify-center rounded-md hover:bg-adwaita-hover/30 hover:text-adwaita-text transition-colors cursor-pointer">
+                    <span class="material-symbols-rounded text-base">format_h1</span>
+                  </button>
+                  <button
+                    type="button"
+                    onclick={() => insertMarkdown('## ')}
+                    title="H2 Header"
+                    class="flex h-7 w-7 items-center justify-center rounded-md hover:bg-adwaita-hover/30 hover:text-adwaita-text transition-colors cursor-pointer">
+                    <span class="material-symbols-rounded text-base">format_h2</span>
+                  </button>
+                  <button
+                    type="button"
+                    onclick={() => insertMarkdown('### ')}
+                    title="H3 Header"
+                    class="flex h-7 w-7 items-center justify-center rounded-md hover:bg-adwaita-hover/30 hover:text-adwaita-text transition-colors cursor-pointer">
+                    <span class="material-symbols-rounded text-base">format_h3</span>
+                  </button>
+                  <div class="h-4 w-px bg-adwaita-border mx-1"></div>
+                  <button
+                    type="button"
+                    onclick={() => insertMarkdown('**', '**')}
+                    title="Bold"
+                    class="flex h-7 w-7 items-center justify-center rounded-md hover:bg-adwaita-hover/30 hover:text-adwaita-text transition-colors cursor-pointer">
+                    <span class="material-symbols-rounded text-base">format_bold</span>
+                  </button>
+                  <button
+                    type="button"
+                    onclick={() => insertMarkdown('*', '*')}
+                    title="Italic"
+                    class="flex h-7 w-7 items-center justify-center rounded-md hover:bg-adwaita-hover/30 hover:text-adwaita-text transition-colors cursor-pointer">
+                    <span class="material-symbols-rounded text-base">format_italic</span>
+                  </button>
+                  <button
+                    type="button"
+                    onclick={() => insertMarkdown('<u>', '</u>')}
+                    title="Underline"
+                    class="flex h-7 w-7 items-center justify-center rounded-md hover:bg-adwaita-hover/30 hover:text-adwaita-text transition-colors cursor-pointer">
+                    <span class="material-symbols-rounded text-base">format_underlined</span>
+                  </button>
+                  <button
+                    type="button"
+                    onclick={() => insertMarkdown('~~', '~~')}
+                    title="Strikethrough"
+                    class="flex h-7 w-7 items-center justify-center rounded-md hover:bg-adwaita-hover/30 hover:text-adwaita-text transition-colors cursor-pointer">
+                    <span class="material-symbols-rounded text-base">format_strikethrough</span>
+                  </button>
+                  <div class="h-4 w-px bg-adwaita-border mx-1"></div>
+                  <button
+                    type="button"
+                    onclick={() => imageFileInput?.click()}
+                    title="Insert Image"
+                    class="flex h-7 w-7 items-center justify-center rounded-md hover:bg-adwaita-hover/30 hover:text-adwaita-text transition-colors cursor-pointer">
+                    <span class="material-symbols-rounded text-base">add_photo_alternate</span>
+                  </button>
+                  <input
+                    type="file"
+                    bind:this={imageFileInput}
+                    accept="image/png, image/webp, image/jpeg, image/jpg"
+                    onchange={handleImageUpload}
+                    class="hidden" />
+                  <button
+                    type="button"
+                    onclick={() => insertMarkdown('1. ')}
+                    title="Numbered List"
+                    class="flex h-7 w-7 items-center justify-center rounded-md hover:bg-adwaita-hover/30 hover:text-adwaita-text transition-colors cursor-pointer">
+                    <span class="material-symbols-rounded text-base">format_list_numbered</span>
+                  </button>
+                  <button
+                    type="button"
+                    onclick={() => insertMarkdown('- ')}
+                    title="Bulleted List"
+                    class="flex h-7 w-7 items-center justify-center rounded-md hover:bg-adwaita-hover/30 hover:text-adwaita-text transition-colors cursor-pointer">
+                    <span class="material-symbols-rounded text-base">format_list_bulleted</span>
+                  </button>
+                </div>
+
+                <div class="flex items-center gap-4 text-[11px] font-mono select-none">
+                  <span>{currentLine}:{currentColumn}</span>
+                  <span class="flex items-center gap-1">
+                    <span class="material-symbols-rounded text-[14px]">space_bar</span>
+                    {indentSize}
+                  </span>
+                  <span class="relative group cursor-help flex items-center">
+                    <span class="material-symbols-rounded text-[16px]">markdown</span>
+                    <span class="absolute bottom-full mb-1.5 right-0 hidden group-hover:block bg-adwaita-card text-adwaita-text text-[10px] px-2 py-1 rounded-md border border-adwaita-border whitespace-nowrap shadow-md font-sans">
+                      Styling with Markdown is supported
+                    </span>
+                  </span>
+                </div>
+              </div>
             {:else}
-              
               <div class="prose-custom w-full bg-adwaita-bg p-6">
                 {#if previewHtml}
                   {@html previewHtml}
@@ -975,11 +1212,21 @@
     border: 0 !important;
     box-sizing: border-box !important;
     width: 100% !important;
+    overflow-y: hidden !important;
+  }
+
+  .wrap-soft {
+    white-space: pre-wrap !important;
+    word-break: break-all !important;
+    overflow-wrap: break-word !important;
+    overflow-x: hidden !important;
+  }
+
+  .wrap-none {
     white-space: pre !important;
     word-break: normal !important;
     overflow-wrap: normal !important;
     overflow-x: auto !important;
-    overflow-y: hidden !important;
   }
 
   .editor-pre code {
@@ -990,8 +1237,8 @@
     margin: 0 !important;
     display: block !important;
     background: transparent !important;
-    white-space: pre !important;
-    word-break: normal !important;
-    overflow-wrap: normal !important;
+    white-space: inherit !important;
+    word-break: inherit !important;
+    overflow-wrap: inherit !important;
   }
 </style>
