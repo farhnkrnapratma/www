@@ -211,6 +211,105 @@
   });
 
   
+  let showToast = $state(false);
+  let toastMessage = $state('');
+
+  function triggerToast(message: string) {
+    toastMessage = message;
+    showToast = true;
+    setTimeout(() => {
+      showToast = false;
+    }, 2000);
+  }
+
+  function getPrettyLanguage(className: string): string {
+    if (!className) return 'Code';
+    const match = className.match(/language-(\S+)/);
+    if (!match) return 'Code';
+    const lang = match[1].toLowerCase();
+    const map: Record<string, string> = {
+      js: 'JavaScript',
+      javascript: 'JavaScript',
+      ts: 'TypeScript',
+      typescript: 'TypeScript',
+      html: 'HTML',
+      css: 'CSS',
+      rust: 'Rust',
+      rs: 'Rust',
+      python: 'Python',
+      py: 'Python',
+      bash: 'Bash',
+      sh: 'Shell',
+      shell: 'Shell',
+      json: 'JSON',
+      yaml: 'YAML',
+      yml: 'YAML',
+      xml: 'XML',
+      md: 'Markdown',
+      markdown: 'Markdown',
+      go: 'Go',
+      golang: 'Go',
+      cpp: 'C++',
+      c: 'C',
+      csharp: 'C#',
+      cs: 'C#',
+      sql: 'SQL',
+      dockerfile: 'Docker',
+      docker: 'Docker'
+    };
+    return map[lang] || lang.charAt(0).toUpperCase() + lang.slice(1);
+  }
+
+  function setupCodeHeaderBars() {
+    const container = document.querySelector('.prose-custom');
+    if (!container) return;
+    const preBlocks = container.querySelectorAll('pre');
+    preBlocks.forEach((el) => {
+      const pre = el as HTMLElement;
+      if (pre.previousElementSibling?.classList.contains('code-header-bar')) return;
+
+      const codeElement = pre.querySelector('code');
+      const langClass = codeElement?.className || '';
+      const prettyLang = getPrettyLanguage(langClass);
+
+      const headerBar = document.createElement('div');
+      headerBar.className = 'code-header-bar flex items-center justify-between bg-adwaita-hover/70 border border-adwaita-border/40 border-b-0 rounded-t-lg px-4 py-2 text-xs text-adwaita-subtitle font-semibold select-none mt-6';
+      
+      const leftSpan = document.createElement('span');
+      leftSpan.className = 'text-xs font-semibold uppercase tracking-wider text-adwaita-subtitle';
+      leftSpan.innerText = prettyLang;
+      headerBar.appendChild(leftSpan);
+
+      const copyBtn = document.createElement('button');
+      copyBtn.type = 'button';
+      copyBtn.className = 'flex h-6 w-6 items-center justify-center rounded-md border border-adwaita-border/30 hover:bg-adwaita-hover/30 hover:text-adwaita-text transition-colors cursor-pointer text-adwaita-subtitle';
+      copyBtn.innerHTML = '<span class="material-symbols-rounded text-sm">content_copy</span>';
+      
+      copyBtn.addEventListener('click', () => {
+        if (!codeElement) return;
+        const codeText = codeElement.innerText || codeElement.textContent || '';
+        navigator.clipboard.writeText(codeText).then(() => {
+          copyBtn.innerHTML = '<span class="material-symbols-rounded text-sm text-palette-green">check_small</span>';
+          triggerToast('Code copied to clipboard!');
+          setTimeout(() => {
+            copyBtn.innerHTML = '<span class="material-symbols-rounded text-sm">content_copy</span>';
+          }, 2000);
+        }).catch(err => {
+          console.error('Failed to copy code: ', err);
+        });
+      });
+
+      headerBar.appendChild(copyBtn);
+
+      pre.style.marginTop = '0px';
+      pre.style.borderTopLeftRadius = '0px';
+      pre.style.borderTopRightRadius = '0px';
+      pre.style.borderTopWidth = '0px';
+
+      pre.parentNode?.insertBefore(headerBar, pre);
+    });
+  }
+
   $effect(() => {
     if (activeTab === 'preview' && previewHtml) {
       tick().then(() => {
@@ -218,6 +317,7 @@
         blocks.forEach((block) => {
           hljs.highlightElement(block as HTMLElement);
         });
+        setupCodeHeaderBars();
       });
     }
   });
@@ -1302,6 +1402,13 @@
   confirmLabel="Save Draft"
   isDestructive={false}
   onConfirm={() => executeSave(false)} />
+
+{#if showToast}
+  <div class="fixed bottom-6 left-1/2 z-50 flex -translate-x-1/2 items-center gap-2 rounded-full border border-adwaita-border bg-adwaita-card/90 px-4 py-2 text-xs font-semibold text-adwaita-text shadow-lg backdrop-blur-md transition-all duration-300">
+    <i class="bi bi-check-circle-fill text-adwaita-accent text-sm" aria-hidden="true"></i>
+    {toastMessage}
+  </div>
+{/if}
 
 <style>
   .editor-textarea,

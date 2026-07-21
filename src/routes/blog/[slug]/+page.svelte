@@ -40,34 +40,91 @@
     }, 2000);
   }
 
-  function setupCodeCopyButtons() {
-    const preBlocks = document.querySelectorAll('.prose-custom pre');
+  function getPrettyLanguage(className: string): string {
+    if (!className) return 'Code';
+    const match = className.match(/language-(\S+)/);
+    if (!match) return 'Code';
+    const lang = match[1].toLowerCase();
+    const map: Record<string, string> = {
+      js: 'JavaScript',
+      javascript: 'JavaScript',
+      ts: 'TypeScript',
+      typescript: 'TypeScript',
+      html: 'HTML',
+      css: 'CSS',
+      rust: 'Rust',
+      rs: 'Rust',
+      python: 'Python',
+      py: 'Python',
+      bash: 'Bash',
+      sh: 'Shell',
+      shell: 'Shell',
+      json: 'JSON',
+      yaml: 'YAML',
+      yml: 'YAML',
+      xml: 'XML',
+      md: 'Markdown',
+      markdown: 'Markdown',
+      go: 'Go',
+      golang: 'Go',
+      cpp: 'C++',
+      c: 'C',
+      csharp: 'C#',
+      cs: 'C#',
+      sql: 'SQL',
+      dockerfile: 'Docker',
+      docker: 'Docker'
+    };
+    return map[lang] || lang.charAt(0).toUpperCase() + lang.slice(1);
+  }
+
+  function setupCodeHeaderBars() {
+    const container = document.querySelector('.prose-custom');
+    if (!container) return;
+    const preBlocks = container.querySelectorAll('pre');
     preBlocks.forEach((el) => {
       const pre = el as HTMLElement;
-      if (pre.querySelector('.copy-code-btn')) return;
-      pre.style.position = 'relative';
-      const btn = document.createElement('button');
-      btn.type = 'button';
-      btn.className = 'copy-code-btn absolute right-2.5 top-2.5 flex h-7 w-7 items-center justify-center rounded-md border border-adwaita-border/40 bg-adwaita-card/65 text-adwaita-subtitle transition-all hover:text-adwaita-accent hover:bg-adwaita-card shadow-xs cursor-pointer z-10';
-      btn.setAttribute('aria-label', 'Copy code');
-      const icon = document.createElement('i');
-      icon.className = 'bi bi-clipboard text-xs transition-transform duration-150';
-      btn.appendChild(icon);
-      btn.addEventListener('click', () => {
-        const codeElement = pre.querySelector('code');
+      if (pre.previousElementSibling?.classList.contains('code-header-bar')) return;
+
+      const codeElement = pre.querySelector('code');
+      const langClass = codeElement?.className || '';
+      const prettyLang = getPrettyLanguage(langClass);
+
+      const headerBar = document.createElement('div');
+      headerBar.className = 'code-header-bar flex items-center justify-between bg-adwaita-hover/70 border border-adwaita-border/40 border-b-0 rounded-t-lg px-4 py-2 text-xs text-adwaita-subtitle font-semibold select-none mt-6';
+      
+      const leftSpan = document.createElement('span');
+      leftSpan.className = 'text-xs font-semibold uppercase tracking-wider text-adwaita-subtitle';
+      leftSpan.innerText = prettyLang;
+      headerBar.appendChild(leftSpan);
+
+      const copyBtn = document.createElement('button');
+      copyBtn.type = 'button';
+      copyBtn.className = 'flex h-6 w-6 items-center justify-center rounded-md border border-adwaita-border/30 hover:bg-adwaita-hover/30 hover:text-adwaita-text transition-colors cursor-pointer text-adwaita-subtitle';
+      copyBtn.innerHTML = '<span class="material-symbols-rounded text-sm">content_copy</span>';
+      
+      copyBtn.addEventListener('click', () => {
         if (!codeElement) return;
         const codeText = codeElement.innerText || codeElement.textContent || '';
         navigator.clipboard.writeText(codeText).then(() => {
-          icon.className = 'bi bi-check-lg text-xs text-adwaita-accent scale-110';
+          copyBtn.innerHTML = '<span class="material-symbols-rounded text-sm text-palette-green">check_small</span>';
           triggerToast('Code copied to clipboard!');
           setTimeout(() => {
-            icon.className = 'bi bi-clipboard text-xs transition-transform duration-150';
+            copyBtn.innerHTML = '<span class="material-symbols-rounded text-sm">content_copy</span>';
           }, 2000);
         }).catch(err => {
           console.error('Failed to copy code: ', err);
         });
       });
-      pre.appendChild(btn);
+
+      headerBar.appendChild(copyBtn);
+
+      pre.style.marginTop = '0px';
+      pre.style.borderTopLeftRadius = '0px';
+      pre.style.borderTopRightRadius = '0px';
+      pre.style.borderTopWidth = '0px';
+
+      pre.parentNode?.insertBefore(headerBar, pre);
     });
   }
 
@@ -163,7 +220,7 @@
     tick().then(() => {
       const container = document.querySelector('.prose-custom');
       if (container) {
-        setupCodeCopyButtons();
+        setupCodeHeaderBars();
         const elements = container.querySelectorAll('h2, h3');
         if (elements.length === 0) return;
 
