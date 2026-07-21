@@ -781,23 +781,23 @@
                     class="flex flex-wrap items-center gap-x-3.5 gap-y-1 font-sans text-xs font-semibold text-adwaita-subtitle select-none">
                     <span class="inline-flex items-center gap-1.5 leading-none"
                       ><span
-                        class="material-symbols-rounded text-[12.5px] font-bold leading-none"
+                        class="material-symbols-rounded text-[9px] font-bold leading-none"
                         aria-hidden="true">calendar_clock</span>
                       {getPostDate(post)}</span>
                     <span class="inline-flex items-center gap-1.5 leading-none"
                       ><span
-                        class="material-symbols-rounded text-[12.5px] font-bold leading-none"
+                        class="material-symbols-rounded text-[9px] font-bold leading-none"
                         aria-hidden="true">av_timer</span>
                       {(post.read_time || '').replace(/\s*read\s*/gi, '')}</span>
                     <span class="inline-flex items-center gap-1.5 leading-none"
                       ><span
-                        class="material-symbols-rounded text-[12.5px] font-bold leading-none"
+                        class="material-symbols-rounded text-[9px] font-bold leading-none"
                         aria-hidden="true">forum</span>
                       {post.comment_count || 0}</span>
                     {#if post.views_count !== undefined}
                       <span class="inline-flex items-center gap-1.5 leading-none"
                         ><span
-                          class="material-symbols-rounded text-[12.5px] font-bold leading-none"
+                          class="material-symbols-rounded text-[9px] font-bold leading-none"
                           aria-hidden="true">visibility</span>
                         {post.views_count}</span>
                     {/if}
@@ -1180,23 +1180,23 @@
                   class="flex flex-wrap items-center gap-x-3.5 gap-y-1 font-sans text-xs font-semibold text-adwaita-subtitle select-none">
                   <span class="inline-flex items-center gap-1.5 leading-none"
                     ><span
-                      class="material-symbols-rounded text-[12.5px] font-bold leading-none"
+                      class="material-symbols-rounded text-[9px] font-bold leading-none"
                       aria-hidden="true">calendar_clock</span>
                     {getPostDate(post)}</span>
                   <span class="inline-flex items-center gap-1.5 leading-none"
                     ><span
-                      class="material-symbols-rounded text-[12.5px] font-bold leading-none"
+                      class="material-symbols-rounded text-[9px] font-bold leading-none"
                       aria-hidden="true">av_timer</span>
                     {(post.read_time || '').replace(/\s*read\s*/gi, '')}</span>
                   <span class="inline-flex items-center gap-1.5 leading-none"
                     ><span
-                      class="material-symbols-rounded text-[12.5px] font-bold leading-none"
+                      class="material-symbols-rounded text-[9px] font-bold leading-none"
                       aria-hidden="true">forum</span>
                     {post.comment_count || 0}</span>
                   {#if post.views_count !== undefined}
                     <span class="inline-flex items-center gap-1.5 leading-none"
                       ><span
-                        class="material-symbols-rounded text-[12.5px] font-bold leading-none"
+                        class="material-symbols-rounded text-[9px] font-bold leading-none"
                         aria-hidden="true">visibility</span>
                       {post.views_count}</span>
                   {/if}

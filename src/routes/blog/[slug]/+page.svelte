@@ -708,26 +708,26 @@
           class="mt-4 flex flex-wrap items-center gap-x-3.5 gap-y-1 font-sans text-xs font-semibold text-adwaita-subtitle select-none">
           <span class="inline-flex items-center gap-1.5 leading-none">
             <span
-              class="material-symbols-rounded text-[12.5px] font-bold leading-none"
+              class="material-symbols-rounded text-[9px] font-bold leading-none"
               aria-hidden="true">calendar_clock</span>
             {formatDate(post.created_at)}
           </span>
           <span class="inline-flex items-center gap-1.5 leading-none">
             <span
-              class="material-symbols-rounded text-[12.5px] font-bold leading-none"
+              class="material-symbols-rounded text-[9px] font-bold leading-none"
               aria-hidden="true">av_timer</span>
             {formatReadTime(post.read_time)}
           </span>
           <span class="inline-flex items-center gap-1.5 leading-none">
             <span
-              class="material-symbols-rounded text-[12.5px] font-bold leading-none"
+              class="material-symbols-rounded text-[9px] font-bold leading-none"
               aria-hidden="true">forum</span>
             {comments.length}
           </span>
           {#if viewCount !== null}
             <span class="inline-flex items-center gap-1.5 leading-none">
               <span
-                class="material-symbols-rounded text-[12.5px] font-bold leading-none"
+                class="material-symbols-rounded text-[9px] font-bold leading-none"
                 aria-hidden="true">visibility</span>
               {viewCount}
             </span>
