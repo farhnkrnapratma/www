@@ -1212,7 +1212,7 @@
 
               <div class="flex items-center gap-4 text-[11px] font-mono select-none">
                 <span class="text-[12.5px] font-semibold tracking-wide">{currentLine}:{currentColumn}</span>
-                <span class="flex items-center gap-1">
+                <span class="flex items-center gap-1 text-[12.5px] font-semibold tracking-wide">
                   <span class="material-symbols-rounded text-[14px]">space_bar</span>
                   {indentSize}
                 </span>
