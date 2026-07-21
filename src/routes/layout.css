@@ -3,10 +3,7 @@
 
 @layer base {
   html {
-    @apply text-[122%];
-    scroll-padding-top: 4.25rem;
-    scroll-padding-bottom: 5.25rem;
-    scroll-behavior: smooth;
+    @apply text-[122%] scroll-pt-[4.25rem] scroll-pb-[5.25rem] scroll-smooth;
   }
 
   body {
@@ -83,12 +80,11 @@
 }
 
 .prose-custom {
-  @apply font-serif leading-[1.7];
+  @apply font-serif leading-[1.7] text-[var(--color-body)];
   --color-heading: #101411;
   --color-body: #232925;
   --color-link: var(--color-adwaita-accent);
   --color-link-hover: var(--color-adwaita-accent-hover);
-  color: var(--color-body);
 }
 
 :root.dark .prose-custom {
@@ -99,8 +95,7 @@
 }
 
 .prose-custom p {
-  @apply mt-5 mb-5;
-  color: var(--color-body);
+  @apply mt-5 mb-5 text-[var(--color-body)];
 }
 
 .prose-custom h1,
@@ -109,8 +104,7 @@
 .prose-custom h4,
 .prose-custom h5,
 .prose-custom h6 {
-  @apply font-sans;
-  color: var(--color-heading);
+  @apply font-sans text-[var(--color-heading)];
 }
 
 .prose-custom h1 {
@@ -150,12 +144,11 @@
 }
 
 .prose-custom a {
-  @apply underline;
-  color: var(--color-link);
+  @apply underline text-[var(--color-link)];
 }
 
 .prose-custom a:hover {
-  color: var(--color-link-hover);
+  @apply text-[var(--color-link-hover)];
 }
 
 .shiny-text {
@@ -217,8 +210,7 @@ button,
 }
 
 ::placeholder {
-  color: var(--color-adwaita-label) !important;
-  opacity: 0.75 !important;
+  @apply !text-[var(--color-adwaita-label)] !opacity-75;
 }
 
 a:focus-visible,
@@ -233,26 +225,24 @@ select:focus-visible,
 details:focus-visible,
 summary:focus-visible,
 [tabindex='0']:focus-visible {
-  outline: 2px solid var(--color-adwaita-accent) !important;
-  outline-offset: 2px !important;
+  @apply !outline-2 !outline-[var(--color-adwaita-accent)] !outline-offset-2;
   border-radius: 6px;
 }
 
 input:focus-visible,
 textarea:focus-visible {
-  outline: none !important;
+  @apply !outline-none;
 }
 
 input:focus,
 textarea:focus,
 select:focus {
-  border-color: var(--color-adwaita-accent) !important;
-  box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-adwaita-accent) 20%, transparent) !important;
+  @apply !border-[var(--color-adwaita-accent)] !ring-2 !ring-[color-mix(in_srgb,var(--color-adwaita-accent)_20%,transparent)];
 }
 
 input.input-valid,
 textarea.input-valid {
-  border-color: var(--color-adwaita-accent) !important;
+  @apply !border-[var(--color-adwaita-accent)];
 }
 
 input[type='text'],
@@ -261,6 +251,5 @@ input[type='password'],
 input[type='search'],
 textarea,
 select {
-  padding-top: 0.55rem !important;
-  padding-bottom: 0.55rem !important;
+  @apply !pt-[0.55rem] !pb-[0.55rem];
 }

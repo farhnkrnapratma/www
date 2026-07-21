@@ -273,26 +273,26 @@
       const prettyLang = getPrettyLanguage(langClass);
 
       const headerBar = document.createElement('div');
-      headerBar.className = 'code-header-bar flex items-center justify-between bg-adwaita-hover/70 border border-adwaita-border rounded-t-lg px-4 py-1.5 text-xs text-adwaita-subtitle font-semibold select-none mt-6';
+      headerBar.className = 'code-header-bar flex items-center justify-between bg-adwaita-bg/95 border border-adwaita-border rounded-t-lg px-4 py-1 text-xs text-adwaita-subtitle font-semibold select-none mt-6';
       
       const leftSpan = document.createElement('span');
-      leftSpan.className = 'text-[11px] font-mono font-bold uppercase tracking-wider text-adwaita-subtitle';
+      leftSpan.className = 'text-[12.5px] font-sans font-bold uppercase tracking-wider text-adwaita-subtitle leading-none';
       leftSpan.innerText = prettyLang;
       headerBar.appendChild(leftSpan);
 
       const copyBtn = document.createElement('button');
       copyBtn.type = 'button';
-      copyBtn.className = 'flex h-6 w-6 items-center justify-center rounded-md border border-adwaita-border/30 hover:bg-adwaita-hover/30 hover:text-adwaita-text transition-colors cursor-pointer text-adwaita-subtitle';
-      copyBtn.innerHTML = '<span class="material-symbols-rounded text-sm">content_copy</span>';
+      copyBtn.className = 'flex h-5 w-5 items-center justify-center rounded-md border border-adwaita-border/30 hover:bg-adwaita-hover/30 hover:text-adwaita-text transition-colors cursor-pointer text-adwaita-subtitle leading-none';
+      copyBtn.innerHTML = '<span class="material-symbols-rounded text-[10.5px] font-bold leading-none" style="font-variation-settings: \'wght\' 800;">content_copy</span>';
       
       copyBtn.addEventListener('click', () => {
         if (!codeElement) return;
         const codeText = codeElement.innerText || codeElement.textContent || '';
         navigator.clipboard.writeText(codeText).then(() => {
-          copyBtn.innerHTML = '<span class="material-symbols-rounded text-sm text-palette-green">check_small</span>';
+          copyBtn.innerHTML = '<span class="material-symbols-rounded text-[10.5px] font-bold leading-none text-palette-green" style="font-variation-settings: \'wght\' 800;">check_small</span>';
           triggerToast('Code copied to clipboard!');
           setTimeout(() => {
-            copyBtn.innerHTML = '<span class="material-symbols-rounded text-sm">content_copy</span>';
+            copyBtn.innerHTML = '<span class="material-symbols-rounded text-[10.5px] font-bold leading-none" style="font-variation-settings: \'wght\' 800;">content_copy</span>';
           }, 2000);
         }).catch(err => {
           console.error('Failed to copy code: ', err);
@@ -1412,40 +1412,33 @@
 {/if}
 
 <style>
+  @import 'tailwindcss';
+
   .editor-textarea,
   .editor-pre,
   .editor-pre code,
   .editor-pre :global(span),
   .line-num-item {
-    font-family: var(--font-mono) !important;
-    font-size: 14.5px !important;
-    line-height: 24px !important;
-    letter-spacing: normal !important;
+    @apply !font-mono !text-[14.5px] !leading-[24px] !tracking-normal !normal-case;
     font-variant-ligatures: none !important;
     font-feature-settings: normal !important;
   }
 
   .editor-textarea,
   .editor-pre {
-    word-break: normal !important;
-    word-wrap: break-word !important;
-    overflow-wrap: break-word !important;
+    @apply !break-normal !break-words;
   }
 
   .editor-textarea {
-    border: 0 !important;
-    margin: 0 !important;
-    outline: none !important;
-    box-sizing: border-box !important;
+    @apply !border-0 !m-0 !outline-none !box-border;
   }
 
   .line-num-item {
-    height: 24px !important;
-    display: block !important;
+    @apply !h-[24px] !block;
   }
 
   .prose-custom > :global(*:first-child) {
-    margin-top: 0 !important;
+    @apply !mt-0;
   }
 </style>
 

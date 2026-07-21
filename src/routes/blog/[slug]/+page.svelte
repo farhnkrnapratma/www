@@ -91,26 +91,26 @@
       const prettyLang = getPrettyLanguage(langClass);
 
       const headerBar = document.createElement('div');
-      headerBar.className = 'code-header-bar flex items-center justify-between bg-adwaita-hover/70 border border-adwaita-border rounded-t-lg px-4 py-1.5 text-xs text-adwaita-subtitle font-semibold select-none mt-6';
+      headerBar.className = 'code-header-bar flex items-center justify-between bg-adwaita-bg/95 border border-adwaita-border rounded-t-lg px-4 py-1 text-xs text-adwaita-subtitle font-semibold select-none mt-6';
       
       const leftSpan = document.createElement('span');
-      leftSpan.className = 'text-[11px] font-mono font-bold uppercase tracking-wider text-adwaita-subtitle';
+      leftSpan.className = 'text-[12.5px] font-sans font-bold uppercase tracking-wider text-adwaita-subtitle leading-none';
       leftSpan.innerText = prettyLang;
       headerBar.appendChild(leftSpan);
 
       const copyBtn = document.createElement('button');
       copyBtn.type = 'button';
-      copyBtn.className = 'flex h-6 w-6 items-center justify-center rounded-md border border-adwaita-border/30 hover:bg-adwaita-hover/30 hover:text-adwaita-text transition-colors cursor-pointer text-adwaita-subtitle';
-      copyBtn.innerHTML = '<span class="material-symbols-rounded text-sm">content_copy</span>';
+      copyBtn.className = 'flex h-5 w-5 items-center justify-center rounded-md border border-adwaita-border/30 hover:bg-adwaita-hover/30 hover:text-adwaita-text transition-colors cursor-pointer text-adwaita-subtitle leading-none';
+      copyBtn.innerHTML = '<span class="material-symbols-rounded text-[10.5px] font-bold leading-none" style="font-variation-settings: \'wght\' 800;">content_copy</span>';
       
       copyBtn.addEventListener('click', () => {
         if (!codeElement) return;
         const codeText = codeElement.innerText || codeElement.textContent || '';
         navigator.clipboard.writeText(codeText).then(() => {
-          copyBtn.innerHTML = '<span class="material-symbols-rounded text-sm text-palette-green">check_small</span>';
+          copyBtn.innerHTML = '<span class="material-symbols-rounded text-[10.5px] font-bold leading-none text-palette-green" style="font-variation-settings: \'wght\' 800;">check_small</span>';
           triggerToast('Code copied to clipboard!');
           setTimeout(() => {
-            copyBtn.innerHTML = '<span class="material-symbols-rounded text-sm">content_copy</span>';
+            copyBtn.innerHTML = '<span class="material-symbols-rounded text-[10.5px] font-bold leading-none" style="font-variation-settings: \'wght\' 800;">content_copy</span>';
           }, 2000);
         }).catch(err => {
           console.error('Failed to copy code: ', err);
@@ -705,29 +705,33 @@
           </p>
         {/if}
         <div
-          class="mt-4 flex flex-wrap items-center gap-x-3.5 gap-y-1 font-sans text-xs font-semibold text-adwaita-subtitle select-none">
-          <span class="inline-flex items-center gap-1.5 leading-none">
+          class="mt-4 flex items-center gap-x-2.5 font-sans text-[11px] font-semibold text-adwaita-subtitle select-none whitespace-nowrap overflow-x-auto no-scrollbar w-full">
+          <span class="inline-flex items-center gap-1 leading-none">
             <span
-              class="material-symbols-rounded text-[9px] font-bold leading-none"
+              class="material-symbols-rounded inline-block text-[10px] font-thin leading-none"
+              style="font-variation-settings: 'wght' 100; transform: scale(0.72); transform-origin: center;"
               aria-hidden="true">calendar_clock</span>
             {formatDate(post.created_at)}
           </span>
-          <span class="inline-flex items-center gap-1.5 leading-none">
+          <span class="inline-flex items-center gap-1 leading-none">
             <span
-              class="material-symbols-rounded text-[9px] font-bold leading-none"
+              class="material-symbols-rounded inline-block text-[10px] font-thin leading-none"
+              style="font-variation-settings: 'wght' 100; transform: scale(0.72); transform-origin: center;"
               aria-hidden="true">av_timer</span>
             {formatReadTime(post.read_time)}
           </span>
-          <span class="inline-flex items-center gap-1.5 leading-none">
+          <span class="inline-flex items-center gap-1 leading-none">
             <span
-              class="material-symbols-rounded text-[9px] font-bold leading-none"
+              class="material-symbols-rounded inline-block text-[10px] font-thin leading-none"
+              style="font-variation-settings: 'wght' 100; transform: scale(0.72); transform-origin: center;"
               aria-hidden="true">forum</span>
             {comments.length}
           </span>
           {#if viewCount !== null}
-            <span class="inline-flex items-center gap-1.5 leading-none">
+            <span class="inline-flex items-center gap-1 leading-none">
               <span
-                class="material-symbols-rounded text-[9px] font-bold leading-none"
+                class="material-symbols-rounded inline-block text-[10px] font-thin leading-none"
+                style="font-variation-settings: 'wght' 100; transform: scale(0.72); transform-origin: center;"
                 aria-hidden="true">visibility</span>
               {viewCount}
             </span>
