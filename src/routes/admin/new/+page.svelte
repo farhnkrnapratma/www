@@ -1314,6 +1314,10 @@
     height: 24px !important;
     display: block !important;
   }
+
+  .prose-custom > :global(*:first-child) {
+    margin-top: 0 !important;
+  }
 </style>
 
 
