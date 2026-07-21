@@ -4,7 +4,9 @@
 
 <SkipLink />
 
-<main id="main-content" class="grid min-h-[80vh] place-items-center px-6 py-24 font-sans sm:py-32 lg:px-8">
+<main
+  id="main-content"
+  class="grid min-h-[80vh] place-items-center px-6 py-24 font-sans sm:py-32 lg:px-8">
   <div class="text-center">
     <p class="text-base font-semibold text-accent">404</p>
     <h1
@@ -16,11 +18,12 @@
     </p>
     <div class="mt-10 flex items-center justify-center gap-x-6">
       <a href="/">
-        <Button variant="primary" size="md">
+        <Button
+          variant="primary"
+          size="md">
           Go back home
         </Button>
       </a>
     </div>
   </div>
 </main>
-

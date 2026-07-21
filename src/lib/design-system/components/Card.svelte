@@ -37,9 +37,9 @@
   };
 
   const interactiveStyles = $derived(
-    interactive
-      ? 'cursor-pointer transition-all hover:bg-surface-hover hover:border-border-strong focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus-ring'
-      : ''
+    interactive ?
+      'cursor-pointer transition-all hover:bg-surface-hover hover:border-border-strong focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus-ring'
+    : '',
   );
 </script>
 
@@ -48,15 +48,15 @@
     role="button"
     tabindex={0}
     class={cn(
-      'rounded-2xl transition-colors duration-300 overflow-hidden text-left',
+      'overflow-hidden rounded-2xl text-left transition-colors duration-300',
       variantStyles[variant],
       densityStyles[density],
       interactiveStyles,
-      className
+      className,
     )}
     {...restProps}>
     {#if header}
-      <div class="border-b border-border-subtle pb-3 mb-4">
+      <div class="mb-4 border-b border-border-subtle pb-3">
         {@render header()}
       </div>
     {/if}
@@ -64,7 +64,7 @@
     {@render children?.()}
 
     {#if footer}
-      <div class="border-t border-border-subtle pt-3 mt-4">
+      <div class="mt-4 border-t border-border-subtle pt-3">
         {@render footer()}
       </div>
     {/if}
@@ -72,14 +72,14 @@
 {:else}
   <div
     class={cn(
-      'rounded-2xl transition-colors duration-300 overflow-hidden',
+      'overflow-hidden rounded-2xl transition-colors duration-300',
       variantStyles[variant],
       densityStyles[density],
-      className
+      className,
     )}
     {...restProps}>
     {#if header}
-      <div class="border-b border-border-subtle pb-3 mb-4">
+      <div class="mb-4 border-b border-border-subtle pb-3">
         {@render header()}
       </div>
     {/if}
@@ -87,7 +87,7 @@
     {@render children?.()}
 
     {#if footer}
-      <div class="border-t border-border-subtle pt-3 mt-4">
+      <div class="mt-4 border-t border-border-subtle pt-3">
         {@render footer()}
       </div>
     {/if}

@@ -58,7 +58,7 @@
   }
 </script>
 
-<div class={cn('flex flex-col gap-1.5 w-full', className)}>
+<div class={cn('flex w-full flex-col gap-1.5', className)}>
   <input
     bind:this={fileInputRef}
     type="file"
@@ -78,17 +78,19 @@
     ondragover={handleDragOver}
     ondragleave={handleDragLeave}
     class={cn(
-      'group relative flex flex-col items-center justify-center rounded-2xl border-2 border-dashed p-6 text-center transition-all cursor-pointer select-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus-ring',
-      isDragging
-        ? 'border-accent bg-accent-subtle/40'
-        : 'border-border-default bg-surface/50 hover:bg-surface-hover hover:border-border-strong',
+      'group relative flex cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed p-6 text-center transition-all select-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus-ring',
+      isDragging ?
+        'border-accent bg-accent-subtle/40'
+      : 'border-border-default bg-surface/50 hover:border-border-strong hover:bg-surface-hover',
       error ? '!border-danger !bg-danger-subtle/10' : '',
-      disabled ? 'opacity-50 cursor-not-allowed' : ''
+      disabled ? 'cursor-not-allowed opacity-50' : '',
     )}>
     {#if selectedFileName}
       <div class="flex items-center gap-2 text-xs font-semibold text-text-primary">
-        <i class="bi bi-file-earmark-check-fill text-lg text-accent" aria-hidden="true"></i>
-        <span class="truncate max-w-xs">{selectedFileName}</span>
+        <i
+          class="bi bi-file-earmark-check-fill text-lg text-accent"
+          aria-hidden="true"></i>
+        <span class="max-w-xs truncate">{selectedFileName}</span>
         <button
           type="button"
           aria-label="Remove selected file"
@@ -96,22 +98,29 @@
             e.stopPropagation();
             clearFile();
           }}
-          class="ml-2 rounded p-1 text-text-muted hover:text-danger hover:bg-danger-subtle">
-          <i class="bi bi-x-lg text-xs" aria-hidden="true"></i>
+          class="ml-2 rounded p-1 text-text-muted hover:bg-danger-subtle hover:text-danger">
+          <i
+            class="bi bi-x-lg text-xs"
+            aria-hidden="true"></i>
         </button>
       </div>
     {:else}
-      <i class="bi bi-cloud-arrow-up text-3xl text-text-muted transition-colors group-hover:text-accent" aria-hidden="true"></i>
-      <p class="mt-2 text-xs font-semibold text-text-primary">
-        Click to upload or drag & drop
-      </p>
+      <i
+        class="bi bi-cloud-arrow-up text-3xl text-text-muted transition-colors group-hover:text-accent"
+        aria-hidden="true"></i>
+      <p class="mt-2 text-xs font-semibold text-text-primary">Click to upload or drag & drop</p>
       <p class="mt-0.5 text-[11px] text-text-muted">{accept} files accepted</p>
     {/if}
   </div>
 
   {#if error}
-    <span role="alert" class="flex items-center gap-1 text-[11px] text-danger font-medium mt-1">
-      <i class="bi bi-exclamation-circle-fill" aria-hidden="true"></i> {error}
+    <span
+      role="alert"
+      class="mt-1 flex items-center gap-1 text-[11px] font-medium text-danger">
+      <i
+        class="bi bi-exclamation-circle-fill"
+        aria-hidden="true"></i>
+      {error}
     </span>
   {/if}
 </div>

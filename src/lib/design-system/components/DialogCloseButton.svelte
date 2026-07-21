@@ -13,5 +13,7 @@
   variant="ghost"
   size="sm"
   onclick={onClose}>
-  <i class="bi bi-x-lg text-xs" aria-hidden="true"></i>
+  <i
+    class="bi bi-x-lg text-xs"
+    aria-hidden="true"></i>
 </IconButton>

@@ -26,9 +26,9 @@
 
 <input
   bind:value
-  class="w-full border border-border-default bg-surface-base text-text-primary placeholder:text-text-muted transition-colors focus:border-accent focus:ring-2 focus:ring-accent/20 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed {sizeStyles[
+  class="w-full border border-border-default bg-surface-base text-text-primary transition-colors placeholder:text-text-muted focus:border-accent focus:ring-2 focus:ring-accent/20 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 {sizeStyles[
     size
-  ]} {error ? '!border-danger !ring-danger/20' : ''} {valid && !error
-    ? '!border-accent'
-    : ''} {className}"
+  ]} {error ? '!border-danger !ring-danger/20' : ''} {valid && !error ? '!border-accent' : (
+    ''
+  )} {className}"
   {...restProps} />

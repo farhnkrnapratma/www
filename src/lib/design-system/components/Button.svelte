@@ -31,7 +31,8 @@
     'inline-flex items-center justify-center font-semibold rounded-lg transition-all cursor-pointer select-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus-ring disabled:opacity-50 disabled:cursor-not-allowed';
 
   const variantStyles = {
-    primary: 'bg-accent text-text-on-accent hover:bg-accent-hover active:bg-accent-active shadow-xs',
+    primary:
+      'bg-accent text-text-on-accent hover:bg-accent-hover active:bg-accent-active shadow-xs',
     secondary:
       'border border-border-default bg-surface text-text-primary hover:bg-surface-hover hover:border-border-strong shadow-xs',
     ghost: 'bg-transparent text-text-secondary hover:bg-surface-hover hover:text-text-primary',
@@ -55,7 +56,7 @@
     variantStyles[variant],
     sizeStyles[size],
     fullWidth ? 'w-full' : '',
-    className
+    className,
   )}
   {...restProps}>
   {#if isLoading}
@@ -65,16 +66,30 @@
       fill="none"
       viewBox="0 0 24 24"
       aria-hidden="true">
-      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+      <circle
+        class="opacity-25"
+        cx="12"
+        cy="12"
+        r="10"
+        stroke="currentColor"
+        stroke-width="4"></circle>
+      <path
+        class="opacity-75"
+        fill="currentColor"
+        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+      ></path>
     </svg>
   {:else if leadingIcon}
-    <i class="bi {leadingIcon} text-sm" aria-hidden="true"></i>
+    <i
+      class="bi {leadingIcon} text-sm"
+      aria-hidden="true"></i>
   {/if}
 
   {@render children?.()}
 
   {#if trailingIcon && !isLoading}
-    <i class="bi {trailingIcon} text-sm" aria-hidden="true"></i>
+    <i
+      class="bi {trailingIcon} text-sm"
+      aria-hidden="true"></i>
   {/if}
 </button>

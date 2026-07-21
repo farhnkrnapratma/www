@@ -9,12 +9,7 @@
     class?: string;
   }
 
-  let {
-    variant = 'neutral',
-    size = 'sm',
-    children,
-    class: className = '',
-  }: Props = $props();
+  let { variant = 'neutral', size = 'sm', children, class: className = '' }: Props = $props();
 
   const variantStyles = {
     neutral: 'bg-surface-subtle text-text-secondary border border-border-subtle',
@@ -33,7 +28,7 @@
     'inline-flex items-center gap-1 rounded-md font-medium tracking-normal select-none',
     variantStyles[variant],
     sizeStyles[size],
-    className
+    className,
   )}>
   {@render children?.()}
 </span>

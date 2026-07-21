@@ -10,6 +10,10 @@
   let { class: className = '', children }: Props = $props();
 </script>
 
-<div class={cn('flex min-h-screen flex-col bg-background font-sans text-text-primary transition-colors duration-300', className)}>
+<div
+  class={cn(
+    'flex min-h-screen flex-col bg-background font-sans text-text-primary transition-colors duration-300',
+    className,
+  )}>
   {@render children?.()}
 </div>

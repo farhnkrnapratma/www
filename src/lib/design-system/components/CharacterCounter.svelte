@@ -18,13 +18,11 @@
   {id}
   aria-live="polite"
   class={cn(
-    'font-mono text-[10px] select-none transition-colors',
-    isExceeded
-      ? 'font-bold text-danger'
-      : isWarning
-      ? 'font-semibold text-warning'
-      : 'text-text-muted',
-    className
+    'font-mono text-[10px] transition-colors select-none',
+    isExceeded ? 'font-bold text-danger'
+    : isWarning ? 'font-semibold text-warning'
+    : 'text-text-muted',
+    className,
   )}>
   {current}/{max}
 </span>

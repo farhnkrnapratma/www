@@ -8,12 +8,7 @@
     class?: string;
   }
 
-  let {
-    type = 'info',
-    title = '',
-    message,
-    class: className = '',
-  }: Props = $props();
+  let { type = 'info', title = '', message, class: className = '' }: Props = $props();
 
   const typeStyles = {
     info: 'border-border-default bg-surface/70 text-text-primary',
@@ -36,9 +31,11 @@
   class={cn(
     'flex items-start gap-3 rounded-2xl border p-4 text-xs shadow-xs backdrop-blur-md select-none',
     typeStyles[type],
-    className
+    className,
   )}>
-  <i class="bi {iconStyles[type]} text-base shrink-0 mt-0.5" aria-hidden="true"></i>
+  <i
+    class="bi {iconStyles[type]} mt-0.5 shrink-0 text-base"
+    aria-hidden="true"></i>
   <div class="flex flex-col gap-0.5">
     {#if title}
       <span class="font-bold">{title}</span>

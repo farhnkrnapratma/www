@@ -12,7 +12,7 @@
   const clampedValue = $derived(Math.max(0, Math.min(100, value)));
 </script>
 
-<div class={cn('flex flex-col gap-1.5 w-full select-none', className)}>
+<div class={cn('flex w-full flex-col gap-1.5 select-none', className)}>
   {#if label}
     <div class="flex items-center justify-between text-xs font-semibold text-text-secondary">
       <span>{label}</span>
@@ -26,9 +26,10 @@
     aria-valuemin={0}
     aria-valuemax={100}
     aria-label={label || 'Progress bar'}
-    class="h-2 w-full overflow-hidden rounded-full bg-surface-subtle border border-border-subtle">
+    class="h-2 w-full overflow-hidden rounded-full border border-border-subtle bg-surface-subtle">
     <div
-      class="h-full bg-accent transition-all duration-300 rounded-full"
-      style="width: {clampedValue}%"></div>
+      class="h-full rounded-full bg-accent transition-all duration-300"
+      style="width: {clampedValue}%">
+    </div>
   </div>
 </div>

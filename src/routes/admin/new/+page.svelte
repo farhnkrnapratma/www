@@ -3,7 +3,17 @@
   import { onMount, tick } from 'svelte';
   import { marked } from 'marked';
   import hljs from 'highlight.js';
-  import { autoResize, SkipLink, LoadingState, StatusBanner, Button, IconButton, FormField, Input, Textarea } from '$lib';
+  import {
+    autoResize,
+    SkipLink,
+    LoadingState,
+    StatusBanner,
+    Button,
+    IconButton,
+    FormField,
+    Input,
+    Textarea,
+  } from '$lib';
   import Dialog from '$lib/design-system/components/Dialog.svelte';
 
   let isCheckingAuth = $state(true);
@@ -133,7 +143,11 @@
             }
           } else {
             // When editing an existing post, only use saved draft if non-template and different
-            if (parsed.markdownContent && parsed.markdownContent !== defaultTemplate && parsed.markdownContent !== markdownContent) {
+            if (
+              parsed.markdownContent &&
+              parsed.markdownContent !== defaultTemplate &&
+              parsed.markdownContent !== markdownContent
+            ) {
               title = parsed.title || title;
               excerpt = parsed.excerpt || excerpt;
               markdownContent = parsed.markdownContent;
@@ -367,7 +381,7 @@
         })
         .join('');
 
-      result.push((prefix + line + suffix) || '&nbsp;');
+      result.push(prefix + line + suffix || '&nbsp;');
       openTags = currentOpen;
     }
 
@@ -807,7 +821,11 @@
 <nav
   class="fixed top-0 z-40 flex h-15 w-full items-center justify-between border-b border-border-subtle bg-surface-card/60 px-5 font-sans shadow-xs backdrop-blur-lg transition-colors duration-300"
   aria-label="Editor navigation">
-  <Button variant="secondary" size="sm" leadingIcon="bi-arrow-left" onclick={handleCancelClick}>
+  <Button
+    variant="secondary"
+    size="sm"
+    leadingIcon="bi-arrow-left"
+    onclick={handleCancelClick}>
     Back
   </Button>
 
@@ -821,9 +839,13 @@
         aria-haspopup="true"
         aria-expanded={themeDropdownOpen}>
         {#if theme === 'auto'}
-          <i class="bi bi-circle-half" aria-hidden="true"></i>
+          <i
+            class="bi bi-circle-half"
+            aria-hidden="true"></i>
         {:else}
-          <i class="bi {theme === 'dark' ? 'bi-moon-stars-fill' : 'bi-sun-fill'}" aria-hidden="true"></i>
+          <i
+            class="bi {theme === 'dark' ? 'bi-moon-stars-fill' : 'bi-sun-fill'}"
+            aria-hidden="true"></i>
         {/if}
       </IconButton>
 
@@ -835,13 +857,22 @@
         <div
           role="menu"
           class="absolute top-11 right-0 z-50 flex min-w-[7.75rem] flex-col rounded-xl border border-border-subtle bg-surface-elevated py-1.5 shadow-lg">
-          {#each ([['auto', 'bi-circle-half', 'Auto'], ['light', 'bi-sun-fill', 'Light'], ['dark', 'bi-moon-stars-fill', 'Dark']] as const) as [val, icon, label]}
+          {#each [['auto', 'bi-circle-half', 'Auto'], ['light', 'bi-sun-fill', 'Light'], ['dark', 'bi-moon-stars-fill', 'Dark']] as const as [val, icon, label]}
             <button
               type="button"
               role="menuitem"
-              onclick={() => { applyTheme(val); themeDropdownOpen = false; }}
-              class="flex w-full cursor-pointer items-center gap-3 px-4 py-2.5 text-left text-xs font-bold transition-colors hover:bg-surface-hover {theme === val ? 'text-accent' : 'text-text-primary'}">
-              <i class="bi {icon} text-sm" aria-hidden="true"></i>
+              onclick={() => {
+                applyTheme(val);
+                themeDropdownOpen = false;
+              }}
+              class="flex w-full cursor-pointer items-center gap-3 px-4 py-2.5 text-left text-xs font-bold transition-colors hover:bg-surface-hover {(
+                theme === val
+              ) ?
+                'text-accent'
+              : 'text-text-primary'}">
+              <i
+                class="bi {icon} text-sm"
+                aria-hidden="true"></i>
               {label}
             </button>
           {/each}
@@ -851,13 +882,21 @@
   </div>
 </nav>
 
-<main id="main-content" class="flex min-h-[calc(100vh-3.75rem)] flex-col pt-15 font-sans">
+<main
+  id="main-content"
+  class="flex min-h-[calc(100vh-3.75rem)] flex-col pt-15 font-sans">
   {#if isCheckingAuth}
-    <LoadingState label="Verifying credentials…" size="lg" class="flex-1 py-20" />
+    <LoadingState
+      label="Verifying credentials…"
+      size="lg"
+      class="flex-1 py-20" />
   {:else}
     <section class="mx-auto w-full max-w-4xl flex-1 px-6 py-10">
       {#if errorMessage}
-        <StatusBanner type="error" message={errorMessage} class="mb-6" />
+        <StatusBanner
+          type="error"
+          message={errorMessage}
+          class="mb-6" />
       {/if}
 
       <form
@@ -958,8 +997,7 @@
                     titleError = '';
                     titleValid = false;
                     validateTitleField();
-                  }}
-                />
+                  }} />
               </FormField>
 
               <FormField
@@ -982,8 +1020,7 @@
                     excerptError = '';
                     excerptValid = false;
                     validateExcerptField();
-                  }}
-                />
+                  }} />
               </FormField>
             </div>
           </div>
@@ -1031,14 +1068,26 @@
                       fill="none"
                       viewBox="0 0 24 24"
                       aria-hidden="true">
-                      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      <circle
+                        class="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        stroke-width="4"></circle>
+                      <path
+                        class="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                      ></path>
                     </svg>
                     Saving…
                   </span>
                 {:else}
                   <span class="inline-flex items-center gap-1.5">
-                    <span class="material-symbols-rounded text-[13px] text-text-muted" aria-hidden="true">cloud_done</span>
+                    <span
+                      class="material-symbols-rounded text-[13px] text-text-muted"
+                      aria-hidden="true">cloud_done</span>
                     Saved
                   </span>
                 {/if}
@@ -1067,11 +1116,14 @@
                     <div
                       role="menu"
                       class="absolute top-8.5 right-0 z-50 flex min-w-[120px] flex-col rounded-lg border border-border-subtle bg-surface-elevated py-1 text-xs shadow-lg">
-                      {#each (['spaces', 'tabs'] as const) as mode}
+                      {#each ['spaces', 'tabs'] as const as mode}
                         <button
                           type="button"
                           role="menuitem"
-                          onclick={() => { indentMode = mode; indentModeDropdownOpen = false; }}
+                          onclick={() => {
+                            indentMode = mode;
+                            indentModeDropdownOpen = false;
+                          }}
                           class="flex w-full cursor-pointer items-center justify-between px-3 py-1.5 text-left text-xs text-text-primary transition-colors hover:bg-surface-hover">
                           <span>{mode === 'spaces' ? 'Spaces' : 'Tabs'}</span>
                           {#if indentMode === mode}
@@ -1109,7 +1161,10 @@
                         <button
                           type="button"
                           role="menuitem"
-                          onclick={() => { indentSize = size; indentSizeDropdownOpen = false; }}
+                          onclick={() => {
+                            indentSize = size;
+                            indentSizeDropdownOpen = false;
+                          }}
                           class="flex w-full cursor-pointer items-center justify-between px-3 py-1.5 text-left text-xs text-text-primary transition-colors hover:bg-surface-hover">
                           <span>{size}</span>
                           {#if indentSize === size}
@@ -1143,11 +1198,14 @@
                     <div
                       role="menu"
                       class="absolute top-8.5 right-0 z-50 flex min-w-[120px] flex-col rounded-lg border border-border-subtle bg-surface-elevated py-1 text-xs shadow-lg">
-                      {#each (['soft', 'none'] as const) as mode}
+                      {#each ['soft', 'none'] as const as mode}
                         <button
                           type="button"
                           role="menuitem"
-                          onclick={() => { lineWrapMode = mode; wrapModeDropdownOpen = false; }}
+                          onclick={() => {
+                            lineWrapMode = mode;
+                            wrapModeDropdownOpen = false;
+                          }}
                           class="flex w-full cursor-pointer items-center justify-between px-3 py-1.5 text-left text-xs text-text-primary transition-colors hover:bg-surface-hover">
                           <span>{mode === 'soft' ? 'Soft wrap' : 'No wrap'}</span>
                           {#if lineWrapMode === mode}
@@ -1174,7 +1232,9 @@
                       ) ?
                         '-mr-[1px] border-r-2 border-accent bg-accent/10 font-bold text-accent'
                       : 'text-text-muted/40'}"
-                      style={lineWrapMode === 'soft' && lineHeights[i] ? `height: ${lineHeights[i]}px !important;` : ''}>
+                      style={lineWrapMode === 'soft' && lineHeights[i] ?
+                        `height: ${lineHeights[i]}px !important;`
+                      : ''}>
                       {i + 1}
                     </div>
                   {/each}
@@ -1187,10 +1247,10 @@
                       lineWrapMode === 'soft'
                     ) ?
                       'overflow-x-hidden! break-normal! break-words! whitespace-pre-wrap!'
-                    : 'overflow-x-auto! break-normal! whitespace-pre!'}"
-                    ><code
+                    : 'overflow-x-auto! break-normal! whitespace-pre!'}"><code
                       class="whitespace-inherit! break-inherit! overflow-wrap-inherit! language-markdown !m-0 !block !bg-transparent !p-0"
-                      >{#each splitHighlightedHtml(highlightedMarkdown) as lineHtml, i (i)}<div class="editor-code-line whitespace-inherit! break-inherit! overflow-wrap-inherit! !m-0 !p-0">{@html lineHtml}</div>{/each}</code></pre>
+                      >{#each splitHighlightedHtml(highlightedMarkdown) as lineHtml, i (i)}<div
+                          class="editor-code-line whitespace-inherit! break-inherit! overflow-wrap-inherit! !m-0 !p-0">{@html lineHtml}</div>{/each}</code></pre>
 
                   <textarea
                     bind:this={markdownTextareaElement}
@@ -1228,42 +1288,48 @@
           {#if activeTab === 'editor'}
             <div
               class="flex flex-wrap items-center justify-between border-t border-border-subtle bg-surface-card/10 px-3 py-1.5 text-xs text-text-secondary select-none">
-              <div class="flex items-center gap-1" role="toolbar" aria-label="Formatting tools">
-                {#each ([
-                  { action: () => insertMarkdown('# '), icon: 'format_h1', label: 'H1 heading' },
-                  { action: () => insertMarkdown('## '), icon: 'format_h2', label: 'H2 heading' },
-                  { action: () => insertMarkdown('### '), icon: 'format_h3', label: 'H3 heading' },
-                ] as const) as item}
+              <div
+                class="flex items-center gap-1"
+                role="toolbar"
+                aria-label="Formatting tools">
+                {#each [{ action: () => insertMarkdown('# '), icon: 'format_h1', label: 'H1 heading' }, { action: () => insertMarkdown('## '), icon: 'format_h2', label: 'H2 heading' }, { action: () => insertMarkdown('### '), icon: 'format_h3', label: 'H3 heading' }] as const as item}
                   <button
                     type="button"
                     onclick={item.action}
                     aria-label={item.label}
                     class="flex h-7 w-7 cursor-pointer items-center justify-center rounded-md transition-colors hover:bg-surface-hover/30 hover:text-text-primary">
-                    <span class="material-symbols-rounded text-base" aria-hidden="true">{item.icon}</span>
+                    <span
+                      class="material-symbols-rounded text-base"
+                      aria-hidden="true">{item.icon}</span>
                   </button>
                 {/each}
-                <div class="mx-1 h-4 w-px bg-border-subtle" aria-hidden="true"></div>
-                {#each ([
-                  { action: () => insertMarkdown('**', '**'), icon: 'format_bold', label: 'Bold' },
-                  { action: () => insertMarkdown('*', '*'), icon: 'format_italic', label: 'Italic' },
-                  { action: () => insertMarkdown('<u>', '</u>'), icon: 'format_underlined', label: 'Underline' },
-                  { action: () => insertMarkdown('~~', '~~'), icon: 'format_strikethrough', label: 'Strikethrough' },
-                ] as const) as item}
+                <div
+                  class="mx-1 h-4 w-px bg-border-subtle"
+                  aria-hidden="true">
+                </div>
+                {#each [{ action: () => insertMarkdown('**', '**'), icon: 'format_bold', label: 'Bold' }, { action: () => insertMarkdown('*', '*'), icon: 'format_italic', label: 'Italic' }, { action: () => insertMarkdown('<u>', '</u>'), icon: 'format_underlined', label: 'Underline' }, { action: () => insertMarkdown('~~', '~~'), icon: 'format_strikethrough', label: 'Strikethrough' }] as const as item}
                   <button
                     type="button"
                     onclick={item.action}
                     aria-label={item.label}
                     class="flex h-7 w-7 cursor-pointer items-center justify-center rounded-md transition-colors hover:bg-surface-hover/30 hover:text-text-primary">
-                    <span class="material-symbols-rounded text-base" aria-hidden="true">{item.icon}</span>
+                    <span
+                      class="material-symbols-rounded text-base"
+                      aria-hidden="true">{item.icon}</span>
                   </button>
                 {/each}
-                <div class="mx-1 h-4 w-px bg-border-subtle" aria-hidden="true"></div>
+                <div
+                  class="mx-1 h-4 w-px bg-border-subtle"
+                  aria-hidden="true">
+                </div>
                 <button
                   type="button"
                   onclick={() => imageFileInput?.click()}
                   aria-label="Insert image"
                   class="flex h-7 w-7 cursor-pointer items-center justify-center rounded-md transition-colors hover:bg-surface-hover/30 hover:text-text-primary">
-                  <span class="material-symbols-rounded text-base" aria-hidden="true">add_photo_alternate</span>
+                  <span
+                    class="material-symbols-rounded text-base"
+                    aria-hidden="true">add_photo_alternate</span>
                 </button>
                 <input
                   type="file"
@@ -1272,32 +1338,34 @@
                   onchange={handleImageUpload}
                   class="hidden"
                   aria-label="Upload image file" />
-                {#each ([
-                  { action: () => insertMarkdown('[', '](url)'), icon: 'link', label: 'Insert link' },
-                  { action: () => insertMarkdown('1. '), icon: 'format_list_numbered', label: 'Numbered list' },
-                  { action: () => insertMarkdown('- '), icon: 'format_list_bulleted', label: 'Bulleted list' },
-                  { action: () => insertMarkdown('```\n', '\n```'), icon: 'code_blocks', label: 'Code block' },
-                ] as const) as item}
+                {#each [{ action: () => insertMarkdown('[', '](url)'), icon: 'link', label: 'Insert link' }, { action: () => insertMarkdown('1. '), icon: 'format_list_numbered', label: 'Numbered list' }, { action: () => insertMarkdown('- '), icon: 'format_list_bulleted', label: 'Bulleted list' }, { action: () => insertMarkdown('```\n', '\n```'), icon: 'code_blocks', label: 'Code block' }] as const as item}
                   <button
                     type="button"
                     onclick={item.action}
                     aria-label={item.label}
                     class="flex h-7 w-7 cursor-pointer items-center justify-center rounded-md transition-colors hover:bg-surface-hover/30 hover:text-text-primary">
-                    <span class="material-symbols-rounded text-base" aria-hidden="true">{item.icon}</span>
+                    <span
+                      class="material-symbols-rounded text-base"
+                      aria-hidden="true">{item.icon}</span>
                   </button>
                 {/each}
               </div>
 
               <div class="flex items-center gap-4 font-mono text-[11px] select-none">
-                <span class="text-[12.5px] font-semibold tracking-wide">{currentLine}:{currentColumn}</span>
+                <span class="text-[12.5px] font-semibold tracking-wide"
+                  >{currentLine}:{currentColumn}</span>
                 <span class="flex items-center gap-1 text-[12.5px] font-semibold tracking-wide">
-                  <span class="material-symbols-rounded text-[14px]" aria-hidden="true">space_bar</span>
+                  <span
+                    class="material-symbols-rounded text-[14px]"
+                    aria-hidden="true">space_bar</span>
                   {indentSize}
                 </span>
                 <span class="text-[12.5px] font-semibold tracking-wide">UTF-8</span>
                 <span class="text-[12.5px] font-semibold tracking-wide">{lineEnding}</span>
                 <span class="group relative flex cursor-help items-center">
-                  <span class="material-symbols-rounded text-[16px]" aria-label="Markdown formatting supported">markdown</span>
+                  <span
+                    class="material-symbols-rounded text-[16px]"
+                    aria-label="Markdown formatting supported">markdown</span>
                   <span
                     class="absolute right-0 bottom-full mb-1.5 hidden rounded-md border border-border-subtle bg-surface-elevated px-2 py-1 font-sans text-[10px] whitespace-nowrap text-text-primary shadow-md group-hover:block">
                     Markdown formatting is supported
@@ -1309,7 +1377,10 @@
         </div>
 
         <div class="mt-4 mb-10 flex flex-wrap justify-end gap-3 select-none">
-          <Button variant="ghost" size="md" onclick={handleCancelClick}>
+          <Button
+            variant="ghost"
+            size="md"
+            onclick={handleCancelClick}>
             Cancel
           </Button>
           <Button
@@ -1340,8 +1411,14 @@
   description="You have unsaved edits. All changes will be lost."
   onClose={() => (showCancelDialog = false)}>
   {#snippet footer()}
-    <Button variant="secondary" size="md" onclick={() => (showCancelDialog = false)}>Keep editing</Button>
-    <Button variant="destructive" size="md" onclick={() => (window.location.href = '/admin')}>Discard changes</Button>
+    <Button
+      variant="secondary"
+      size="md"
+      onclick={() => (showCancelDialog = false)}>Keep editing</Button>
+    <Button
+      variant="destructive"
+      size="md"
+      onclick={() => (window.location.href = '/admin')}>Discard changes</Button>
   {/snippet}
 </Dialog>
 
@@ -1352,8 +1429,14 @@
   description="This will make the post immediately visible to all readers."
   onClose={() => (showPublishDialog = false)}>
   {#snippet footer()}
-    <Button variant="secondary" size="md" onclick={() => (showPublishDialog = false)}>Cancel</Button>
-    <Button variant="primary" size="md" onclick={() => executeSave(true)}>Publish post</Button>
+    <Button
+      variant="secondary"
+      size="md"
+      onclick={() => (showPublishDialog = false)}>Cancel</Button>
+    <Button
+      variant="primary"
+      size="md"
+      onclick={() => executeSave(true)}>Publish post</Button>
   {/snippet}
 </Dialog>
 
@@ -1364,8 +1447,14 @@
   description="The post will be saved privately and won't be visible to readers."
   onClose={() => (showSaveDraftDialog = false)}>
   {#snippet footer()}
-    <Button variant="secondary" size="md" onclick={() => (showSaveDraftDialog = false)}>Cancel</Button>
-    <Button variant="primary" size="md" onclick={() => executeSave(false)}>Save draft</Button>
+    <Button
+      variant="secondary"
+      size="md"
+      onclick={() => (showSaveDraftDialog = false)}>Cancel</Button>
+    <Button
+      variant="primary"
+      size="md"
+      onclick={() => executeSave(false)}>Save draft</Button>
   {/snippet}
 </Dialog>
 
@@ -1375,7 +1464,9 @@
     role="status"
     aria-live="polite"
     class="fixed bottom-6 left-1/2 z-50 flex -translate-x-1/2 items-center gap-2 rounded-full border border-border-subtle bg-surface-card/90 px-4 py-2 text-xs font-semibold text-text-primary shadow-lg backdrop-blur-md transition-all duration-300">
-    <i class="bi bi-check-circle-fill text-sm text-accent" aria-hidden="true"></i>
+    <i
+      class="bi bi-check-circle-fill text-sm text-accent"
+      aria-hidden="true"></i>
     {toastMessage}
   </div>
 {/if}
@@ -1387,7 +1478,9 @@
   .editor-pre code,
   .editor-pre :global(span),
   .line-num-item {
-    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace !important;
+    font-family:
+      ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New',
+      monospace !important;
     font-size: 14.5px !important;
     line-height: 24px !important;
     letter-spacing: normal !important;

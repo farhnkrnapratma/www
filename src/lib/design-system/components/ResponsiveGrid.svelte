@@ -9,12 +9,7 @@
     children?: Snippet;
   }
 
-  let {
-    columns = 2,
-    gap = 'md',
-    class: className = '',
-    children,
-  }: Props = $props();
+  let { columns = 2, gap = 'md', class: className = '', children }: Props = $props();
 
   const gridStyles = {
     1: 'grid-cols-1',

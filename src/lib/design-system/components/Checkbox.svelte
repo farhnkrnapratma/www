@@ -21,24 +21,24 @@
 
 <label
   class={cn(
-    'inline-flex items-start gap-2.5 cursor-pointer select-none',
-    disabled ? 'opacity-50 cursor-not-allowed' : '',
-    className
+    'inline-flex cursor-pointer items-start gap-2.5 select-none',
+    disabled ? 'cursor-not-allowed opacity-50' : '',
+    className,
   )}>
   <input
     type="checkbox"
     {id}
     {disabled}
     bind:checked
-    class="mt-0.5 h-4 w-4 rounded border-border-default bg-surface text-accent focus:ring-2 focus:ring-accent/20 focus:ring-offset-0 focus:outline-none transition-colors cursor-pointer accent-accent"
+    class="mt-0.5 h-4 w-4 cursor-pointer rounded border-border-default bg-surface text-accent accent-accent transition-colors focus:ring-2 focus:ring-accent/20 focus:ring-offset-0 focus:outline-none"
     {...restProps} />
   {#if label || description}
     <div class="flex flex-col">
       {#if label}
-        <span class="text-xs sm:text-sm font-semibold text-text-primary">{label}</span>
+        <span class="text-xs font-semibold text-text-primary sm:text-sm">{label}</span>
       {/if}
       {#if description}
-        <span class="text-xs text-text-muted mt-0.5">{description}</span>
+        <span class="mt-0.5 text-xs text-text-muted">{description}</span>
       {/if}
     </div>
   {/if}

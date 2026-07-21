@@ -9,12 +9,7 @@
     children?: Snippet;
   }
 
-  let {
-    position = 'inline',
-    align = 'right',
-    class: className = '',
-    children,
-  }: Props = $props();
+  let { position = 'inline', align = 'right', class: className = '', children }: Props = $props();
 
   const alignStyles = {
     left: 'justify-start',
@@ -25,12 +20,12 @@
 
 <div
   class={cn(
-    'flex items-center gap-3 w-full',
+    'flex w-full items-center gap-3',
     alignStyles[align],
-    position === 'sticky'
-      ? 'sticky bottom-0 z-30 bg-surface/90 backdrop-blur-md border-t border-border-subtle py-3 px-4'
-      : 'py-2',
-    className
+    position === 'sticky' ?
+      'sticky bottom-0 z-30 border-t border-border-subtle bg-surface/90 px-4 py-3 backdrop-blur-md'
+    : 'py-2',
+    className,
   )}>
   {@render children?.()}
 </div>

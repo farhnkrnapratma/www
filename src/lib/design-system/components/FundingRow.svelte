@@ -26,32 +26,40 @@
   target="_blank"
   rel="noopener noreferrer"
   class={cn(
-    'group flex items-center justify-between gap-4 p-4 rounded-xl border border-border-subtle bg-surface/40 hover:bg-surface-hover hover:border-border-strong transition-all duration-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus-ring select-none',
-    className
+    'group flex items-center justify-between gap-4 rounded-xl border border-border-subtle bg-surface/40 p-4 transition-all duration-300 select-none hover:border-border-strong hover:bg-surface-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus-ring',
+    className,
   )}>
-  <div class="flex items-center gap-3.5 min-w-0">
-    <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-border-subtle bg-surface text-accent group-hover:scale-105 transition-transform">
-      <i class="bi {icon} text-base" aria-hidden="true"></i>
+  <div class="flex min-w-0 items-center gap-3.5">
+    <div
+      class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-border-subtle bg-surface text-accent transition-transform group-hover:scale-105">
+      <i
+        class="bi {icon} text-base"
+        aria-hidden="true"></i>
     </div>
-    <div class="flex flex-col min-w-0">
+    <div class="flex min-w-0 flex-col">
       <div class="flex items-center gap-2">
-        <span class="text-xs font-bold text-text-primary group-hover:text-accent transition-colors truncate">
+        <span
+          class="truncate text-xs font-bold text-text-primary transition-colors group-hover:text-accent">
           {platform}
         </span>
         {#if badge}
-          <span class="rounded bg-accent-subtle/40 px-1.5 py-0.25 text-[10px] font-bold text-accent">
+          <span
+            class="rounded bg-accent-subtle/40 px-1.5 py-0.25 text-[10px] font-bold text-accent">
             {badge}
           </span>
         {/if}
       </div>
       {#if description}
-        <span class="text-[11px] text-text-muted truncate">{description}</span>
+        <span class="truncate text-[11px] text-text-muted">{description}</span>
       {/if}
     </div>
   </div>
 
-  <div class="flex items-center gap-1.5 text-xs text-text-muted group-hover:text-accent transition-colors shrink-0 font-medium">
+  <div
+    class="flex shrink-0 items-center gap-1.5 text-xs font-medium text-text-muted transition-colors group-hover:text-accent">
     <span>Sponsor</span>
-    <i class="bi bi-box-arrow-up-right text-[10px]" aria-hidden="true"></i>
+    <i
+      class="bi bi-box-arrow-up-right text-[10px]"
+      aria-hidden="true"></i>
   </div>
 </a>

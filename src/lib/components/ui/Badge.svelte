@@ -8,12 +8,7 @@
     class?: string;
   }
 
-  let {
-    variant = 'default',
-    size = 'sm',
-    children,
-    class: className = '',
-  }: Props = $props();
+  let { variant = 'default', size = 'sm', children, class: className = '' }: Props = $props();
 
   const variantStyles = {
     default: 'bg-border-subtle/50 text-text-secondary border border-border-subtle',

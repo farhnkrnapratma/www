@@ -12,22 +12,22 @@
 </script>
 
 <div
-  class="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between {align === 'center'
-    ? 'text-center items-center'
-    : 'text-left'}">
+  class="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between {align === 'center' ?
+    'items-center text-center'
+  : 'text-left'}">
   <div>
     <h1 class="text-2xl font-bold tracking-tight text-text-primary sm:text-3xl lg:text-4xl">
       {title}
     </h1>
     {#if subtitle}
-      <p class="mt-1 text-xs text-text-secondary sm:text-sm leading-relaxed max-w-xl">
+      <p class="mt-1 max-w-xl text-xs leading-relaxed text-text-secondary sm:text-sm">
         {subtitle}
       </p>
     {/if}
   </div>
 
   {#if actions}
-    <div class="flex items-center gap-2 shrink-0 mt-3 sm:mt-0">
+    <div class="mt-3 flex shrink-0 items-center gap-2 sm:mt-0">
       {@render actions()}
     </div>
   {/if}

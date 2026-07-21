@@ -11,6 +11,8 @@
   let { as = 'span', class: className = '', children }: Props = $props();
 </script>
 
-<svelte:element this={as} class={cn('sr-only', className)}>
+<svelte:element
+  this={as}
+  class={cn('sr-only', className)}>
   {@render children?.()}
 </svelte:element>

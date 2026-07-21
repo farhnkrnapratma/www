@@ -189,7 +189,7 @@
     aria-hidden="true"></i>
   <span class="hidden sm:inline">Search</span>
   <kbd
-    class="ml-1.5 hidden inline-flex h-5 items-center justify-center rounded border border-border-subtle bg-surface-canvas px-1.5 align-middle font-mono text-[11px] leading-none font-semibold text-text-secondary sm:inline-flex">
+    class="bg-surface-canvas ml-1.5 hidden inline-flex h-5 items-center justify-center rounded border border-border-subtle px-1.5 align-middle font-mono text-[11px] leading-none font-semibold text-text-secondary sm:inline-flex">
     Ctrl+K
   </kbd>
 </button>
@@ -211,7 +211,7 @@
       onkeydown={handleKeydown}>
       <div class="border-b border-border-subtle px-4 py-2">
         <div
-          class="flex items-center gap-3 rounded-xl border border-border-subtle bg-surface-canvas/40 px-3 py-1.5 transition-all duration-150 focus-within:border-accent/60 focus-within:ring-1 focus-within:ring-accent/20">
+          class="bg-surface-canvas/40 flex items-center gap-3 rounded-xl border border-border-subtle px-3 py-1.5 transition-all duration-150 focus-within:border-accent/60 focus-within:ring-1 focus-within:ring-accent/20">
           {#if isLoading}
             <svg
               class="h-4 w-4 shrink-0 animate-spin text-accent"
@@ -362,7 +362,7 @@
                       <div class="mt-1 flex flex-wrap gap-1">
                         {#each result.tags as tag (tag)}
                           <span
-                            class="rounded-full bg-surface-canvas px-1.5 py-0.5 font-mono text-[10px] text-text-muted"
+                            class="bg-surface-canvas rounded-full px-1.5 py-0.5 font-mono text-[10px] text-text-muted"
                             >{tag}</span>
                         {/each}
                       </div>
@@ -385,11 +385,11 @@
       {/if}
 
       <div
-        class="flex items-center justify-end border-t border-border-subtle bg-surface-canvas/15 px-4 py-2.5 select-none">
+        class="bg-surface-canvas/15 flex items-center justify-end border-t border-border-subtle px-4 py-2.5 select-none">
         <div class="flex items-center gap-3.5 text-xs text-text-muted">
           <span class="flex items-center gap-1.5">
             <kbd
-              class="inline-flex h-5.5 w-5.5 items-center justify-center rounded border border-border-subtle bg-surface-canvas align-middle text-[11px] font-semibold text-text-secondary">
+              class="bg-surface-canvas inline-flex h-5.5 w-5.5 items-center justify-center rounded border border-border-subtle align-middle text-[11px] font-semibold text-text-secondary">
               <i
                 class="bi bi-arrow-down-up text-[11px]"
                 aria-hidden="true"></i>
@@ -398,7 +398,7 @@
           </span>
           <span class="flex items-center gap-1.5">
             <kbd
-              class="inline-flex h-5.5 w-5.5 items-center justify-center rounded border border-border-subtle bg-surface-canvas align-middle text-[11px] font-semibold text-text-secondary">
+              class="bg-surface-canvas inline-flex h-5.5 w-5.5 items-center justify-center rounded border border-border-subtle align-middle text-[11px] font-semibold text-text-secondary">
               <i
                 class="bi bi-arrow-return-left text-[11px]"
                 aria-hidden="true"></i>
@@ -407,7 +407,7 @@
           </span>
           <span class="flex items-center gap-1.5">
             <kbd
-              class="inline-flex h-5.5 items-center justify-center rounded border border-border-subtle bg-surface-canvas px-1.5 align-middle font-mono text-[11px] font-semibold text-text-secondary uppercase">
+              class="bg-surface-canvas inline-flex h-5.5 items-center justify-center rounded border border-border-subtle px-1.5 align-middle font-mono text-[11px] font-semibold text-text-secondary uppercase">
               esc
             </kbd>
             close
@@ -436,4 +436,3 @@
     display: none;
   }
 </style>
-

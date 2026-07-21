@@ -26,7 +26,10 @@
   size="sm"
   {onClose}>
   {#snippet footer()}
-    <Button variant="primary" size="md" onclick={onClose}>
+    <Button
+      variant="primary"
+      size="md"
+      onclick={onClose}>
       {buttonLabel}
     </Button>
   {/snippet}

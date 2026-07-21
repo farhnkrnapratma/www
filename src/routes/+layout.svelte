@@ -110,4 +110,3 @@
     <span class="hidden sm:inline">Feedback</span>
   </a>
 {/if}
-

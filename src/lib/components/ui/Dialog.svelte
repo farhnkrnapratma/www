@@ -34,7 +34,7 @@
     <!-- Backdrop -->
     <button
       type="button"
-      class="absolute inset-0 bg-overlay-backdrop backdrop-blur-sm cursor-default"
+      class="absolute inset-0 cursor-default bg-overlay-backdrop backdrop-blur-sm"
       aria-label="Close modal"
       onclick={onClose}></button>
 

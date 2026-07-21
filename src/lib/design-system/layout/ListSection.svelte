@@ -12,8 +12,8 @@
 
 <div
   class={cn(
-    'overflow-hidden rounded-2xl border border-border-subtle bg-surface/60 divide-y divide-border-subtle shadow-xs backdrop-blur-lg transition-colors duration-300',
-    className
+    'divide-y divide-border-subtle overflow-hidden rounded-2xl border border-border-subtle bg-surface/60 shadow-xs backdrop-blur-lg transition-colors duration-300',
+    className,
   )}>
   {@render children?.()}
 </div>

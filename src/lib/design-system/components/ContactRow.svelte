@@ -35,43 +35,50 @@
 
 <div
   class={cn(
-    'group flex items-center justify-between gap-4 p-4 rounded-xl border border-border-subtle bg-surface/40 hover:bg-surface-hover hover:border-border-strong transition-all duration-300',
-    className
+    'group flex items-center justify-between gap-4 rounded-xl border border-border-subtle bg-surface/40 p-4 transition-all duration-300 hover:border-border-strong hover:bg-surface-hover',
+    className,
   )}>
-  <div class="flex items-center gap-3.5 min-w-0">
-    <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-border-subtle bg-surface text-text-secondary group-hover:text-accent transition-colors">
-      <i class="bi {icon} text-base" aria-hidden="true"></i>
+  <div class="flex min-w-0 items-center gap-3.5">
+    <div
+      class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-border-subtle bg-surface text-text-secondary transition-colors group-hover:text-accent">
+      <i
+        class="bi {icon} text-base"
+        aria-hidden="true"></i>
     </div>
-    <div class="flex flex-col min-w-0">
+    <div class="flex min-w-0 flex-col">
       {#if href}
         <a
           {href}
           target={href.startsWith('http') ? '_blank' : undefined}
           rel={href.startsWith('http') ? 'noopener noreferrer' : undefined}
-          class="text-xs font-bold text-text-primary hover:text-accent truncate transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus-ring">
+          class="truncate text-xs font-bold text-text-primary transition-colors hover:text-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus-ring">
           {title}
         </a>
       {:else}
-        <span class="text-xs font-bold text-text-primary truncate">{title}</span>
+        <span class="truncate text-xs font-bold text-text-primary">{title}</span>
       {/if}
       {#if subtitle}
-        <span class="text-[11px] text-text-muted truncate">{subtitle}</span>
+        <span class="truncate text-[11px] text-text-muted">{subtitle}</span>
       {/if}
     </div>
   </div>
 
-  <div class="flex items-center gap-2 shrink-0">
+  <div class="flex shrink-0 items-center gap-2">
     {#if copyableText}
       <button
         type="button"
         onclick={handleCopy}
         aria-label="Copy contact information"
-        class="inline-flex h-8 items-center gap-1.5 rounded-lg border border-border-subtle bg-surface px-2.5 text-[11px] font-medium text-text-secondary hover:bg-surface-hover hover:text-text-primary transition-colors focus-visible:outline-2 focus-visible:outline-focus-ring">
+        class="inline-flex h-8 items-center gap-1.5 rounded-lg border border-border-subtle bg-surface px-2.5 text-[11px] font-medium text-text-secondary transition-colors hover:bg-surface-hover hover:text-text-primary focus-visible:outline-2 focus-visible:outline-focus-ring">
         {#if copied}
-          <i class="bi bi-check2 text-accent" aria-hidden="true"></i>
+          <i
+            class="bi bi-check2 text-accent"
+            aria-hidden="true"></i>
           <span class="text-accent">Copied</span>
         {:else}
-          <i class="bi bi-clipboard" aria-hidden="true"></i>
+          <i
+            class="bi bi-clipboard"
+            aria-hidden="true"></i>
           <span>Copy</span>
         {/if}
       </button>

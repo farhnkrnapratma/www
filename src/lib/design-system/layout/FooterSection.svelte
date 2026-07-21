@@ -27,7 +27,7 @@
 <footer
   class={cn(
     'relative z-10 mx-auto mt-auto w-full border-t border-border-subtle px-6 pt-16 pb-12 font-sans text-xs text-text-muted md:w-[80%] lg:w-[50%]',
-    className
+    className,
   )}>
   <div class="grid grid-cols-1 gap-8 pb-10 md:grid-cols-12">
     <div class="flex flex-col gap-4 md:col-span-7">
@@ -45,7 +45,9 @@
           rel="noopener noreferrer"
           class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-border-subtle bg-surface text-text-secondary transition-colors hover:bg-surface-hover hover:text-accent"
           aria-label="GitHub (opens in a new tab)">
-          <i class="bi bi-github text-base leading-none" aria-hidden="true"></i>
+          <i
+            class="bi bi-github text-base leading-none"
+            aria-hidden="true"></i>
         </a>
         <a
           href="https://linkedin.com/in/farhnkrnapratma"
@@ -53,7 +55,9 @@
           rel="noopener noreferrer"
           class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-border-subtle bg-surface text-text-secondary transition-colors hover:bg-surface-hover hover:text-accent"
           aria-label="LinkedIn (opens in a new tab)">
-          <i class="bi bi-linkedin text-base leading-none" aria-hidden="true"></i>
+          <i
+            class="bi bi-linkedin text-base leading-none"
+            aria-hidden="true"></i>
         </a>
         <a
           href="https://x.com/farhnkrnapratma"
@@ -61,7 +65,9 @@
           rel="noopener noreferrer"
           class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-border-subtle bg-surface text-text-secondary transition-colors hover:bg-surface-hover hover:text-accent"
           aria-label="X (opens in a new tab)">
-          <i class="bi bi-twitter-x text-base leading-none" aria-hidden="true"></i>
+          <i
+            class="bi bi-twitter-x text-base leading-none"
+            aria-hidden="true"></i>
         </a>
         <a
           href="https://instagram.com/farhnkrnapratma"
@@ -69,7 +75,9 @@
           rel="noopener noreferrer"
           class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-border-subtle bg-surface text-text-secondary transition-colors hover:bg-surface-hover hover:text-accent"
           aria-label="Instagram (opens in a new tab)">
-          <i class="bi bi-instagram text-base leading-none" aria-hidden="true"></i>
+          <i
+            class="bi bi-instagram text-base leading-none"
+            aria-hidden="true"></i>
         </a>
       </div>
     </div>
@@ -107,9 +115,13 @@
       <a
         href="/atom.xml"
         class="inline-flex items-center gap-1 transition-colors hover:text-[#f26522]">
-        <i class="bi bi-rss-fill" aria-hidden="true"></i> RSS Feed
+        <i
+          class="bi bi-rss-fill"
+          aria-hidden="true"></i> RSS Feed
       </a>
-      <a href="/sitemap.xml" class="transition-colors hover:text-accent">Sitemap</a>
+      <a
+        href="/sitemap.xml"
+        class="transition-colors hover:text-accent">Sitemap</a>
     </div>
   </div>
 </footer>

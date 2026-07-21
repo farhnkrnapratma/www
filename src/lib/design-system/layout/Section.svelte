@@ -9,12 +9,7 @@
     children?: Snippet;
   }
 
-  let {
-    spacing = 'normal',
-    bordered = false,
-    class: className = '',
-    children,
-  }: Props = $props();
+  let { spacing = 'normal', bordered = false, class: className = '', children }: Props = $props();
 
   const spacingStyles = {
     compact: 'py-6 md:py-8',
@@ -28,7 +23,7 @@
     'relative z-10 w-full',
     spacingStyles[spacing],
     bordered ? 'border-t border-border-subtle' : '',
-    className
+    className,
   )}>
   {@render children?.()}
 </section>

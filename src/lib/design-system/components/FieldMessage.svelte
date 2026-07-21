@@ -8,12 +8,7 @@
     class?: string;
   }
 
-  let {
-    type = 'error',
-    id,
-    message,
-    class: className = '',
-  }: Props = $props();
+  let { type = 'error', id, message, class: className = '' }: Props = $props();
 
   const typeStyles = {
     error: 'text-danger',
@@ -36,11 +31,13 @@
     role={type === 'error' ? 'alert' : undefined}
     aria-live={type === 'error' ? 'polite' : 'off'}
     class={cn(
-      'flex items-center gap-1.5 text-[11px] font-medium leading-tight select-none mt-1',
+      'mt-1 flex items-center gap-1.5 text-[11px] leading-tight font-medium select-none',
       typeStyles[type],
-      className
+      className,
     )}>
-    <i class="bi {iconStyles[type]} text-xs" aria-hidden="true"></i>
+    <i
+      class="bi {iconStyles[type]} text-xs"
+      aria-hidden="true"></i>
     <span>{message}</span>
   </div>
 {/if}

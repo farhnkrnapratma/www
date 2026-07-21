@@ -7,11 +7,7 @@
     class?: string;
   }
 
-  let {
-    label = 'Loading content...',
-    size = 'md',
-    class: className = '',
-  }: Props = $props();
+  let { label = 'Loading content...', size = 'md', class: className = '' }: Props = $props();
 
   const sizeStyles = {
     sm: 'h-4 w-4 border-2',
@@ -25,14 +21,12 @@
   aria-live="polite"
   aria-busy="true"
   class={cn(
-    'flex flex-col items-center justify-center p-8 text-center select-none gap-3',
-    className
+    'flex flex-col items-center justify-center gap-3 p-8 text-center select-none',
+    className,
   )}>
   <div
-    class={cn(
-      'animate-spin rounded-full border-border-subtle border-t-accent',
-      sizeStyles[size]
-    )}></div>
+    class={cn('animate-spin rounded-full border-border-subtle border-t-accent', sizeStyles[size])}>
+  </div>
   {#if label}
     <span class="text-xs font-medium text-text-muted">{label}</span>
   {/if}

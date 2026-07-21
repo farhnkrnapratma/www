@@ -33,11 +33,11 @@
   bind:value
   {disabled}
   class={cn(
-    'w-full border border-border-default bg-surface text-text-primary transition-colors focus:border-accent focus:ring-2 focus:ring-accent/20 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed',
+    'w-full border border-border-default bg-surface text-text-primary transition-colors focus:border-accent focus:ring-2 focus:ring-accent/20 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50',
     sizeStyles[size],
     error ? '!border-danger !ring-danger/20' : '',
     valid && !error ? '!border-accent' : '',
-    className
+    className,
   )}
   {...restProps}>
   {@render children?.()}

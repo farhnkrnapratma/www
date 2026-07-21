@@ -33,7 +33,9 @@
     });
   }
 
-  const encodedUrl = $derived(encodeURIComponent(url || (typeof window !== 'undefined' ? window.location.href : '')));
+  const encodedUrl = $derived(
+    encodeURIComponent(url || (typeof window !== 'undefined' ? window.location.href : '')),
+  );
   const encodedTitle = $derived(encodeURIComponent(articleTitle));
 </script>
 
@@ -49,16 +51,19 @@
         type="text"
         readonly
         value={url || (typeof window !== 'undefined' ? window.location.href : '')}
-        class="text-xs font-mono select-all"
-      />
+        class="font-mono text-xs select-all" />
       <Button
         variant={copied ? 'subtle' : 'secondary'}
         size="md"
         onclick={copyUrl}>
         {#if copied}
-          <i class="bi bi-check2 text-accent" aria-hidden="true"></i> Copied!
+          <i
+            class="bi bi-check2 text-accent"
+            aria-hidden="true"></i> Copied!
         {:else}
-          <i class="bi bi-clipboard" aria-hidden="true"></i> Copy
+          <i
+            class="bi bi-clipboard"
+            aria-hidden="true"></i> Copy
         {/if}
       </Button>
     </div>
@@ -68,8 +73,13 @@
         href="https://x.com/intent/post?url={encodedUrl}&text={encodedTitle}"
         target="_blank"
         rel="noopener noreferrer">
-        <IconButton ariaLabel="Share on X" variant="default" size="lg">
-          <i class="bi bi-twitter-x text-lg" aria-hidden="true"></i>
+        <IconButton
+          ariaLabel="Share on X"
+          variant="default"
+          size="lg">
+          <i
+            class="bi bi-twitter-x text-lg"
+            aria-hidden="true"></i>
         </IconButton>
       </a>
 
@@ -77,8 +87,13 @@
         href="https://linkedin.com/sharing/share-offsite/?url={encodedUrl}"
         target="_blank"
         rel="noopener noreferrer">
-        <IconButton ariaLabel="Share on LinkedIn" variant="default" size="lg">
-          <i class="bi bi-linkedin text-lg text-[#0a66c2]" aria-hidden="true"></i>
+        <IconButton
+          ariaLabel="Share on LinkedIn"
+          variant="default"
+          size="lg">
+          <i
+            class="bi bi-linkedin text-lg text-[#0a66c2]"
+            aria-hidden="true"></i>
         </IconButton>
       </a>
 
@@ -86,8 +101,13 @@
         href="https://www.facebook.com/sharer/sharer.php?u={encodedUrl}"
         target="_blank"
         rel="noopener noreferrer">
-        <IconButton ariaLabel="Share on Facebook" variant="default" size="lg">
-          <i class="bi bi-facebook text-lg text-[#1877f2]" aria-hidden="true"></i>
+        <IconButton
+          ariaLabel="Share on Facebook"
+          variant="default"
+          size="lg">
+          <i
+            class="bi bi-facebook text-lg text-[#1877f2]"
+            aria-hidden="true"></i>
         </IconButton>
       </a>
 
@@ -95,15 +115,23 @@
         href="https://reddit.com/submit?url={encodedUrl}&title={encodedTitle}"
         target="_blank"
         rel="noopener noreferrer">
-        <IconButton ariaLabel="Share on Reddit" variant="default" size="lg">
-          <i class="bi bi-reddit text-lg text-[#ff4500]" aria-hidden="true"></i>
+        <IconButton
+          ariaLabel="Share on Reddit"
+          variant="default"
+          size="lg">
+          <i
+            class="bi bi-reddit text-lg text-[#ff4500]"
+            aria-hidden="true"></i>
         </IconButton>
       </a>
     </div>
   </div>
 
   {#snippet footer()}
-    <Button variant="ghost" size="md" onclick={onClose}>
+    <Button
+      variant="ghost"
+      size="md"
+      onclick={onClose}>
       Close
     </Button>
   {/snippet}

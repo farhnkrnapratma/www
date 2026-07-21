@@ -381,7 +381,9 @@
   class="fixed top-0 z-40 flex h-15 w-full items-center justify-between border-b border-border-subtle bg-surface-card/60 px-5 font-sans shadow-xs backdrop-blur-lg transition-colors duration-300"
   aria-label="Admin navigation">
   <div class="flex items-center gap-2">
-    <span class="material-symbols-rounded text-lg text-accent select-none" aria-hidden="true">code</span>
+    <span
+      class="material-symbols-rounded text-lg text-accent select-none"
+      aria-hidden="true">code</span>
     <span class="text-sm font-bold text-text-primary select-none">Console</span>
   </div>
 
@@ -396,9 +398,13 @@
         aria-haspopup="true"
         aria-expanded={themeDropdownOpen}>
         {#if theme === 'auto'}
-          <i class="bi bi-circle-half" aria-hidden="true"></i>
+          <i
+            class="bi bi-circle-half"
+            aria-hidden="true"></i>
         {:else}
-          <i class="bi {theme === 'dark' ? 'bi-moon-stars-fill' : 'bi-sun-fill'}" aria-hidden="true"></i>
+          <i
+            class="bi {theme === 'dark' ? 'bi-moon-stars-fill' : 'bi-sun-fill'}"
+            aria-hidden="true"></i>
         {/if}
       </IconButton>
 
@@ -410,13 +416,22 @@
         <div
           role="menu"
           class="absolute top-11 right-0 z-50 flex min-w-[7.75rem] flex-col rounded-xl border border-border-subtle bg-surface-elevated py-1.5 shadow-lg">
-          {#each ([['auto', 'bi-circle-half', 'Auto'], ['light', 'bi-sun-fill', 'Light'], ['dark', 'bi-moon-stars-fill', 'Dark']] as const) as [val, icon, label]}
+          {#each [['auto', 'bi-circle-half', 'Auto'], ['light', 'bi-sun-fill', 'Light'], ['dark', 'bi-moon-stars-fill', 'Dark']] as const as [val, icon, label]}
             <button
               type="button"
               role="menuitem"
-              onclick={() => { applyTheme(val); themeDropdownOpen = false; }}
-              class="flex w-full cursor-pointer items-center gap-3 px-4 py-2.5 text-left text-xs font-bold transition-colors hover:bg-surface-hover {theme === val ? 'text-accent' : 'text-text-primary'}">
-              <i class="bi {icon} text-sm" aria-hidden="true"></i>
+              onclick={() => {
+                applyTheme(val);
+                themeDropdownOpen = false;
+              }}
+              class="flex w-full cursor-pointer items-center gap-3 px-4 py-2.5 text-left text-xs font-bold transition-colors hover:bg-surface-hover {(
+                theme === val
+              ) ?
+                'text-accent'
+              : 'text-text-primary'}">
+              <i
+                class="bi {icon} text-sm"
+                aria-hidden="true"></i>
               {label}
             </button>
           {/each}
@@ -436,17 +451,26 @@
 </nav>
 
 <!-- Main Content -->
-<main id="main-content" class="flex min-h-[calc(100vh-3.75rem)] flex-col pt-15 font-sans">
-  <section class="mx-auto w-full flex-1 px-6 py-14 md:w-[80%] md:max-w-none lg:w-[50%]" aria-label="Blog posts">
-
+<main
+  id="main-content"
+  class="flex min-h-[calc(100vh-3.75rem)] flex-col pt-15 font-sans">
+  <section
+    class="mx-auto w-full flex-1 px-6 py-14 md:w-[80%] md:max-w-none lg:w-[50%]"
+    aria-label="Blog posts">
     {#if isLoading}
-      <LoadingState label="Loading dashboard data..." size="lg" class="py-20" />
+      <LoadingState
+        label="Loading dashboard data..."
+        size="lg"
+        class="py-20" />
     {:else}
       <!-- Page Header -->
       <div class="mb-8 flex items-center justify-between gap-4">
         <h1 class="text-2xl font-bold tracking-tight text-text-primary sm:text-3xl">Posts</h1>
         <a href="/admin/new">
-          <Button variant="primary" size="md" leadingIcon="bi-plus-lg">
+          <Button
+            variant="primary"
+            size="md"
+            leadingIcon="bi-plus-lg">
             New post
           </Button>
         </a>
@@ -460,15 +484,23 @@
           icon="bi-journal-plus">
           {#snippet actions()}
             <a href="/admin/new">
-              <Button variant="primary" size="sm" leadingIcon="bi-plus-lg">New post</Button>
+              <Button
+                variant="primary"
+                size="sm"
+                leadingIcon="bi-plus-lg">New post</Button>
             </a>
           {/snippet}
         </EmptyState>
       {:else}
-        <div class="boxed-list text-left" role="list" aria-label="Blog posts list">
+        <div
+          class="boxed-list text-left"
+          role="list"
+          aria-label="Blog posts list">
           {#each posts as post (post.id)}
             {@const postComments = getPostComments(post.id)}
-            <div class="action-row group flex flex-col items-stretch gap-4 py-4" role="listitem">
+            <div
+              class="action-row group flex flex-col items-stretch gap-4 py-4"
+              role="listitem">
               <div class="flex items-start justify-between gap-3">
                 <!-- Post Meta -->
                 <div class="flex min-w-0 flex-1 flex-col gap-1">
@@ -488,21 +520,29 @@
                         aria-expanded={expandedPostIds.has(post.id)}
                         aria-controls="comments-{post.id}"
                         class="inline-flex h-6 cursor-pointer items-center gap-1 rounded-lg bg-border-subtle/40 px-2 text-[10px] font-semibold text-text-secondary transition-colors hover:bg-border-subtle focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">
-                        <i class="bi bi-chat-left-text-fill text-[10px] text-accent" aria-hidden="true"></i>
+                        <i
+                          class="bi bi-chat-left-text-fill text-[10px] text-accent"
+                          aria-hidden="true"></i>
                         {expandedPostIds.has(post.id) ? 'Hide' : 'Show'} comments ({postComments.length})
                       </button>
                     {/if}
                   </div>
                   <h2 class="text-base font-bold text-text-primary">{post.title}</h2>
-                  <p class="line-clamp-1 font-mono text-xs text-text-muted" aria-label="Storage path">
+                  <p
+                    class="line-clamp-1 font-mono text-xs text-text-muted"
+                    aria-label="Storage path">
                     {post.storage_path}
                   </p>
                 </div>
 
                 <!-- Post Actions -->
                 <div class="flex shrink-0 items-center gap-2">
-                  <a href="/admin/new?id={post.id}" aria-label="Edit post: {post.title}">
-                    <Button variant="secondary" size="sm">Edit post</Button>
+                  <a
+                    href="/admin/new?id={post.id}"
+                    aria-label="Edit post: {post.title}">
+                    <Button
+                      variant="secondary"
+                      size="sm">Edit post</Button>
                   </a>
 
                   <!-- Overflow Menu -->
@@ -511,10 +551,13 @@
                       ariaLabel="More actions for {post.title}"
                       variant="default"
                       size="sm"
-                      onclick={() => (openActionMenuId = openActionMenuId === post.id ? null : post.id)}
+                      onclick={() =>
+                        (openActionMenuId = openActionMenuId === post.id ? null : post.id)}
                       aria-haspopup="true"
                       aria-expanded={openActionMenuId === post.id}>
-                      <i class="bi bi-three-dots-vertical text-sm" aria-hidden="true"></i>
+                      <i
+                        class="bi bi-three-dots-vertical text-sm"
+                        aria-hidden="true"></i>
                     </IconButton>
 
                     {#if openActionMenuId === post.id}
@@ -529,17 +572,27 @@
                         <button
                           type="button"
                           role="menuitem"
-                          onclick={() => { togglePublish(post); openActionMenuId = null; }}
+                          onclick={() => {
+                            togglePublish(post);
+                            openActionMenuId = null;
+                          }}
                           class="flex w-full cursor-pointer items-center gap-2.5 px-4 py-2.5 text-left text-xs font-bold text-text-primary transition-colors hover:bg-surface-hover">
-                          <i class="bi {post.published ? 'bi-eye-slash' : 'bi-eye'} text-sm" aria-hidden="true"></i>
+                          <i
+                            class="bi {post.published ? 'bi-eye-slash' : 'bi-eye'} text-sm"
+                            aria-hidden="true"></i>
                           {post.published ? 'Unpublish' : 'Publish post'}
                         </button>
                         <button
                           type="button"
                           role="menuitem"
-                          onclick={() => { openActionMenuId = null; confirmDeletePost(post); }}
+                          onclick={() => {
+                            openActionMenuId = null;
+                            confirmDeletePost(post);
+                          }}
                           class="flex w-full cursor-pointer items-center gap-2.5 px-4 py-2.5 text-left text-xs font-bold text-danger transition-colors hover:bg-danger-subtle">
-                          <i class="bi bi-trash3 text-sm" aria-hidden="true"></i>
+                          <i
+                            class="bi bi-trash3 text-sm"
+                            aria-hidden="true"></i>
                           Delete post
                         </button>
                       </div>
@@ -550,7 +603,9 @@
 
               <!-- Comments Thread (expandable) -->
               {#if postComments.length > 0 && expandedPostIds.has(post.id)}
-                <div id="comments-{post.id}" class="flex flex-col gap-6 p-4">
+                <div
+                  id="comments-{post.id}"
+                  class="flex flex-col gap-6 p-4">
                   {#snippet commentNode(
                     comment: FlatAdminComment,
                     depth: number,
@@ -581,7 +636,7 @@
 
                         <div class="min-w-0 flex-1">
                           <div
-                            class="inline-block max-w-full border border-border-subtle bg-surface-card/70 px-4 py-2.5 text-left rounded-2xl">
+                            class="inline-block max-w-full rounded-2xl border border-border-subtle bg-surface-card/70 px-4 py-2.5 text-left">
                             <div class="text-xs font-bold text-text-primary">
                               {getCommentAuthor(comment)}
                             </div>
@@ -595,7 +650,8 @@
                             </p>
                           </div>
 
-                          <div class="mt-1.5 ml-2 flex flex-wrap items-center gap-3 text-[10px] text-text-muted">
+                          <div
+                            class="mt-1.5 ml-2 flex flex-wrap items-center gap-3 text-[10px] text-text-muted">
                             <span>{formatDate(comment.created_at)}</span>
                             {#if !comment.is_approved}
                               <Badge variant="warning">Hidden</Badge>
@@ -603,7 +659,10 @@
                             {#if comment.is_approved}
                               <button
                                 type="button"
-                                onclick={() => { replyTo = comment; commentContent = ''; }}
+                                onclick={() => {
+                                  replyTo = comment;
+                                  commentContent = '';
+                                }}
                                 class="inline-flex h-6 cursor-pointer items-center rounded-lg bg-border-subtle/30 px-2 py-0.5 font-bold text-text-secondary transition-colors hover:bg-border-subtle hover:text-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">
                                 Reply
                               </button>
@@ -624,12 +683,16 @@
                               class="mt-3 rounded-xl border border-border-subtle bg-surface-base p-4">
                               <div class="mb-3 flex items-center justify-between gap-3">
                                 <p class="text-xs font-semibold text-text-secondary">
-                                  Replying as Admin to <span class="text-text-primary font-bold">{getCommentAuthor(comment)}</span>
+                                  Replying as Admin to <span class="font-bold text-text-primary"
+                                    >{getCommentAuthor(comment)}</span>
                                 </p>
                                 <Button
                                   variant="ghost"
                                   size="sm"
-                                  onclick={() => { replyTo = null; commentContent = ''; }}>
+                                  onclick={() => {
+                                    replyTo = null;
+                                    commentContent = '';
+                                  }}>
                                   Cancel
                                 </Button>
                               </div>
@@ -645,8 +708,7 @@
                                     rows={3}
                                     maxlength={1000}
                                     placeholder="Write your reply…"
-                                    bind:value={commentContent}
-                                  />
+                                    bind:value={commentContent} />
                                 </FormField>
                                 <div class="flex justify-end">
                                   <Button
@@ -674,7 +736,11 @@
                                 style="left: -28px; top: -16px; width: 28px; height: 32px; border-bottom-left-radius: 10px;"
                                 aria-hidden="true">
                               </div>
-                              {@render commentNode(child, depth + 1, i === comment.children.length - 1)}
+                              {@render commentNode(
+                                child,
+                                depth + 1,
+                                i === comment.children.length - 1,
+                              )}
                             </div>
                           {/each}
                         </div>

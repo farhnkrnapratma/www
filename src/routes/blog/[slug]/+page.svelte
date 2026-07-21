@@ -5,7 +5,17 @@
   import type { BlogComment } from './+page.server';
   import hljs from 'highlight.js';
   import { isNameReserved } from '$lib/nameValidator';
-  import { autoResize, SkipLink, SpotlightSearch, Button, IconButton, EmptyState, StatusBanner, FormField, Textarea } from '$lib';
+  import {
+    autoResize,
+    SkipLink,
+    SpotlightSearch,
+    Button,
+    IconButton,
+    EmptyState,
+    StatusBanner,
+    FormField,
+    Textarea,
+  } from '$lib';
   import Dialog from '$lib/design-system/components/Dialog.svelte';
   import { page } from '$app/state';
   import { supabase } from '$lib/supabase';
@@ -606,7 +616,9 @@
   <a
     href="/#blogs"
     class="inline-flex h-9 items-center justify-center rounded-lg border border-border-subtle bg-surface-card px-4 text-xs font-semibold text-text-primary transition-colors hover:bg-surface-hover">
-    <i class="bi bi-arrow-left mr-2" aria-hidden="true"></i>
+    <i
+      class="bi bi-arrow-left mr-2"
+      aria-hidden="true"></i>
     Back to blog
   </a>
   <div class="flex items-center gap-2">
@@ -620,9 +632,13 @@
         aria-haspopup="true"
         aria-expanded={themeDropdownOpen}>
         {#if theme === 'auto'}
-          <i class="bi bi-circle-half" aria-hidden="true"></i>
+          <i
+            class="bi bi-circle-half"
+            aria-hidden="true"></i>
         {:else}
-          <i class="bi {theme === 'dark' ? 'bi-moon-stars-fill' : 'bi-sun-fill'}" aria-hidden="true"></i>
+          <i
+            class="bi {theme === 'dark' ? 'bi-moon-stars-fill' : 'bi-sun-fill'}"
+            aria-hidden="true"></i>
         {/if}
       </IconButton>
 
@@ -634,13 +650,22 @@
         <div
           role="menu"
           class="absolute top-11 right-0 z-50 flex min-w-[7.75rem] flex-col rounded-xl border border-border-subtle bg-surface-elevated py-1.5 shadow-lg">
-          {#each ([['auto', 'bi-circle-half', 'Auto'], ['light', 'bi-sun-fill', 'Light'], ['dark', 'bi-moon-stars-fill', 'Dark']] as const) as [val, icon, label]}
+          {#each [['auto', 'bi-circle-half', 'Auto'], ['light', 'bi-sun-fill', 'Light'], ['dark', 'bi-moon-stars-fill', 'Dark']] as const as [val, icon, label]}
             <button
               type="button"
               role="menuitem"
-              onclick={() => { applyTheme(val); themeDropdownOpen = false; }}
-              class="flex w-full cursor-pointer items-center gap-3 px-4 py-2.5 text-left text-xs font-bold transition-colors hover:bg-surface-hover {theme === val ? 'text-accent' : 'text-text-primary'}">
-              <i class="bi {icon} text-sm" aria-hidden="true"></i>
+              onclick={() => {
+                applyTheme(val);
+                themeDropdownOpen = false;
+              }}
+              class="flex w-full cursor-pointer items-center gap-3 px-4 py-2.5 text-left text-xs font-bold transition-colors hover:bg-surface-hover {(
+                theme === val
+              ) ?
+                'text-accent'
+              : 'text-text-primary'}">
+              <i
+                class="bi {icon} text-sm"
+                aria-hidden="true"></i>
               {label}
             </button>
           {/each}
@@ -650,7 +675,9 @@
   </div>
 </nav>
 
-<main id="main-content" class="flex min-h-[calc(100vh-3.75rem)] flex-col pt-15 font-sans">
+<main
+  id="main-content"
+  class="flex min-h-[calc(100vh-3.75rem)] flex-col pt-15 font-sans">
   <div class="relative mx-auto w-full max-w-7xl px-6 pt-10 pb-16 xl:grid xl:grid-cols-12 xl:gap-8">
     <article
       class="mx-auto flex w-full flex-col pt-4 md:w-[80%] lg:w-[50%] xl:col-span-6 xl:col-start-4 xl:mx-0 xl:w-auto">
@@ -680,7 +707,9 @@
               aria-hidden="true">schedule</span>
             {formatReadTime(post.read_time)}
           </span>
-          <span class="inline-flex items-center gap-1" aria-label="{comments.length} comments">
+          <span
+            class="inline-flex items-center gap-1"
+            aria-label="{comments.length} comments">
             <span
               class="material-symbols-rounded text-[10px] leading-none"
               style="font-variation-settings: 'wght' 300, 'opsz' 20;"
@@ -688,7 +717,9 @@
             {comments.length}
           </span>
           {#if viewCount !== null}
-            <span class="inline-flex items-center gap-1" aria-label="{viewCount} views">
+            <span
+              class="inline-flex items-center gap-1"
+              aria-label="{viewCount} views">
               <span
                 class="material-symbols-rounded text-[10px] leading-none"
                 style="font-variation-settings: 'wght' 300, 'opsz' 20;"
@@ -729,11 +760,15 @@
             </Button>
           {:else if helpfulnessFeedback === 'yes'}
             <span class="flex animate-pulse items-center gap-1.5 text-xs font-bold text-accent">
-              <i class="bi bi-heart-fill" aria-hidden="true"></i> Thank you for your feedback!
+              <i
+                class="bi bi-heart-fill"
+                aria-hidden="true"></i> Thank you for your feedback!
             </span>
           {:else}
             <span class="flex items-center gap-1.5 text-xs font-bold text-text-muted">
-              <i class="bi bi-emoji-neutral" aria-hidden="true"></i> Redirecting to feedback…
+              <i
+                class="bi bi-emoji-neutral"
+                aria-hidden="true"></i> Redirecting to feedback…
             </span>
           {/if}
         </div>
@@ -751,19 +786,16 @@
               aria-hidden="true"></i>
             <span class="hidden sm:inline">{showCopySuccess ? 'Copied!' : 'Copy link'}</span>
           </button>
-          {#each [
-            { href: `https://twitter.com/intent/tweet?url=${encodeURIComponent(page.url.href)}&text=${encodeURIComponent(post.title)}`, icon: 'bi-twitter-x', label: 'Share on X (opens in a new tab)', text: 'X' },
-            { href: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(page.url.href)}`, icon: 'bi-facebook', label: 'Share on Facebook (opens in a new tab)', text: 'Facebook' },
-            { href: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(page.url.href)}`, icon: 'bi-linkedin', label: 'Share on LinkedIn (opens in a new tab)', text: 'LinkedIn' },
-            { href: `mailto:?subject=${encodeURIComponent(post.title)}&body=${encodeURIComponent(page.url.href)}`, icon: 'bi-envelope', label: 'Share via email', text: 'Email' },
-          ] as item}
+          {#each [{ href: `https://twitter.com/intent/tweet?url=${encodeURIComponent(page.url.href)}&text=${encodeURIComponent(post.title)}`, icon: 'bi-twitter-x', label: 'Share on X (opens in a new tab)', text: 'X' }, { href: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(page.url.href)}`, icon: 'bi-facebook', label: 'Share on Facebook (opens in a new tab)', text: 'Facebook' }, { href: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(page.url.href)}`, icon: 'bi-linkedin', label: 'Share on LinkedIn (opens in a new tab)', text: 'LinkedIn' }, { href: `mailto:?subject=${encodeURIComponent(post.title)}&body=${encodeURIComponent(page.url.href)}`, icon: 'bi-envelope', label: 'Share via email', text: 'Email' }] as item}
             <a
               href={item.href}
               target={item.href.startsWith('mailto') ? undefined : '_blank'}
               rel="noopener noreferrer"
               class="inline-flex h-9 items-center justify-center gap-2 rounded-lg border border-border-subtle bg-surface-card px-4 text-xs font-semibold text-text-primary transition-colors select-none hover:bg-surface-hover hover:text-accent"
               aria-label={item.label}>
-              <i class="bi {item.icon}" aria-hidden="true"></i>
+              <i
+                class="bi {item.icon}"
+                aria-hidden="true"></i>
               <span class="hidden sm:inline">{item.text}</span>
             </a>
           {/each}
@@ -772,12 +804,16 @@
 
       <div
         class="mt-8 flex flex-col items-center gap-5 rounded-2xl border border-border-subtle bg-surface-card/45 p-6 select-none sm:flex-row sm:items-start">
-        <div class="relative h-20 w-20 shrink-0 overflow-hidden rounded-full border border-border-subtle bg-surface-card/60 animate-pulse">
+        <div
+          class="relative h-20 w-20 shrink-0 animate-pulse overflow-hidden rounded-full border border-border-subtle bg-surface-card/60">
           <img
             src="/android-chrome-512x512.png"
             alt="Farhan Kurnia Pratama"
             loading="lazy"
-            onload={(e) => (e.currentTarget.closest('.animate-pulse') as HTMLElement | null)?.classList.remove('animate-pulse')}
+            onload={e =>
+              (e.currentTarget.closest('.animate-pulse') as HTMLElement | null)?.classList.remove(
+                'animate-pulse',
+              )}
             class="h-full w-full object-cover object-top" />
         </div>
         <div class="min-w-0 flex-1 text-center sm:text-left">
@@ -855,7 +891,9 @@
         </div>
       </div>
 
-      <section class="mt-16 border-t border-border-subtle pt-10" aria-label="Comments">
+      <section
+        class="mt-16 border-t border-border-subtle pt-10"
+        aria-label="Comments">
         <h2 class="mb-8 text-xl font-bold tracking-tight text-text-primary">
           Comments ({comments.length})
         </h2>
@@ -927,12 +965,20 @@
                     aria-live="polite"
                     class="mt-1 h-4 text-xs leading-none font-medium">
                     {#if errors.authorName}
-                      <span role="alert" class="flex items-center gap-1 text-danger">
-                        <i class="bi bi-exclamation-circle-fill" aria-hidden="true"></i>{errors.authorName}
+                      <span
+                        role="alert"
+                        class="flex items-center gap-1 text-danger">
+                        <i
+                          class="bi bi-exclamation-circle-fill"
+                          aria-hidden="true"></i
+                        >{errors.authorName}
                       </span>
                     {:else if valid.authorName && !isAnonymous}
                       <span class="flex items-center gap-1 text-accent">
-                        <i class="bi bi-check-circle-fill" aria-hidden="true"></i>Looks good
+                        <i
+                          class="bi bi-check-circle-fill"
+                          aria-hidden="true"></i
+                        >Looks good
                       </span>
                     {/if}
                   </div>
@@ -959,12 +1005,16 @@
                     valid.commentContent = false;
                     validateCommentContent();
                   }}
-                  aria-required="true"
-                />
+                  aria-required="true" />
               </FormField>
 
               <div class="mt-2 flex justify-end">
-                <Button type="submit" variant="primary" size="md" disabled={isSubmitting} isLoading={isSubmitting}>
+                <Button
+                  type="submit"
+                  variant="primary"
+                  size="md"
+                  disabled={isSubmitting}
+                  isLoading={isSubmitting}>
                   {isSubmitting ? 'Posting…' : 'Post comment'}
                 </Button>
               </div>
@@ -1041,7 +1091,10 @@
                         <p class="text-xs font-semibold text-text-secondary">
                           Replying to {getCommentAuthor(comment)}
                         </p>
-                        <Button variant="secondary" size="sm" onclick={cancelReply}>Cancel</Button>
+                        <Button
+                          variant="secondary"
+                          size="sm"
+                          onclick={cancelReply}>Cancel</Button>
                       </div>
 
                       <div class="flex flex-col gap-4">
@@ -1095,12 +1148,20 @@
                               aria-live="polite"
                               class="mt-1 h-4 text-xs leading-none font-medium">
                               {#if errors.authorName}
-                                <span role="alert" class="flex items-center gap-1 text-danger">
-                                  <i class="bi bi-exclamation-circle-fill" aria-hidden="true"></i>{errors.authorName}
+                                <span
+                                  role="alert"
+                                  class="flex items-center gap-1 text-danger">
+                                  <i
+                                    class="bi bi-exclamation-circle-fill"
+                                    aria-hidden="true"></i
+                                  >{errors.authorName}
                                 </span>
                               {:else if valid.authorName && !isAnonymous}
                                 <span class="flex items-center gap-1 text-accent">
-                                  <i class="bi bi-check-circle-fill" aria-hidden="true"></i>Looks good
+                                  <i
+                                    class="bi bi-check-circle-fill"
+                                    aria-hidden="true"></i
+                                  >Looks good
                                 </span>
                               {/if}
                             </div>
@@ -1127,12 +1188,16 @@
                               valid.commentContent = false;
                               validateCommentContent();
                             }}
-                            aria-required="true"
-                          />
+                            aria-required="true" />
                         </FormField>
 
                         <div class="flex justify-end">
-                          <Button type="submit" variant="primary" size="sm" disabled={isSubmitting} isLoading={isSubmitting}>
+                          <Button
+                            type="submit"
+                            variant="primary"
+                            size="sm"
+                            disabled={isSubmitting}
+                            isLoading={isSubmitting}>
                             {isSubmitting ? 'Posting…' : 'Post reply'}
                           </Button>
                         </div>
@@ -1169,7 +1234,9 @@
       </section>
     </article>
 
-    <aside class="sticky top-24 hidden h-fit select-none xl:col-span-3 xl:col-start-10 xl:block" aria-label="Table of contents">
+    <aside
+      class="sticky top-24 hidden h-fit select-none xl:col-span-3 xl:col-start-10 xl:block"
+      aria-label="Table of contents">
       <div class="boxed-list border border-border-subtle bg-surface-card/45 p-5 backdrop-blur-lg">
         <h3 class="mb-3 text-xs font-bold tracking-wider text-text-secondary uppercase">
           In this article
@@ -1178,7 +1245,9 @@
         {#if headings.length === 0}
           <p class="text-xs text-text-muted italic">No subheadings found.</p>
         {:else}
-          <ul class="flex flex-col gap-2" role="list">
+          <ul
+            class="flex flex-col gap-2"
+            role="list">
             {#each headings as heading, index (heading.id + '-' + index)}
               <li
                 class="text-xs"
@@ -1222,19 +1291,16 @@
         </div>
 
         <div class="flex items-center gap-3">
-          {#each [
-            { href: 'https://github.com/farhnkrnapratma', icon: 'bi-github', label: 'GitHub (opens in a new tab)' },
-            { href: 'https://linkedin.com/in/farhnkrnapratma', icon: 'bi-linkedin', label: 'LinkedIn (opens in a new tab)' },
-            { href: 'https://x.com/farhnkrnapratma', icon: 'bi-twitter-x', label: 'X (opens in a new tab)' },
-            { href: 'https://instagram.com/farhnkrnapratma', icon: 'bi-instagram', label: 'Instagram (opens in a new tab)' },
-          ] as social}
+          {#each [{ href: 'https://github.com/farhnkrnapratma', icon: 'bi-github', label: 'GitHub (opens in a new tab)' }, { href: 'https://linkedin.com/in/farhnkrnapratma', icon: 'bi-linkedin', label: 'LinkedIn (opens in a new tab)' }, { href: 'https://x.com/farhnkrnapratma', icon: 'bi-twitter-x', label: 'X (opens in a new tab)' }, { href: 'https://instagram.com/farhnkrnapratma', icon: 'bi-instagram', label: 'Instagram (opens in a new tab)' }] as social}
             <a
               href={social.href}
               target="_blank"
               rel="noopener noreferrer"
               class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-border-subtle bg-surface-card text-text-secondary transition-colors hover:bg-surface-hover hover:text-accent"
               aria-label={social.label}>
-              <i class="bi {social.icon} text-base leading-none" aria-hidden="true"></i>
+              <i
+                class="bi {social.icon} text-base leading-none"
+                aria-hidden="true"></i>
             </a>
           {/each}
         </div>
@@ -1262,7 +1328,9 @@
         <a
           href="/atom.xml"
           class="inline-flex items-center gap-1 transition-colors hover:text-[#f26522]">
-          <i class="bi bi-rss-fill" aria-hidden="true"></i> RSS feed
+          <i
+            class="bi bi-rss-fill"
+            aria-hidden="true"></i> RSS feed
         </a>
         <a
           href="/sitemap.xml"
@@ -1277,7 +1345,9 @@
     role="status"
     aria-live="polite"
     class="fixed bottom-6 left-1/2 z-50 flex -translate-x-1/2 items-center gap-2 rounded-full border border-border-subtle bg-surface-card/90 px-4 py-2 text-xs font-semibold text-text-primary shadow-lg backdrop-blur-md transition-all duration-300">
-    <i class="bi bi-check-circle-fill text-sm text-accent" aria-hidden="true"></i>
+    <i
+      class="bi bi-check-circle-fill text-sm text-accent"
+      aria-hidden="true"></i>
     {toastMessage}
   </div>
 {/if}
@@ -1287,35 +1357,46 @@
   bind:isOpen={showYesFeedbackDialog}
   title="Share this article?"
   description="Great to hear it helped! Share it with your peers:"
-  onClose={() => { showYesFeedbackDialog = false; helpfulnessFeedback = null; }}>
+  onClose={() => {
+    showYesFeedbackDialog = false;
+    helpfulnessFeedback = null;
+  }}>
   {#snippet children()}
     <div class="grid grid-cols-2 gap-2 text-left">
       <button
-        onclick={() => { copyToClipboard(); showYesFeedbackDialog = false; }}
+        onclick={() => {
+          copyToClipboard();
+          showYesFeedbackDialog = false;
+        }}
         class="col-span-2 flex h-9.5 cursor-pointer items-center justify-center gap-2 rounded-lg border border-border-subtle bg-surface-card px-3 text-xs font-semibold text-text-primary transition-colors hover:bg-surface-hover hover:text-accent">
-        <i class="bi {showCopySuccess ? 'bi-check2 text-success' : 'bi-link-45deg'} text-sm" aria-hidden="true"></i>
+        <i
+          class="bi {showCopySuccess ? 'bi-check2 text-success' : 'bi-link-45deg'} text-sm"
+          aria-hidden="true"></i>
         <span>{showCopySuccess ? 'Copied!' : 'Copy link'}</span>
       </button>
-      {#each [
-        { href: `https://twitter.com/intent/tweet?url=${encodeURIComponent(page.url.href)}&text=${encodeURIComponent(post.title)}`, icon: 'bi-twitter-x', text: 'X' },
-        { href: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(page.url.href)}`, icon: 'bi-linkedin', text: 'LinkedIn' },
-        { href: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(page.url.href)}`, icon: 'bi-facebook', text: 'Facebook' },
-        { href: `mailto:?subject=${encodeURIComponent(post.title)}&body=${encodeURIComponent(page.url.href)}`, icon: 'bi-envelope', text: 'Email' },
-      ] as item}
+      {#each [{ href: `https://twitter.com/intent/tweet?url=${encodeURIComponent(page.url.href)}&text=${encodeURIComponent(post.title)}`, icon: 'bi-twitter-x', text: 'X' }, { href: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(page.url.href)}`, icon: 'bi-linkedin', text: 'LinkedIn' }, { href: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(page.url.href)}`, icon: 'bi-facebook', text: 'Facebook' }, { href: `mailto:?subject=${encodeURIComponent(post.title)}&body=${encodeURIComponent(page.url.href)}`, icon: 'bi-envelope', text: 'Email' }] as item}
         <a
           href={item.href}
           target={item.href.startsWith('mailto') ? undefined : '_blank'}
           rel="noopener noreferrer"
           onclick={() => (showYesFeedbackDialog = false)}
           class="flex h-9.5 items-center justify-center gap-2 rounded-lg border border-border-subtle bg-surface-card px-3 text-xs font-semibold text-text-primary transition-colors hover:bg-surface-hover hover:text-accent">
-          <i class="bi {item.icon} text-sm" aria-hidden="true"></i>
+          <i
+            class="bi {item.icon} text-sm"
+            aria-hidden="true"></i>
           <span>{item.text}</span>
         </a>
       {/each}
     </div>
   {/snippet}
   {#snippet footer()}
-    <Button variant="secondary" size="md" onclick={() => { showYesFeedbackDialog = false; helpfulnessFeedback = null; }}>Cancel</Button>
+    <Button
+      variant="secondary"
+      size="md"
+      onclick={() => {
+        showYesFeedbackDialog = false;
+        helpfulnessFeedback = null;
+      }}>Cancel</Button>
   {/snippet}
 </Dialog>
 
@@ -1324,9 +1405,24 @@
   bind:isOpen={showNoFeedbackDialog}
   title="Share your feedback?"
   description="Tell us what we can improve. Your report helps make this article better for everyone."
-  onClose={() => { showNoFeedbackDialog = false; helpfulnessFeedback = null; }}>
+  onClose={() => {
+    showNoFeedbackDialog = false;
+    helpfulnessFeedback = null;
+  }}>
   {#snippet footer()}
-    <Button variant="secondary" size="md" onclick={() => { showNoFeedbackDialog = false; helpfulnessFeedback = null; }}>Cancel</Button>
-    <Button variant="primary" size="md" onclick={() => { showNoFeedbackDialog = false; window.location.href = '/feedback'; }}>Send feedback</Button>
+    <Button
+      variant="secondary"
+      size="md"
+      onclick={() => {
+        showNoFeedbackDialog = false;
+        helpfulnessFeedback = null;
+      }}>Cancel</Button>
+    <Button
+      variant="primary"
+      size="md"
+      onclick={() => {
+        showNoFeedbackDialog = false;
+        window.location.href = '/feedback';
+      }}>Send feedback</Button>
   {/snippet}
 </Dialog>

@@ -26,7 +26,7 @@
   }: Props = $props();
 </script>
 
-<div class="flex flex-col gap-1.5 w-full {className}">
+<div class="flex w-full flex-col gap-1.5 {className}">
   <div class="flex items-center justify-between">
     <label
       for={id}

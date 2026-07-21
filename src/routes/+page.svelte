@@ -4,7 +4,20 @@
   import { onMount } from 'svelte';
   import type { BlogPost } from './+page.server';
   import { isNameReserved } from '$lib/nameValidator';
-  import { autoResize, SkipLink, SpotlightSearch, FormField, Input, Textarea, Button, IconButton, Badge, Card, Dialog, EmptyState } from '$lib';
+  import {
+    autoResize,
+    SkipLink,
+    SpotlightSearch,
+    FormField,
+    Input,
+    Textarea,
+    Button,
+    IconButton,
+    Badge,
+    Card,
+    Dialog,
+    EmptyState,
+  } from '$lib';
   import { supabase } from '$lib/supabase';
   import { SvelteMap } from 'svelte/reactivity';
 
@@ -510,7 +523,9 @@
                 aria-hidden="true"></i>
               {getThemeLabel()}
             </span>
-            <i class="bi bi-chevron-down text-xs text-text-muted" aria-hidden="true"></i>
+            <i
+              class="bi bi-chevron-down text-xs text-text-muted"
+              aria-hidden="true"></i>
           </button>
 
           {#if themeDropdownOpen}
@@ -527,7 +542,9 @@
                   ) ?
                     'text-accent'
                   : 'text-text-primary'}">
-                  <i class="bi {getThemeIcon(themeOption as Theme)} text-sm" aria-hidden="true"></i>
+                  <i
+                    class="bi {getThemeIcon(themeOption as Theme)} text-sm"
+                    aria-hidden="true"></i>
                   {getThemeLabel(themeOption as Theme)}
                 </button>
               {/each}
@@ -573,11 +590,20 @@
           aria-label="Close theme menu"></button>
         <div
           class="absolute top-12 right-0 z-50 hidden min-w-[7.75rem] flex-col rounded-xl border border-border-subtle bg-surface-elevated py-1.5 shadow-lg md:flex">
-          {#each ([['auto', 'bi-circle-half', 'Auto'], ['light', 'bi-sun-fill', 'Light'], ['dark', 'bi-moon-stars-fill', 'Dark']] as const) as [val, icon, label]}
+          {#each [['auto', 'bi-circle-half', 'Auto'], ['light', 'bi-sun-fill', 'Light'], ['dark', 'bi-moon-stars-fill', 'Dark']] as const as [val, icon, label]}
             <button
-              onclick={() => { applyTheme(val); themeDropdownOpen = false; }}
-              class="flex w-full cursor-pointer items-center gap-3 px-4 py-2.5 text-left text-xs font-bold transition-colors hover:bg-surface-hover {theme === val ? 'text-accent' : 'text-text-primary'}">
-              <i class="bi {icon} text-sm" aria-hidden="true"></i>
+              onclick={() => {
+                applyTheme(val);
+                themeDropdownOpen = false;
+              }}
+              class="flex w-full cursor-pointer items-center gap-3 px-4 py-2.5 text-left text-xs font-bold transition-colors hover:bg-surface-hover {(
+                theme === val
+              ) ?
+                'text-accent'
+              : 'text-text-primary'}">
+              <i
+                class="bi {icon} text-sm"
+                aria-hidden="true"></i>
               {label}
             </button>
           {/each}
@@ -593,12 +619,16 @@
       aria-label={menuOpen ? 'Close menu' : 'Open menu'}
       aria-expanded={menuOpen}
       aria-controls="mobile-menu">
-      <i class="bi {menuOpen ? 'bi-x-lg' : 'bi-list'} text-text-primary" aria-hidden="true"></i>
+      <i
+        class="bi {menuOpen ? 'bi-x-lg' : 'bi-list'} text-text-primary"
+        aria-hidden="true"></i>
     </button>
   </div>
 </nav>
 
-<main id="main-content" class="flex min-h-[calc(100vh-3.75rem)] flex-col pt-15 font-sans">
+<main
+  id="main-content"
+  class="flex min-h-[calc(100vh-3.75rem)] flex-col pt-15 font-sans">
   {#if activeSection === 'home'}
     <section
       class="relative z-10 mx-auto flex w-full flex-col gap-8 px-6 pt-10 pb-24 md:w-[80%] md:max-w-none md:pt-14 md:pb-28 lg:w-[50%]">
@@ -697,8 +727,7 @@
                     </div>
                   </div>
 
-                  <p
-                    class="line-clamp-2 text-xs leading-normal text-text-muted dark:text-zinc-300">
+                  <p class="line-clamp-2 text-xs leading-normal text-text-muted dark:text-zinc-300">
                     {project.desc}
                   </p>
 
@@ -752,13 +781,16 @@
                 <li
                   class="group relative flex w-full flex-col gap-5 p-5 text-left transition-all duration-200 hover:bg-surface-hover/40 active:scale-[0.995] sm:flex-row sm:items-start">
                   <div
-                    class="relative aspect-video w-full shrink-0 overflow-hidden rounded-lg border border-border-subtle bg-surface-card/60 animate-pulse select-none sm:w-40 md:w-48">
+                    class="relative aspect-video w-full shrink-0 animate-pulse overflow-hidden rounded-lg border border-border-subtle bg-surface-card/60 select-none sm:w-40 md:w-48">
                     {#if post.banner_path}
                       <img
                         src={getBannerUrl(post.banner_path)}
                         alt=""
                         loading="lazy"
-                        onload={(e) => (e.currentTarget.closest('.animate-pulse') as HTMLElement | null)?.classList.remove('animate-pulse')}
+                        onload={e =>
+                          (
+                            e.currentTarget.closest('.animate-pulse') as HTMLElement | null
+                          )?.classList.remove('animate-pulse')}
                         class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-103" />
                     {:else}
                       <div
@@ -814,8 +846,7 @@
                         {post.excerpt}
                       </p>
                     {/if}
-                    <div
-                      class="mt-1 flex items-center gap-1.5 text-xs font-bold text-accent">
+                    <div class="mt-1 flex items-center gap-1.5 text-xs font-bold text-accent">
                       <span>Read article</span>
                       <i class="bi bi-arrow-right transition-transform group-hover:translate-x-0.5"
                       ></i>
@@ -905,7 +936,7 @@
           required
           error={formErrors.name}
           valid={formValid.name}>
-        <Input
+          <Input
             type="text"
             id="form-name"
             name="name"
@@ -919,8 +950,7 @@
               formErrors.name = '';
               formValid.name = false;
               validateName();
-            }}
-          />
+            }} />
         </FormField>
 
         <FormField
@@ -943,8 +973,7 @@
               formErrors.email = '';
               formValid.email = false;
               validateEmail();
-            }}
-          />
+            }} />
         </FormField>
 
         <FormField
@@ -967,12 +996,14 @@
               formErrors.message = '';
               formValid.message = false;
               validateMessage();
-            }}
-          />
+            }} />
         </FormField>
 
         <div class="mt-2 flex justify-end">
-          <Button type="submit" variant="primary" size="md">
+          <Button
+            type="submit"
+            variant="primary"
+            size="md">
             Send message
           </Button>
         </div>
@@ -1004,7 +1035,7 @@
       </div>
 
       <div class="mt-10">
-        <h2 class="text-sm font-bold text-text-secondary uppercase tracking-wider">Experience</h2>
+        <h2 class="text-sm font-bold tracking-wider text-text-secondary uppercase">Experience</h2>
         <div class="boxed-list mt-4">
           {#each experiences as exp (exp.role)}
             <div class="flex flex-col gap-2 px-6 py-5 transition-all hover:bg-surface-hover">
@@ -1022,7 +1053,7 @@
       </div>
 
       <div class="mt-10">
-        <h2 class="text-sm font-bold text-text-secondary uppercase tracking-wider">Education</h2>
+        <h2 class="text-sm font-bold tracking-wider text-text-secondary uppercase">Education</h2>
         <div class="boxed-list mt-4">
           {#each education as edu (`${edu.degree}-${edu.university}`)}
             <div class="flex flex-col gap-1.5 px-6 py-5 transition-all hover:bg-surface-hover">
@@ -1040,7 +1071,7 @@
       </div>
 
       <div class="mt-10">
-        <h2 class="text-sm font-bold text-text-secondary uppercase tracking-wider">Skills</h2>
+        <h2 class="text-sm font-bold tracking-wider text-text-secondary uppercase">Skills</h2>
         <div class="mt-4 flex flex-wrap gap-2">
           {#each skills as group (group.category)}
             <span
@@ -1070,34 +1101,41 @@
           rel="noopener noreferrer"
           title="Subscribe via Atom/RSS feed"
           class="mb-0.5 flex h-9 shrink-0 items-center justify-center gap-1.5 rounded-lg border border-border-subtle bg-surface-card px-3 text-xs font-semibold text-text-muted transition-colors select-none hover:bg-surface-hover hover:text-[#f26522]">
-          <i class="bi bi-rss-fill flex items-center justify-center text-sm leading-none" aria-hidden="true"></i>
+          <i
+            class="bi bi-rss-fill flex items-center justify-center text-sm leading-none"
+            aria-hidden="true"></i>
           <span class="flex hidden items-center leading-none sm:inline">Feed</span>
         </a>
       </div>
       <div class="boxed-list mt-8">
         {#if posts.length === 0}
-            <EmptyState
-              icon="bi-journal-x"
-              title="No posts yet"
-              description="Articles will appear here once published." />
+          <EmptyState
+            icon="bi-journal-x"
+            title="No posts yet"
+            description="Articles will appear here once published." />
         {:else}
           <ul class="divide-y divide-border-subtle">
             {#each posts as post (post.id)}
               <li
                 class="group relative flex w-full flex-col gap-5 p-5 text-left transition-all duration-200 hover:bg-surface-hover/40 active:scale-[0.995] sm:flex-row sm:items-start">
                 <div
-                  class="relative aspect-video w-full shrink-0 overflow-hidden rounded-lg border border-border-subtle bg-surface-card/60 animate-pulse select-none sm:w-40 md:w-48">
+                  class="relative aspect-video w-full shrink-0 animate-pulse overflow-hidden rounded-lg border border-border-subtle bg-surface-card/60 select-none sm:w-40 md:w-48">
                   {#if post.banner_path}
                     <img
                       src={getBannerUrl(post.banner_path)}
                       alt=""
                       loading="lazy"
-                      onload={(e) => (e.currentTarget.closest('.animate-pulse') as HTMLElement | null)?.classList.remove('animate-pulse')}
+                      onload={e =>
+                        (
+                          e.currentTarget.closest('.animate-pulse') as HTMLElement | null
+                        )?.classList.remove('animate-pulse')}
                       class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-103" />
                   {:else}
                     <div
                       class="to-palette-purple/15 flex h-full w-full items-center justify-center bg-gradient-to-br from-accent/15 select-none">
-                      <i class="bi bi-journal-text text-xl text-accent/50" aria-hidden="true"></i>
+                      <i
+                        class="bi bi-journal-text text-xl text-accent/50"
+                        aria-hidden="true"></i>
                     </div>
                   {/if}
                 </div>
@@ -1248,8 +1286,7 @@
                   </div>
                 </div>
 
-                <p
-                  class="line-clamp-2 text-xs leading-normal text-text-muted dark:text-zinc-300">
+                <p class="line-clamp-2 text-xs leading-normal text-text-muted dark:text-zinc-300">
                   {project.desc}
                 </p>
 
@@ -1373,7 +1410,9 @@
         <a
           href="/atom.xml"
           class="inline-flex items-center gap-1 transition-colors hover:text-[#f26522]">
-          <i class="bi bi-rss-fill" aria-hidden="true"></i> RSS feed
+          <i
+            class="bi bi-rss-fill"
+            aria-hidden="true"></i> RSS feed
         </a>
         <a
           href="/sitemap.xml"
@@ -1389,7 +1428,13 @@
   description="Are you sure you want to send this message?"
   onClose={() => (showSendMessageDialog = false)}>
   {#snippet footer()}
-    <Button variant="secondary" size="md" onclick={() => (showSendMessageDialog = false)}>Cancel</Button>
-    <Button variant="primary" size="md" onclick={executeSendMessage}>Send message</Button>
+    <Button
+      variant="secondary"
+      size="md"
+      onclick={() => (showSendMessageDialog = false)}>Cancel</Button>
+    <Button
+      variant="primary"
+      size="md"
+      onclick={executeSendMessage}>Send message</Button>
   {/snippet}
 </Dialog>

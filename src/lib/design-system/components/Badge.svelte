@@ -9,12 +9,7 @@
     class?: string;
   }
 
-  let {
-    variant = 'default',
-    size = 'sm',
-    children,
-    class: className = '',
-  }: Props = $props();
+  let { variant = 'default', size = 'sm', children, class: className = '' }: Props = $props();
 
   const variantStyles = {
     default: 'bg-border-subtle/50 text-text-secondary border border-border-subtle',
@@ -35,7 +30,7 @@
     'inline-flex items-center gap-1 rounded-md font-semibold tracking-wide select-none',
     variantStyles[variant],
     sizeStyles[size],
-    className
+    className,
   )}>
   {@render children?.()}
 </span>

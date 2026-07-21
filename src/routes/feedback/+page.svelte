@@ -169,8 +169,12 @@
   class="fixed top-0 z-40 flex h-15 w-full items-center justify-between border-b border-border-subtle bg-surface-card/60 px-5 font-sans shadow-xs backdrop-blur-lg transition-colors duration-300"
   aria-label="Main navigation">
   <a href="/">
-    <Button variant="secondary" size="sm">
-      <i class="bi bi-arrow-left text-sm" aria-hidden="true"></i>
+    <Button
+      variant="secondary"
+      size="sm">
+      <i
+        class="bi bi-arrow-left text-sm"
+        aria-hidden="true"></i>
       Back to home
     </Button>
   </a>
@@ -256,7 +260,9 @@
   </div>
 </nav>
 
-<main id="main-content" class="flex min-h-[calc(100vh-3.75rem)] flex-col pt-15 font-sans">
+<main
+  id="main-content"
+  class="flex min-h-[calc(100vh-3.75rem)] flex-col pt-15 font-sans">
   <section class="relative z-10 mx-auto flex w-full max-w-2xl flex-col gap-8 px-6 py-12">
     <div
       class="pointer-events-none absolute top-12.5 left-[50%] z-0 h-80 w-[320px] translate-x-[-50%] rounded-full bg-accent/10 blur-[80px]">
@@ -272,7 +278,9 @@
       </p>
     </div>
 
-    <Card variant="glass" class="p-5 select-none relative z-10">
+    <Card
+      variant="glass"
+      class="relative z-10 p-5 select-none">
       <div class="flex flex-col gap-3">
         <h2 class="text-sm font-bold text-text-primary">Feedback categories</h2>
         <ul class="flex flex-col gap-2.5 text-xs text-text-secondary">
@@ -371,8 +379,7 @@
             formErrors.name = '';
             formValid.name = false;
             validateName();
-          }}
-        />
+          }} />
       </FormField>
 
       <FormField
@@ -395,8 +402,7 @@
             formErrors.email = '';
             formValid.email = false;
             validateEmail();
-          }}
-        />
+          }} />
       </FormField>
 
       <FormField
@@ -418,8 +424,7 @@
             formErrors.url = '';
             formValid.url = false;
             validateUrl();
-          }}
-        />
+          }} />
       </FormField>
 
       <FormField
@@ -442,12 +447,14 @@
             formErrors.message = '';
             formValid.message = false;
             validateMessage();
-          }}
-        />
+          }} />
       </FormField>
 
       <div class="mt-2 flex justify-end select-none">
-        <Button type="submit" variant="primary" size="md">
+        <Button
+          type="submit"
+          variant="primary"
+          size="md">
           Submit feedback
         </Button>
       </div>
@@ -563,4 +570,3 @@
     </Button>
   {/snippet}
 </Dialog>
-

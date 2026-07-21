@@ -29,16 +29,19 @@
 
 <div
   class={cn(
-    'group relative flex flex-col justify-between rounded-2xl border border-border-subtle bg-surface/60 p-5 sm:p-6 shadow-xs backdrop-blur-lg transition-all duration-300',
-    interactive ? 'hover:bg-surface-hover hover:border-border-strong' : '',
-    className
+    'group relative flex flex-col justify-between rounded-2xl border border-border-subtle bg-surface/60 p-5 shadow-xs backdrop-blur-lg transition-all duration-300 sm:p-6',
+    interactive ? 'hover:border-border-strong hover:bg-surface-hover' : '',
+    className,
   )}>
   <div class="flex flex-col gap-2">
     <!-- Header Title & Link -->
     <div class="flex items-start justify-between gap-3">
-      <h3 class="text-base font-bold tracking-tight text-text-primary group-hover:text-accent transition-colors">
+      <h3
+        class="text-base font-bold tracking-tight text-text-primary transition-colors group-hover:text-accent">
         {#if href}
-          <a href={href} class="focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus-ring rounded-sm">
+          <a
+            {href}
+            class="rounded-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus-ring">
             {title}
           </a>
         {:else}
@@ -46,7 +49,9 @@
         {/if}
       </h3>
       {#if href && interactive}
-        <i class="bi bi-arrow-up-right text-xs text-text-muted transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-accent shrink-0 mt-1" aria-hidden="true"></i>
+        <i
+          class="bi bi-arrow-up-right mt-1 shrink-0 text-xs text-text-muted transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-accent"
+          aria-hidden="true"></i>
       {/if}
     </div>
 
@@ -59,7 +64,7 @@
 
     <!-- Description -->
     {#if description}
-      <p class="mt-1 text-xs leading-relaxed text-text-secondary line-clamp-3">
+      <p class="mt-1 line-clamp-3 text-xs leading-relaxed text-text-secondary">
         {description}
       </p>
     {/if}
@@ -71,7 +76,8 @@
 
   <!-- Footer Tags & Actions -->
   {#if tags || actions}
-    <div class="mt-4 flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-border-subtle/40 select-none">
+    <div
+      class="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-border-subtle/40 pt-3 select-none">
       {#if tags}
         <div class="flex flex-wrap items-center gap-1.5">
           {@render tags()}
@@ -79,7 +85,7 @@
       {/if}
 
       {#if actions}
-        <div class="flex items-center gap-2 ml-auto">
+        <div class="ml-auto flex items-center gap-2">
           {@render actions()}
         </div>
       {/if}

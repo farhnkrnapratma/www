@@ -8,11 +8,7 @@
     children?: Snippet;
   }
 
-  let {
-    visibleOn = 'desktop-only',
-    class: className = '',
-    children,
-  }: Props = $props();
+  let { visibleOn = 'desktop-only', class: className = '', children }: Props = $props();
 
   const visibilityStyles = {
     'mobile-only': 'block sm:hidden',

@@ -47,7 +47,7 @@
     if (isOpen && typeof document !== 'undefined') {
       setTimeout(() => {
         const focusable = dialogRef?.querySelector(
-          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
         ) as HTMLElement;
         focusable?.focus();
       }, 30);
@@ -62,7 +62,7 @@
     <!-- Backdrop Overlay -->
     <button
       type="button"
-      class="absolute inset-0 bg-overlay-backdrop backdrop-blur-sm cursor-default"
+      class="absolute inset-0 cursor-default bg-overlay-backdrop backdrop-blur-sm"
       aria-label="Close modal"
       onclick={() => closeOnBackdrop && onClose()}></button>
 
@@ -77,17 +77,19 @@
         'relative z-10 w-full transform rounded-2xl border border-border-subtle bg-surface-elevated p-6 shadow-2xl transition-all select-none',
         sizeStyles[size],
         isDestructive ? 'border-danger/30' : '',
-        className
+        className,
       )}>
       <div class="flex flex-col gap-1 text-left">
         <h2
           id="dialog-title"
           class={cn(
-            'text-base font-bold text-text-primary flex items-center gap-2',
-            isDestructive ? 'text-danger' : ''
+            'flex items-center gap-2 text-base font-bold text-text-primary',
+            isDestructive ? 'text-danger' : '',
           )}>
           {#if isDestructive}
-            <i class="bi bi-exclamation-triangle-fill text-danger text-sm" aria-hidden="true"></i>
+            <i
+              class="bi bi-exclamation-triangle-fill text-sm text-danger"
+              aria-hidden="true"></i>
           {/if}
           {title}
         </h2>

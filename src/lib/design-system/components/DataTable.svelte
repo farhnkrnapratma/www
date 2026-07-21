@@ -15,12 +15,7 @@
     class?: string;
   }
 
-  let {
-    caption = '',
-    columns = [],
-    data = [],
-    class: className = '',
-  }: Props = $props();
+  let { caption = '', columns = [], data = [], class: className = '' }: Props = $props();
 
   const alignStyles = {
     left: 'text-left',
@@ -34,7 +29,8 @@
     {#if caption}
       <caption class="sr-only">{caption}</caption>
     {/if}
-    <thead class="bg-surface-elevated text-text-secondary font-bold uppercase tracking-wider text-[11px] border-b border-border-subtle">
+    <thead
+      class="border-b border-border-subtle bg-surface-elevated text-[11px] font-bold tracking-wider text-text-secondary uppercase">
       <tr>
         {#each columns as col (col.key)}
           <th
@@ -47,7 +43,7 @@
     </thead>
     <tbody class="divide-y divide-border-subtle/50 bg-surface/50">
       {#each data as row, i (i)}
-        <tr class="hover:bg-surface-hover transition-colors">
+        <tr class="transition-colors hover:bg-surface-hover">
           {#each columns as col (col.key)}
             <td class={cn('px-4 py-3 font-medium', alignStyles[col.align || 'left'])}>
               {row[col.key] ?? '—'}

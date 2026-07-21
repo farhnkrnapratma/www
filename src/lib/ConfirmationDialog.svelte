@@ -46,7 +46,10 @@
     {@render children()}
   {:else}
     {#snippet footer()}
-      <Button variant="secondary" size="md" onclick={close}>
+      <Button
+        variant="secondary"
+        size="md"
+        onclick={close}>
         {cancelLabel}
       </Button>
       <Button

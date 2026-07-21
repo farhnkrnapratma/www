@@ -8,11 +8,7 @@
     children?: Snippet;
   }
 
-  let {
-    gap = 'md',
-    class: className = '',
-    children,
-  }: Props = $props();
+  let { gap = 'md', class: className = '', children }: Props = $props();
 
   const gapStyles = {
     sm: 'gap-3',
@@ -22,6 +18,6 @@
   };
 </script>
 
-<div class={cn('flex flex-col w-full', gapStyles[gap], className)}>
+<div class={cn('flex w-full flex-col', gapStyles[gap], className)}>
   {@render children?.()}
 </div>

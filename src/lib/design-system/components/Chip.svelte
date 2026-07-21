@@ -32,12 +32,12 @@
   {onclick}
   aria-pressed={active}
   class={cn(
-    'inline-flex items-center justify-center rounded-full transition-all cursor-pointer select-none border focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus-ring disabled:opacity-50 disabled:cursor-not-allowed',
-    active
-      ? 'bg-accent text-text-on-accent border-accent font-bold shadow-xs'
-      : 'bg-surface border-border-default text-text-secondary hover:bg-surface-hover hover:text-text-primary hover:border-border-strong',
+    'inline-flex cursor-pointer items-center justify-center rounded-full border transition-all select-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus-ring disabled:cursor-not-allowed disabled:opacity-50',
+    active ?
+      'border-accent bg-accent font-bold text-text-on-accent shadow-xs'
+    : 'border-border-default bg-surface text-text-secondary hover:border-border-strong hover:bg-surface-hover hover:text-text-primary',
     sizeStyles[size],
-    className
+    className,
   )}>
   {@render children?.()}
 </button>

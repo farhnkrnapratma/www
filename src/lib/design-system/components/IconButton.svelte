@@ -40,10 +40,10 @@
   aria-label={ariaLabel}
   title={ariaLabel}
   class={cn(
-    'inline-flex items-center justify-center rounded-lg transition-colors cursor-pointer select-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus-ring disabled:opacity-50 disabled:cursor-not-allowed',
+    'inline-flex cursor-pointer items-center justify-center rounded-lg transition-colors select-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus-ring disabled:cursor-not-allowed disabled:opacity-50',
     variantStyles[variant],
     sizeStyles[size],
-    className
+    className,
   )}
   {...restProps}>
   {@render children?.()}

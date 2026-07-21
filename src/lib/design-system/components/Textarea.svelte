@@ -36,7 +36,7 @@
       'no-scrollbar resize-none overflow-hidden',
       error ? '!border-danger !ring-danger/20' : '',
       valid && !error ? '!border-accent' : '',
-      className
+      className,
     )}
     {...restProps}></textarea>
 {:else}
@@ -48,7 +48,7 @@
       baseStyles,
       error ? '!border-danger !ring-danger/20' : '',
       valid && !error ? '!border-accent' : '',
-      className
+      className,
     )}
     {...restProps}></textarea>
 {/if}

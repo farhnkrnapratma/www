@@ -9,12 +9,7 @@
     right?: Snippet;
   }
 
-  let {
-    ratio = '50-50',
-    class: className = '',
-    left,
-    right,
-  }: Props = $props();
+  let { ratio = '50-50', class: className = '', left, right }: Props = $props();
 
   const ratioStyles = {
     '50-50': 'grid-cols-1 md:grid-cols-12 gap-8',

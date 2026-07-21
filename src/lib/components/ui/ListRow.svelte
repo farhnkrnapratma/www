@@ -40,10 +40,10 @@
           class="bi {icon} text-lg {iconColor} transition-colors group-hover:text-accent"
           aria-hidden="true"></i>
       {/if}
-      <div class="flex flex-col min-w-0">
-        <span class="text-sm font-semibold truncate text-text-primary">{title}</span>
+      <div class="flex min-w-0 flex-col">
+        <span class="truncate text-sm font-semibold text-text-primary">{title}</span>
         {#if subtitle}
-          <span class="text-xs text-text-muted truncate mt-0.5">{subtitle}</span>
+          <span class="mt-0.5 truncate text-xs text-text-muted">{subtitle}</span>
         {/if}
       </div>
     </div>
@@ -63,10 +63,10 @@
           class="bi {icon} text-lg {iconColor}"
           aria-hidden="true"></i>
       {/if}
-      <div class="flex flex-col min-w-0">
-        <span class="text-sm font-semibold truncate text-text-primary">{title}</span>
+      <div class="flex min-w-0 flex-col">
+        <span class="truncate text-sm font-semibold text-text-primary">{title}</span>
         {#if subtitle}
-          <span class="text-xs text-text-muted truncate mt-0.5">{subtitle}</span>
+          <span class="mt-0.5 truncate text-xs text-text-muted">{subtitle}</span>
         {/if}
       </div>
     </div>

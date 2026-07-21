@@ -38,12 +38,6 @@
 </script>
 
 <div
-  class={cn(
-    'w-full',
-    directionStyles[direction],
-    gapStyles[gap],
-    alignStyles[align],
-    className
-  )}>
+  class={cn('w-full', directionStyles[direction], gapStyles[gap], alignStyles[align], className)}>
   {@render children?.()}
 </div>

@@ -109,14 +109,18 @@
 
 <SkipLink />
 
-<main id="main-content" class="flex min-h-[calc(100vh-3.75rem)] flex-col items-center justify-center pt-15 font-sans">
+<main
+  id="main-content"
+  class="flex min-h-[calc(100vh-3.75rem)] flex-col items-center justify-center pt-15 font-sans">
   <div class="flex w-full max-w-sm flex-1 flex-col justify-center px-6 py-10">
-    <Card variant="glass" class="p-6">
+    <Card
+      variant="glass"
+      class="p-6">
       <div class="mb-6 flex flex-col items-center text-center select-none">
         <div class="flex items-center gap-2">
-          <span class="material-symbols-rounded text-2xl text-accent select-none" aria-hidden="true"
-            >code</span
-          >
+          <span
+            class="material-symbols-rounded text-2xl text-accent select-none"
+            aria-hidden="true">code</span>
           <h1 class="text-xl font-bold text-text-primary">Console</h1>
         </div>
         <p class="mt-1 text-xs text-text-secondary">Sign in to manage your blog posts</p>
@@ -146,8 +150,7 @@
               validateEmailField();
             }}
             aria-required="true"
-            aria-invalid={!!errors.email}
-          />
+            aria-invalid={!!errors.email} />
         </FormField>
 
         <FormField
@@ -172,15 +175,16 @@
               }}
               aria-required="true"
               aria-invalid={!!errors.password}
-              class="pr-10"
-            />
+              class="pr-10" />
             <div class="absolute right-1">
               <IconButton
                 ariaLabel={showPassword ? 'Hide password' : 'Show password'}
                 variant="ghost"
                 size="sm"
                 onclick={() => (showPassword = !showPassword)}>
-                <span class="material-symbols-rounded text-base" aria-hidden="true">
+                <span
+                  class="material-symbols-rounded text-base"
+                  aria-hidden="true">
                   {showPassword ? 'visibility_off' : 'visibility'}
                 </span>
               </IconButton>
@@ -202,14 +206,13 @@
     <div class="mt-4 text-center select-none">
       <a
         href="/"
-        class="text-xs font-semibold text-text-secondary hover:text-accent transition-colors hover:underline">
+        class="text-xs font-semibold text-text-secondary transition-colors hover:text-accent hover:underline">
         Back to home
       </a>
     </div>
   </div>
 
-  <footer
-    class="w-full px-6 py-8 text-center font-sans text-xs text-text-muted select-none">
+  <footer class="w-full px-6 py-8 text-center font-sans text-xs text-text-muted select-none">
     <p>&copy; {new Date().getFullYear()} Farhan Kurnia Pratama. All rights reserved.</p>
   </footer>
 
@@ -225,4 +228,3 @@
     </div>
   {/if}
 </main>
-

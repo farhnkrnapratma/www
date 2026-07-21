@@ -8,11 +8,7 @@
     children?: Snippet;
   }
 
-  let {
-    width = 'standard',
-    class: className = '',
-    children,
-  }: Props = $props();
+  let { width = 'standard', class: className = '', children }: Props = $props();
 
   const widthStyles = {
     reading: 'max-w-2xl',
@@ -24,11 +20,6 @@
   };
 </script>
 
-<div
-  class={cn(
-    'mx-auto w-full px-4 sm:px-6',
-    widthStyles[width],
-    className
-  )}>
+<div class={cn('mx-auto w-full px-4 sm:px-6', widthStyles[width], className)}>
   {@render children?.()}
 </div>

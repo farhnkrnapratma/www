@@ -31,14 +31,16 @@
   }: Props = $props();
 </script>
 
-<div class={cn('flex flex-col gap-1.5 w-full', disabled ? 'opacity-60' : '', className)}>
+<div class={cn('flex w-full flex-col gap-1.5', disabled ? 'opacity-60' : '', className)}>
   <div class="flex items-center justify-between">
     <label
       for={id}
       class="text-xs font-bold text-text-secondary select-none">
       {label}
       {#if required}
-        <span class="text-danger" aria-hidden="true">*</span>
+        <span
+          class="text-danger"
+          aria-hidden="true">*</span>
         <span class="sr-only">(required)</span>
       {/if}
     </label>
@@ -59,16 +61,22 @@
         id="{id}-error"
         role="alert"
         class="flex items-center gap-1 text-danger">
-        <i class="bi bi-exclamation-circle-fill" aria-hidden="true"></i>
+        <i
+          class="bi bi-exclamation-circle-fill"
+          aria-hidden="true"></i>
         {error}
       </span>
     {:else if valid}
       <span class="flex items-center gap-1 text-accent">
-        <i class="bi bi-check-circle-fill" aria-hidden="true"></i>
+        <i
+          class="bi bi-check-circle-fill"
+          aria-hidden="true"></i>
         Looks good
       </span>
     {:else if hint}
-      <span id="{id}-hint" class="text-text-muted">{hint}</span>
+      <span
+        id="{id}-hint"
+        class="text-text-muted">{hint}</span>
     {/if}
   </div>
 </div>

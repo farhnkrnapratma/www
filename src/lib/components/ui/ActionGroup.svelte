@@ -8,12 +8,7 @@
     class?: string;
   }
 
-  let {
-    align = 'right',
-    gap = 'md',
-    children,
-    class: className = '',
-  }: Props = $props();
+  let { align = 'right', gap = 'md', children, class: className = '' }: Props = $props();
 
   const alignStyles = {
     left: 'justify-start',
@@ -29,6 +24,6 @@
   };
 </script>
 
-<div class="flex items-center flex-wrap {alignStyles[align]} {gapStyles[gap]} {className}">
+<div class="flex flex-wrap items-center {alignStyles[align]} {gapStyles[gap]} {className}">
   {@render children?.()}
 </div>

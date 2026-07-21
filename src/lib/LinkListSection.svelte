@@ -21,9 +21,13 @@
 
 <section
   class="relative z-10 mx-auto w-full px-6 pt-10 pb-24 md:w-[70%] md:max-w-none md:pt-14 md:pb-28 lg:w-[45%]">
-  <SectionHeader {title} {subtitle} />
+  <SectionHeader
+    {title}
+    {subtitle} />
 
-  <Card variant="glass" class="mt-8 overflow-hidden divide-y divide-border-subtle">
+  <Card
+    variant="glass"
+    class="mt-8 divide-y divide-border-subtle overflow-hidden">
     {#each items as item (item.label)}
       <ListRow
         title={item.label}
