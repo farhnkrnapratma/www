@@ -706,28 +706,28 @@
         <div
           class="mt-4 flex flex-wrap items-center gap-x-3.5 gap-y-1 font-sans text-xs font-semibold text-adwaita-subtitle select-none">
           <span class="inline-flex items-center gap-1.5 leading-none">
-            <i
-              class="bi bi-calendar3 text-[11px] leading-none"
-              aria-hidden="true"></i>
+            <span
+              class="material-symbols-rounded text-[14px] leading-none"
+              aria-hidden="true">calendar_clock</span>
             {formatDate(post.created_at)}
           </span>
           <span class="inline-flex items-center gap-1.5 leading-none">
-            <i
-              class="bi bi-clock text-[11px] leading-none"
-              aria-hidden="true"></i>
+            <span
+              class="material-symbols-rounded text-[14px] leading-none"
+              aria-hidden="true">av_timer</span>
             {formatReadTime(post.read_time)}
           </span>
           <span class="inline-flex items-center gap-1.5 leading-none">
-            <i
-              class="bi bi-chat-left-text text-[11px] leading-none"
-              aria-hidden="true"></i>
+            <span
+              class="material-symbols-rounded text-[14px] leading-none"
+              aria-hidden="true">forum</span>
             {comments.length}
           </span>
           {#if viewCount !== null}
             <span class="inline-flex items-center gap-1.5 leading-none">
-              <i
-                class="bi bi-eye text-[11px] leading-none"
-                aria-hidden="true"></i>
+              <span
+                class="material-symbols-rounded text-[14px] leading-none"
+                aria-hidden="true">visibility</span>
               {viewCount}
             </span>
           {/if}

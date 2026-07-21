@@ -780,25 +780,25 @@
                   <div
                     class="flex flex-wrap items-center gap-x-3.5 gap-y-1 font-sans text-xs font-semibold text-adwaita-subtitle select-none">
                     <span class="inline-flex items-center gap-1.5 leading-none"
-                      ><i
-                        class="bi bi-calendar3 text-[11px] leading-none"
-                        aria-hidden="true"></i>
+                      ><span
+                        class="material-symbols-rounded text-[14px] leading-none"
+                        aria-hidden="true">calendar_clock</span>
                       {getPostDate(post)}</span>
                     <span class="inline-flex items-center gap-1.5 leading-none"
-                      ><i
-                        class="bi bi-clock text-[11px] leading-none"
-                        aria-hidden="true"></i>
+                      ><span
+                        class="material-symbols-rounded text-[14px] leading-none"
+                        aria-hidden="true">av_timer</span>
                       {(post.read_time || '').replace(/\s*read\s*/gi, '')}</span>
                     <span class="inline-flex items-center gap-1.5 leading-none"
-                      ><i
-                        class="bi bi-chat-left-text text-[11px] leading-none"
-                        aria-hidden="true"></i>
+                      ><span
+                        class="material-symbols-rounded text-[14px] leading-none"
+                        aria-hidden="true">forum</span>
                       {post.comment_count || 0}</span>
                     {#if post.views_count !== undefined}
                       <span class="inline-flex items-center gap-1.5 leading-none"
-                        ><i
-                          class="bi bi-eye text-[11px] leading-none"
-                          aria-hidden="true"></i>
+                        ><span
+                          class="material-symbols-rounded text-[14px] leading-none"
+                          aria-hidden="true">visibility</span>
                         {post.views_count}</span>
                     {/if}
                   </div>
@@ -1179,25 +1179,25 @@
                 <div
                   class="flex flex-wrap items-center gap-x-3.5 gap-y-1 font-sans text-xs font-semibold text-adwaita-subtitle select-none">
                   <span class="inline-flex items-center gap-1.5 leading-none"
-                    ><i
-                      class="bi bi-calendar3 text-[11px] leading-none"
-                      aria-hidden="true"></i>
+                    ><span
+                      class="material-symbols-rounded text-[14px] leading-none"
+                      aria-hidden="true">calendar_clock</span>
                     {getPostDate(post)}</span>
                   <span class="inline-flex items-center gap-1.5 leading-none"
-                    ><i
-                      class="bi bi-clock text-[11px] leading-none"
-                      aria-hidden="true"></i>
+                    ><span
+                      class="material-symbols-rounded text-[14px] leading-none"
+                      aria-hidden="true">av_timer</span>
                     {(post.read_time || '').replace(/\s*read\s*/gi, '')}</span>
                   <span class="inline-flex items-center gap-1.5 leading-none"
-                    ><i
-                      class="bi bi-chat-left-text text-[11px] leading-none"
-                      aria-hidden="true"></i>
+                    ><span
+                      class="material-symbols-rounded text-[14px] leading-none"
+                      aria-hidden="true">forum</span>
                     {post.comment_count || 0}</span>
                   {#if post.views_count !== undefined}
                     <span class="inline-flex items-center gap-1.5 leading-none"
-                      ><i
-                        class="bi bi-eye text-[11px] leading-none"
-                        aria-hidden="true"></i>
+                      ><span
+                        class="material-symbols-rounded text-[14px] leading-none"
+                        aria-hidden="true">visibility</span>
                       {post.views_count}</span>
                   {/if}
                 </div>
