@@ -266,6 +266,8 @@
 
   let imageFileInput = $state<HTMLInputElement | null>(null);
 
+  let lineCount = $derived(markdownContent.split('\n').length);
+
   function updateCursorPosition() {
     if (!textareaElement) return;
     const textBeforeCursor = markdownContent.substring(0, textareaElement.selectionStart);
@@ -953,7 +955,7 @@
                   </span>
                 {:else}
                   <span class="inline-flex items-center gap-1.5">
-                    <span class="material-symbols-rounded text-[18px] text-adwaita-subtitle">cloud_done</span>
+                    <span class="material-symbols-rounded text-[15px] text-adwaita-subtitle">cloud_done</span>
                     Saved
                   </span>
                 {/if}
@@ -1094,26 +1096,34 @@
           
           <div class="bg-adwaita-bg">
             {#if activeTab === 'editor'}
-              <div class="relative w-full overflow-hidden">
-                <pre
-                  bind:this={preElement}
-                  class="editor-pre pre-highlight pointer-events-none absolute inset-0 text-adwaita-text select-none bg-transparent"
-                ><code class="language-markdown">{@html highlightedMarkdown}</code></pre>
+              <div class="flex flex-row items-stretch w-full overflow-hidden">
+                <div class="editor-line-numbers select-none font-mono text-right text-adwaita-subtitle/40 text-[14px] pr-2.5 pl-3 pt-5 border-r border-adwaita-border/20 bg-adwaita-card/10 select-none">
+                  {#each Array(lineCount) as _, i}
+                    <div class="line-num">{i + 1}</div>
+                  {/each}
+                </div>
 
-                <textarea
-                  bind:this={markdownTextareaElement}
-                  required
-                  aria-label="Markdown Content"
-                  bind:value={markdownContent}
-                  onscroll={syncScroll}
-                  oninput={() => { syncScroll(); updateCursorPosition(); }}
-                  onclick={updateCursorPosition}
-                  onkeyup={updateCursorPosition}
-                  onfocus={updateCursorPosition}
-                  onkeydown={handleTextareaKeyDown}
-                  class="editor-textarea relative w-full bg-transparent text-transparent caret-adwaita-text focus:outline-none focus:ring-0 {lineWrapMode === 'soft' ? 'wrap-soft' : 'wrap-none'}"
-                  style="overflow-y: hidden; resize: none;"
-                ></textarea>
+                <div class="relative flex-1 overflow-hidden">
+                  <pre
+                    bind:this={preElement}
+                    class="editor-pre pre-highlight pointer-events-none absolute inset-0 text-adwaita-text select-none bg-transparent"
+                  ><code class="language-markdown">{@html highlightedMarkdown}</code></pre>
+
+                  <textarea
+                    bind:this={markdownTextareaElement}
+                    required
+                    aria-label="Markdown Content"
+                    bind:value={markdownContent}
+                    onscroll={syncScroll}
+                    oninput={() => { syncScroll(); updateCursorPosition(); }}
+                    onclick={updateCursorPosition}
+                    onkeyup={updateCursorPosition}
+                    onfocus={updateCursorPosition}
+                    onkeydown={handleTextareaKeyDown}
+                    class="editor-textarea relative w-full bg-transparent text-transparent caret-adwaita-text focus:outline-none focus:ring-0 {lineWrapMode === 'soft' ? 'wrap-soft' : 'wrap-none'}"
+                    style="overflow-y: hidden; resize: none;"
+                  ></textarea>
+                </div>
               </div>
             {:else}
               <div class="prose-custom w-full bg-adwaita-bg p-6">
@@ -1294,12 +1304,17 @@
     font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace !important;
     font-size: 14px !important;
     line-height: 1.625 !important;
-    padding: 20px !important;
+    padding: 20px 20px 20px 16px !important;
     margin: 0 !important;
     border: 0 !important;
     box-sizing: border-box !important;
     width: 100% !important;
     overflow-y: hidden !important;
+  }
+
+  .line-num {
+    height: 22.75px;
+    line-height: 22.75px;
   }
 
   .editor-textarea:focus {
