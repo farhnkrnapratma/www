@@ -257,6 +257,10 @@
   let indentSize = $state(4);
   let lineWrapMode = $state<'soft' | 'none'>('soft');
 
+  let indentModeDropdownOpen = $state(false);
+  let indentSizeDropdownOpen = $state(false);
+  let wrapModeDropdownOpen = $state(false);
+
   let currentLine = $state(1);
   let currentColumn = $state(1);
 
@@ -937,79 +941,159 @@
             </div>
 
             
-            <div class="ml-auto flex items-center pr-2 text-xs text-adwaita-subtitle italic font-medium select-none">
-              {#if autoSaveStatus === 'saving'}
-                <span class="inline-flex items-center gap-1.5">
-                  <svg class="animate-spin h-3.5 w-3.5 text-adwaita-accent" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                  </svg>
-                  Saving draft...
-                </span>
-              {:else}
-                <span class="inline-flex items-center gap-1.5">
-                  <i class="bi bi-cloud-check text-sm text-adwaita-accent"></i>
-                  Draft saved
-                </span>
+            <div class="ml-auto flex items-center gap-2 select-none">
+              <div class="text-xs text-adwaita-subtitle italic font-medium pr-1.5">
+                {#if autoSaveStatus === 'saving'}
+                  <span class="inline-flex items-center gap-1.5">
+                    <svg class="animate-spin h-3.5 w-3.5 text-adwaita-accent" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Saving...
+                  </span>
+                {:else}
+                  <span class="inline-flex items-center gap-1.5">
+                    <i class="bi bi-cloud-check text-sm text-adwaita-accent"></i>
+                    Saved
+                  </span>
+                {/if}
+              </div>
+
+              {#if activeTab === 'editor'}
+                
+                <div class="relative">
+                  <button
+                    type="button"
+                    onclick={() => {
+                      indentModeDropdownOpen = !indentModeDropdownOpen;
+                      indentSizeDropdownOpen = false;
+                      wrapModeDropdownOpen = false;
+                    }}
+                    class="px-4 py-1.5 text-xs font-semibold rounded-md border border-adwaita-border bg-adwaita-card text-adwaita-subtitle hover:text-adwaita-text hover:bg-adwaita-hover transition-colors cursor-pointer flex items-center gap-1.5 h-7.5"
+                    aria-haspopup="true"
+                    aria-expanded={indentModeDropdownOpen}>
+                    {indentMode === 'spaces' ? 'Spaces' : 'Tabs'}
+                    <i class="bi bi-chevron-down text-[9px]"></i>
+                  </button>
+                  {#if indentModeDropdownOpen}
+                    <button class="fixed inset-0 z-40 cursor-default" onclick={() => (indentModeDropdownOpen = false)} aria-label="Close menu"></button>
+                    <div class="absolute top-8.5 right-0 z-50 flex min-w-[120px] flex-col rounded-lg border border-adwaita-border bg-adwaita-card py-1 shadow-lg text-xs">
+                      <button
+                        type="button"
+                        onclick={() => {
+                          indentMode = 'spaces';
+                          indentModeDropdownOpen = false;
+                        }}
+                        class="flex w-full items-center justify-between px-3 py-1.5 text-left text-xs text-adwaita-text hover:bg-adwaita-hover transition-colors cursor-pointer">
+                        <span>Spaces</span>
+                        {#if indentMode === 'spaces'}
+                          <i class="bi bi-check text-adwaita-accent"></i>
+                        {/if}
+                      </button>
+                      <button
+                        type="button"
+                        onclick={() => {
+                          indentMode = 'tabs';
+                          indentModeDropdownOpen = false;
+                        }}
+                        class="flex w-full items-center justify-between px-3 py-1.5 text-left text-xs text-adwaita-text hover:bg-adwaita-hover transition-colors cursor-pointer">
+                        <span>Tabs</span>
+                        {#if indentMode === 'tabs'}
+                          <i class="bi bi-check text-adwaita-accent"></i>
+                        {/if}
+                      </button>
+                    </div>
+                  {/if}
+                </div>
+
+                
+                <div class="relative">
+                  <button
+                    type="button"
+                    onclick={() => {
+                      indentSizeDropdownOpen = !indentSizeDropdownOpen;
+                      indentModeDropdownOpen = false;
+                      wrapModeDropdownOpen = false;
+                    }}
+                    class="px-4 py-1.5 text-xs font-semibold rounded-md border border-adwaita-border bg-adwaita-card text-adwaita-subtitle hover:text-adwaita-text hover:bg-adwaita-hover transition-colors cursor-pointer flex items-center gap-1.5 h-7.5"
+                    aria-haspopup="true"
+                    aria-expanded={indentSizeDropdownOpen}>
+                    {indentSize}
+                    <i class="bi bi-chevron-down text-[9px]"></i>
+                  </button>
+                  {#if indentSizeDropdownOpen}
+                    <button class="fixed inset-0 z-40 cursor-default" onclick={() => (indentSizeDropdownOpen = false)} aria-label="Close menu"></button>
+                    <div class="absolute top-8.5 right-0 z-50 flex min-w-[80px] flex-col rounded-lg border border-adwaita-border bg-adwaita-card py-1 shadow-lg text-xs">
+                      {#each [2, 4, 8] as size}
+                        <button
+                          type="button"
+                          onclick={() => {
+                            indentSize = size;
+                            indentSizeDropdownOpen = false;
+                          }}
+                          class="flex w-full items-center justify-between px-3 py-1.5 text-left text-xs text-adwaita-text hover:bg-adwaita-hover transition-colors cursor-pointer">
+                          <span>{size}</span>
+                          {#if indentSize === size}
+                            <i class="bi bi-check text-adwaita-accent"></i>
+                          {/if}
+                        </button>
+                      {/each}
+                    </div>
+                  {/if}
+                </div>
+
+                
+                <div class="relative">
+                  <button
+                    type="button"
+                    onclick={() => {
+                      wrapModeDropdownOpen = !wrapModeDropdownOpen;
+                      indentModeDropdownOpen = false;
+                      indentSizeDropdownOpen = false;
+                    }}
+                    class="px-4 py-1.5 text-xs font-semibold rounded-md border border-adwaita-border bg-adwaita-card text-adwaita-subtitle hover:text-adwaita-text hover:bg-adwaita-hover transition-colors cursor-pointer flex items-center gap-1.5 h-7.5"
+                    aria-haspopup="true"
+                    aria-expanded={wrapModeDropdownOpen}>
+                    {lineWrapMode === 'soft' ? 'Soft wrap' : 'No wrap'}
+                    <i class="bi bi-chevron-down text-[9px]"></i>
+                  </button>
+                  {#if wrapModeDropdownOpen}
+                    <button class="fixed inset-0 z-40 cursor-default" onclick={() => (wrapModeDropdownOpen = false)} aria-label="Close menu"></button>
+                    <div class="absolute top-8.5 right-0 z-50 flex min-w-[120px] flex-col rounded-lg border border-adwaita-border bg-adwaita-card py-1 shadow-lg text-xs">
+                      <button
+                        type="button"
+                        onclick={() => {
+                          lineWrapMode = 'soft';
+                          wrapModeDropdownOpen = false;
+                        }}
+                        class="flex w-full items-center justify-between px-3 py-1.5 text-left text-xs text-adwaita-text hover:bg-adwaita-hover transition-colors cursor-pointer">
+                        <span>Soft wrap</span>
+                        {#if lineWrapMode === 'soft'}
+                          <i class="bi bi-check text-adwaita-accent"></i>
+                        {/if}
+                      </button>
+                      <button
+                        type="button"
+                        onclick={() => {
+                          lineWrapMode = 'none';
+                          wrapModeDropdownOpen = false;
+                        }}
+                        class="flex w-full items-center justify-between px-3 py-1.5 text-left text-xs text-adwaita-text hover:bg-adwaita-hover transition-colors cursor-pointer">
+                        <span>No wrap</span>
+                        {#if lineWrapMode === 'none'}
+                          <i class="bi bi-check text-adwaita-accent"></i>
+                        {/if}
+                      </button>
+                    </div>
+                  {/if}
+                </div>
               {/if}
             </div>
           </div>
 
           
-          <div class="bg-adwaita-bg min-h-[500px]">
+          <div class="bg-adwaita-bg">
             {#if activeTab === 'editor'}
-              <div class="flex flex-wrap items-center gap-4 bg-adwaita-card/10 px-4 py-2 border-b border-adwaita-border select-none">
-                <div class="flex items-center gap-2">
-                  <span class="text-[11px] font-semibold text-adwaita-subtitle">Indent mode</span>
-                  <div class="inline-flex rounded-lg border border-adwaita-border bg-adwaita-switcher-bg p-0.5 gap-0.5">
-                    <button
-                      type="button"
-                      onclick={() => indentMode = 'spaces'}
-                      class="px-2 py-0.5 text-[10px] font-semibold rounded transition-all cursor-pointer {indentMode === 'spaces' ? 'bg-adwaita-switcher-active text-adwaita-text shadow-xs border border-adwaita-border/10' : 'text-adwaita-subtitle hover:text-adwaita-text hover:bg-adwaita-hover/30'}">
-                      Spaces
-                    </button>
-                    <button
-                      type="button"
-                      onclick={() => indentMode = 'tabs'}
-                      class="px-2 py-0.5 text-[10px] font-semibold rounded transition-all cursor-pointer {indentMode === 'tabs' ? 'bg-adwaita-switcher-active text-adwaita-text shadow-xs border border-adwaita-border/10' : 'text-adwaita-subtitle hover:text-adwaita-text hover:bg-adwaita-hover/30'}">
-                      Tabs
-                    </button>
-                  </div>
-                </div>
-
-                <div class="flex items-center gap-2">
-                  <span class="text-[11px] font-semibold text-adwaita-subtitle">Indent size</span>
-                  <div class="inline-flex rounded-lg border border-adwaita-border bg-adwaita-switcher-bg p-0.5 gap-0.5">
-                    {#each [2, 4, 8] as size}
-                      <button
-                        type="button"
-                        onclick={() => indentSize = size}
-                        class="px-2 py-0.5 text-[10px] font-semibold rounded transition-all cursor-pointer {indentSize === size ? 'bg-adwaita-switcher-active text-adwaita-text shadow-xs border border-adwaita-border/10' : 'text-adwaita-subtitle hover:text-adwaita-text hover:bg-adwaita-hover/30'}">
-                        {size}
-                      </button>
-                    {/each}
-                  </div>
-                </div>
-
-                <div class="flex items-center gap-2">
-                  <span class="text-[11px] font-semibold text-adwaita-subtitle">Wrap mode</span>
-                  <div class="inline-flex rounded-lg border border-adwaita-border bg-adwaita-switcher-bg p-0.5 gap-0.5">
-                    <button
-                      type="button"
-                      onclick={() => lineWrapMode = 'soft'}
-                      class="px-2 py-0.5 text-[10px] font-semibold rounded transition-all cursor-pointer {lineWrapMode === 'soft' ? 'bg-adwaita-switcher-active text-adwaita-text shadow-xs border border-adwaita-border/10' : 'text-adwaita-subtitle hover:text-adwaita-text hover:bg-adwaita-hover/30'}">
-                      Soft wrap
-                    </button>
-                    <button
-                      type="button"
-                      onclick={() => lineWrapMode = 'none'}
-                      class="px-2 py-0.5 text-[10px] font-semibold rounded transition-all cursor-pointer {lineWrapMode === 'none' ? 'bg-adwaita-switcher-active text-adwaita-text shadow-xs border border-adwaita-border/10' : 'text-adwaita-subtitle hover:text-adwaita-text hover:bg-adwaita-hover/30'}">
-                      No wrap
-                    </button>
-                  </div>
-                </div>
-              </div>
-
               <div class="relative w-full overflow-hidden">
                 <pre
                   bind:this={preElement}
@@ -1031,103 +1115,6 @@
                   style="overflow-y: hidden; resize: none;"
                 ></textarea>
               </div>
-
-              <div class="flex flex-wrap items-center justify-between border-t border-adwaita-border bg-adwaita-card/10 px-3 py-1.5 select-none text-xs text-adwaita-subtitle">
-                <div class="flex items-center gap-1">
-                  <button
-                    type="button"
-                    onclick={() => insertMarkdown('# ')}
-                    title="H1 Header"
-                    class="flex h-7 w-7 items-center justify-center rounded-md hover:bg-adwaita-hover/30 hover:text-adwaita-text transition-colors cursor-pointer">
-                    <span class="material-symbols-rounded text-base">format_h1</span>
-                  </button>
-                  <button
-                    type="button"
-                    onclick={() => insertMarkdown('## ')}
-                    title="H2 Header"
-                    class="flex h-7 w-7 items-center justify-center rounded-md hover:bg-adwaita-hover/30 hover:text-adwaita-text transition-colors cursor-pointer">
-                    <span class="material-symbols-rounded text-base">format_h2</span>
-                  </button>
-                  <button
-                    type="button"
-                    onclick={() => insertMarkdown('### ')}
-                    title="H3 Header"
-                    class="flex h-7 w-7 items-center justify-center rounded-md hover:bg-adwaita-hover/30 hover:text-adwaita-text transition-colors cursor-pointer">
-                    <span class="material-symbols-rounded text-base">format_h3</span>
-                  </button>
-                  <div class="h-4 w-px bg-adwaita-border mx-1"></div>
-                  <button
-                    type="button"
-                    onclick={() => insertMarkdown('**', '**')}
-                    title="Bold"
-                    class="flex h-7 w-7 items-center justify-center rounded-md hover:bg-adwaita-hover/30 hover:text-adwaita-text transition-colors cursor-pointer">
-                    <span class="material-symbols-rounded text-base">format_bold</span>
-                  </button>
-                  <button
-                    type="button"
-                    onclick={() => insertMarkdown('*', '*')}
-                    title="Italic"
-                    class="flex h-7 w-7 items-center justify-center rounded-md hover:bg-adwaita-hover/30 hover:text-adwaita-text transition-colors cursor-pointer">
-                    <span class="material-symbols-rounded text-base">format_italic</span>
-                  </button>
-                  <button
-                    type="button"
-                    onclick={() => insertMarkdown('<u>', '</u>')}
-                    title="Underline"
-                    class="flex h-7 w-7 items-center justify-center rounded-md hover:bg-adwaita-hover/30 hover:text-adwaita-text transition-colors cursor-pointer">
-                    <span class="material-symbols-rounded text-base">format_underlined</span>
-                  </button>
-                  <button
-                    type="button"
-                    onclick={() => insertMarkdown('~~', '~~')}
-                    title="Strikethrough"
-                    class="flex h-7 w-7 items-center justify-center rounded-md hover:bg-adwaita-hover/30 hover:text-adwaita-text transition-colors cursor-pointer">
-                    <span class="material-symbols-rounded text-base">format_strikethrough</span>
-                  </button>
-                  <div class="h-4 w-px bg-adwaita-border mx-1"></div>
-                  <button
-                    type="button"
-                    onclick={() => imageFileInput?.click()}
-                    title="Insert Image"
-                    class="flex h-7 w-7 items-center justify-center rounded-md hover:bg-adwaita-hover/30 hover:text-adwaita-text transition-colors cursor-pointer">
-                    <span class="material-symbols-rounded text-base">add_photo_alternate</span>
-                  </button>
-                  <input
-                    type="file"
-                    bind:this={imageFileInput}
-                    accept="image/png, image/webp, image/jpeg, image/jpg"
-                    onchange={handleImageUpload}
-                    class="hidden" />
-                  <button
-                    type="button"
-                    onclick={() => insertMarkdown('1. ')}
-                    title="Numbered List"
-                    class="flex h-7 w-7 items-center justify-center rounded-md hover:bg-adwaita-hover/30 hover:text-adwaita-text transition-colors cursor-pointer">
-                    <span class="material-symbols-rounded text-base">format_list_numbered</span>
-                  </button>
-                  <button
-                    type="button"
-                    onclick={() => insertMarkdown('- ')}
-                    title="Bulleted List"
-                    class="flex h-7 w-7 items-center justify-center rounded-md hover:bg-adwaita-hover/30 hover:text-adwaita-text transition-colors cursor-pointer">
-                    <span class="material-symbols-rounded text-base">format_list_bulleted</span>
-                  </button>
-                </div>
-
-                <div class="flex items-center gap-4 text-[11px] font-mono select-none">
-                  <span>{currentLine}:{currentColumn}</span>
-                  <span class="flex items-center gap-1">
-                    <span class="material-symbols-rounded text-[14px]">space_bar</span>
-                    {indentSize}
-                  </span>
-                  <span class="relative group cursor-help flex items-center">
-                    <span class="material-symbols-rounded text-[16px]">markdown</span>
-                    <span class="absolute bottom-full mb-1.5 right-0 hidden group-hover:block bg-adwaita-card text-adwaita-text text-[10px] px-2 py-1 rounded-md border border-adwaita-border whitespace-nowrap shadow-md font-sans">
-                      Styling with Markdown is supported
-                    </span>
-                  </span>
-                </div>
-              </div>
             {:else}
               <div class="prose-custom w-full bg-adwaita-bg p-6">
                 {#if previewHtml}
@@ -1138,6 +1125,106 @@
               </div>
             {/if}
           </div>
+
+          
+          {#if activeTab === 'editor'}
+            <div class="flex flex-wrap items-center justify-between border-t border-adwaita-border bg-adwaita-card/10 px-3 py-1.5 select-none text-xs text-adwaita-subtitle">
+              <div class="flex items-center gap-1">
+                <button
+                  type="button"
+                  onclick={() => insertMarkdown('# ')}
+                  title="H1 Header"
+                  class="flex h-7 w-7 items-center justify-center rounded-md hover:bg-adwaita-hover/30 hover:text-adwaita-text transition-colors cursor-pointer">
+                  <span class="material-symbols-rounded text-base">format_h1</span>
+                </button>
+                <button
+                  type="button"
+                  onclick={() => insertMarkdown('## ')}
+                  title="H2 Header"
+                  class="flex h-7 w-7 items-center justify-center rounded-md hover:bg-adwaita-hover/30 hover:text-adwaita-text transition-colors cursor-pointer">
+                  <span class="material-symbols-rounded text-base">format_h2</span>
+                </button>
+                <button
+                  type="button"
+                  onclick={() => insertMarkdown('### ')}
+                  title="H3 Header"
+                  class="flex h-7 w-7 items-center justify-center rounded-md hover:bg-adwaita-hover/30 hover:text-adwaita-text transition-colors cursor-pointer">
+                  <span class="material-symbols-rounded text-base">format_h3</span>
+                </button>
+                <div class="h-4 w-px bg-adwaita-border mx-1"></div>
+                <button
+                  type="button"
+                  onclick={() => insertMarkdown('**', '**')}
+                  title="Bold"
+                  class="flex h-7 w-7 items-center justify-center rounded-md hover:bg-adwaita-hover/30 hover:text-adwaita-text transition-colors cursor-pointer">
+                  <span class="material-symbols-rounded text-base">format_bold</span>
+                </button>
+                <button
+                  type="button"
+                  onclick={() => insertMarkdown('*', '*')}
+                  title="Italic"
+                  class="flex h-7 w-7 items-center justify-center rounded-md hover:bg-adwaita-hover/30 hover:text-adwaita-text transition-colors cursor-pointer">
+                  <span class="material-symbols-rounded text-base">format_italic</span>
+                </button>
+                <button
+                  type="button"
+                  onclick={() => insertMarkdown('<u>', '</u>')}
+                  title="Underline"
+                  class="flex h-7 w-7 items-center justify-center rounded-md hover:bg-adwaita-hover/30 hover:text-adwaita-text transition-colors cursor-pointer">
+                  <span class="material-symbols-rounded text-base">format_underlined</span>
+                </button>
+                <button
+                  type="button"
+                  onclick={() => insertMarkdown('~~', '~~')}
+                  title="Strikethrough"
+                  class="flex h-7 w-7 items-center justify-center rounded-md hover:bg-adwaita-hover/30 hover:text-adwaita-text transition-colors cursor-pointer">
+                  <span class="material-symbols-rounded text-base">format_strikethrough</span>
+                </button>
+                <div class="h-4 w-px bg-adwaita-border mx-1"></div>
+                <button
+                  type="button"
+                  onclick={() => imageFileInput?.click()}
+                  title="Insert Image"
+                  class="flex h-7 w-7 items-center justify-center rounded-md hover:bg-adwaita-hover/30 hover:text-adwaita-text transition-colors cursor-pointer">
+                  <span class="material-symbols-rounded text-base">add_photo_alternate</span>
+                </button>
+                <input
+                  type="file"
+                  bind:this={imageFileInput}
+                  accept="image/png, image/webp, image/jpeg, image/jpg"
+                  onchange={handleImageUpload}
+                  class="hidden" />
+                <button
+                  type="button"
+                  onclick={() => insertMarkdown('1. ')}
+                  title="Numbered List"
+                  class="flex h-7 w-7 items-center justify-center rounded-md hover:bg-adwaita-hover/30 hover:text-adwaita-text transition-colors cursor-pointer">
+                  <span class="material-symbols-rounded text-base">format_list_numbered</span>
+                </button>
+                <button
+                  type="button"
+                  onclick={() => insertMarkdown('- ')}
+                  title="Bulleted List"
+                  class="flex h-7 w-7 items-center justify-center rounded-md hover:bg-adwaita-hover/30 hover:text-adwaita-text transition-colors cursor-pointer">
+                  <span class="material-symbols-rounded text-base">format_list_bulleted</span>
+                </button>
+              </div>
+
+              <div class="flex items-center gap-4 text-[11px] font-mono select-none">
+                <span>{currentLine}:{currentColumn}</span>
+                <span class="flex items-center gap-1">
+                  <span class="material-symbols-rounded text-[14px]">space_bar</span>
+                  {indentSize}
+                </span>
+                <span class="relative group cursor-help flex items-center">
+                  <span class="material-symbols-rounded text-[16px]">markdown</span>
+                  <span class="absolute bottom-full mb-1.5 right-0 hidden group-hover:block bg-adwaita-card text-adwaita-text text-[10px] px-2 py-1 rounded-md border border-adwaita-border whitespace-nowrap shadow-md font-sans">
+                    Styling with Markdown is supported
+                  </span>
+                </span>
+              </div>
+            </div>
+          {/if}
         </div>
 
         <div class="mt-4 mb-10 flex justify-end gap-3 select-none">
@@ -1213,6 +1300,12 @@
     box-sizing: border-box !important;
     width: 100% !important;
     overflow-y: hidden !important;
+  }
+
+  .editor-textarea:focus {
+    border-color: transparent !important;
+    box-shadow: none !important;
+    outline: none !important;
   }
 
   .wrap-soft {
