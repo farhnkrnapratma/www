@@ -273,10 +273,10 @@
       const prettyLang = getPrettyLanguage(langClass);
 
       const headerBar = document.createElement('div');
-      headerBar.className = 'code-header-bar flex items-center justify-between bg-adwaita-hover/70 border border-adwaita-border/40 border-b-0 rounded-t-lg px-4 py-2 text-xs text-adwaita-subtitle font-semibold select-none mt-6';
+      headerBar.className = 'code-header-bar flex items-center justify-between bg-adwaita-hover/70 border border-adwaita-border rounded-t-lg px-4 py-1.5 text-xs text-adwaita-subtitle font-semibold select-none mt-6';
       
       const leftSpan = document.createElement('span');
-      leftSpan.className = 'text-xs font-semibold uppercase tracking-wider text-adwaita-subtitle';
+      leftSpan.className = 'text-[11px] font-mono font-bold uppercase tracking-wider text-adwaita-subtitle';
       leftSpan.innerText = prettyLang;
       headerBar.appendChild(leftSpan);
 
@@ -305,6 +305,7 @@
       pre.style.borderTopLeftRadius = '0px';
       pre.style.borderTopRightRadius = '0px';
       pre.style.borderTopWidth = '0px';
+      pre.style.paddingTop = '10px';
 
       pre.parentNode?.insertBefore(headerBar, pre);
     });
