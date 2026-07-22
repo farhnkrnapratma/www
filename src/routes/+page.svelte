@@ -22,6 +22,7 @@
     createFilterSortStore,
   } from '$lib';
   import { supabase } from '$lib/supabase';
+  import { SvelteSet } from 'svelte/reactivity';
 
   let { data } = $props();
 
@@ -369,7 +370,7 @@
   });
 
   const allBlogTags = $derived.by(() => {
-    const set = new Set<string>();
+    const set = new SvelteSet<string>();
     for (const post of posts) {
       if (post.tags) {
         post.tags.forEach(t => set.add(t));
@@ -413,7 +414,7 @@
   });
 
   const allProjectTags = $derived.by(() => {
-    const set = new Set<string>();
+    const set = new SvelteSet<string>();
     for (const p of projects) {
       if (p.tags) {
         p.tags.forEach(t => set.add(t));
