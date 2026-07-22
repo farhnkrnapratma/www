@@ -1598,6 +1598,9 @@
         const sectionId = url.replace('/#', '');
         navigate(sectionId as Section);
         window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else if (url === '/') {
+        navigate('home');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
       } else {
         window.location.href = url;
       }

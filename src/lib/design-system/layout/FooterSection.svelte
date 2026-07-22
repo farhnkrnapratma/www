@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
   import { cn } from '../utils/cn';
 
   interface NavItem {
@@ -15,24 +16,68 @@
   }
 
   const defaultNavItems: NavItem[] = [
-    { label: 'Overview', url: '/' },
+    { label: 'Home', url: '/' },
     { label: 'Projects', url: '/#projects' },
-    { label: 'Blog', url: '/#posts' },
-    { label: 'Skills', url: '/#skills' },
-    { label: 'Experience', url: '/#experience' },
-    { label: 'CV / Resume', url: '/#cv' },
-    { label: 'Contact', url: '/#contact' },
+    { label: 'Blogs', url: '/#blogs' },
+    { label: 'CV', url: '/#cv' },
+    { label: 'Funding', url: '/#funding' },
+    { label: 'Contacts', url: '/#contacts' },
   ];
+
+  type Theme = 'auto' | 'dark' | 'light';
 
   let {
     name = 'Farhan Kurnia Pratama',
-    description = 'Security-focused Software Engineer with expertise in Linux/Unix, AI, and Open-Source Software.',
+    description = 'Security-focused Software Engineer with expertise in Linux/Unix, AI, and Open-Source Software, dedicated to building reliable, maintainable, and privacy-centric systems.',
     navItems = [],
     onNavClick,
     class: className = '',
   }: Props = $props();
 
+  let theme = $state<Theme>('auto');
+  let themeDropdownOpen = $state(false);
+
   let resolvedNavItems = $derived(navItems.length > 0 ? navItems : defaultNavItems);
+
+  function applyTheme(newTheme: Theme) {
+    theme = newTheme;
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('theme', newTheme);
+      if (newTheme === 'dark') {
+        document.documentElement.classList.add('dark');
+      } else if (newTheme === 'light') {
+        document.documentElement.classList.remove('dark');
+      } else {
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        if (prefersDark) {
+          document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+        }
+      }
+    }
+  }
+
+  function getThemeIcon(t: Theme = theme) {
+    if (t === 'dark') return 'bi-moon-stars-fill';
+    if (t === 'light') return 'bi-sun-fill';
+    return 'bi-circle-half';
+  }
+
+  function getThemeLabel(t: Theme = theme) {
+    if (t === 'dark') return 'Dark';
+    if (t === 'light') return 'Light';
+    return 'Auto';
+  }
+
+  onMount(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('theme') as Theme;
+      if (saved) {
+        theme = saved;
+      }
+    }
+  });
 </script>
 
 <footer
@@ -121,14 +166,69 @@
 
   <div
     class="flex flex-col items-center justify-between gap-4 border-t border-border-subtle pt-6 select-none sm:flex-row">
-    <p>&copy; {new Date().getFullYear()} {name}. All rights reserved</p>
-    <div class="flex items-center gap-4 text-[11px] text-text-muted">
+    <p>&copy; {new Date().getFullYear()} {name}. All rights reserved.</p>
+
+    <div class="flex flex-wrap items-center gap-4 text-[11px] text-text-muted">
+      <div class="relative">
+        <button
+          type="button"
+          onclick={() => (themeDropdownOpen = !themeDropdownOpen)}
+          class="inline-flex h-7 items-center gap-1.5 rounded-lg border border-border-subtle bg-surface-card px-2.5 text-xs font-medium text-text-secondary transition-colors hover:bg-surface-hover hover:text-text-primary focus-visible:outline-none"
+          aria-label="Change theme"
+          aria-haspopup="true"
+          aria-expanded={themeDropdownOpen}>
+          <i
+            class="bi {getThemeIcon()} text-xs text-accent"
+            aria-hidden="true"></i>
+          <span>{getThemeLabel()}</span>
+          <span
+            class="inline-flex h-3.5 w-3.5 shrink-0 origin-center items-center justify-center text-text-muted transition-transform duration-200 ease-out {(
+              themeDropdownOpen
+            ) ?
+              'rotate-180'
+            : ''}">
+            <i
+              class="bi bi-chevron-down text-[9px] leading-none"
+              aria-hidden="true"></i>
+          </span>
+        </button>
+
+        {#if themeDropdownOpen}
+          <button
+            type="button"
+            class="fixed inset-0 z-40 cursor-default"
+            onclick={() => (themeDropdownOpen = false)}
+            aria-label="Close theme menu"></button>
+          <div
+            class="absolute right-0 bottom-full z-50 mb-1 flex min-w-28 flex-col rounded-xl border border-border-subtle bg-surface-elevated p-1 shadow-xl backdrop-blur-md">
+            {#each ['auto', 'light', 'dark'] as const as option (option)}
+              <button
+                type="button"
+                onclick={() => {
+                  applyTheme(option);
+                  themeDropdownOpen = false;
+                }}
+                class="flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-left text-xs font-medium transition-colors {(
+                  theme === option
+                ) ?
+                  'bg-accent/10 font-semibold text-accent'
+                : 'text-text-primary hover:bg-surface-hover'}">
+                <i
+                  class="bi {getThemeIcon(option)} text-xs"
+                  aria-hidden="true"></i>
+                <span>{getThemeLabel(option)}</span>
+              </button>
+            {/each}
+          </div>
+        {/if}
+      </div>
+
       <a
         href="/atom.xml"
         class="inline-flex items-center gap-1 transition-colors hover:text-[#f26522]">
         <i
           class="bi bi-rss-fill"
-          aria-hidden="true"></i> RSS Feed
+          aria-hidden="true"></i> RSS feed
       </a>
       <a
         href="/sitemap.xml"
