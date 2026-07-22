@@ -438,8 +438,8 @@
           </div>
         </div>
 
-        <!-- Consent Cards Grid -->
-        <div class="grid grid-cols-1 gap-5 md:grid-cols-2">
+        <!-- Consent Cards Stack (Stacked vertically) -->
+        <div class="flex flex-col gap-5">
           <!-- Card 1: Behavioral Analytics -->
           <div
             class="flex flex-col justify-between gap-4 rounded-xl border border-border-subtle bg-surface/50 p-5">
