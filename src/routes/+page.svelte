@@ -956,17 +956,7 @@
       </div>
 
       <div>
-        <div class="mb-4 flex items-center justify-between gap-4">
-          <h3 class="text-lg font-bold tracking-tight text-text-primary">Skills</h3>
-          <button
-            onclick={() => navigate('cv')}
-            class="group inline-flex cursor-pointer items-center gap-1.5 text-xs font-bold text-accent hover:underline">
-            <span>View full CV</span>
-            <i
-              class="bi bi-arrow-right transition-transform group-hover:translate-x-0.5"
-              aria-hidden="true"></i>
-          </button>
-        </div>
+        <h3 class="mb-4 text-lg font-bold tracking-tight text-text-primary">Skills</h3>
         <div class="flex flex-wrap gap-2">
           {#each skillsSnapshot as group (group.category)}
             <span
@@ -980,17 +970,7 @@
       </div>
 
       <div>
-        <div class="mb-4 flex items-center justify-between gap-4">
-          <h3 class="text-lg font-bold tracking-tight text-text-primary">Experience</h3>
-          <button
-            onclick={() => navigate('cv')}
-            class="group inline-flex cursor-pointer items-center gap-1.5 text-xs font-bold text-accent hover:underline">
-            <span>Full experience</span>
-            <i
-              class="bi bi-arrow-right transition-transform group-hover:translate-x-0.5"
-              aria-hidden="true"></i>
-          </button>
-        </div>
+        <h3 class="mb-4 text-lg font-bold tracking-tight text-text-primary">Experience</h3>
         <div class="boxed-list text-left">
           {#each experiences.slice(0, 1) as exp (exp.role)}
             <div class="flex flex-col gap-2 px-6 py-5 transition-all hover:bg-surface-hover/40">
@@ -1009,6 +989,17 @@
               </p>
             </div>
           {/each}
+        </div>
+        <div class="mt-4 flex justify-end">
+          <button
+            onclick={() => navigate('cv')}
+            class="group inline-flex cursor-pointer items-center gap-1.5 text-xs font-bold text-accent hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+            aria-label="View full CV including education and experience">
+            <span>View full CV</span>
+            <i
+              class="bi bi-arrow-right transition-transform group-hover:translate-x-0.5"
+              aria-hidden="true"></i>
+          </button>
         </div>
       </div>
 
