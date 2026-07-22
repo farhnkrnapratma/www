@@ -330,14 +330,6 @@
   let feedbackMessage = $state<{ type: 'success' | 'error'; text: string } | null>(null);
   const commentTree = $derived(buildCommentTree(comments));
 
-  function formatDate(dateStr: string) {
-    return new Date(dateStr).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-    });
-  }
-
   function buildCommentTree(items: BlogComment[]): FlatComment[] {
     const commentMap = new SvelteMap<string, FlatComment>();
     for (const item of items) {
