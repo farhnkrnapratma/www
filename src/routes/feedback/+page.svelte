@@ -1,7 +1,17 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { isNameReserved } from '$lib/nameValidator';
-  import { Card, FormField, Input, Textarea, Button, IconButton, Dialog, SkipLink } from '$lib';
+  import {
+    Card,
+    FormField,
+    Input,
+    Textarea,
+    Button,
+    IconButton,
+    Dialog,
+    SkipLink,
+    FooterSection,
+  } from '$lib';
 
   const name = 'Farhan Kurnia Pratama';
   const desc =
@@ -165,100 +175,75 @@
 
 <SkipLink />
 
-<nav
-  class="fixed top-0 z-40 flex h-15 w-full items-center justify-between border-b border-border-subtle bg-surface-card/60 px-5 font-sans shadow-xs backdrop-blur-lg transition-colors duration-300"
-  aria-label="Main navigation">
-  <a href="/">
-    <Button
-      variant="secondary"
-      size="sm">
-      <i
-        class="bi bi-arrow-left text-sm"
-        aria-hidden="true"></i>
-      Back to home
-    </Button>
-  </a>
+<!-- Top Header Navigation Bar -->
+<header
+  class="fixed top-0 right-0 left-0 z-40 border-b border-border-subtle bg-surface-card/80 backdrop-blur-md">
+  <div
+    class="mx-auto flex h-15 items-center justify-between px-6 font-sans md:w-[80%] md:max-w-none lg:w-[50%]">
+    <a
+      href="/"
+      class="flex items-center gap-2.5 text-text-primary transition-opacity hover:opacity-85">
+      <img
+        src="/favicon-32x32.png"
+        alt=""
+        class="h-6 w-6 rounded-full" />
+      <span class="text-sm font-bold tracking-tight">{name}</span>
+    </a>
 
-  <div class="flex items-center gap-3 select-none">
-    <div class="relative">
-      <IconButton
-        ariaLabel="Change theme"
-        variant="default"
-        size="sm"
-        onclick={() => (themeDropdownOpen = !themeDropdownOpen)}
-        aria-haspopup="true"
-        aria-expanded={themeDropdownOpen}>
-        {#if theme === 'auto'}
-          <i
-            class="bi bi-circle-half"
-            aria-hidden="true"></i>
-        {:else}
-          <i
-            class="bi {theme === 'dark' ? 'bi-moon-stars-fill' : 'bi-sun-fill'}"
-            aria-hidden="true"></i>
-        {/if}
-      </IconButton>
-
-      {#if themeDropdownOpen}
+    <div class="flex items-center gap-3">
+      <!-- Theme Switcher -->
+      <div class="relative">
         <button
-          class="fixed inset-0 z-40 cursor-default"
-          onclick={() => (themeDropdownOpen = false)}
-          aria-label="Close theme menu"></button>
-        <div
-          class="absolute top-11 right-0 z-50 flex min-w-31 flex-col rounded-xl border border-border-subtle bg-surface-elevated py-1.5 shadow-lg">
+          type="button"
+          onclick={() => (themeDropdownOpen = !themeDropdownOpen)}
+          aria-label="Select theme"
+          aria-expanded={themeDropdownOpen}
+          class="flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg border border-border-subtle bg-surface-card text-text-secondary transition-colors hover:bg-surface-hover hover:text-text-primary">
+          <i
+            class="bi {theme === 'dark' ? 'bi-moon-stars-fill'
+            : theme === 'light' ? 'bi-sun-fill'
+            : 'bi-circle-half'} text-sm"
+            aria-hidden="true"></i>
+        </button>
+
+        {#if themeDropdownOpen}
           <button
             type="button"
-            onclick={() => {
-              applyTheme('auto');
-              themeDropdownOpen = false;
-            }}
-            class="flex w-full cursor-pointer items-center gap-3 px-4 py-2.5 text-left text-xs font-bold transition-colors hover:bg-surface-hover {(
-              theme === 'auto'
-            ) ?
-              'text-accent'
-            : 'text-text-primary'}">
-            <i
-              class="bi bi-circle-half text-sm"
-              aria-hidden="true"></i>
-            Auto
-          </button>
-          <button
-            type="button"
-            onclick={() => {
-              applyTheme('light');
-              themeDropdownOpen = false;
-            }}
-            class="flex w-full cursor-pointer items-center gap-3 px-4 py-2.5 text-left text-xs font-bold transition-colors hover:bg-surface-hover {(
-              theme === 'light'
-            ) ?
-              'text-accent'
-            : 'text-text-primary'}">
-            <i
-              class="bi bi-sun-fill text-sm"
-              aria-hidden="true"></i>
-            Light
-          </button>
-          <button
-            type="button"
-            onclick={() => {
-              applyTheme('dark');
-              themeDropdownOpen = false;
-            }}
-            class="flex w-full cursor-pointer items-center gap-3 px-4 py-2.5 text-left text-xs font-bold transition-colors hover:bg-surface-hover {(
-              theme === 'dark'
-            ) ?
-              'text-accent'
-            : 'text-text-primary'}">
-            <i
-              class="bi bi-moon-stars-fill text-sm"
-              aria-hidden="true"></i>
-            Dark
-          </button>
-        </div>
-      {/if}
+            class="fixed inset-0 z-40 cursor-default"
+            onclick={() => (themeDropdownOpen = false)}
+            aria-label="Close menu"></button>
+          <div
+            class="absolute top-11 right-0 z-50 flex min-w-32 flex-col rounded-xl border border-border-subtle bg-surface-elevated py-1 shadow-xl backdrop-blur-md">
+            {#each [['auto', 'bi-circle-half', 'Auto'], ['light', 'bi-sun-fill', 'Light'], ['dark', 'bi-moon-stars-fill', 'Dark']] as const as [val, icon, label] (val)}
+              <button
+                type="button"
+                onclick={() => {
+                  applyTheme(val);
+                  themeDropdownOpen = false;
+                }}
+                class="flex w-full cursor-pointer items-center gap-2.5 px-3 py-1.5 text-left text-xs font-semibold transition-colors hover:bg-surface-hover {(
+                  theme === val
+                ) ?
+                  'text-accent'
+                : 'text-text-primary'}">
+                <i
+                  class="bi {icon} text-xs"
+                  aria-hidden="true"></i>
+                <span>{label}</span>
+              </button>
+            {/each}
+          </div>
+        {/if}
+      </div>
+
+      <a
+        href="/"
+        class="inline-flex h-9 items-center justify-center rounded-lg border border-border-subtle bg-surface-card px-3 text-xs font-semibold text-text-primary transition-colors hover:bg-surface-hover">
+        Back to Home
+      </a>
     </div>
   </div>
-</nav>
+</header>
 
 <main
   id="main-content"
@@ -461,93 +446,10 @@
     </form>
   </section>
 
-  <footer
-    class="relative z-10 mx-auto mt-auto w-full border-t border-border-subtle px-6 pt-16 pb-12 font-sans text-xs text-text-muted md:w-[80%] lg:w-[50%]">
-    <div class="grid grid-cols-1 gap-8 pb-10 md:grid-cols-12">
-      <div class="flex flex-col gap-4 md:col-span-7">
-        <div>
-          <h3 class="text-base font-bold text-text-primary">{name}</h3>
-          <p class="mt-2 max-w-md text-xs leading-relaxed text-text-secondary">
-            {desc}
-          </p>
-        </div>
-
-        <div class="flex items-center gap-3">
-          <a
-            href="https://github.com/farhnkrnapratma"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-border-subtle bg-surface-card text-text-secondary transition-colors hover:bg-surface-hover hover:text-accent"
-            aria-label="GitHub (opens in a new tab)">
-            <i
-              class="bi bi-github text-base leading-none"
-              aria-hidden="true"></i>
-          </a>
-          <a
-            href="https://linkedin.com/in/farhnkrnapratma"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-border-subtle bg-surface-card text-text-secondary transition-colors hover:bg-surface-hover hover:text-accent"
-            aria-label="LinkedIn (opens in a new tab)">
-            <i
-              class="bi bi-linkedin text-base leading-none"
-              aria-hidden="true"></i>
-          </a>
-          <a
-            href="https://x.com/farhnkrnapratma"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-border-subtle bg-surface-card text-text-secondary transition-colors hover:bg-surface-hover hover:text-accent"
-            aria-label="X (opens in a new tab)">
-            <i
-              class="bi bi-twitter-x text-base leading-none"
-              aria-hidden="true"></i>
-          </a>
-          <a
-            href="https://instagram.com/farhnkrnapratma"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-border-subtle bg-surface-card text-text-secondary transition-colors hover:bg-surface-hover hover:text-accent"
-            aria-label="Instagram (opens in a new tab)">
-            <i
-              class="bi bi-instagram text-base leading-none"
-              aria-hidden="true"></i>
-          </a>
-        </div>
-      </div>
-
-      <div class="flex flex-col pt-1 md:col-span-5 md:pt-8">
-        <ul class="grid grid-cols-2 gap-x-4 gap-y-2">
-          {#each footerNavItems as item (item.url)}
-            <li>
-              <a
-                href={item.url}
-                class="cursor-pointer text-left font-medium transition-colors hover:text-accent">
-                {item.label}
-              </a>
-            </li>
-          {/each}
-        </ul>
-      </div>
-    </div>
-
-    <div
-      class="flex flex-col items-center justify-between gap-4 border-t border-border-subtle pt-6 select-none sm:flex-row">
-      <p>&copy; {new Date().getFullYear()} {name}. All rights reserved.</p>
-      <div class="flex items-center gap-4 text-[11px] text-text-muted">
-        <a
-          href="/atom.xml"
-          class="inline-flex items-center gap-1 transition-colors hover:text-[#f26522]">
-          <i
-            class="bi bi-rss-fill"
-            aria-hidden="true"></i> RSS feed
-        </a>
-        <a
-          href="/sitemap.xml"
-          class="transition-colors hover:text-accent">Sitemap</a>
-      </div>
-    </div>
-  </footer>
+  <FooterSection
+    {name}
+    description={desc}
+    navItems={footerNavItems} />
 </main>
 
 <Dialog
