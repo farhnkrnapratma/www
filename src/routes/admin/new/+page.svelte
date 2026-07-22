@@ -1103,7 +1103,14 @@
                     aria-haspopup="true"
                     aria-expanded={indentModeDropdownOpen}>
                     {indentMode === 'spaces' ? 'Spaces' : 'Tabs'}
-                    <i class="bi bi-chevron-down text-[9px]"></i>
+                    <span
+                      class="inline-flex h-3.5 w-3.5 shrink-0 origin-center items-center justify-center text-text-muted transition-transform duration-200 ease-out {(
+                        indentModeDropdownOpen
+                      ) ?
+                        'rotate-180'
+                      : ''}">
+                      <i class="bi bi-chevron-down text-[9px] leading-none"></i>
+                    </span>
                   </button>
                   {#if indentModeDropdownOpen}
                     <button
@@ -1144,7 +1151,14 @@
                     aria-haspopup="true"
                     aria-expanded={indentSizeDropdownOpen}>
                     {indentSize}
-                    <i class="bi bi-chevron-down text-[9px]"></i>
+                    <span
+                      class="inline-flex h-3.5 w-3.5 shrink-0 origin-center items-center justify-center text-text-muted transition-transform duration-200 ease-out {(
+                        indentSizeDropdownOpen
+                      ) ?
+                        'rotate-180'
+                      : ''}">
+                      <i class="bi bi-chevron-down text-[9px] leading-none"></i>
+                    </span>
                   </button>
                   {#if indentSizeDropdownOpen}
                     <button
@@ -1185,7 +1199,14 @@
                     aria-haspopup="true"
                     aria-expanded={wrapModeDropdownOpen}>
                     {lineWrapMode === 'soft' ? 'Soft wrap' : 'No wrap'}
-                    <i class="bi bi-chevron-down text-[9px]"></i>
+                    <span
+                      class="inline-flex h-3.5 w-3.5 shrink-0 origin-center items-center justify-center text-text-muted transition-transform duration-200 ease-out {(
+                        wrapModeDropdownOpen
+                      ) ?
+                        'rotate-180'
+                      : ''}">
+                      <i class="bi bi-chevron-down text-[9px] leading-none"></i>
+                    </span>
                   </button>
                   {#if wrapModeDropdownOpen}
                     <button

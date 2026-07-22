@@ -617,9 +617,16 @@
                 aria-hidden="true"></i>
               {getThemeLabel()}
             </span>
-            <i
-              class="bi bi-chevron-down text-xs text-text-muted"
-              aria-hidden="true"></i>
+            <span
+              class="inline-flex h-4 w-4 shrink-0 origin-center items-center justify-center text-text-muted transition-transform duration-200 ease-out {(
+                themeDropdownOpen
+              ) ?
+                'rotate-180'
+              : ''}">
+              <i
+                class="bi bi-chevron-down text-xs leading-none"
+                aria-hidden="true"></i>
+            </span>
           </button>
 
           {#if themeDropdownOpen}

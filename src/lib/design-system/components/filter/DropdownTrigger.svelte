@@ -25,11 +25,14 @@
     isOpen && 'border-border-subtle/60 bg-surface-hover',
   )}>
   <span class="truncate leading-none">{@render children()}</span>
-  <i
-    class="bi bi-chevron-down shrink-0 text-[10px] text-text-muted transition-transform duration-150 {(
+  <span
+    class="inline-flex h-4 w-4 shrink-0 origin-center items-center justify-center text-text-muted transition-transform duration-200 ease-out {(
       isOpen
     ) ?
       'rotate-180'
-    : ''}"
-    aria-hidden="true"></i>
+    : ''}">
+    <i
+      class="bi bi-chevron-down text-[10px] leading-none"
+      aria-hidden="true"></i>
+  </span>
 </button>
