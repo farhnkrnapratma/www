@@ -9,25 +9,15 @@
    */
   interface Props {
     /** Screen-reader accessible label for the button */
-    'ariaLabel': string;
+    ariaLabel: string;
     /** Whether the associated panel is currently open */
-    'isOpen'?: boolean;
+    isOpen?: boolean;
     /** Slot for the trigger's visible content (value label, badge, etc.) */
-    'children': Snippet;
-    /** Optional extra class names */
-    'class'?: string;
-    'onclick'?: () => void;
-    'aria-haspopup'?: boolean | 'true' | 'false' | 'dialog' | 'menu' | 'grid' | 'listbox' | 'tree';
+    children: Snippet;
+    onclick?: () => void;
   }
 
-  let {
-    ariaLabel,
-    isOpen = false,
-    children,
-    'class': className = '',
-    onclick,
-    'aria-haspopup': ariaHasPopup = 'true',
-  }: Props = $props();
+  let { ariaLabel, isOpen = false, children, onclick }: Props = $props();
 </script>
 
 <button
@@ -35,13 +25,12 @@
   {onclick}
   aria-label={ariaLabel}
   aria-expanded={isOpen}
-  aria-haspopup={ariaHasPopup}
+  aria-haspopup="listbox"
   class={cn(
     'inline-flex h-8 min-w-[5.5rem] cursor-pointer items-center justify-between gap-1.5 rounded-lg border border-border-subtle bg-surface-card px-2.5 text-xs font-medium text-text-primary shadow-2xs',
     'transition-all hover:border-border-subtle/80 hover:bg-surface-hover',
     'focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none',
     isOpen && 'border-border-subtle/60 bg-surface-hover',
-    className,
   )}>
   <span class="truncate leading-none">{@render children()}</span>
   <i
