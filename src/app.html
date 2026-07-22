@@ -3,17 +3,44 @@
   lang="en"
   translate="no">
   <head>
-    <!-- Google tag (gtag.js) -->
-    <script
-      async
-      src="https://www.googletagmanager.com/gtag/js?id=G-6HR3DKWZLF"></script>
+    <!-- Google Consent Mode v2 Initialization (Must run before gtag.js) -->
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag() {
         dataLayer.push(arguments);
       }
-      gtag('js', new Date());
 
+      // Check if visitor has saved consent preferences in localStorage
+      let savedConsent = null;
+      try {
+        const stored = localStorage.getItem('fkp_cookie_consent_v2');
+        if (stored) savedConsent = JSON.parse(stored);
+      } catch (e) {}
+
+      // Default consent configuration (Denied by default)
+      const defaultConsent = {
+        analytics_storage: 'denied',
+        ad_storage: 'denied',
+        ad_user_data: 'denied',
+        ad_personalization: 'denied',
+        wait_for_update: 500,
+      };
+
+      if (savedConsent) {
+        // Restore saved visitor choice if available
+        defaultConsent.analytics_storage = savedConsent.analytics_storage || 'denied';
+        defaultConsent.ad_storage = savedConsent.ad_storage || 'denied';
+        defaultConsent.ad_user_data = savedConsent.ad_user_data || 'denied';
+        defaultConsent.ad_personalization = savedConsent.ad_personalization || 'denied';
+      }
+
+      gtag('consent', 'default', defaultConsent);
+    </script>
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-6HR3DKWZLF"></script>
+    <script>
+      gtag('js', new Date());
       gtag('config', 'G-6HR3DKWZLF');
     </script>
     <meta charset="utf-8" />

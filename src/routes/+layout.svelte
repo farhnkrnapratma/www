@@ -2,6 +2,7 @@
   import './layout.css';
   import { onMount } from 'svelte';
   import { fade } from 'svelte/transition';
+  import ConsentBanner from '$lib/components/ConsentBanner.svelte';
   import { page } from '$app/state';
 
   const { children } = $props();
@@ -109,4 +110,6 @@
       aria-hidden="true">feedback</span>
     <span class="hidden sm:inline">Feedback</span>
   </a>
+
+  <ConsentBanner />
 {/if}

@@ -4,3 +4,4 @@ export { default as SpotlightSearch } from './SpotlightSearch.svelte';
 
 // Export AWDS Design System Primitives & Tokens
 export * from './design-system';
+export * from './stores/consentStore.svelte';
