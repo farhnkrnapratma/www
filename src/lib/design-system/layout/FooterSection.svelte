@@ -222,10 +222,10 @@
   </div>
 
   <div
-    class="flex flex-col items-center justify-between gap-y-3.5 border-t border-border-subtle/60 pt-6 select-none lg:flex-row lg:gap-x-6">
-    <!-- Link Group (Row 1 in Fallback / Right side in Desktop) -->
+    class="flex flex-col items-center justify-center gap-y-3.5 border-t border-border-subtle/60 pt-6 text-center select-none">
+    <!-- Link Group (Row 1 on ALL screen sizes) -->
     <div
-      class="order-1 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-xs font-medium text-text-muted lg:order-2 lg:justify-end">
+      class="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-xs font-medium text-text-muted">
       <a
         href="/atom.xml"
         class="inline-flex items-center gap-1.5 whitespace-nowrap transition-colors hover:text-[#f26522] focus-visible:text-[#f26522] focus-visible:outline-none">
@@ -252,8 +252,8 @@
       </button>
     </div>
 
-    <!-- Copyright Notice (Row 2 in Fallback / Left side in Desktop) -->
-    <p class="order-2 text-xs font-medium text-text-muted lg:order-1">
+    <!-- Copyright Notice (Row 2 on ALL screen sizes) -->
+    <p class="text-xs font-medium text-text-muted">
       &copy; {new Date().getFullYear()}
       {name}. All rights reserved.
     </p>
