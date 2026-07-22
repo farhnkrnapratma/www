@@ -139,7 +139,7 @@
     </div>
 
     {#if resolvedNavItems.length > 0}
-      <div class="flex flex-col justify-between pt-1 md:col-span-5 md:pt-0">
+      <div class="flex flex-col justify-between pt-8 md:col-span-5 md:pt-8">
         <ul class="grid grid-cols-2 gap-x-4 gap-y-2">
           {#each resolvedNavItems as item (item.url)}
             <li>
