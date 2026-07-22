@@ -6,8 +6,6 @@
   import Dialog from '../design-system/components/Dialog.svelte';
   import Checkbox from '../design-system/components/Checkbox.svelte';
 
-  let showCustomizeModal = $state(false);
-
   let tempAnalytics = $state(consentStore.signals.analytics_storage === 'granted');
   let tempAdStorage = $state(consentStore.signals.ad_storage === 'granted');
   let tempAdUserData = $state(consentStore.signals.ad_user_data === 'granted');
