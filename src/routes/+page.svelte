@@ -54,6 +54,7 @@
     faculty: string;
     university: string;
     period: string;
+    gpa?: string;
   }
 
   const name = 'Farhan Kurnia Pratama';
@@ -155,8 +156,20 @@
       faculty: 'Faculty of Computer Science and Sciences',
       university: 'Universitas Indo Global Mandiri',
       period: '2024 – Present',
+      gpa: '3.44/4.00',
     },
   ];
+
+  // Skill groups shown on the home snapshot — highest-priority categories only.
+  const snapshotSkillGroups = [
+    'Linux',
+    'Unix',
+    'Programming Languages',
+    'DevOps & Tooling',
+    'Cybersecurity',
+    'Artificial Intelligence',
+  ];
+  const skillsSnapshot = $derived(skills.filter(g => snapshotSkillGroups.includes(g.category)));
 
   interface SkillGroup {
     category: string;
@@ -802,7 +815,7 @@
                         <span
                           class="material-symbols-rounded text-xs leading-none"
                           style="font-variation-settings: 'wght' 300, 'opsz' 20;"
-                          aria-hidden="true">star_shine</span>
+                          aria-hidden="true">star_rate</span>
                         {project.stars} stars
                       </span>
                     </div>
@@ -950,6 +963,64 @@
             </button>
           </div>
         {/if}
+      </div>
+
+      <!-- Skills Snapshot -->
+      <div>
+        <div class="mb-4 flex items-center justify-between gap-4">
+          <h3 class="text-lg font-bold tracking-tight text-text-primary">Skills</h3>
+          <button
+            onclick={() => navigate('cv')}
+            class="group inline-flex cursor-pointer items-center gap-1.5 text-xs font-bold text-accent hover:underline">
+            <span>View full CV</span>
+            <i
+              class="bi bi-arrow-right transition-transform group-hover:translate-x-0.5"
+              aria-hidden="true"></i>
+          </button>
+        </div>
+        <div class="flex flex-wrap gap-2">
+          {#each skillsSnapshot as group (group.category)}
+            <span
+              class="cursor-default rounded-full border border-border-subtle bg-surface-card/60 px-3.5 py-1.5 text-xs font-semibold text-text-primary transition-colors hover:bg-surface-hover">
+              {group.category}
+              <span class="font-normal text-text-secondary opacity-80"
+                >({group.items.join(', ')})</span>
+            </span>
+          {/each}
+        </div>
+      </div>
+
+      <!-- Experience Highlight -->
+      <div>
+        <div class="mb-4 flex items-center justify-between gap-4">
+          <h3 class="text-lg font-bold tracking-tight text-text-primary">Experience</h3>
+          <button
+            onclick={() => navigate('cv')}
+            class="group inline-flex cursor-pointer items-center gap-1.5 text-xs font-bold text-accent hover:underline">
+            <span>Full experience</span>
+            <i
+              class="bi bi-arrow-right transition-transform group-hover:translate-x-0.5"
+              aria-hidden="true"></i>
+          </button>
+        </div>
+        <div class="boxed-list text-left">
+          {#each experiences.slice(0, 1) as exp (exp.role)}
+            <div class="flex flex-col gap-2 px-5 py-4">
+              <div class="flex items-start justify-between gap-4">
+                <div>
+                  <h4 class="text-sm font-bold text-text-primary">{exp.role}</h4>
+                  <p class="text-xs font-medium text-text-secondary">{exp.company}</p>
+                </div>
+                <span
+                  class="shrink-0 rounded-full border border-border-subtle px-2.5 py-0.5 text-[11px] font-semibold text-text-secondary"
+                  >{exp.period}</span>
+              </div>
+              <p class="mt-0.5 line-clamp-2 text-xs leading-relaxed text-text-secondary">
+                {exp.desc}
+              </p>
+            </div>
+          {/each}
+        </div>
       </div>
 
       <div class="boxed-list border-accent/30 bg-accent/5 text-left">
@@ -1143,6 +1214,11 @@
                   <h3 class="text-base font-bold text-text-primary">{edu.degree} in {edu.major}</h3>
                   <p class="text-sm text-text-secondary">{edu.faculty}</p>
                   <p class="mt-1 text-sm font-semibold text-text-primary">{edu.university}</p>
+                  {#if edu.gpa}
+                    <p class="mt-1.5 text-xs font-semibold text-text-secondary">
+                      Current GPA: <span class="text-text-primary">{edu.gpa}</span>
+                    </p>
+                  {/if}
                 </div>
                 <p class="shrink-0 text-xs font-semibold text-text-secondary">{edu.period}</p>
               </div>
@@ -1462,7 +1538,7 @@
                         <span
                           class="material-symbols-rounded text-xs leading-none"
                           style="font-variation-settings: 'wght' 300, 'opsz' 20;"
-                          aria-hidden="true">star_shine</span>
+                          aria-hidden="true">star_rate</span>
                         {project.stars} stars
                       </span>
                     </div>
