@@ -20,6 +20,7 @@
     FilterChipGroup,
     FilterEmptyState,
     createFilterSortStore,
+    formatBlogDate,
   } from '$lib';
 
   interface AdminPost {
@@ -759,30 +760,14 @@
                           <div
                             class="inline-block max-w-full rounded-2xl border border-border-subtle bg-surface-card/70 px-4 py-2.5 text-left">
                             <div class="text-xs font-bold text-text-primary">
-                              {getCommentAuthor(
-                                comment,
-                              )}{#if comment.author_name === 'Admin' || getCommentAuthor(comment) === 'Admin'}<sup
-                                  class="text-[9px] text-accent select-none"
-                                  ><span
-                                    class="material-symbols-rounded text-[9px] leading-none"
-                                    style="font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 20;"
-                                    aria-label="Verified Admin"
-                                    title="Verified Admin">verified</span
-                                  ></sup
-                                >{/if}
+                              {getCommentAuthor(comment)}
                             </div>
                             <p class="mt-0.5 text-sm leading-relaxed text-text-secondary">
                               {#if comment.reply_to_author}
-                                <span class="mr-1.5 text-xs font-bold text-accent"
-                                  >{comment.reply_to_author}{#if comment.reply_to_author === 'Admin'}<sup
-                                      class="text-[9px] text-accent select-none"
-                                      ><span
-                                        class="material-symbols-rounded text-[9px] leading-none"
-                                        style="font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 20;"
-                                        aria-label="Verified Admin"
-                                        title="Verified Admin">verified</span
-                                      ></sup
-                                    >{/if}</span>
+                                <span
+                                  class="mr-1.5 inline-flex items-center rounded-full border border-border-subtle bg-border-subtle/30 px-2 py-0.5 align-middle text-xs leading-none font-semibold text-accent select-none">
+                                  {comment.reply_to_author}
+                                </span>
                               {/if}
                               <span class="whitespace-pre-line">{comment.content}</span>
                             </p>
@@ -790,7 +775,7 @@
 
                           <div
                             class="mt-1.5 ml-2 flex flex-wrap items-center gap-3 text-[10px] text-text-muted">
-                            <span>{formatDate(comment.created_at)}</span>
+                            <span>{formatBlogDate(comment.created_at)}</span>
                             {#if !comment.is_approved}
                               <Badge variant="warning">Hidden</Badge>
                             {/if}

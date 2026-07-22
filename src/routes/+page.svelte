@@ -1184,7 +1184,10 @@
                   <h3 class="text-base font-bold text-text-primary">{exp.role}</h3>
                   <p class="text-sm font-medium text-text-secondary">{exp.company}</p>
                 </div>
-                <p class="shrink-0 text-xs font-semibold text-text-secondary">{exp.period}</p>
+                <span
+                  class="shrink-0 rounded-md border border-border-subtle bg-border-subtle/30 px-2.5 py-0.5 text-xs font-semibold text-text-muted select-none">
+                  {exp.period}
+                </span>
               </div>
               <p class="mt-1.5 text-sm leading-relaxed text-text-secondary">{exp.desc}</p>
             </div>
@@ -1220,7 +1223,10 @@
                     </p>
                   {/if}
                 </div>
-                <p class="shrink-0 text-xs font-semibold text-text-secondary">{edu.period}</p>
+                <span
+                  class="shrink-0 rounded-md border border-border-subtle bg-border-subtle/30 px-2.5 py-0.5 text-xs font-semibold text-text-muted select-none">
+                  {edu.period}
+                </span>
               </div>
             </div>
           {/each}
