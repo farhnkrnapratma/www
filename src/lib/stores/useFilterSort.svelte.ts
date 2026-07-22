@@ -1,3 +1,5 @@
+import { SvelteURL } from 'svelte/reactivity';
+
 export interface SortState {
   field: string;
   direction: 'asc' | 'desc';
@@ -124,7 +126,7 @@ export function createFilterSortStore(options: FilterSortOptions = {}) {
 
   function syncToUrl() {
     if (typeof window === 'undefined') return;
-    const url = new URL(window.location.href);
+    const url = new SvelteURL(window.location.href);
 
     if (search.trim()) {
       url.searchParams.set('q', search.trim());
