@@ -1200,7 +1200,7 @@
                   value={blogFilterStore.search}
                   oninput={e => blogFilterStore.setSearch((e.target as HTMLInputElement).value)}
                   size="sm"
-                  ariaLabel="Search blog articles" />
+                  aria-label="Search blog articles" />
               </div>
             {/snippet}
 
@@ -1361,7 +1361,7 @@
                   value={projectFilterStore.search}
                   oninput={e => projectFilterStore.setSearch((e.target as HTMLInputElement).value)}
                   size="sm"
-                  ariaLabel="Search projects" />
+                  aria-label="Search projects" />
               </div>
             {/snippet}
 

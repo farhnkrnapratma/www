@@ -534,7 +534,7 @@
                   value={filterStore.search}
                   oninput={e => filterStore.setSearch((e.target as HTMLInputElement).value)}
                   size="sm"
-                  ariaLabel="Search posts" />
+                  aria-label="Search posts" />
               </div>
             {/snippet}
 
