@@ -1015,15 +1015,16 @@
                     <div class="text-xs font-bold text-text-primary/95">
                       {getCommentAuthor(comment)}
                     </div>
-                    <p class="mt-0.5 text-sm leading-relaxed text-text-primary/90">
+                    <div
+                      class="mt-0.5 flex flex-wrap items-center gap-1.5 text-sm leading-relaxed text-text-primary/90">
                       {#if comment.reply_to_author}
                         <span
-                          class="mr-1.5 inline-flex items-center rounded-full border border-border-subtle bg-border-subtle/30 px-2 py-0.5 align-middle text-xs leading-none font-semibold text-accent select-none">
+                          class="inline-flex shrink-0 items-center rounded-full border border-border-subtle bg-border-subtle/30 px-2 py-0.5 text-xs leading-none font-semibold text-accent select-none">
                           {comment.reply_to_author}
                         </span>
                       {/if}
                       <span class="whitespace-pre-line">{comment.content}</span>
-                    </p>
+                    </div>
                   </div>
 
                   <div class="mt-1 ml-2 flex items-center gap-2 text-[10px] text-text-muted">
