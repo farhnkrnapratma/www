@@ -373,7 +373,7 @@
     const set = new SvelteSet<string>();
     for (const post of posts) {
       if (post.tags) {
-        post.tags.forEach(t => set.add(t));
+        post.tags.forEach((t: string) => set.add(t));
       }
     }
     return Array.from(set);
@@ -392,7 +392,7 @@
 
     const selectedTags = blogFilterStore.filters['tag'] || [];
     if (selectedTags.length > 0) {
-      list = list.filter(p => p.tags && p.tags.some(t => selectedTags.includes(t)));
+      list = list.filter(p => p.tags && p.tags.some((t: string) => selectedTags.includes(t)));
     }
 
     const sortField = blogFilterStore.sort.field;
@@ -402,12 +402,12 @@
       if (sortField === 'title') {
         return a.title.localeCompare(b.title) * sortDir;
       } else if (sortField === 'readingTime') {
-        const readingA = parseInt(a.reading_time || '0', 10);
-        const readingB = parseInt(b.reading_time || '0', 10);
+        const readingA = parseInt(a.read_time || '0', 10);
+        const readingB = parseInt(b.read_time || '0', 10);
         return (readingA - readingB) * sortDir;
       } else {
-        const dateA = new Date(a.date || a.created_at || 0).getTime();
-        const dateB = new Date(b.date || b.created_at || 0).getTime();
+        const dateA = new Date(a.created_at || 0).getTime();
+        const dateB = new Date(b.created_at || 0).getTime();
         return (dateA - dateB) * sortDir;
       }
     });
@@ -1198,7 +1198,7 @@
                   type="search"
                   placeholder="Search articles..."
                   value={blogFilterStore.search}
-                  onInput={val => blogFilterStore.setSearch(val)}
+                  oninput={e => blogFilterStore.setSearch((e.target as HTMLInputElement).value)}
                   size="sm"
                   ariaLabel="Search blog articles" />
               </div>
@@ -1359,7 +1359,7 @@
                   type="search"
                   placeholder="Search projects..."
                   value={projectFilterStore.search}
-                  onInput={val => projectFilterStore.setSearch(val)}
+                  oninput={e => projectFilterStore.setSearch((e.target as HTMLInputElement).value)}
                   size="sm"
                   ariaLabel="Search projects" />
               </div>

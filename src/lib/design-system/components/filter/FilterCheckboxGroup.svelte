@@ -73,7 +73,7 @@
               class="flex cursor-pointer items-center gap-2 rounded-md px-1.5 py-1 text-xs text-text-primary hover:bg-surface-hover">
               <Checkbox
                 checked={selectedValues.includes(opt.value)}
-                onChange={() => onChange(opt.value)} />
+                onchange={() => onChange(opt.value)} />
               <span>{opt.label}</span>
             </label>
           {/each}
@@ -89,7 +89,7 @@
             class="flex cursor-pointer items-center gap-2 rounded-md border border-border-subtle bg-surface-card px-2.5 py-1 text-xs text-text-primary hover:bg-surface-hover">
             <Checkbox
               checked={selectedValues.includes(opt.value)}
-              onChange={() => onChange(opt.value)} />
+              onchange={() => onChange(opt.value)} />
             <span>{opt.label}</span>
           </label>
         {/each}

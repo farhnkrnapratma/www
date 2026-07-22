@@ -532,7 +532,7 @@
                   type="search"
                   placeholder="Search title or path..."
                   value={filterStore.search}
-                  onInput={val => filterStore.setSearch(val)}
+                  oninput={e => filterStore.setSearch((e.target as HTMLInputElement).value)}
                   size="sm"
                   ariaLabel="Search posts" />
               </div>

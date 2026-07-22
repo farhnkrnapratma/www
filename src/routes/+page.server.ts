@@ -42,6 +42,7 @@ export interface BlogPost {
   read_time?: string;
   comment_count?: number;
   views_count?: number;
+  tags?: string[];
 }
 
 const GITHUB_USERNAME = 'farhnkrnapratma';
