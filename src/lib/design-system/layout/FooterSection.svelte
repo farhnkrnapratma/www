@@ -221,41 +221,54 @@
     {/if}
   </div>
 
-  <div
-    class="flex flex-col items-center justify-center gap-y-3.5 border-t border-border-subtle/60 pt-6 text-center select-none">
-    <!-- Link Group (Row 1 on ALL screen sizes) -->
-    <div
-      class="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-xs font-medium text-text-muted">
-      <a
-        href="/atom.xml"
-        class="inline-flex items-center gap-1.5 whitespace-nowrap transition-colors hover:text-[#f26522] focus-visible:text-[#f26522] focus-visible:outline-none">
-        <i
-          class="bi bi-rss-fill text-[11px] leading-none"
-          aria-hidden="true"></i>
-        <span>RSS feed</span>
-      </a>
-      <a
-        href="/sitemap.xml"
-        class="whitespace-nowrap transition-colors hover:text-text-primary focus-visible:text-text-primary focus-visible:outline-none">
-        Sitemap
-      </a>
-      <a
-        href="/privacy"
-        class="whitespace-nowrap transition-colors hover:text-text-primary focus-visible:text-text-primary focus-visible:outline-none">
-        Privacy Policy
-      </a>
-      <button
-        type="button"
-        onclick={() => consentStore.openCustomizeModal()}
-        class="cursor-pointer whitespace-nowrap transition-colors hover:text-text-primary focus-visible:text-text-primary focus-visible:outline-none">
-        Cookie Settings
-      </button>
+  <!-- Footer Meta Section with Categorized Resources & Legal Columns -->
+  <div class="mt-8 border-t border-border-subtle/60 pt-8 select-none">
+    <div class="grid grid-cols-2 gap-8 sm:grid-cols-2">
+      <!-- Resources Column -->
+      <div class="flex flex-col gap-2.5">
+        <h4 class="text-[11px] font-bold tracking-wider text-text-primary uppercase">Resources</h4>
+        <div class="flex flex-col gap-2">
+          <a
+            href="/atom.xml"
+            class="inline-flex items-center gap-1.5 text-xs font-semibold text-text-secondary transition-colors hover:text-[#f26522] focus-visible:text-[#f26522] focus-visible:outline-none">
+            <i
+              class="bi bi-rss-fill text-[11px] leading-none text-[#f26522]"
+              aria-hidden="true"></i>
+            <span>RSS feed</span>
+          </a>
+          <a
+            href="/sitemap.xml"
+            class="text-xs font-semibold text-text-secondary transition-colors hover:text-accent focus-visible:text-accent focus-visible:outline-none">
+            Sitemap
+          </a>
+        </div>
+      </div>
+
+      <!-- Legal & Privacy Column -->
+      <div class="flex flex-col gap-2.5">
+        <h4 class="text-[11px] font-bold tracking-wider text-text-primary uppercase">Legal</h4>
+        <div class="flex flex-col gap-2">
+          <a
+            href="/privacy"
+            class="text-xs font-semibold text-text-secondary transition-colors hover:text-accent focus-visible:text-accent focus-visible:outline-none">
+            Privacy Policy
+          </a>
+          <button
+            type="button"
+            onclick={() => consentStore.openCustomizeModal()}
+            class="cursor-pointer text-left text-xs font-semibold text-text-secondary transition-colors hover:text-accent focus-visible:text-accent focus-visible:outline-none">
+            Cookie Settings
+          </button>
+        </div>
+      </div>
     </div>
 
-    <!-- Copyright Notice (Row 2 on ALL screen sizes) -->
-    <p class="text-xs font-medium text-text-muted">
-      &copy; {new Date().getFullYear()}
-      {name}. All rights reserved.
-    </p>
+    <!-- Concise Dynamic Copyright Notice -->
+    <div class="mt-8 border-t border-border-subtle/40 pt-4 text-center">
+      <p class="text-xs font-medium text-text-muted">
+        &copy; {new Date().getFullYear()}
+        {name}
+      </p>
+    </div>
   </div>
 </footer>
