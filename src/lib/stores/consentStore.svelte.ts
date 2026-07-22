@@ -181,6 +181,23 @@ export function createConsentStore() {
     });
   }
 
+  function resetVisitorConsent() {
+    if (typeof window !== 'undefined') {
+      try {
+        localStorage.removeItem(STORAGE_KEY);
+      } catch {
+        // Ignore storage errors
+      }
+    }
+    signals.analytics_storage = 'denied';
+    signals.ad_storage = 'denied';
+    signals.ad_user_data = 'denied';
+    signals.ad_personalization = 'denied';
+    hasUserChosen = false;
+    isCustomizeModalOpen = false;
+    isBannerOpen = true;
+  }
+
   function openBanner() {
     isBannerOpen = true;
   }
@@ -266,6 +283,7 @@ export function createConsentStore() {
       return streams;
     },
     init,
+    resetVisitorConsent,
     updateConsent,
     acceptAll,
     acceptAnalyticsOnly,

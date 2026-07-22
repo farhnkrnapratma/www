@@ -435,21 +435,6 @@
         aria-hidden="true">code</span>
       <span class="text-sm font-bold text-text-primary select-none">Console</span>
     </a>
-
-    <div class="h-4 w-[1px] bg-border-subtle"></div>
-
-    <div class="flex items-center gap-1">
-      <a
-        href="/admin"
-        class="rounded-lg bg-surface-switcher-active px-3 py-1.5 text-xs font-bold text-accent shadow-xs">
-        Posts & Comments
-      </a>
-      <a
-        href="/admin/privacy"
-        class="rounded-lg px-3 py-1.5 text-xs font-semibold text-text-secondary transition-colors hover:bg-surface-hover hover:text-text-primary">
-        Privacy & Analytics
-      </a>
-    </div>
   </div>
 
   <div class="flex items-center gap-2">

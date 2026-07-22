@@ -5,6 +5,7 @@
   import Button from '../design-system/components/Button.svelte';
   import Dialog from '../design-system/components/Dialog.svelte';
   import Checkbox from '../design-system/components/Checkbox.svelte';
+  import Badge from '../design-system/components/Badge.svelte';
 
   let tempAnalytics = $state(consentStore.signals.analytics_storage === 'granted');
   let tempAdStorage = $state(consentStore.signals.ad_storage === 'granted');
@@ -102,7 +103,7 @@
           type="button"
           onclick={openCustomize}
           class="ml-auto text-xs font-semibold text-text-muted hover:text-accent hover:underline">
-          Customize
+          Cookies Settings
         </button>
       </div>
     </div>
@@ -111,69 +112,151 @@
 
 <Dialog
   bind:isOpen={consentStore.isCustomizeModalOpen}
-  title="Customize Privacy & Cookies"
-  description="Enable or disable specific tracking signals and cookie storage."
+  title="Cookies Settings"
+  description="Manage Google Consent Mode v2 signals, data processing, and visitor choices."
   onClose={() => consentStore.closeCustomizeModal()}>
   <div class="flex flex-col gap-4 py-2">
-    <div class="rounded-xl border border-border-subtle bg-surface-card p-3.5">
-      <div class="flex items-start justify-between gap-3">
-        <div>
-          <h4 class="text-xs font-bold text-text-primary">Behavioral Analytics</h4>
-          <p class="mt-0.5 text-[11px] text-text-secondary">
-            Measures sessions and page views to improve content without advertising tracking.
-          </p>
-          <span class="mt-1 inline-block font-mono text-[10px] text-text-muted"
-            >analytics_storage</span>
+    <!-- Consent Status Banner -->
+    <div
+      class="flex items-center justify-between gap-3 rounded-xl border border-border-subtle bg-surface-card px-4 py-3">
+      <div>
+        <h4 class="text-xs font-bold text-text-primary">Current Consent Status</h4>
+        <p class="text-[11px] text-text-secondary">
+          {consentStore.overallConsentStatus === 'Good' ?
+            'All signals enabled for optimal site analytics.'
+          : consentStore.overallConsentStatus === 'Partial' ?
+            'Partial signals allowed based on your selections.'
+          : 'Default settings active. Choice pending.'}
+        </p>
+      </div>
+      <Badge
+        variant={consentStore.overallConsentStatus === 'Good' ? 'success'
+        : consentStore.overallConsentStatus === 'Partial' ? 'warning'
+        : 'neutral'}>
+        {consentStore.overallConsentStatus}
+      </Badge>
+    </div>
+
+    <!-- Quick Action Presets -->
+    <div class="flex flex-wrap items-center gap-2">
+      <span class="text-xs font-medium text-text-muted">Quick presets:</span>
+      <button
+        type="button"
+        onclick={() => {
+          tempAnalytics = true;
+          tempAdStorage = true;
+          tempAdUserData = true;
+          tempAdPersonalization = true;
+        }}
+        class="rounded-md border border-border-subtle bg-surface-card px-2.5 py-1 text-xs font-semibold text-text-primary transition-colors hover:bg-surface-hover">
+        Allow all
+      </button>
+      <button
+        type="button"
+        onclick={() => {
+          tempAnalytics = true;
+          tempAdStorage = false;
+          tempAdUserData = false;
+          tempAdPersonalization = false;
+        }}
+        class="rounded-md border border-border-subtle bg-surface-card px-2.5 py-1 text-xs font-semibold text-text-primary transition-colors hover:bg-surface-hover">
+        Analytics only
+      </button>
+      <button
+        type="button"
+        onclick={() => {
+          tempAnalytics = false;
+          tempAdStorage = false;
+          tempAdUserData = false;
+          tempAdPersonalization = false;
+        }}
+        class="rounded-md border border-border-subtle bg-surface-card px-2.5 py-1 text-xs font-semibold text-text-primary transition-colors hover:bg-surface-hover">
+        Deny all
+      </button>
+    </div>
+
+    <!-- Signal Toggles -->
+    <div class="flex flex-col gap-3">
+      <div class="rounded-xl border border-border-subtle bg-surface-card p-3.5">
+        <div class="flex items-start justify-between gap-3">
+          <div>
+            <h4 class="text-xs font-bold text-text-primary">Behavioral Analytics</h4>
+            <p class="mt-0.5 text-[11px] text-text-secondary">
+              Measures sessions and page views to improve content without advertising tracking.
+            </p>
+            <span class="mt-1 inline-block font-mono text-[10px] text-text-muted"
+              >analytics_storage</span>
+          </div>
+          <Checkbox
+            bind:checked={tempAnalytics}
+            label="" />
         </div>
-        <Checkbox
-          bind:checked={tempAnalytics}
-          label="" />
+      </div>
+
+      <div class="rounded-xl border border-border-subtle bg-surface-card p-3.5">
+        <div class="flex items-start justify-between gap-3">
+          <div>
+            <h4 class="text-xs font-bold text-text-primary">Advertising Storage</h4>
+            <p class="mt-0.5 text-[11px] text-text-secondary">
+              Enables storage related to advertising (e.g. cookies or device identifiers).
+            </p>
+            <span class="mt-1 inline-block font-mono text-[10px] text-text-muted">ad_storage</span>
+          </div>
+          <Checkbox
+            bind:checked={tempAdStorage}
+            label="" />
+        </div>
+      </div>
+
+      <div class="rounded-xl border border-border-subtle bg-surface-card p-3.5">
+        <div class="flex items-start justify-between gap-3">
+          <div>
+            <h4 class="text-xs font-bold text-text-primary">Ad User Data</h4>
+            <p class="mt-0.5 text-[11px] text-text-secondary">
+              Sends user-level data to Google for online advertising and conversion measurement.
+            </p>
+            <span class="mt-1 inline-block font-mono text-[10px] text-text-muted"
+              >ad_user_data</span>
+          </div>
+          <Checkbox
+            bind:checked={tempAdUserData}
+            label="" />
+        </div>
+      </div>
+
+      <div class="rounded-xl border border-border-subtle bg-surface-card p-3.5">
+        <div class="flex items-start justify-between gap-3">
+          <div>
+            <h4 class="text-xs font-bold text-text-primary">Ad Personalization</h4>
+            <p class="mt-0.5 text-[11px] text-text-secondary">
+              Allows personalized advertising (remarketing) based on visitor activity.
+            </p>
+            <span class="mt-1 inline-block font-mono text-[10px] text-text-muted"
+              >ad_personalization</span>
+          </div>
+          <Checkbox
+            bind:checked={tempAdPersonalization}
+            label="" />
+        </div>
       </div>
     </div>
 
-    <div class="rounded-xl border border-border-subtle bg-surface-card p-3.5">
-      <div class="flex items-start justify-between gap-3">
+    <!-- Data Retention & Reset Section -->
+    <div
+      class="flex flex-col gap-3 rounded-xl border border-border-subtle bg-surface-card/60 p-3.5">
+      <div class="flex items-center justify-between gap-3">
         <div>
-          <h4 class="text-xs font-bold text-text-primary">Advertising Storage</h4>
+          <h4 class="text-xs font-bold text-text-primary">Reset Visitor Choices</h4>
           <p class="mt-0.5 text-[11px] text-text-secondary">
-            Enables storage related to advertising (e.g. cookies or device identifiers).
+            Clear saved cookie consent signals from your browser and reopen the consent banner.
           </p>
-          <span class="mt-1 inline-block font-mono text-[10px] text-text-muted">ad_storage</span>
         </div>
-        <Checkbox
-          bind:checked={tempAdStorage}
-          label="" />
-      </div>
-    </div>
-
-    <div class="rounded-xl border border-border-subtle bg-surface-card p-3.5">
-      <div class="flex items-start justify-between gap-3">
-        <div>
-          <h4 class="text-xs font-bold text-text-primary">Ad User Data</h4>
-          <p class="mt-0.5 text-[11px] text-text-secondary">
-            Sends user-level data to Google for online advertising and conversion measurement.
-          </p>
-          <span class="mt-1 inline-block font-mono text-[10px] text-text-muted">ad_user_data</span>
-        </div>
-        <Checkbox
-          bind:checked={tempAdUserData}
-          label="" />
-      </div>
-    </div>
-
-    <div class="rounded-xl border border-border-subtle bg-surface-card p-3.5">
-      <div class="flex items-start justify-between gap-3">
-        <div>
-          <h4 class="text-xs font-bold text-text-primary">Ad Personalization</h4>
-          <p class="mt-0.5 text-[11px] text-text-secondary">
-            Allows personalized advertising (remarketing) based on visitor activity.
-          </p>
-          <span class="mt-1 inline-block font-mono text-[10px] text-text-muted"
-            >ad_personalization</span>
-        </div>
-        <Checkbox
-          bind:checked={tempAdPersonalization}
-          label="" />
+        <Button
+          variant="secondary"
+          size="sm"
+          onclick={consentStore.resetVisitorConsent}>
+          Reset choice
+        </Button>
       </div>
     </div>
   </div>
