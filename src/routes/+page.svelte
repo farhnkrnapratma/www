@@ -160,17 +160,6 @@
     },
   ];
 
-  // Skill groups shown on the home snapshot — highest-priority categories only.
-  const snapshotSkillGroups = [
-    'Linux',
-    'Unix',
-    'Programming Languages',
-    'DevOps & Tooling',
-    'Cybersecurity',
-    'Artificial Intelligence',
-  ];
-  const skillsSnapshot = $derived(skills.filter(g => snapshotSkillGroups.includes(g.category)));
-
   interface SkillGroup {
     category: string;
     items: string[];
@@ -187,6 +176,17 @@
     { category: 'Artificial Intelligence', items: ['Prompt Engineering', 'LLMs', 'RAG'] },
     { category: 'Cybersecurity', items: ['GRC', 'IAM'] },
   ];
+
+  // Skill groups shown on the home snapshot — highest-priority categories only.
+  const snapshotSkillGroups = [
+    'Linux',
+    'Unix',
+    'Programming Languages',
+    'DevOps & Tooling',
+    'Cybersecurity',
+    'Artificial Intelligence',
+  ];
+  const skillsSnapshot = $derived(skills.filter(g => snapshotSkillGroups.includes(g.category)));
 
   interface FundingPlatform {
     label: string;
