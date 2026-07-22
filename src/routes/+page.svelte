@@ -81,14 +81,6 @@
 
   const posts = $derived(data.posts || []);
 
-  function getPostDate(post: BlogPost) {
-    return new Date(post.created_at).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-    });
-  }
-
   function getBannerUrl(bannerPath: string | null | undefined): string | null {
     if (!bannerPath) return null;
     const { data: res } = supabase.storage.from('blog-posts').getPublicUrl(bannerPath);
