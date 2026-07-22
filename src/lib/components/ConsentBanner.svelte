@@ -132,7 +132,7 @@
       <Badge
         variant={consentStore.overallConsentStatus === 'Good' ? 'success'
         : consentStore.overallConsentStatus === 'Partial' ? 'warning'
-        : 'neutral'}>
+        : 'default'}>
         {consentStore.overallConsentStatus}
       </Badge>
     </div>
