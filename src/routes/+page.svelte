@@ -2,7 +2,6 @@
   import LinkListSection from '$lib/LinkListSection.svelte';
   import ShinyText from '$lib/ShinyText.svelte';
   import { onMount } from 'svelte';
-  import type { BlogPost } from './+page.server';
   import { isNameReserved } from '$lib/nameValidator';
   import {
     SkipLink,
