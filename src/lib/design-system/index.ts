@@ -88,6 +88,7 @@ export { default as ListSection } from './layout/ListSection.svelte';
 export { default as FooterSection } from './layout/FooterSection.svelte';
 
 // AWDS Filter & Sort Components Export
+export { default as DropdownTrigger } from './components/filter/DropdownTrigger.svelte';
 export { default as FilterToolbar } from './components/filter/FilterToolbar.svelte';
 export { default as FilterChip } from './components/filter/FilterChip.svelte';
 export { default as FilterChipGroup } from './components/filter/FilterChipGroup.svelte';

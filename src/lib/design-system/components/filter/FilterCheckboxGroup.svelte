@@ -1,6 +1,7 @@
 <script lang="ts">
   import Checkbox from '../Checkbox.svelte';
   import { cn } from '../../utils/cn';
+  import DropdownTrigger from './DropdownTrigger.svelte';
 
   interface Option {
     value: string;
@@ -26,51 +27,48 @@
   }: Props = $props();
 
   let isOpen = $state(false);
+
+  let triggerLabel = $derived(
+    selectedValues.length > 0 ? `${selectedValues.length} selected` : 'All',
+  );
 </script>
 
 <div class={cn('relative inline-flex items-center gap-2 text-left select-none', className)}>
-  <span class="text-xs font-medium whitespace-nowrap text-text-secondary">
-    {label}
-  </span>
+  <span class="text-xs font-medium whitespace-nowrap text-text-secondary">{label}</span>
 
   {#if collapsible}
-    <button
-      type="button"
-      onclick={() => (isOpen = !isOpen)}
-      aria-expanded={isOpen}
-      aria-haspopup="true"
-      class="inline-flex h-8.5 cursor-pointer items-center gap-1.5 rounded-lg border border-border-subtle bg-surface-card px-2.5 text-xs font-medium text-text-primary shadow-2xs transition-all hover:border-border-subtle/80 hover:bg-surface-hover focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none">
-      <span>{selectedValues.length > 0 ? `${selectedValues.length} selected` : 'All'}</span>
-      <i
-        class="bi bi-chevron-down text-[10px] text-text-muted transition-transform {isOpen ?
-          'rotate-180'
-        : ''}"
-        aria-hidden="true"></i>
-    </button>
+    <DropdownTrigger
+      ariaLabel="{label}: {triggerLabel}"
+      {isOpen}
+      onclick={() => (isOpen = !isOpen)}>
+      {triggerLabel}
+    </DropdownTrigger>
 
     {#if isOpen}
+      <!-- Backdrop -->
       <button
         type="button"
         class="fixed inset-0 z-40 cursor-default"
         onclick={() => (isOpen = false)}
-        aria-label="Close menu"></button>
+        aria-label="Close {label} filter"></button>
 
+      <!-- Panel -->
       <div
         role="group"
-        aria-label={label}
-        class="absolute top-10 left-0 z-50 flex min-w-48 flex-col gap-1.5 rounded-xl border border-border-subtle bg-surface-elevated p-2.5 shadow-xl backdrop-blur-md">
+        aria-label="{label} filters"
+        class="absolute top-[calc(100%+4px)] left-0 z-50 flex min-w-48 flex-col rounded-xl border border-border-subtle bg-surface-elevated shadow-xl backdrop-blur-md">
         <div
-          class="border-b border-border-subtle/40 px-1.5 py-1 text-[11px] font-semibold text-text-secondary">
+          class="border-b border-border-subtle/40 px-3 py-2 text-[11px] font-semibold text-text-secondary">
           Filter by {label}
         </div>
-        <div class="no-scrollbar flex max-h-52 flex-col gap-1 overflow-y-auto pt-1">
+        <div class="no-scrollbar flex max-h-52 flex-col overflow-y-auto p-1.5">
           {#each options as opt (opt.value)}
             <label
-              class="flex cursor-pointer items-center gap-2 rounded-md px-2 py-1.5 text-xs font-medium text-text-primary transition-colors hover:bg-surface-hover/70">
+              class="flex cursor-pointer items-center gap-2.5 rounded-md px-2 py-1.5 text-xs font-medium text-text-primary transition-colors hover:bg-surface-hover/70">
               <Checkbox
                 checked={selectedValues.includes(opt.value)}
                 onchange={() => onChange(opt.value)} />
-              <span>{opt.label}</span>
+              <span class="leading-none">{opt.label}</span>
             </label>
           {/each}
         </div>
