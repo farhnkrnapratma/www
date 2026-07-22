@@ -71,9 +71,9 @@
       href="/"
       class="flex items-center gap-2.5 text-text-primary transition-opacity hover:opacity-85">
       <img
-        src="/favicon-32x32.png"
-        alt=""
-        class="h-6 w-6 rounded-full" />
+        src="/android-chrome-512x512.png"
+        alt="Farhan Kurnia Pratama"
+        class="h-6.5 w-6.5 rounded-full border border-accent/40 object-cover object-top" />
       <span class="text-sm font-bold tracking-tight">{name}</span>
     </a>
 
