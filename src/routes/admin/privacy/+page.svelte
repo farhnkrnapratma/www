@@ -15,10 +15,19 @@
   let showTechDetailsBehavioral = $state(false);
   let showTechDetailsAd = $state(false);
 
-  // Test signal modal
+  // Test signal & Configure banner modals
   let showTestSignalModal = $state(false);
+  let showConfigureBannerModal = $state(false);
   let testLog = $state<string[]>([]);
   let isTesting = $state(false);
+
+  function resetStoredConsent() {
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('fkp_cookie_consent_v2');
+    }
+    consentStore.openBanner();
+    showConfigureBannerModal = false;
+  }
 
   type Theme = 'auto' | 'dark' | 'light';
   let theme = $state<Theme>('auto');
@@ -521,7 +530,7 @@
               <Button
                 variant="secondary"
                 size="sm"
-                onclick={consentStore.openBanner}>
+                onclick={() => (showConfigureBannerModal = true)}>
                 Configure banner
               </Button>
               <Button
@@ -733,6 +742,92 @@
       size="md"
       onclick={() => (showTestSignalModal = false)}>
       Close
+    </Button>
+  {/snippet}
+</Dialog>
+
+<!-- Configure Consent Banner Modal -->
+<Dialog
+  bind:isOpen={showConfigureBannerModal}
+  title="Configure Consent Banner"
+  description="Manage visitor cookie banner behavior, test preset choices, or launch the floating banner."
+  onClose={() => (showConfigureBannerModal = false)}>
+  <div class="flex flex-col gap-4 py-2 font-sans text-xs">
+    <div class="rounded-xl border border-border-subtle bg-surface-card p-4">
+      <h4 class="font-bold text-text-primary">Banner Status & Actions</h4>
+      <p class="mt-1 leading-relaxed text-text-secondary">
+        The public banner prompts new visitors for consent choices and updates Google Consent Mode
+        v2 signals.
+      </p>
+
+      <div class="mt-4 flex flex-wrap gap-2">
+        <Button
+          variant="primary"
+          size="sm"
+          onclick={() => {
+            consentStore.openBanner();
+            showConfigureBannerModal = false;
+          }}>
+          Open floating banner on screen
+        </Button>
+
+        <Button
+          variant="secondary"
+          size="sm"
+          onclick={resetStoredConsent}>
+          Reset visitor choice in localStorage
+        </Button>
+      </div>
+    </div>
+
+    <!-- Quick Presets Test -->
+    <div class="rounded-xl border border-border-subtle bg-surface-card p-4">
+      <h4 class="font-bold text-text-primary">Test Consent Callbacks</h4>
+      <p class="mt-1 text-text-muted">
+        Simulate visitor actions to trigger live <code class="font-mono text-accent"
+          >gtag('consent', 'update', ...)</code> signals.
+      </p>
+
+      <div class="mt-3 flex flex-wrap gap-2">
+        <Button
+          variant="secondary"
+          size="sm"
+          onclick={() => {
+            consentStore.acceptAll();
+            showConfigureBannerModal = false;
+          }}>
+          Accept All
+        </Button>
+
+        <Button
+          variant="secondary"
+          size="sm"
+          onclick={() => {
+            consentStore.acceptAnalyticsOnly();
+            showConfigureBannerModal = false;
+          }}>
+          Analytics Only
+        </Button>
+
+        <Button
+          variant="ghost"
+          size="sm"
+          onclick={() => {
+            consentStore.rejectAll();
+            showConfigureBannerModal = false;
+          }}>
+          Reject All
+        </Button>
+      </div>
+    </div>
+  </div>
+
+  {#snippet footer()}
+    <Button
+      variant="secondary"
+      size="md"
+      onclick={() => (showConfigureBannerModal = false)}>
+      Done
     </Button>
   {/snippet}
 </Dialog>

@@ -110,6 +110,6 @@
       aria-hidden="true">feedback</span>
     <span class="hidden sm:inline">Feedback</span>
   </a>
-
-  <ConsentBanner />
 {/if}
+
+<ConsentBanner />
