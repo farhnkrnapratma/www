@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { fade, slide } from 'svelte/transition';
+  import { fade } from 'svelte/transition';
   import { consentStore } from '../stores/consentStore.svelte';
   import Button from '../design-system/components/Button.svelte';
   import Dialog from '../design-system/components/Dialog.svelte';

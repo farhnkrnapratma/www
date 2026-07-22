@@ -3,6 +3,8 @@
  * Manages visitor consent signals, admin retention preferences, and gtag sync.
  */
 
+import { SvelteDate } from 'svelte/reactivity';
+
 export type ConsentStatus = 'granted' | 'denied';
 
 export interface ConsentSignals {
@@ -33,8 +35,8 @@ const RETENTION_STORAGE_KEY = 'fkp_ga4_retention_settings';
 
 declare global {
   interface Window {
-    dataLayer: any[];
-    gtag?: (...args: any[]) => void;
+    dataLayer: unknown[];
+    gtag?: (...args: unknown[]) => void;
   }
 }
 
@@ -44,14 +46,14 @@ export function createConsentStore() {
   let isSavingRetention = $state(false);
   let retentionSaveSuccess = $state(false);
 
-  let signals = $state<ConsentSignals>({
+  const signals = $state<ConsentSignals>({
     analytics_storage: 'denied',
     ad_storage: 'denied',
     ad_user_data: 'denied',
     ad_personalization: 'denied',
   });
 
-  let retention = $state<RetentionSettings>({
+  const retention = $state<RetentionSettings>({
     eventDataRetention: '14_months',
     userDataRetention: '14_months',
     lastUpdated: undefined,
@@ -70,14 +72,14 @@ export function createConsentStore() {
   ];
 
   // Derived states
-  let isBehavioralActive = $derived(signals.analytics_storage === 'granted');
-  let isAdvertisingActive = $derived(
+  const isBehavioralActive = $derived(signals.analytics_storage === 'granted');
+  const isAdvertisingActive = $derived(
     signals.ad_storage === 'granted' ||
       signals.ad_user_data === 'granted' ||
       signals.ad_personalization === 'granted',
   );
 
-  let overallConsentStatus = $derived<'Good' | 'Setup needed' | 'Partial'>(
+  const overallConsentStatus = $derived<'Good' | 'Setup needed' | 'Partial'>(
     !hasUserChosen ? 'Setup needed'
     : isBehavioralActive && isAdvertisingActive ? 'Good'
     : 'Partial',
@@ -99,7 +101,7 @@ export function createConsentStore() {
       } else {
         isBannerOpen = true;
       }
-    } catch (e) {
+    } catch {
       isBannerOpen = true;
     }
 
@@ -112,7 +114,9 @@ export function createConsentStore() {
         retention.userDataRetention = parsedRet.userDataRetention || '14_months';
         retention.lastUpdated = parsedRet.lastUpdated;
       }
-    } catch (e) {}
+    } catch {
+      // Ignore storage error
+    }
   }
 
   function applyGtagUpdate(newSignals: ConsentSignals) {
@@ -140,15 +144,18 @@ export function createConsentStore() {
 
       try {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(newSignals));
-      } catch (e) {}
+      } catch {
+        // Ignore storage error
+      }
     }
   }
 
   function updateConsent(newSignals: Partial<ConsentSignals>) {
-    signals = {
-      ...signals,
-      ...newSignals,
-    };
+    signals.analytics_storage = newSignals.analytics_storage ?? signals.analytics_storage;
+    signals.ad_storage = newSignals.ad_storage ?? signals.ad_storage;
+    signals.ad_user_data = newSignals.ad_user_data ?? signals.ad_user_data;
+    signals.ad_personalization = newSignals.ad_personalization ?? signals.ad_personalization;
+
     hasUserChosen = true;
     isBannerOpen = false;
     applyGtagUpdate(signals);
@@ -198,12 +205,14 @@ export function createConsentStore() {
 
     retention.eventDataRetention = eventPeriod;
     retention.userDataRetention = userPeriod;
-    retention.lastUpdated = new Date().toISOString();
+    retention.lastUpdated = new SvelteDate().toISOString();
 
     if (typeof window !== 'undefined') {
       try {
         localStorage.setItem(RETENTION_STORAGE_KEY, JSON.stringify(retention));
-      } catch (e) {}
+      } catch {
+        // Ignore storage error
+      }
     }
 
     isSavingRetention = false;

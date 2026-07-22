@@ -1,12 +1,8 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { supabase } from '$lib/supabase';
-  import {
-    consentStore,
-    type RetentionPeriod,
-    type ConsentSignals,
-  } from '$lib/stores/consentStore.svelte';
-  import { Button, IconButton, Badge, Select, Dialog, SkipLink, StatusBanner } from '$lib';
+  import { consentStore, type RetentionPeriod } from '$lib/stores/consentStore.svelte';
+  import { Button, IconButton, Badge, Dialog, SkipLink, StatusBanner, LoadingState } from '$lib';
 
   let isLoading = $state(true);
   let isLoggingOut = $state(false);
@@ -197,483 +193,495 @@
   </div>
 </nav>
 
-<!-- Main Content -->
 <main
   id="main-content"
   class="flex min-h-[calc(100vh-3.75rem)] flex-col pt-15 font-sans">
-  <section
-    class="mx-auto w-full flex-1 px-6 py-10 md:w-[80%] md:max-w-none lg:w-[50%]"
-    aria-label="Privacy and Analytics Management">
-    <!-- Page Header -->
-    <div class="mb-8">
-      <div class="flex items-center gap-2 text-xs font-semibold text-accent">
-        <i
-          class="bi bi-shield-lock-fill"
-          aria-hidden="true"></i>
-        <span>GA4 & Consent Control Panel</span>
-      </div>
-      <h1 class="mt-1 text-2xl font-bold tracking-tight text-text-primary sm:text-3xl">
-        Privacy & Analytics
-      </h1>
-      <p class="mt-1 text-xs leading-relaxed text-text-secondary">
-        Manage Google Analytics 4 data retention limits, Google Consent Mode v2 signals, and
-        regional privacy rules.
-      </p>
-    </div>
-
-    <!-- AREA 1: OVERVIEW SUMMARY CARDS -->
-    <div class="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2">
-      <!-- Retention Overview Card -->
-      <div
-        class="flex flex-col justify-between gap-3 rounded-2xl border border-border-subtle bg-surface-card/60 p-5 shadow-xs backdrop-blur-md">
-        <div class="flex items-start justify-between gap-3">
-          <div>
-            <span class="text-[11px] font-semibold tracking-wider text-text-muted uppercase">
-              Data Retention
-            </span>
-            <h3 class="mt-1 text-lg font-bold text-text-primary">
-              Retention: {consentStore.retention.eventDataRetention === '14_months' ?
-                '14 months'
-              : '2 months'}
-            </h3>
-          </div>
-          <Badge
-            variant="success"
-            size="sm">Active</Badge>
-        </div>
-        <p class="text-xs leading-relaxed text-text-secondary">
-          User-level and event-level data retention windows are configured to standard limits.
-        </p>
-      </div>
-
-      <!-- Consent Mode Overview Card -->
-      <div
-        class="flex flex-col justify-between gap-3 rounded-2xl border border-border-subtle bg-surface-card/60 p-5 shadow-xs backdrop-blur-md">
-        <div class="flex items-start justify-between gap-3">
-          <div>
-            <span class="text-[11px] font-semibold tracking-wider text-text-muted uppercase">
-              Consent Mode v2
-            </span>
-            <h3 class="mt-1 text-lg font-bold text-text-primary">
-              Consent: {consentStore.overallConsentStatus}
-            </h3>
-          </div>
-          <Badge
-            variant={consentStore.overallConsentStatus === 'Good' ? 'success'
-            : consentStore.overallConsentStatus === 'Partial' ? 'warning'
-            : 'neutral'}
-            size="sm">
-            {consentStore.overallConsentStatus}
-          </Badge>
-        </div>
-        <p class="text-xs leading-relaxed text-text-secondary">
-          {consentStore.overallConsentStatus === 'Good' ?
-            'Both Behavioral and Advertising consent signals are active.'
-          : consentStore.overallConsentStatus === 'Partial' ?
-            'Behavioral analytics active; advertising signals restricted.'
-          : 'Consent banner active. Awaiting visitor consent choices.'}
-        </p>
-      </div>
-    </div>
-
-    <!-- AREA 2: DATA RETENTION -->
-    <div
-      class="mb-8 flex flex-col gap-5 rounded-2xl border border-border-subtle bg-surface-card/60 p-6 shadow-xs backdrop-blur-md">
-      <div class="flex flex-col gap-1">
-        <div class="flex items-center gap-2">
+  {#if isLoading}
+    <section class="mx-auto w-full flex-1 px-6 py-10 md:w-[80%] md:max-w-none lg:w-[50%]">
+      <LoadingState
+        label="Loading privacy & analytics data..."
+        size="lg"
+        class="py-20" />
+    </section>
+  {:else}
+    <section
+      class="mx-auto w-full flex-1 px-6 py-10 md:w-[80%] md:max-w-none lg:w-[50%]"
+      aria-label="Privacy and Analytics Management">
+      <!-- Page Header -->
+      <div class="mb-8">
+        <div class="flex items-center gap-2 text-xs font-semibold text-accent">
           <i
-            class="bi bi-clock-history text-accent"
+            class="bi bi-shield-lock-fill"
             aria-hidden="true"></i>
-          <h2 class="text-base font-bold text-text-primary">Data Retention</h2>
+          <span>GA4 & Consent Control Panel</span>
         </div>
-        <p class="text-xs text-text-secondary">
-          Configure how long user-level and event-level identifiers are retained in Google Analytics
-          4 before automatic deletion.
+        <h1 class="mt-1 text-2xl font-bold tracking-tight text-text-primary sm:text-3xl">
+          Privacy & Analytics
+        </h1>
+        <p class="mt-1 text-xs leading-relaxed text-text-secondary">
+          Manage Google Analytics 4 data retention limits, Google Consent Mode v2 signals, and
+          regional privacy rules.
         </p>
       </div>
 
-      {#if consentStore.retentionSaveSuccess}
-        <StatusBanner
-          type="success"
-          title="Retention settings updated successfully"
-          message="Your data retention preference has been saved and will apply within 24 hours." />
-      {/if}
-
-      <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
-        <!-- Event Data Retention Field -->
-        <div class="flex flex-col gap-2">
-          <label
-            for="event-retention-select"
-            class="text-xs font-bold text-text-primary">
-            Event data retention
-          </label>
-          <div class="flex items-center gap-2">
-            <button
-              type="button"
-              onclick={() => (selectedEventRetention = '2_months')}
-              class="flex-1 rounded-lg border py-2 text-xs font-bold transition-all
-                {selectedEventRetention === '2_months' ?
-                'border-accent bg-accent/10 text-accent shadow-2xs'
-              : 'border-border-subtle bg-surface-card text-text-secondary hover:bg-surface-hover'}">
-              2 months
-            </button>
-            <button
-              type="button"
-              onclick={() => (selectedEventRetention = '14_months')}
-              class="flex-1 rounded-lg border py-2 text-xs font-bold transition-all
-                {selectedEventRetention === '14_months' ?
-                'border-accent bg-accent/10 text-accent shadow-2xs'
-              : 'border-border-subtle bg-surface-card text-text-secondary hover:bg-surface-hover'}">
-              14 months
-            </button>
+      <!-- AREA 1: OVERVIEW SUMMARY CARDS -->
+      <div class="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <!-- Retention Overview Card -->
+        <div
+          class="flex flex-col justify-between gap-3 rounded-2xl border border-border-subtle bg-surface-card/60 p-5 shadow-xs backdrop-blur-md">
+          <div class="flex items-start justify-between gap-3">
+            <div>
+              <span class="text-[11px] font-semibold tracking-wider text-text-muted uppercase">
+                Data Retention
+              </span>
+              <h3 class="mt-1 text-lg font-bold text-text-primary">
+                Retention: {consentStore.retention.eventDataRetention === '14_months' ?
+                  '14 months'
+                : '2 months'}
+              </h3>
+            </div>
+            <Badge
+              variant="success"
+              size="sm">Active</Badge>
           </div>
-          <span class="text-[11px] text-text-muted">
-            Standard event-level data retention limit.
-          </span>
-        </div>
-
-        <!-- User Data Retention Field -->
-        <div class="flex flex-col gap-2">
-          <label
-            for="user-retention-select"
-            class="text-xs font-bold text-text-primary">
-            User data retention
-          </label>
-          <div class="flex items-center gap-2">
-            <button
-              type="button"
-              onclick={() => (selectedUserRetention = '2_months')}
-              class="flex-1 rounded-lg border py-2 text-xs font-bold transition-all
-                {selectedUserRetention === '2_months' ?
-                'border-accent bg-accent/10 text-accent shadow-2xs'
-              : 'border-border-subtle bg-surface-card text-text-secondary hover:bg-surface-hover'}">
-              2 months
-            </button>
-            <button
-              type="button"
-              onclick={() => (selectedUserRetention = '14_months')}
-              class="flex-1 rounded-lg border py-2 text-xs font-bold transition-all
-                {selectedUserRetention === '14_months' ?
-                'border-accent bg-accent/10 text-accent shadow-2xs'
-              : 'border-border-subtle bg-surface-card text-text-secondary hover:bg-surface-hover'}">
-              14 months
-            </button>
-          </div>
-          <span class="text-[11px] text-text-muted"> User-level identifier retention window. </span>
-        </div>
-      </div>
-
-      <!-- Helper info callout -->
-      <div
-        class="rounded-xl border border-border-subtle/50 bg-surface/40 p-3.5 text-xs text-text-muted">
-        <ul class="list-disc space-y-1 pl-4">
-          <li>
-            <strong>Changes apply after 24 hours</strong> according to Google Analytics processing rules.
-          </li>
-          <li>
-            Retention affects user-level and event-level data associated with cookies, User-IDs, or
-            advertising identifiers.
-          </li>
-          <li>
-            Google Signals data maintains a 26-month maximum limit regardless of these general
-            settings.
-          </li>
-        </ul>
-      </div>
-
-      <div class="flex justify-end pt-2">
-        <Button
-          variant="primary"
-          size="md"
-          onclick={handleSaveRetention}
-          isLoading={consentStore.isSavingRetention}
-          disabled={consentStore.isSavingRetention}>
-          Save retention settings
-        </Button>
-      </div>
-    </div>
-
-    <!-- AREA 3: CONSENT SETTINGS -->
-    <div
-      class="mb-8 flex flex-col gap-6 rounded-2xl border border-border-subtle bg-surface-card/60 p-6 shadow-xs backdrop-blur-md">
-      <!-- Top Stream Selector & Section Header -->
-      <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <div class="flex items-center gap-2">
-            <i
-              class="bi bi-sliders text-accent"
-              aria-hidden="true"></i>
-            <h2 class="text-base font-bold text-text-primary">Consent Settings</h2>
-          </div>
-          <p class="mt-0.5 text-xs text-text-secondary">
-            Manage Google Consent Mode v2 signals mapped to visitor choices.
+          <p class="text-xs leading-relaxed text-text-secondary">
+            User-level and event-level data retention windows are configured to standard limits.
           </p>
         </div>
 
-        <!-- Stream selector -->
-        <div class="flex items-center gap-2 select-none">
-          <span class="text-xs font-semibold whitespace-nowrap text-text-muted">Stream:</span>
-          <select
-            value={consentStore.selectedStreamId}
-            onchange={e => consentStore.setSelectedStream(e.currentTarget.value)}
-            class="h-8.5 cursor-pointer rounded-lg border border-border-subtle bg-surface-card px-2.5 text-xs font-medium text-text-primary shadow-2xs">
-            {#each consentStore.streams as stream (stream.id)}
-              <option value={stream.id}>{stream.name}</option>
-            {/each}
-          </select>
-        </div>
-      </div>
-
-      <!-- Consent Cards Grid -->
-      <div class="grid grid-cols-1 gap-5 md:grid-cols-2">
-        <!-- Card 1: Behavioral Analytics -->
+        <!-- Consent Mode Overview Card -->
         <div
-          class="flex flex-col justify-between gap-4 rounded-xl border border-border-subtle bg-surface/50 p-5">
-          <div class="flex flex-col gap-3">
-            <div class="flex items-start justify-between gap-3">
-              <div>
-                <h3 class="text-sm font-bold text-text-primary">Behavioral Analytics Consent</h3>
-                <p class="mt-0.5 text-xs leading-relaxed text-text-secondary">
-                  Measures sessions, page views, and interactions without personal advertising
-                  tracking.
-                </p>
-              </div>
-              <Badge
-                variant={consentStore.isBehavioralActive ? 'success' : 'neutral'}
-                size="sm">
-                {consentStore.isBehavioralActive ? 'Active' : 'Inactive'}
-              </Badge>
-            </div>
-
-            <!-- Signal Mapping -->
-            <div class="rounded-lg border border-border-subtle/40 bg-surface-card p-2.5">
-              <span class="text-[11px] font-semibold text-text-muted">Underlying Signal:</span>
-              <div class="mt-1 flex items-center justify-between">
-                <code
-                  class="rounded bg-accent/10 px-1.5 py-0.5 font-mono text-xs font-semibold text-accent">
-                  analytics_storage
-                </code>
-                <span
-                  class="text-xs font-bold {consentStore.signals.analytics_storage === 'granted' ?
-                    'text-emerald-500'
-                  : 'text-text-muted'}">
-                  {consentStore.signals.analytics_storage.toUpperCase()}
-                </span>
-              </div>
-            </div>
-
-            <!-- Impact Summary -->
+          class="flex flex-col justify-between gap-3 rounded-2xl border border-border-subtle bg-surface-card/60 p-5 shadow-xs backdrop-blur-md">
+          <div class="flex items-start justify-between gap-3">
             <div>
-              <span class="text-[11px] font-semibold text-text-muted">Impact Summary:</span>
-              <div class="mt-1.5 flex flex-wrap gap-1.5">
-                <span
-                  class="rounded-md border border-border-subtle/60 bg-surface-card px-2 py-0.5 text-[11px] font-semibold text-text-secondary">
-                  Session Measurement
-                </span>
-                <span
-                  class="rounded-md border border-border-subtle/60 bg-surface-card px-2 py-0.5 text-[11px] font-semibold text-text-secondary">
-                  Pageview Metrics
-                </span>
-                <span
-                  class="rounded-md border border-border-subtle/60 bg-surface-card px-2 py-0.5 text-[11px] font-semibold text-text-secondary">
-                  Engagement Reports
-                </span>
-              </div>
+              <span class="text-[11px] font-semibold tracking-wider text-text-muted uppercase">
+                Consent Mode v2
+              </span>
+              <h3 class="mt-1 text-lg font-bold text-text-primary">
+                Consent: {consentStore.overallConsentStatus}
+              </h3>
             </div>
-
-            <!-- Progressive Disclosure Toggle -->
-            <button
-              type="button"
-              onclick={() => (showTechDetailsBehavioral = !showTechDetailsBehavioral)}
-              class="text-left text-[11px] font-bold text-accent hover:underline">
-              {showTechDetailsBehavioral ? 'Hide technical spec' : 'Show technical spec →'}
-            </button>
-
-            {#if showTechDetailsBehavioral}
-              <div
-                class="rounded-lg border border-border-subtle bg-surface-card p-3 font-mono text-[11px] text-text-muted">
-                <p>gtag('consent', 'update', &#123;</p>
-                <p class="pl-3">'analytics_storage': '{consentStore.signals.analytics_storage}'</p>
-                <p>&#125;);</p>
-              </div>
-            {/if}
+            <Badge
+              variant={consentStore.overallConsentStatus === 'Good' ? 'success'
+              : consentStore.overallConsentStatus === 'Partial' ? 'warning'
+              : 'neutral'}
+              size="sm">
+              {consentStore.overallConsentStatus}
+            </Badge>
           </div>
-
-          <div class="flex flex-wrap items-center gap-2 border-t border-border-subtle/40 pt-2">
-            <Button
-              variant="secondary"
-              size="sm"
-              onclick={consentStore.openBanner}>
-              Configure banner
-            </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              onclick={() =>
-                consentStore.updateConsent({
-                  analytics_storage:
-                    consentStore.signals.analytics_storage === 'granted' ? 'denied' : 'granted',
-                })}>
-              Toggle signal
-            </Button>
-          </div>
-        </div>
-
-        <!-- Card 2: Advertising Consent -->
-        <div
-          class="flex flex-col justify-between gap-4 rounded-xl border border-border-subtle bg-surface/50 p-5">
-          <div class="flex flex-col gap-3">
-            <div class="flex items-start justify-between gap-3">
-              <div>
-                <h3 class="text-sm font-bold text-text-primary">Advertising Consent</h3>
-                <p class="mt-0.5 text-xs leading-relaxed text-text-secondary">
-                  Controls Google Ads measurement, conversion export, and remarketing
-                  personalization.
-                </p>
-              </div>
-              <Badge
-                variant={consentStore.isAdvertisingActive ? 'success' : 'neutral'}
-                size="sm">
-                {consentStore.isAdvertisingActive ? 'Active' : 'Inactive'}
-              </Badge>
-            </div>
-
-            <!-- Signal Mappings -->
-            <div
-              class="flex flex-col gap-1.5 rounded-lg border border-border-subtle/40 bg-surface-card p-2.5">
-              <span class="text-[11px] font-semibold text-text-muted">Underlying Signals:</span>
-              <div class="flex items-center justify-between text-xs">
-                <code class="font-mono text-[11px] text-text-primary">ad_storage</code>
-                <span
-                  class="font-bold {consentStore.signals.ad_storage === 'granted' ?
-                    'text-emerald-500'
-                  : 'text-text-muted'}">{consentStore.signals.ad_storage.toUpperCase()}</span>
-              </div>
-              <div class="flex items-center justify-between text-xs">
-                <code class="font-mono text-[11px] text-text-primary">ad_user_data</code>
-                <span
-                  class="font-bold {consentStore.signals.ad_user_data === 'granted' ?
-                    'text-emerald-500'
-                  : 'text-text-muted'}">{consentStore.signals.ad_user_data.toUpperCase()}</span>
-              </div>
-              <div class="flex items-center justify-between text-xs">
-                <code class="font-mono text-[11px] text-text-primary">ad_personalization</code>
-                <span
-                  class="font-bold {consentStore.signals.ad_personalization === 'granted' ?
-                    'text-emerald-500'
-                  : 'text-text-muted'}"
-                  >{consentStore.signals.ad_personalization.toUpperCase()}</span>
-              </div>
-            </div>
-
-            <!-- Impact Summary -->
-            <div>
-              <span class="text-[11px] font-semibold text-text-muted">Impact Summary:</span>
-              <div class="mt-1.5 flex flex-wrap gap-1.5">
-                <span
-                  class="rounded-md border border-border-subtle/60 bg-surface-card px-2 py-0.5 text-[11px] font-semibold text-text-secondary">
-                  Ad Measurement
-                </span>
-                <span
-                  class="rounded-md border border-border-subtle/60 bg-surface-card px-2 py-0.5 text-[11px] font-semibold text-text-secondary">
-                  Conversion Export
-                </span>
-                <span
-                  class="rounded-md border border-border-subtle/60 bg-surface-card px-2 py-0.5 text-[11px] font-semibold text-text-secondary">
-                  Remarketing
-                </span>
-              </div>
-            </div>
-
-            <!-- Progressive Disclosure Toggle -->
-            <button
-              type="button"
-              onclick={() => (showTechDetailsAd = !showTechDetailsAd)}
-              class="text-left text-[11px] font-bold text-accent hover:underline">
-              {showTechDetailsAd ? 'Hide technical spec' : 'Show technical spec →'}
-            </button>
-
-            {#if showTechDetailsAd}
-              <div
-                class="rounded-lg border border-border-subtle bg-surface-card p-3 font-mono text-[11px] text-text-muted">
-                <p>gtag('consent', 'update', &#123;</p>
-                <p class="pl-3">'ad_storage': '{consentStore.signals.ad_storage}',</p>
-                <p class="pl-3">'ad_user_data': '{consentStore.signals.ad_user_data}',</p>
-                <p class="pl-3">
-                  'ad_personalization': '{consentStore.signals.ad_personalization}'
-                </p>
-                <p>&#125;);</p>
-              </div>
-            {/if}
-          </div>
-
-          <div class="flex flex-wrap items-center gap-2 border-t border-border-subtle/40 pt-2">
-            <Button
-              variant="secondary"
-              size="sm"
-              onclick={() => (showTestSignalModal = true)}>
-              Test consent signals
-            </Button>
-          </div>
+          <p class="text-xs leading-relaxed text-text-secondary">
+            {consentStore.overallConsentStatus === 'Good' ?
+              'Both Behavioral and Advertising consent signals are active.'
+            : consentStore.overallConsentStatus === 'Partial' ?
+              'Behavioral analytics active; advertising signals restricted.'
+            : 'Consent banner active. Awaiting visitor consent choices.'}
+          </p>
         </div>
       </div>
-    </div>
 
-    <!-- AREA 4: DEFAULT CONSENT BY REGION -->
-    <div
-      class="flex flex-col gap-4 rounded-2xl border border-border-subtle bg-surface-card/60 p-6 shadow-xs backdrop-blur-md">
-      <div class="flex flex-col gap-1">
-        <div class="flex items-center gap-2">
-          <i
-            class="bi bi-globe-americas text-accent"
-            aria-hidden="true"></i>
-          <h2 class="text-base font-bold text-text-primary">Default Consent by Region</h2>
+      <!-- AREA 2: DATA RETENTION -->
+      <div
+        class="mb-8 flex flex-col gap-5 rounded-2xl border border-border-subtle bg-surface-card/60 p-6 shadow-xs backdrop-blur-md">
+        <div class="flex flex-col gap-1">
+          <div class="flex items-center gap-2">
+            <i
+              class="bi bi-clock-history text-accent"
+              aria-hidden="true"></i>
+            <h2 class="text-base font-bold text-text-primary">Data Retention</h2>
+          </div>
+          <p class="text-xs text-text-secondary">
+            Configure how long user-level and event-level identifiers are retained in Google
+            Analytics 4 before automatic deletion.
+          </p>
         </div>
-        <p class="text-xs text-text-secondary">
-          Configure default consent signals applied before visitor interaction based on
-          jurisdiction.
-        </p>
+
+        {#if consentStore.retentionSaveSuccess}
+          <StatusBanner
+            type="success"
+            title="Retention settings updated successfully"
+            message="Your data retention preference has been saved and will apply within 24 hours." />
+        {/if}
+
+        <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
+          <!-- Event Data Retention Field -->
+          <div class="flex flex-col gap-2">
+            <label
+              for="event-retention-select"
+              class="text-xs font-bold text-text-primary">
+              Event data retention
+            </label>
+            <div class="flex items-center gap-2">
+              <button
+                type="button"
+                onclick={() => (selectedEventRetention = '2_months')}
+                class="flex-1 rounded-lg border py-2 text-xs font-bold transition-all
+                {selectedEventRetention === '2_months' ?
+                  'border-accent bg-accent/10 text-accent shadow-2xs'
+                : 'border-border-subtle bg-surface-card text-text-secondary hover:bg-surface-hover'}">
+                2 months
+              </button>
+              <button
+                type="button"
+                onclick={() => (selectedEventRetention = '14_months')}
+                class="flex-1 rounded-lg border py-2 text-xs font-bold transition-all
+                {selectedEventRetention === '14_months' ?
+                  'border-accent bg-accent/10 text-accent shadow-2xs'
+                : 'border-border-subtle bg-surface-card text-text-secondary hover:bg-surface-hover'}">
+                14 months
+              </button>
+            </div>
+            <span class="text-[11px] text-text-muted">
+              Standard event-level data retention limit.
+            </span>
+          </div>
+
+          <!-- User Data Retention Field -->
+          <div class="flex flex-col gap-2">
+            <label
+              for="user-retention-select"
+              class="text-xs font-bold text-text-primary">
+              User data retention
+            </label>
+            <div class="flex items-center gap-2">
+              <button
+                type="button"
+                onclick={() => (selectedUserRetention = '2_months')}
+                class="flex-1 rounded-lg border py-2 text-xs font-bold transition-all
+                {selectedUserRetention === '2_months' ?
+                  'border-accent bg-accent/10 text-accent shadow-2xs'
+                : 'border-border-subtle bg-surface-card text-text-secondary hover:bg-surface-hover'}">
+                2 months
+              </button>
+              <button
+                type="button"
+                onclick={() => (selectedUserRetention = '14_months')}
+                class="flex-1 rounded-lg border py-2 text-xs font-bold transition-all
+                {selectedUserRetention === '14_months' ?
+                  'border-accent bg-accent/10 text-accent shadow-2xs'
+                : 'border-border-subtle bg-surface-card text-text-secondary hover:bg-surface-hover'}">
+                14 months
+              </button>
+            </div>
+            <span class="text-[11px] text-text-muted">
+              User-level identifier retention window.
+            </span>
+          </div>
+        </div>
+
+        <!-- Helper info callout -->
+        <div
+          class="rounded-xl border border-border-subtle/50 bg-surface/40 p-3.5 text-xs text-text-muted">
+          <ul class="list-disc space-y-1 pl-4">
+            <li>
+              <strong>Changes apply after 24 hours</strong> according to Google Analytics processing rules.
+            </li>
+            <li>
+              Retention affects user-level and event-level data associated with cookies, User-IDs,
+              or advertising identifiers.
+            </li>
+            <li>
+              Google Signals data maintains a 26-month maximum limit regardless of these general
+              settings.
+            </li>
+          </ul>
+        </div>
+
+        <div class="flex justify-end pt-2">
+          <Button
+            variant="primary"
+            size="md"
+            onclick={handleSaveRetention}
+            isLoading={consentStore.isSavingRetention}
+            disabled={consentStore.isSavingRetention}>
+            Save retention settings
+          </Button>
+        </div>
       </div>
 
-      <div class="space-y-3">
-        <!-- EEA / UK Region -->
-        <div
-          class="flex flex-col gap-2 rounded-xl border border-border-subtle bg-surface/40 p-4 sm:flex-row sm:items-center sm:justify-between">
+      <!-- AREA 3: CONSENT SETTINGS -->
+      <div
+        class="mb-8 flex flex-col gap-6 rounded-2xl border border-border-subtle bg-surface-card/60 p-6 shadow-xs backdrop-blur-md">
+        <!-- Top Stream Selector & Section Header -->
+        <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h4 class="text-xs font-bold text-text-primary">
-              EEA / UK (European Economic Area & United Kingdom)
-            </h4>
-            <p class="mt-0.5 text-[11px] text-text-muted">
-              GDPR compliance: All storage signals default to DENIED until explicit opt-in.
+            <div class="flex items-center gap-2">
+              <i
+                class="bi bi-sliders text-accent"
+                aria-hidden="true"></i>
+              <h2 class="text-base font-bold text-text-primary">Consent Settings</h2>
+            </div>
+            <p class="mt-0.5 text-xs text-text-secondary">
+              Manage Google Consent Mode v2 signals mapped to visitor choices.
             </p>
           </div>
-          <div class="flex shrink-0 items-center gap-2">
-            <Badge
-              variant="warning"
-              size="sm">Denied by default</Badge>
-            <span class="font-mono text-[11px] text-text-muted">wait_for_update: 500ms</span>
+
+          <!-- Stream selector -->
+          <div class="flex items-center gap-2 select-none">
+            <span class="text-xs font-semibold whitespace-nowrap text-text-muted">Stream:</span>
+            <select
+              value={consentStore.selectedStreamId}
+              onchange={e => consentStore.setSelectedStream(e.currentTarget.value)}
+              class="h-8.5 cursor-pointer rounded-lg border border-border-subtle bg-surface-card px-2.5 text-xs font-medium text-text-primary shadow-2xs">
+              {#each consentStore.streams as stream (stream.id)}
+                <option value={stream.id}>{stream.name}</option>
+              {/each}
+            </select>
           </div>
         </div>
 
-        <!-- Global / Default Region -->
-        <div
-          class="flex flex-col gap-2 rounded-xl border border-border-subtle bg-surface/40 p-4 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <h4 class="text-xs font-bold text-text-primary">Global / Default Fallback Region</h4>
-            <p class="mt-0.5 text-[11px] text-text-muted">
-              Default fallback policy prior to visitor banner choices.
-            </p>
+        <!-- Consent Cards Grid -->
+        <div class="grid grid-cols-1 gap-5 md:grid-cols-2">
+          <!-- Card 1: Behavioral Analytics -->
+          <div
+            class="flex flex-col justify-between gap-4 rounded-xl border border-border-subtle bg-surface/50 p-5">
+            <div class="flex flex-col gap-3">
+              <div class="flex items-start justify-between gap-3">
+                <div>
+                  <h3 class="text-sm font-bold text-text-primary">Behavioral Analytics Consent</h3>
+                  <p class="mt-0.5 text-xs leading-relaxed text-text-secondary">
+                    Measures sessions, page views, and interactions without personal advertising
+                    tracking.
+                  </p>
+                </div>
+                <Badge
+                  variant={consentStore.isBehavioralActive ? 'success' : 'neutral'}
+                  size="sm">
+                  {consentStore.isBehavioralActive ? 'Active' : 'Inactive'}
+                </Badge>
+              </div>
+
+              <!-- Signal Mapping -->
+              <div class="rounded-lg border border-border-subtle/40 bg-surface-card p-2.5">
+                <span class="text-[11px] font-semibold text-text-muted">Underlying Signal:</span>
+                <div class="mt-1 flex items-center justify-between">
+                  <code
+                    class="rounded bg-accent/10 px-1.5 py-0.5 font-mono text-xs font-semibold text-accent">
+                    analytics_storage
+                  </code>
+                  <span
+                    class="text-xs font-bold {consentStore.signals.analytics_storage === 'granted' ?
+                      'text-emerald-500'
+                    : 'text-text-muted'}">
+                    {consentStore.signals.analytics_storage.toUpperCase()}
+                  </span>
+                </div>
+              </div>
+
+              <!-- Impact Summary -->
+              <div>
+                <span class="text-[11px] font-semibold text-text-muted">Impact Summary:</span>
+                <div class="mt-1.5 flex flex-wrap gap-1.5">
+                  <span
+                    class="rounded-md border border-border-subtle/60 bg-surface-card px-2 py-0.5 text-[11px] font-semibold text-text-secondary">
+                    Session Measurement
+                  </span>
+                  <span
+                    class="rounded-md border border-border-subtle/60 bg-surface-card px-2 py-0.5 text-[11px] font-semibold text-text-secondary">
+                    Pageview Metrics
+                  </span>
+                  <span
+                    class="rounded-md border border-border-subtle/60 bg-surface-card px-2 py-0.5 text-[11px] font-semibold text-text-secondary">
+                    Engagement Reports
+                  </span>
+                </div>
+              </div>
+
+              <!-- Progressive Disclosure Toggle -->
+              <button
+                type="button"
+                onclick={() => (showTechDetailsBehavioral = !showTechDetailsBehavioral)}
+                class="text-left text-[11px] font-bold text-accent hover:underline">
+                {showTechDetailsBehavioral ? 'Hide technical spec' : 'Show technical spec →'}
+              </button>
+
+              {#if showTechDetailsBehavioral}
+                <div
+                  class="rounded-lg border border-border-subtle bg-surface-card p-3 font-mono text-[11px] text-text-muted">
+                  <p>gtag('consent', 'update', &#123;</p>
+                  <p class="pl-3">
+                    'analytics_storage': '{consentStore.signals.analytics_storage}'
+                  </p>
+                  <p>&#125;);</p>
+                </div>
+              {/if}
+            </div>
+
+            <div class="flex flex-wrap items-center gap-2 border-t border-border-subtle/40 pt-2">
+              <Button
+                variant="secondary"
+                size="sm"
+                onclick={consentStore.openBanner}>
+                Configure banner
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                onclick={() =>
+                  consentStore.updateConsent({
+                    analytics_storage:
+                      consentStore.signals.analytics_storage === 'granted' ? 'denied' : 'granted',
+                  })}>
+                Toggle signal
+              </Button>
+            </div>
           </div>
-          <div class="flex shrink-0 items-center gap-2">
-            <Badge
-              variant="neutral"
-              size="sm">Denied by default</Badge>
-            <span class="font-mono text-[11px] text-text-muted">wait_for_update: 500ms</span>
+
+          <!-- Card 2: Advertising Consent -->
+          <div
+            class="flex flex-col justify-between gap-4 rounded-xl border border-border-subtle bg-surface/50 p-5">
+            <div class="flex flex-col gap-3">
+              <div class="flex items-start justify-between gap-3">
+                <div>
+                  <h3 class="text-sm font-bold text-text-primary">Advertising Consent</h3>
+                  <p class="mt-0.5 text-xs leading-relaxed text-text-secondary">
+                    Controls Google Ads measurement, conversion export, and remarketing
+                    personalization.
+                  </p>
+                </div>
+                <Badge
+                  variant={consentStore.isAdvertisingActive ? 'success' : 'neutral'}
+                  size="sm">
+                  {consentStore.isAdvertisingActive ? 'Active' : 'Inactive'}
+                </Badge>
+              </div>
+
+              <!-- Signal Mappings -->
+              <div
+                class="flex flex-col gap-1.5 rounded-lg border border-border-subtle/40 bg-surface-card p-2.5">
+                <span class="text-[11px] font-semibold text-text-muted">Underlying Signals:</span>
+                <div class="flex items-center justify-between text-xs">
+                  <code class="font-mono text-[11px] text-text-primary">ad_storage</code>
+                  <span
+                    class="font-bold {consentStore.signals.ad_storage === 'granted' ?
+                      'text-emerald-500'
+                    : 'text-text-muted'}">{consentStore.signals.ad_storage.toUpperCase()}</span>
+                </div>
+                <div class="flex items-center justify-between text-xs">
+                  <code class="font-mono text-[11px] text-text-primary">ad_user_data</code>
+                  <span
+                    class="font-bold {consentStore.signals.ad_user_data === 'granted' ?
+                      'text-emerald-500'
+                    : 'text-text-muted'}">{consentStore.signals.ad_user_data.toUpperCase()}</span>
+                </div>
+                <div class="flex items-center justify-between text-xs">
+                  <code class="font-mono text-[11px] text-text-primary">ad_personalization</code>
+                  <span
+                    class="font-bold {consentStore.signals.ad_personalization === 'granted' ?
+                      'text-emerald-500'
+                    : 'text-text-muted'}"
+                    >{consentStore.signals.ad_personalization.toUpperCase()}</span>
+                </div>
+              </div>
+
+              <!-- Impact Summary -->
+              <div>
+                <span class="text-[11px] font-semibold text-text-muted">Impact Summary:</span>
+                <div class="mt-1.5 flex flex-wrap gap-1.5">
+                  <span
+                    class="rounded-md border border-border-subtle/60 bg-surface-card px-2 py-0.5 text-[11px] font-semibold text-text-secondary">
+                    Ad Measurement
+                  </span>
+                  <span
+                    class="rounded-md border border-border-subtle/60 bg-surface-card px-2 py-0.5 text-[11px] font-semibold text-text-secondary">
+                    Conversion Export
+                  </span>
+                  <span
+                    class="rounded-md border border-border-subtle/60 bg-surface-card px-2 py-0.5 text-[11px] font-semibold text-text-secondary">
+                    Remarketing
+                  </span>
+                </div>
+              </div>
+
+              <!-- Progressive Disclosure Toggle -->
+              <button
+                type="button"
+                onclick={() => (showTechDetailsAd = !showTechDetailsAd)}
+                class="text-left text-[11px] font-bold text-accent hover:underline">
+                {showTechDetailsAd ? 'Hide technical spec' : 'Show technical spec →'}
+              </button>
+
+              {#if showTechDetailsAd}
+                <div
+                  class="rounded-lg border border-border-subtle bg-surface-card p-3 font-mono text-[11px] text-text-muted">
+                  <p>gtag('consent', 'update', &#123;</p>
+                  <p class="pl-3">'ad_storage': '{consentStore.signals.ad_storage}',</p>
+                  <p class="pl-3">'ad_user_data': '{consentStore.signals.ad_user_data}',</p>
+                  <p class="pl-3">
+                    'ad_personalization': '{consentStore.signals.ad_personalization}'
+                  </p>
+                  <p>&#125;);</p>
+                </div>
+              {/if}
+            </div>
+
+            <div class="flex flex-wrap items-center gap-2 border-t border-border-subtle/40 pt-2">
+              <Button
+                variant="secondary"
+                size="sm"
+                onclick={() => (showTestSignalModal = true)}>
+                Test consent signals
+              </Button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  </section>
+
+      <!-- AREA 4: DEFAULT CONSENT BY REGION -->
+      <div
+        class="flex flex-col gap-4 rounded-2xl border border-border-subtle bg-surface-card/60 p-6 shadow-xs backdrop-blur-md">
+        <div class="flex flex-col gap-1">
+          <div class="flex items-center gap-2">
+            <i
+              class="bi bi-globe-americas text-accent"
+              aria-hidden="true"></i>
+            <h2 class="text-base font-bold text-text-primary">Default Consent by Region</h2>
+          </div>
+          <p class="text-xs text-text-secondary">
+            Configure default consent signals applied before visitor interaction based on
+            jurisdiction.
+          </p>
+        </div>
+
+        <div class="space-y-3">
+          <!-- EEA / UK Region -->
+          <div
+            class="flex flex-col gap-2 rounded-xl border border-border-subtle bg-surface/40 p-4 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <h4 class="text-xs font-bold text-text-primary">
+                EEA / UK (European Economic Area & United Kingdom)
+              </h4>
+              <p class="mt-0.5 text-[11px] text-text-muted">
+                GDPR compliance: All storage signals default to DENIED until explicit opt-in.
+              </p>
+            </div>
+            <div class="flex shrink-0 items-center gap-2">
+              <Badge
+                variant="warning"
+                size="sm">Denied by default</Badge>
+              <span class="font-mono text-[11px] text-text-muted">wait_for_update: 500ms</span>
+            </div>
+          </div>
+
+          <!-- Global / Default Region -->
+          <div
+            class="flex flex-col gap-2 rounded-xl border border-border-subtle bg-surface/40 p-4 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <h4 class="text-xs font-bold text-text-primary">Global / Default Fallback Region</h4>
+              <p class="mt-0.5 text-[11px] text-text-muted">
+                Default fallback policy prior to visitor banner choices.
+              </p>
+            </div>
+            <div class="flex shrink-0 items-center gap-2">
+              <Badge
+                variant="neutral"
+                size="sm">Denied by default</Badge>
+              <span class="font-mono text-[11px] text-text-muted">wait_for_update: 500ms</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  {/if}
 </main>
 
 <!-- Test Consent Signals Modal -->
