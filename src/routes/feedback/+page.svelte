@@ -1,17 +1,7 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { isNameReserved } from '$lib/nameValidator';
-  import {
-    Card,
-    FormField,
-    Input,
-    Textarea,
-    Button,
-    IconButton,
-    Dialog,
-    SkipLink,
-    FooterSection,
-  } from '$lib';
+  import { Card, FormField, Input, Textarea, Button, Dialog, SkipLink, FooterSection } from '$lib';
 
   const name = 'Farhan Kurnia Pratama';
   const desc =
