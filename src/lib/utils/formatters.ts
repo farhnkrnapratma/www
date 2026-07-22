@@ -39,12 +39,14 @@ export function formatBlogDate(dateStr: string): string {
   const year = date.getFullYear();
   const currentYear = now.getFullYear();
 
-  const hour = date.getHours();
+  const rawHour = date.getHours();
+  const period = rawHour >= 12 ? 'PM' : 'AM';
+  const hour12 = rawHour % 12 === 0 ? 12 : rawHour % 12;
   const minute = String(date.getMinutes()).padStart(2, '0');
 
   const yearPart = year === currentYear ? '' : ` ${year}`;
 
-  return `${fullMonth} ${twoDigitDate}${yearPart} at ${hour}:${minute}`;
+  return `${fullMonth} ${twoDigitDate}${yearPart} at ${hour12}:${minute} ${period}`;
 }
 
 export function formatReadTime(readTimeInput?: string | number | null): string {
