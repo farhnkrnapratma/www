@@ -222,28 +222,37 @@
   </div>
 
   <div
-    class="flex flex-col items-center justify-between gap-4 border-t border-border-subtle pt-6 select-none sm:flex-row">
-    <p>&copy; {new Date().getFullYear()} {name}. All rights reserved.</p>
+    class="flex flex-col items-center justify-between gap-y-3 border-t border-border-subtle/60 pt-6 select-none sm:flex-row sm:gap-x-6">
+    <p class="text-xs font-medium text-text-muted">
+      &copy; {new Date().getFullYear()}
+      {name}. All rights reserved.
+    </p>
 
-    <div class="flex items-center gap-4 text-[11px] text-text-muted">
+    <div
+      class="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-xs font-medium text-text-muted sm:justify-end">
       <a
         href="/atom.xml"
-        class="inline-flex items-center gap-1 transition-colors hover:text-[#f26522]">
+        class="inline-flex items-center gap-1.5 transition-colors hover:text-[#f26522] focus-visible:text-[#f26522] focus-visible:outline-none">
         <i
-          class="bi bi-rss-fill"
-          aria-hidden="true"></i> RSS feed
+          class="bi bi-rss-fill text-[11px] leading-none"
+          aria-hidden="true"></i>
+        <span>RSS feed</span>
       </a>
       <a
         href="/sitemap.xml"
-        class="transition-colors hover:text-accent">Sitemap</a>
+        class="transition-colors hover:text-text-primary focus-visible:text-text-primary focus-visible:outline-none">
+        Sitemap
+      </a>
       <a
         href="/privacy"
-        class="transition-colors hover:text-accent">Privacy Policy</a>
+        class="transition-colors hover:text-text-primary focus-visible:text-text-primary focus-visible:outline-none">
+        Privacy Policy
+      </a>
       <button
         type="button"
         onclick={() => consentStore.openCustomizeModal()}
-        class="cursor-pointer transition-colors hover:text-accent focus-visible:outline-none">
-        Cookies Settings
+        class="cursor-pointer transition-colors hover:text-text-primary focus-visible:text-text-primary focus-visible:outline-none">
+        Cookie Settings
       </button>
     </div>
   </div>
