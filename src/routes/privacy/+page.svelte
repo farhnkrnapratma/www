@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { SkipLink, FooterSection } from '$lib';
+  import { consentStore } from '$lib/stores/consentStore.svelte';
 
   const name = 'Farhan Kurnia Pratama';
   const siteUrl = 'https://fkp.my.id/';
@@ -163,7 +164,17 @@
 
     <section
       class="rounded-2xl border border-border-subtle bg-surface-card/60 p-6 shadow-xs backdrop-blur-lg">
-      <h2 class="text-base font-bold text-text-primary">3. Form Submissions</h2>
+      <h2 class="text-base font-bold text-text-primary">3. Data Retention</h2>
+      <p class="mt-2">
+        The data retention period for user-level and event-level analytics data collected via Google
+        Analytics 4 is set to <strong>14 months</strong>. Once this retention period expires, stored
+        event and user data is automatically purged from Google Analytics servers.
+      </p>
+    </section>
+
+    <section
+      class="rounded-2xl border border-border-subtle bg-surface-card/60 p-6 shadow-xs backdrop-blur-lg">
+      <h2 class="text-base font-bold text-text-primary">4. Form Submissions</h2>
       <p class="mt-2">
         If you submit a message via the Contact or Feedback forms, the information you provide
         (name, email, message) is used solely to respond to your inquiry. Form entries are
@@ -173,18 +184,22 @@
 
     <section
       class="rounded-2xl border border-border-subtle bg-surface-card/60 p-6 shadow-xs backdrop-blur-lg">
-      <h2 class="text-base font-bold text-text-primary">4. Your Choices & Controls</h2>
+      <h2 class="text-base font-bold text-text-primary">5. Your Choices & Controls</h2>
       <p class="mt-2">
-        You can disable cookies in your browser settings or use browser extensions like <em
-          >uBlock Origin</em>
-        or <em>Google Analytics Opt-out Browser Add-on</em> to prevent data collection by Google Analytics
-        without affecting your ability to view this website.
+        You can customize your tracking preferences anytime by clicking <button
+          type="button"
+          onclick={() => consentStore.openCustomizeModal()}
+          class="font-semibold text-accent underline hover:text-accent-hover"
+          >Cookies Settings</button>
+        in the footer, or disable cookies in your browser settings. You can also use extensions like
+        <em>uBlock Origin</em>
+        or <em>Google Analytics Opt-out Browser Add-on</em> to prevent data collection.
       </p>
     </section>
 
     <section
       class="rounded-2xl border border-border-subtle bg-surface-card/60 p-6 shadow-xs backdrop-blur-lg">
-      <h2 class="text-base font-bold text-text-primary">5. Contact Information</h2>
+      <h2 class="text-base font-bold text-text-primary">6. Contact Information</h2>
       <p class="mt-2">
         If you have any questions regarding this privacy policy or data collection practices, please
         feel free to reach out via email at
