@@ -1,9 +1,20 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { SkipLink } from '$lib';
+  import { SkipLink, FooterSection } from '$lib';
 
   const name = 'Farhan Kurnia Pratama';
+  const desc =
+    'Security-focused Software Engineer with expertise in Linux/Unix, AI, and Open-Source Software, dedicated to building reliable, maintainable, and privacy-centric systems.';
   const siteUrl = 'https://fkp.my.id/';
+
+  const footerNavItems = [
+    { label: 'Home', url: '/' },
+    { label: 'Projects', url: '/#projects' },
+    { label: 'Blogs', url: '/#blogs' },
+    { label: 'CV', url: '/#cv' },
+    { label: 'Funding', url: '/#funding' },
+    { label: 'Contacts', url: '/#contacts' },
+  ];
 
   type Theme = 'auto' | 'dark' | 'light';
   let theme = $state<Theme>('auto');
@@ -199,12 +210,7 @@
   </div>
 </main>
 
-<footer
-  class="mx-auto w-full border-t border-border-subtle px-6 py-8 font-sans text-xs text-text-muted md:w-[80%] lg:w-[50%]">
-  <div class="flex flex-col items-center justify-between gap-4 select-none sm:flex-row">
-    <p>&copy; {new Date().getFullYear()} {name}. All rights reserved.</p>
-    <a
-      href="/"
-      class="transition-colors hover:text-accent">Back to Home</a>
-  </div>
-</footer>
+<FooterSection
+  {name}
+  description={desc}
+  navItems={footerNavItems} />
