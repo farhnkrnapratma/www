@@ -530,7 +530,7 @@
               <div class="w-full sm:w-64">
                 <Input
                   type="search"
-                  placeholder="Search title or path..."
+                  placeholder="Search posts..."
                   value={filterStore.search}
                   oninput={e => filterStore.setSearch((e.target as HTMLInputElement).value)}
                   size="sm"

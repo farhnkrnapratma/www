@@ -27,32 +27,41 @@
   role="region"
   aria-label={title || 'Filter and sort options'}
   class={cn(
-    'flex flex-col gap-3 rounded-2xl border border-border-subtle bg-surface-card/45 p-4 shadow-xs backdrop-blur-lg select-none',
+    'flex flex-col gap-3 rounded-2xl border border-border-subtle bg-surface-card/40 p-4 shadow-xs backdrop-blur-md select-none',
     className,
   )}>
-  <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-    <!-- Left side: Search & Filter controls -->
-    <div class="flex flex-wrap items-center gap-2.5">
+  <!-- Row 1: Primary Search (Left) & Result Count (Right) -->
+  <div class="flex flex-col gap-2.5 sm:flex-row sm:items-center sm:justify-between">
+    <div class="w-full sm:w-72 sm:max-w-xs">
       {#if searchSlot}
         {@render searchSlot()}
       {/if}
+    </div>
+
+    {#if countSlot}
+      <div class="flex items-center sm:justify-end">
+        {@render countSlot()}
+      </div>
+    {/if}
+  </div>
+
+  <!-- Row 2: Narrowing Filters (Left) & Ordering Sort (Right) -->
+  <div
+    class="flex flex-col gap-3 border-t border-border-subtle/40 pt-2.5 sm:flex-row sm:items-center sm:justify-between">
+    <div class="flex flex-wrap items-center gap-3">
       {#if filterControlsSlot}
         {@render filterControlsSlot()}
       {/if}
     </div>
 
-    <!-- Right side: Count & Sort -->
-    <div class="flex flex-wrap items-center justify-between gap-3 sm:justify-end">
-      {#if countSlot}
-        {@render countSlot()}
-      {/if}
+    <div class="flex items-center sm:justify-end">
       {#if sortSlot}
         {@render sortSlot()}
       {/if}
     </div>
   </div>
 
-  <!-- Bottom side: Active Filter Chips -->
+  <!-- Row 3: Active Filter Chips (If Any) -->
   {#if chipsSlot}
     {@render chipsSlot()}
   {/if}

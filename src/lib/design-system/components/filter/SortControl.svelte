@@ -27,23 +27,22 @@
   let id = $state(`sort-control-${Math.random().toString(36).substring(2, 9)}`);
 </script>
 
-<div class={cn('flex items-center gap-1.5 select-none', className)}>
+<div class={cn('flex items-center gap-2 select-none', className)}>
   <label
     for={id}
-    class="flex items-center gap-1 text-xs font-semibold whitespace-nowrap text-text-secondary">
-    <span
-      class="material-symbols-rounded text-sm text-text-muted"
-      aria-hidden="true">filter_alt</span>
-    <span>Sort:</span>
+    class="text-xs font-medium whitespace-nowrap text-text-secondary">
+    Sort by
   </label>
 
   <select
     {id}
     value={currentField}
     onchange={e => onFieldChange(e.currentTarget.value)}
-    class="cursor-pointer rounded-lg border border-border-subtle bg-surface-card px-2.5 py-1.5 text-xs font-semibold text-text-primary shadow-2xs transition-colors hover:bg-surface-hover focus-visible:outline-2 focus-visible:outline-accent">
+    class="h-8.5 cursor-pointer rounded-lg border border-border-subtle bg-surface-card px-2.5 text-xs font-medium text-text-primary shadow-2xs transition-all hover:border-border-subtle/80 hover:bg-surface-hover focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none">
     {#each fields as field (field.value)}
-      <option value={field.value}>{field.label}</option>
+      <option
+        value={field.value}
+        class="bg-surface-elevated text-text-primary">{field.label}</option>
     {/each}
   </select>
 
@@ -51,9 +50,10 @@
     type="button"
     onclick={onDirectionToggle}
     aria-label="Sort direction: {currentDirection === 'asc' ? 'Ascending' : 'Descending'}"
-    class="inline-flex h-7.5 w-7.5 cursor-pointer items-center justify-center rounded-lg border border-border-subtle bg-surface-card text-text-primary shadow-2xs transition-colors hover:bg-surface-hover hover:text-accent focus-visible:outline-2 focus-visible:outline-accent">
+    title="Sort direction: {currentDirection === 'asc' ? 'Ascending' : 'Descending'}"
+    class="inline-flex h-8.5 w-8.5 cursor-pointer items-center justify-center rounded-lg border border-border-subtle bg-surface-card text-text-secondary shadow-2xs transition-all hover:bg-surface-hover hover:text-text-primary focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none">
     <i
-      class="bi {currentDirection === 'asc' ? 'bi-sort-up' : 'bi-sort-down'} text-sm"
+      class="bi {currentDirection === 'asc' ? 'bi-sort-up' : 'bi-sort-down'} text-xs"
       aria-hidden="true"></i>
   </button>
 </div>

@@ -22,16 +22,18 @@
 <div class={cn('flex items-center gap-2 select-none', className)}>
   <label
     for={id}
-    class="text-xs font-semibold whitespace-nowrap text-text-secondary">
-    {label}:
+    class="text-xs font-medium whitespace-nowrap text-text-secondary">
+    {label}
   </label>
   <select
     {id}
     {value}
     onchange={e => onChange(e.currentTarget.value)}
-    class="cursor-pointer rounded-lg border border-border-subtle bg-surface-card px-2.5 py-1.5 text-xs font-semibold text-text-primary shadow-2xs transition-colors hover:bg-surface-hover focus-visible:outline-2 focus-visible:outline-accent">
+    class="h-8.5 cursor-pointer rounded-lg border border-border-subtle bg-surface-card px-2.5 text-xs font-medium text-text-primary shadow-2xs transition-all hover:border-border-subtle/80 hover:bg-surface-hover focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none">
     {#each options as option (option.value)}
-      <option value={option.value}>{option.label}</option>
+      <option
+        value={option.value}
+        class="bg-surface-elevated text-text-primary">{option.label}</option>
     {/each}
   </select>
 </div>

@@ -12,10 +12,10 @@
 </script>
 
 <div
-  class={cn('text-xs font-semibold text-text-secondary select-none', className)}
+  class={cn('text-xs font-medium whitespace-nowrap text-text-muted select-none', className)}
   aria-live="polite"
   aria-atomic="true">
-  Showing <span class="font-bold text-text-primary">{count}</span> of
-  <span class="font-bold text-text-primary">{total}</span>
+  Showing <span class="font-semibold text-text-secondary">{count}</span> of
+  <span class="font-semibold text-text-secondary">{total}</span>
   {itemLabel}
 </div>

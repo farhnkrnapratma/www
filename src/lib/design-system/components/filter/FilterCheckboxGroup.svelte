@@ -28,24 +28,19 @@
   let isOpen = $state(false);
 </script>
 
-<div class={cn('relative inline-block text-left select-none', className)}>
+<div class={cn('relative inline-flex items-center gap-2 text-left select-none', className)}>
+  <span class="text-xs font-medium whitespace-nowrap text-text-secondary">
+    {label}
+  </span>
+
   {#if collapsible}
     <button
       type="button"
       onclick={() => (isOpen = !isOpen)}
       aria-expanded={isOpen}
       aria-haspopup="true"
-      class="inline-flex cursor-pointer items-center gap-1.5 rounded-lg border border-border-subtle bg-surface-card px-3 py-1.5 text-xs font-semibold text-text-primary shadow-2xs transition-colors hover:bg-surface-hover focus-visible:outline-2 focus-visible:outline-accent">
-      <span
-        class="material-symbols-rounded text-sm text-text-muted"
-        aria-hidden="true">filter_alt</span>
-      <span>{label}</span>
-      {#if selectedValues.length > 0}
-        <span
-          class="ml-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-accent px-1 text-[10px] font-bold text-white">
-          {selectedValues.length}
-        </span>
-      {/if}
+      class="inline-flex h-8.5 cursor-pointer items-center gap-1.5 rounded-lg border border-border-subtle bg-surface-card px-2.5 text-xs font-medium text-text-primary shadow-2xs transition-all hover:border-border-subtle/80 hover:bg-surface-hover focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none">
+      <span>{selectedValues.length > 0 ? `${selectedValues.length} selected` : 'All'}</span>
       <i
         class="bi bi-chevron-down text-[10px] text-text-muted transition-transform {isOpen ?
           'rotate-180'
@@ -63,14 +58,15 @@
       <div
         role="group"
         aria-label={label}
-        class="absolute top-9 left-0 z-50 flex min-w-48 flex-col gap-2 rounded-xl border border-border-subtle bg-surface-elevated p-3 shadow-xl">
-        <div class="mb-1 text-[11px] font-bold tracking-wider text-text-muted uppercase">
-          {label}
+        class="absolute top-10 left-0 z-50 flex min-w-48 flex-col gap-1.5 rounded-xl border border-border-subtle bg-surface-elevated p-2.5 shadow-xl backdrop-blur-md">
+        <div
+          class="border-b border-border-subtle/40 px-1.5 py-1 text-[11px] font-semibold text-text-secondary">
+          Filter by {label}
         </div>
-        <div class="no-scrollbar flex max-h-48 flex-col gap-1.5 overflow-y-auto">
+        <div class="no-scrollbar flex max-h-52 flex-col gap-1 overflow-y-auto pt-1">
           {#each options as opt (opt.value)}
             <label
-              class="flex cursor-pointer items-center gap-2 rounded-md px-1.5 py-1 text-xs text-text-primary hover:bg-surface-hover">
+              class="flex cursor-pointer items-center gap-2 rounded-md px-2 py-1.5 text-xs font-medium text-text-primary transition-colors hover:bg-surface-hover/70">
               <Checkbox
                 checked={selectedValues.includes(opt.value)}
                 onchange={() => onChange(opt.value)} />
@@ -82,11 +78,11 @@
     {/if}
   {:else}
     <fieldset class="flex flex-col gap-2">
-      <legend class="mb-1 text-xs font-bold text-text-secondary">{label}</legend>
+      <legend class="mb-1 text-xs font-medium text-text-secondary">{label}</legend>
       <div class="flex flex-wrap gap-2">
         {#each options as opt (opt.value)}
           <label
-            class="flex cursor-pointer items-center gap-2 rounded-md border border-border-subtle bg-surface-card px-2.5 py-1 text-xs text-text-primary hover:bg-surface-hover">
+            class="flex cursor-pointer items-center gap-2 rounded-md border border-border-subtle bg-surface-card px-2.5 py-1 text-xs font-medium text-text-primary hover:bg-surface-hover">
             <Checkbox
               checked={selectedValues.includes(opt.value)}
               onchange={() => onChange(opt.value)} />
