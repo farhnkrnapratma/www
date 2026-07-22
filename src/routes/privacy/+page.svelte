@@ -3,18 +3,7 @@
   import { SkipLink, FooterSection } from '$lib';
 
   const name = 'Farhan Kurnia Pratama';
-  const desc =
-    'Security-focused Software Engineer with expertise in Linux/Unix, AI, and Open-Source Software, dedicated to building reliable, maintainable, and privacy-centric systems.';
   const siteUrl = 'https://fkp.my.id/';
-
-  const footerNavItems = [
-    { label: 'Home', url: '/' },
-    { label: 'Projects', url: '/#projects' },
-    { label: 'Blogs', url: '/#blogs' },
-    { label: 'CV', url: '/#cv' },
-    { label: 'Funding', url: '/#funding' },
-    { label: 'Contacts', url: '/#contacts' },
-  ];
 
   type Theme = 'auto' | 'dark' | 'light';
   let theme = $state<Theme>('auto');

@@ -1589,7 +1589,7 @@
     onNavClick={url => {
       if (url.startsWith('/#')) {
         const sectionId = url.replace('/#', '');
-        navigate(sectionId as any);
+        navigate(sectionId as Section);
         window.scrollTo({ top: 0, behavior: 'smooth' });
       } else {
         window.location.href = url;

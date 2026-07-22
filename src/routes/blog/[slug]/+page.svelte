@@ -199,17 +199,6 @@
   const headings = $derived(data.headings || []);
   let activeHeadingId = $state('');
 
-  const name = 'Farhan Kurnia Pratama';
-  const desc =
-    'Security-focused Software Engineer with expertise in Linux/Unix, AI, and Open-Source Software, dedicated to building reliable, maintainable, and privacy-centric systems.';
-  const footerNavItems = [
-    { label: 'Home', url: '/' },
-    { label: 'Projects', url: '/#projects' },
-    { label: 'Blogs', url: '/#blogs' },
-    { label: 'CV', url: '/#cv' },
-    { label: 'Funding', url: '/#funding' },
-    { label: 'Contacts', url: '/#contacts' },
-  ];
   let helpfulnessFeedback = $state<'yes' | 'no' | null>(null);
   let showYesFeedbackDialog = $state(false);
   let showNoFeedbackDialog = $state(false);
