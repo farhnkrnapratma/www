@@ -6,7 +6,7 @@
     isOpen: boolean;
     title: string;
     description?: string;
-    size?: 'sm' | 'md' | 'lg';
+    size?: 'sm' | 'md' | 'lg' | 'xl' | '2xl';
     isDestructive?: boolean;
     closeOnBackdrop?: boolean;
     closeOnEscape?: boolean;
@@ -36,9 +36,11 @@
   let previouslyFocusedElement = $state<HTMLElement | null>(null);
 
   const sizeStyles = {
-    sm: 'max-w-sm',
-    md: 'max-w-md',
-    lg: 'max-w-lg',
+    'sm': 'max-w-sm',
+    'md': 'max-w-md',
+    'lg': 'max-w-lg',
+    'xl': 'max-w-xl',
+    '2xl': 'max-w-2xl',
   };
 
   function handleKeydown(e: KeyboardEvent) {
