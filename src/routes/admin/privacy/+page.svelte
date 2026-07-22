@@ -264,7 +264,7 @@
             <Badge
               variant={consentStore.overallConsentStatus === 'Good' ? 'success'
               : consentStore.overallConsentStatus === 'Partial' ? 'warning'
-              : 'neutral'}
+              : 'default'}
               size="sm">
               {consentStore.overallConsentStatus}
             </Badge>
@@ -444,7 +444,7 @@
                   </p>
                 </div>
                 <Badge
-                  variant={consentStore.isBehavioralActive ? 'success' : 'neutral'}
+                  variant={consentStore.isBehavioralActive ? 'success' : 'default'}
                   size="sm">
                   {consentStore.isBehavioralActive ? 'Active' : 'Inactive'}
                 </Badge>
@@ -539,7 +539,7 @@
                   </p>
                 </div>
                 <Badge
-                  variant={consentStore.isAdvertisingActive ? 'success' : 'neutral'}
+                  variant={consentStore.isAdvertisingActive ? 'success' : 'default'}
                   size="sm">
                   {consentStore.isAdvertisingActive ? 'Active' : 'Inactive'}
                 </Badge>
@@ -673,7 +673,7 @@
             </div>
             <div class="flex shrink-0 items-center gap-2">
               <Badge
-                variant="neutral"
+                variant="default"
                 size="sm">Denied by default</Badge>
               <span class="font-mono text-[11px] text-text-muted">wait_for_update: 500ms</span>
             </div>
