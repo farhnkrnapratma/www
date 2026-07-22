@@ -1026,8 +1026,9 @@
                     </p>
                   </div>
 
-                  <div class="mt-1 ml-2 flex items-center gap-3 text-[10px] text-text-muted">
+                  <div class="mt-1 ml-2 flex items-center gap-2 text-[10px] text-text-muted">
                     <time datetime={comment.created_at}>{formatBlogDate(comment.created_at)}</time>
+                    <span aria-hidden="true">&middot;</span>
                     <button
                       type="button"
                       onclick={() => {
@@ -1035,7 +1036,7 @@
                         feedbackMessage = null;
                         commentContent = '';
                       }}
-                      class="inline-flex h-6 cursor-pointer items-center rounded bg-border-subtle/30 px-2 py-0.5 font-bold text-text-primary/70 transition-colors hover:bg-border-subtle hover:text-accent">
+                      class="cursor-pointer font-bold text-text-muted transition-colors hover:text-accent focus-visible:outline-none">
                       Reply
                     </button>
                   </div>

@@ -774,10 +774,12 @@
                           </div>
 
                           <div
-                            class="mt-1.5 ml-2 flex flex-wrap items-center gap-3 text-[10px] text-text-muted">
+                            class="mt-1.5 ml-2 flex flex-wrap items-center gap-2 text-[10px] text-text-muted">
                             <span>{formatBlogDate(comment.created_at)}</span>
+                            <span aria-hidden="true">&middot;</span>
                             {#if !comment.is_approved}
                               <Badge variant="warning">Hidden</Badge>
+                              <span aria-hidden="true">&middot;</span>
                             {/if}
                             {#if comment.is_approved}
                               <button
@@ -786,15 +788,16 @@
                                   replyTo = comment;
                                   commentContent = '';
                                 }}
-                                class="inline-flex h-6 cursor-pointer items-center rounded-lg bg-border-subtle/30 px-2 py-0.5 font-bold text-text-secondary transition-colors hover:bg-border-subtle hover:text-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">
+                                class="cursor-pointer font-bold text-text-muted transition-colors hover:text-accent focus-visible:outline-none">
                                 Reply
                               </button>
+                              <span aria-hidden="true">&middot;</span>
                             {/if}
                             <button
                               type="button"
                               onclick={() => confirmDeleteComment(comment.id)}
                               aria-label="Delete comment by {getCommentAuthor(comment)}"
-                              class="ml-auto inline-flex h-6 cursor-pointer items-center rounded-lg border border-danger/20 bg-danger-subtle px-2 py-0.5 font-bold text-danger transition-colors hover:bg-danger/20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-danger">
+                              class="cursor-pointer font-bold text-danger transition-colors hover:text-danger-hover hover:underline focus-visible:outline-none">
                               Delete
                             </button>
                           </div>

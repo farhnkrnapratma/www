@@ -38,6 +38,7 @@ declare global {
 export function createConsentStore() {
   let hasUserChosen = $state(false);
   let isBannerOpen = $state(false);
+  let isCustomizeModalOpen = $state(false);
   let isSavingRetention = $state(false);
   let retentionSaveSuccess = $state(false);
 
@@ -230,6 +231,18 @@ export function createConsentStore() {
     },
     get isBannerOpen() {
       return isBannerOpen;
+    },
+    get isCustomizeModalOpen() {
+      return isCustomizeModalOpen;
+    },
+    set isCustomizeModalOpen(val: boolean) {
+      isCustomizeModalOpen = val;
+    },
+    openCustomizeModal() {
+      isCustomizeModalOpen = true;
+    },
+    closeCustomizeModal() {
+      isCustomizeModalOpen = false;
     },
     get isSavingRetention() {
       return isSavingRetention;

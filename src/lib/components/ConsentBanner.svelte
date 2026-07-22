@@ -17,12 +17,17 @@
     consentStore.init();
   });
 
+  $effect(() => {
+    if (consentStore.isCustomizeModalOpen) {
+      tempAnalytics = consentStore.signals.analytics_storage === 'granted';
+      tempAdStorage = consentStore.signals.ad_storage === 'granted';
+      tempAdUserData = consentStore.signals.ad_user_data === 'granted';
+      tempAdPersonalization = consentStore.signals.ad_personalization === 'granted';
+    }
+  });
+
   function openCustomize() {
-    tempAnalytics = consentStore.signals.analytics_storage === 'granted';
-    tempAdStorage = consentStore.signals.ad_storage === 'granted';
-    tempAdUserData = consentStore.signals.ad_user_data === 'granted';
-    tempAdPersonalization = consentStore.signals.ad_personalization === 'granted';
-    showCustomizeModal = true;
+    consentStore.openCustomizeModal();
   }
 
   function saveCustomPreferences() {
@@ -32,7 +37,7 @@
       ad_user_data: tempAdUserData ? 'granted' : 'denied',
       ad_personalization: tempAdPersonalization ? 'granted' : 'denied',
     });
-    showCustomizeModal = false;
+    consentStore.closeCustomizeModal();
   }
 </script>
 
@@ -107,10 +112,10 @@
 {/if}
 
 <Dialog
-  bind:isOpen={showCustomizeModal}
-  title="Customize Privacy & Consent"
-  description="Enable or disable specific Google Consent Mode v2 storage signals."
-  onClose={() => (showCustomizeModal = false)}>
+  bind:isOpen={consentStore.isCustomizeModalOpen}
+  title="Customize Privacy & Cookies"
+  description="Enable or disable specific tracking signals and cookie storage."
+  onClose={() => consentStore.closeCustomizeModal()}>
   <div class="flex flex-col gap-4 py-2">
     <div class="rounded-xl border border-border-subtle bg-surface-card p-3.5">
       <div class="flex items-start justify-between gap-3">

@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { cn } from '../utils/cn';
+  import { consentStore } from '../../stores/consentStore.svelte';
 
   interface NavItem {
     label: string;
@@ -238,6 +239,12 @@
       <a
         href="/privacy"
         class="transition-colors hover:text-accent">Privacy Policy</a>
+      <button
+        type="button"
+        onclick={() => consentStore.openCustomizeModal()}
+        class="cursor-pointer transition-colors hover:text-accent focus-visible:outline-none">
+        Cookies Settings
+      </button>
     </div>
   </div>
 </footer>
