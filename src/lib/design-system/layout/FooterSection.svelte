@@ -139,7 +139,7 @@
     </div>
 
     {#if resolvedNavItems.length > 0}
-      <div class="flex flex-col pt-1 md:col-span-5 md:pt-8">
+      <div class="flex flex-col justify-between pt-1 md:col-span-5 md:pt-0">
         <ul class="grid grid-cols-2 gap-x-4 gap-y-2">
           {#each resolvedNavItems as item (item.url)}
             <li>
@@ -160,6 +160,62 @@
             </li>
           {/each}
         </ul>
+
+        <div class="relative mt-6 pt-1">
+          <button
+            type="button"
+            onclick={() => (themeDropdownOpen = !themeDropdownOpen)}
+            class="inline-flex h-8 items-center gap-2 rounded-lg border border-border-subtle bg-surface-card px-3 text-xs font-medium text-text-secondary shadow-2xs transition-all hover:bg-surface-hover hover:text-text-primary focus-visible:outline-none"
+            aria-label="Change theme"
+            aria-haspopup="true"
+            aria-expanded={themeDropdownOpen}>
+            <i
+              class="bi {getThemeIcon()} text-xs text-text-secondary"
+              aria-hidden="true"></i>
+            <span>{getThemeLabel()}</span>
+            <span
+              class="inline-flex h-3.5 w-3.5 shrink-0 origin-center items-center justify-center text-text-muted transition-transform duration-200 ease-out {(
+                themeDropdownOpen
+              ) ?
+                'rotate-180'
+              : ''}">
+              <i
+                class="bi bi-chevron-down text-[9px] leading-none"
+                aria-hidden="true"></i>
+            </span>
+          </button>
+
+          {#if themeDropdownOpen}
+            <button
+              type="button"
+              class="fixed inset-0 z-40 cursor-default"
+              onclick={() => (themeDropdownOpen = false)}
+              aria-label="Close theme menu"></button>
+            <div
+              class="absolute bottom-full left-0 z-50 mb-1.5 flex min-w-32 flex-col rounded-xl border border-border-subtle bg-surface-elevated p-1 shadow-xl backdrop-blur-md">
+              {#each ['auto', 'light', 'dark'] as const as option (option)}
+                <button
+                  type="button"
+                  onclick={() => {
+                    applyTheme(option);
+                    themeDropdownOpen = false;
+                  }}
+                  class="flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-left text-xs font-medium transition-colors {(
+                    theme === option
+                  ) ?
+                    'bg-accent/10 font-semibold text-accent'
+                  : 'text-text-primary hover:bg-surface-hover'}">
+                  <i
+                    class="bi {getThemeIcon(option)} text-xs {theme === option ? 'text-accent' : (
+                      'text-text-secondary'
+                    )}"
+                    aria-hidden="true"></i>
+                  <span>{getThemeLabel(option)}</span>
+                </button>
+              {/each}
+            </div>
+          {/if}
+        </div>
       </div>
     {/if}
   </div>
@@ -168,61 +224,7 @@
     class="flex flex-col items-center justify-between gap-4 border-t border-border-subtle pt-6 select-none sm:flex-row">
     <p>&copy; {new Date().getFullYear()} {name}. All rights reserved.</p>
 
-    <div class="flex flex-wrap items-center gap-4 text-[11px] text-text-muted">
-      <div class="relative">
-        <button
-          type="button"
-          onclick={() => (themeDropdownOpen = !themeDropdownOpen)}
-          class="inline-flex h-7 items-center gap-1.5 rounded-lg border border-border-subtle bg-surface-card px-2.5 text-xs font-medium text-text-secondary transition-colors hover:bg-surface-hover hover:text-text-primary focus-visible:outline-none"
-          aria-label="Change theme"
-          aria-haspopup="true"
-          aria-expanded={themeDropdownOpen}>
-          <i
-            class="bi {getThemeIcon()} text-xs text-accent"
-            aria-hidden="true"></i>
-          <span>{getThemeLabel()}</span>
-          <span
-            class="inline-flex h-3.5 w-3.5 shrink-0 origin-center items-center justify-center text-text-muted transition-transform duration-200 ease-out {(
-              themeDropdownOpen
-            ) ?
-              'rotate-180'
-            : ''}">
-            <i
-              class="bi bi-chevron-down text-[9px] leading-none"
-              aria-hidden="true"></i>
-          </span>
-        </button>
-
-        {#if themeDropdownOpen}
-          <button
-            type="button"
-            class="fixed inset-0 z-40 cursor-default"
-            onclick={() => (themeDropdownOpen = false)}
-            aria-label="Close theme menu"></button>
-          <div
-            class="absolute right-0 bottom-full z-50 mb-1 flex min-w-28 flex-col rounded-xl border border-border-subtle bg-surface-elevated p-1 shadow-xl backdrop-blur-md">
-            {#each ['auto', 'light', 'dark'] as const as option (option)}
-              <button
-                type="button"
-                onclick={() => {
-                  applyTheme(option);
-                  themeDropdownOpen = false;
-                }}
-                class="flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-left text-xs font-medium transition-colors {(
-                  theme === option
-                ) ?
-                  'bg-accent/10 font-semibold text-accent'
-                : 'text-text-primary hover:bg-surface-hover'}">
-                <i
-                  class="bi {getThemeIcon(option)} text-xs"
-                  aria-hidden="true"></i>
-                <span>{getThemeLabel(option)}</span>
-              </button>
-            {/each}
-          </div>
-        {/if}
-      </div>
-
+    <div class="flex items-center gap-4 text-[11px] text-text-muted">
       <a
         href="/atom.xml"
         class="inline-flex items-center gap-1 transition-colors hover:text-[#f26522]">
