@@ -993,17 +993,18 @@
         </div>
         <div class="boxed-list text-left">
           {#each experiences.slice(0, 1) as exp (exp.role)}
-            <div class="flex flex-col gap-2 px-5 py-4">
+            <div class="flex flex-col gap-2 px-6 py-5 transition-all hover:bg-surface-hover/40">
               <div class="flex items-start justify-between gap-4">
                 <div>
-                  <h4 class="text-sm font-bold text-text-primary">{exp.role}</h4>
-                  <p class="text-xs font-medium text-text-secondary">{exp.company}</p>
+                  <h4 class="text-base font-bold text-text-primary">{exp.role}</h4>
+                  <p class="text-sm font-medium text-text-secondary">{exp.company}</p>
                 </div>
                 <span
-                  class="shrink-0 rounded-full border border-border-subtle px-2.5 py-0.5 text-[11px] font-semibold text-text-secondary"
-                  >{exp.period}</span>
+                  class="shrink-0 rounded-full border border-border-subtle bg-border-subtle/30 px-2.5 py-0.5 text-xs font-semibold text-text-muted select-none">
+                  {exp.period}
+                </span>
               </div>
-              <p class="mt-0.5 line-clamp-2 text-xs leading-relaxed text-text-secondary">
+              <p class="mt-1.5 line-clamp-2 text-sm leading-relaxed text-text-secondary">
                 {exp.desc}
               </p>
             </div>
@@ -1178,14 +1179,14 @@
         <h2 class="text-sm font-bold tracking-wider text-text-secondary uppercase">Experience</h2>
         <div class="boxed-list mt-4">
           {#each experiences as exp (exp.role)}
-            <div class="flex flex-col gap-2 px-6 py-5 transition-all hover:bg-surface-hover">
+            <div class="flex flex-col gap-2 px-6 py-5 transition-all hover:bg-surface-hover/40">
               <div class="flex items-start justify-between gap-4">
                 <div>
                   <h3 class="text-base font-bold text-text-primary">{exp.role}</h3>
                   <p class="text-sm font-medium text-text-secondary">{exp.company}</p>
                 </div>
                 <span
-                  class="shrink-0 rounded-md border border-border-subtle bg-border-subtle/30 px-2.5 py-0.5 text-xs font-semibold text-text-muted select-none">
+                  class="shrink-0 rounded-full border border-border-subtle bg-border-subtle/30 px-2.5 py-0.5 text-xs font-semibold text-text-muted select-none">
                   {exp.period}
                 </span>
               </div>
@@ -1199,7 +1200,7 @@
         <h2 class="text-sm font-bold tracking-wider text-text-secondary uppercase">Education</h2>
         <div class="boxed-list mt-4">
           {#each education as edu (`${edu.degree}-${edu.university}`)}
-            <div class="flex flex-col gap-1.5 px-6 py-5 transition-all hover:bg-surface-hover">
+            <div class="flex flex-col gap-1.5 px-6 py-5 transition-all hover:bg-surface-hover/40">
               <div class="flex items-start justify-between gap-4">
                 <div>
                   <h3 class="text-base font-bold text-text-primary">{edu.degree} in {edu.major}</h3>
@@ -1224,7 +1225,7 @@
                   {/if}
                 </div>
                 <span
-                  class="shrink-0 rounded-md border border-border-subtle bg-border-subtle/30 px-2.5 py-0.5 text-xs font-semibold text-text-muted select-none">
+                  class="shrink-0 rounded-full border border-border-subtle bg-border-subtle/30 px-2.5 py-0.5 text-xs font-semibold text-text-muted select-none">
                   {edu.period}
                 </span>
               </div>
