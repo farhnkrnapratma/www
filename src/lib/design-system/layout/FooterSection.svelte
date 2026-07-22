@@ -222,17 +222,13 @@
   </div>
 
   <div
-    class="flex flex-col items-center justify-between gap-y-3 border-t border-border-subtle/60 pt-6 select-none sm:flex-row sm:gap-x-6">
-    <p class="text-xs font-medium text-text-muted">
-      &copy; {new Date().getFullYear()}
-      {name}. All rights reserved.
-    </p>
-
+    class="flex flex-col items-center justify-between gap-y-3.5 border-t border-border-subtle/60 pt-6 select-none lg:flex-row lg:gap-x-6">
+    <!-- Link Group (Row 1 in Fallback / Right side in Desktop) -->
     <div
-      class="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-xs font-medium text-text-muted sm:justify-end">
+      class="order-1 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-xs font-medium text-text-muted lg:order-2 lg:justify-end">
       <a
         href="/atom.xml"
-        class="inline-flex items-center gap-1.5 transition-colors hover:text-[#f26522] focus-visible:text-[#f26522] focus-visible:outline-none">
+        class="inline-flex items-center gap-1.5 whitespace-nowrap transition-colors hover:text-[#f26522] focus-visible:text-[#f26522] focus-visible:outline-none">
         <i
           class="bi bi-rss-fill text-[11px] leading-none"
           aria-hidden="true"></i>
@@ -240,20 +236,26 @@
       </a>
       <a
         href="/sitemap.xml"
-        class="transition-colors hover:text-text-primary focus-visible:text-text-primary focus-visible:outline-none">
+        class="whitespace-nowrap transition-colors hover:text-text-primary focus-visible:text-text-primary focus-visible:outline-none">
         Sitemap
       </a>
       <a
         href="/privacy"
-        class="transition-colors hover:text-text-primary focus-visible:text-text-primary focus-visible:outline-none">
+        class="whitespace-nowrap transition-colors hover:text-text-primary focus-visible:text-text-primary focus-visible:outline-none">
         Privacy Policy
       </a>
       <button
         type="button"
         onclick={() => consentStore.openCustomizeModal()}
-        class="cursor-pointer transition-colors hover:text-text-primary focus-visible:text-text-primary focus-visible:outline-none">
+        class="cursor-pointer whitespace-nowrap transition-colors hover:text-text-primary focus-visible:text-text-primary focus-visible:outline-none">
         Cookie Settings
       </button>
     </div>
+
+    <!-- Copyright Notice (Row 2 in Fallback / Left side in Desktop) -->
+    <p class="order-2 text-xs font-medium text-text-muted lg:order-1">
+      &copy; {new Date().getFullYear()}
+      {name}. All rights reserved.
+    </p>
   </div>
 </footer>
