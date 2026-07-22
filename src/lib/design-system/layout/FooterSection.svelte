@@ -222,10 +222,10 @@
   </div>
 
   <!-- Footer Meta Section with Categorized Resources & Legal Columns -->
-  <div class="mt-8 border-t border-border-subtle/60 pt-8 select-none">
-    <div class="grid grid-cols-2 gap-8 sm:grid-cols-2">
+  <div class="mt-6 border-t border-border-subtle/60 pt-6 select-none">
+    <div class="flex flex-wrap items-start justify-start gap-x-16 gap-y-6 text-left">
       <!-- Resources Column -->
-      <div class="flex flex-col gap-2.5">
+      <div class="flex flex-col gap-2">
         <h4 class="text-[11px] font-bold tracking-wider text-text-primary uppercase">Resources</h4>
         <div class="flex flex-col gap-2">
           <a
@@ -235,6 +235,9 @@
               class="bi bi-rss-fill text-[11px] leading-none text-[#f26522]"
               aria-hidden="true"></i>
             <span>RSS feed</span>
+            <span
+              class="rounded bg-[#f26522]/15 px-1 py-0.5 font-mono text-[9px] leading-none font-bold text-[#f26522]"
+              >XML</span>
           </a>
           <a
             href="/sitemap.xml"
@@ -245,7 +248,7 @@
       </div>
 
       <!-- Legal & Privacy Column -->
-      <div class="flex flex-col gap-2.5">
+      <div class="flex flex-col gap-2">
         <h4 class="text-[11px] font-bold tracking-wider text-text-primary uppercase">Legal</h4>
         <div class="flex flex-col gap-2">
           <a
@@ -263,11 +266,11 @@
       </div>
     </div>
 
-    <!-- Concise Dynamic Copyright Notice -->
-    <div class="mt-8 border-t border-border-subtle/40 pt-4 text-center">
-      <p class="text-xs font-medium text-text-muted">
+    <!-- Restored Full Dynamic Copyright Notice -->
+    <div class="mt-6 border-t border-border-subtle/40 pt-4 text-center sm:text-left">
+      <p class="text-xs font-medium text-text-secondary/80">
         &copy; {new Date().getFullYear()}
-        {name}
+        {name}. All rights reserved.
       </p>
     </div>
   </div>
