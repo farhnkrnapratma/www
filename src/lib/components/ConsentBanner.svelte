@@ -182,7 +182,7 @@
     <Button
       variant="secondary"
       size="md"
-      onclick={() => (showCustomizeModal = false)}>
+      onclick={() => consentStore.closeCustomizeModal()}>
       Cancel
     </Button>
     <Button
