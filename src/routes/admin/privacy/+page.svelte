@@ -7,15 +7,12 @@
   let isLoading = $state(true);
   let isLoggingOut = $state(false);
 
-  // Form states for Data Retention
   let selectedEventRetention = $state<RetentionPeriod>('14_months');
   let selectedUserRetention = $state<RetentionPeriod>('14_months');
 
-  // Progressive disclosure toggles for technical parameter details
   let showTechDetailsBehavioral = $state(false);
   let showTechDetailsAd = $state(false);
 
-  // Test signal & Configure banner modals
   let showTestSignalModal = $state(false);
   let showConfigureBannerModal = $state(false);
   let testLog = $state<string[]>([]);
@@ -56,7 +53,6 @@
     selectedEventRetention = consentStore.retention.eventDataRetention;
     selectedUserRetention = consentStore.retention.userDataRetention;
 
-    // Verify admin authentication
     const { data: sessionData } = await supabase.auth.getSession();
     if (!sessionData.session) {
       window.location.href = '/admin/login';
@@ -107,7 +103,6 @@
 
 <SkipLink />
 
-<!-- Admin Navigation Bar -->
 <nav
   class="fixed top-0 z-40 flex h-15 w-full items-center justify-between border-b border-border-subtle bg-surface-card/60 px-5 font-sans shadow-xs backdrop-blur-lg transition-colors duration-300"
   aria-label="Admin navigation">
@@ -123,7 +118,6 @@
 
     <div class="h-4 w-[1px] bg-border-subtle"></div>
 
-    <!-- Navigation Tabs -->
     <div class="flex items-center gap-1">
       <a
         href="/admin"
@@ -139,7 +133,6 @@
   </div>
 
   <div class="flex items-center gap-2">
-    <!-- Theme Picker -->
     <div class="relative">
       <IconButton
         ariaLabel="Change theme"
@@ -216,7 +209,6 @@
     <section
       class="mx-auto w-full flex-1 px-6 py-10 md:w-[80%] md:max-w-none lg:w-[50%]"
       aria-label="Privacy and Analytics Management">
-      <!-- Page Header -->
       <div class="mb-8">
         <div class="flex items-center gap-2 text-xs font-semibold text-accent">
           <i
@@ -233,9 +225,7 @@
         </p>
       </div>
 
-      <!-- AREA 1: OVERVIEW SUMMARY CARDS -->
       <div class="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2">
-        <!-- Retention Overview Card -->
         <div
           class="flex flex-col justify-between gap-3 rounded-2xl border border-border-subtle bg-surface-card/60 p-5 shadow-xs backdrop-blur-md">
           <div class="flex items-start justify-between gap-3">
@@ -258,7 +248,6 @@
           </p>
         </div>
 
-        <!-- Consent Mode Overview Card -->
         <div
           class="flex flex-col justify-between gap-3 rounded-2xl border border-border-subtle bg-surface-card/60 p-5 shadow-xs backdrop-blur-md">
           <div class="flex items-start justify-between gap-3">
@@ -288,7 +277,6 @@
         </div>
       </div>
 
-      <!-- AREA 2: DATA RETENTION -->
       <div
         class="mb-8 flex flex-col gap-5 rounded-2xl border border-border-subtle bg-surface-card/60 p-6 shadow-xs backdrop-blur-md">
         <div class="flex flex-col gap-1">
@@ -312,7 +300,6 @@
         {/if}
 
         <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
-          <!-- Event Data Retention Field -->
           <div class="flex flex-col gap-2">
             <label
               for="event-retention-select"
@@ -344,7 +331,6 @@
             </span>
           </div>
 
-          <!-- User Data Retention Field -->
           <div class="flex flex-col gap-2">
             <label
               for="user-retention-select"
@@ -377,7 +363,6 @@
           </div>
         </div>
 
-        <!-- Helper info callout -->
         <div
           class="rounded-xl border border-border-subtle/50 bg-surface/40 p-3.5 text-xs text-text-muted">
           <ul class="list-disc space-y-1 pl-4">
@@ -407,10 +392,8 @@
         </div>
       </div>
 
-      <!-- AREA 3: CONSENT SETTINGS -->
       <div
         class="mb-8 flex flex-col gap-6 rounded-2xl border border-border-subtle bg-surface-card/60 p-6 shadow-xs backdrop-blur-md">
-        <!-- Top Stream Selector & Section Header -->
         <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <div class="flex items-center gap-2">
@@ -424,7 +407,6 @@
             </p>
           </div>
 
-          <!-- Stream selector -->
           <div class="flex items-center gap-2 select-none">
             <span class="text-xs font-semibold whitespace-nowrap text-text-muted">Stream:</span>
             <select
@@ -438,9 +420,7 @@
           </div>
         </div>
 
-        <!-- Consent Cards Stack (Stacked vertically) -->
         <div class="flex flex-col gap-5">
-          <!-- Card 1: Behavioral Analytics -->
           <div
             class="flex flex-col justify-between gap-4 rounded-xl border border-border-subtle bg-surface/50 p-5">
             <div class="flex flex-col gap-3">
@@ -459,7 +439,6 @@
                 </Badge>
               </div>
 
-              <!-- Signal Mapping -->
               <div
                 class="flex flex-col gap-2 rounded-xl border border-border-subtle/50 bg-surface-card p-3 shadow-2xs">
                 <span class="text-[11px] font-semibold text-text-muted">Underlying Signal:</span>
@@ -487,7 +466,6 @@
                 </div>
               </div>
 
-              <!-- Impact Summary -->
               <div>
                 <span class="text-[11px] font-semibold text-text-muted">Impact Summary:</span>
                 <div class="mt-1.5 flex flex-wrap gap-1.5">
@@ -506,7 +484,6 @@
                 </div>
               </div>
 
-              <!-- Progressive Disclosure Toggle -->
               <button
                 type="button"
                 onclick={() => (showTechDetailsBehavioral = !showTechDetailsBehavioral)}
@@ -546,7 +523,6 @@
             </div>
           </div>
 
-          <!-- Card 2: Advertising Consent -->
           <div
             class="flex flex-col justify-between gap-4 rounded-xl border border-border-subtle bg-surface/50 p-5">
             <div class="flex flex-col gap-3">
@@ -565,7 +541,6 @@
                 </Badge>
               </div>
 
-              <!-- Signal Mappings -->
               <div
                 class="flex flex-col gap-2 rounded-xl border border-border-subtle/50 bg-surface-card p-3 shadow-2xs">
                 <span class="text-[11px] font-semibold text-text-muted">Underlying Signals:</span>
@@ -593,7 +568,6 @@
                 </div>
               </div>
 
-              <!-- Impact Summary -->
               <div>
                 <span class="text-[11px] font-semibold text-text-muted">Impact Summary:</span>
                 <div class="mt-1.5 flex flex-wrap gap-1.5">
@@ -612,7 +586,6 @@
                 </div>
               </div>
 
-              <!-- Progressive Disclosure Toggle -->
               <button
                 type="button"
                 onclick={() => (showTechDetailsAd = !showTechDetailsAd)}
@@ -646,7 +619,6 @@
         </div>
       </div>
 
-      <!-- AREA 4: DEFAULT CONSENT BY REGION -->
       <div
         class="flex flex-col gap-4 rounded-2xl border border-border-subtle bg-surface-card/60 p-6 shadow-xs backdrop-blur-md">
         <div class="flex flex-col gap-1">
@@ -663,7 +635,6 @@
         </div>
 
         <div class="space-y-3">
-          <!-- EEA / UK Region -->
           <div
             class="flex flex-col gap-2 rounded-xl border border-border-subtle bg-surface/40 p-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
@@ -682,7 +653,6 @@
             </div>
           </div>
 
-          <!-- Global / Default Region -->
           <div
             class="flex flex-col gap-2 rounded-xl border border-border-subtle bg-surface/40 p-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
@@ -704,7 +674,6 @@
   {/if}
 </main>
 
-<!-- Test Consent Signals Modal -->
 <Dialog
   bind:isOpen={showTestSignalModal}
   title="Test Consent Mode v2 Signals"
@@ -746,7 +715,6 @@
   {/snippet}
 </Dialog>
 
-<!-- Configure Consent Banner Modal -->
 <Dialog
   bind:isOpen={showConfigureBannerModal}
   title="Configure Consent Banner"
@@ -780,7 +748,6 @@
       </div>
     </div>
 
-    <!-- Quick Presets Test -->
     <div class="rounded-xl border border-border-subtle bg-surface-card p-4">
       <h4 class="font-bold text-text-primary">Test Consent Callbacks</h4>
       <p class="mt-1 text-text-muted">

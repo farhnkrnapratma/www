@@ -27,12 +27,10 @@
 
   let isOpen = $state(false);
 
-  // Always resolve the selected label; fall back to first option so sort is never blank.
   let selectedLabel = $derived(
     fields.find(f => f.value === currentField)?.label ?? fields[0]?.label ?? 'Sort by',
   );
 
-  // Ensure currentField is never empty (initialise to first field if nothing is set yet)
   let resolvedField = $derived(
     fields.some(f => f.value === currentField) ? currentField : (fields[0]?.value ?? ''),
   );
@@ -54,14 +52,12 @@
   </DropdownTrigger>
 
   {#if isOpen}
-    <!-- Backdrop -->
     <button
       type="button"
       class="fixed inset-0 z-40 cursor-default"
       onclick={() => (isOpen = false)}
       aria-label="Close sort options"></button>
 
-    <!-- Panel -->
     <div
       role="listbox"
       aria-label="Sort field options"
@@ -87,7 +83,6 @@
     </div>
   {/if}
 
-  <!-- Direction toggle -->
   <button
     type="button"
     onclick={onDirectionToggle}

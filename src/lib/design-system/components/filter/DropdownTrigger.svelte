@@ -2,17 +2,9 @@
   import { cn } from '../../utils/cn';
   import type { Snippet } from 'svelte';
 
-  /**
-   * Shared dropdown trigger button used by FilterSelect, FilterCheckboxGroup, and SortControl.
-   * All three toolbar controls derive their trigger appearance from this single primitive,
-   * ensuring a unified look across every toolbar on the site.
-   */
   interface Props {
-    /** Screen-reader accessible label for the button */
     ariaLabel: string;
-    /** Whether the associated panel is currently open */
     isOpen?: boolean;
-    /** Slot for the trigger's visible content (value label, badge, etc.) */
     children: Snippet;
     onclick?: () => void;
   }

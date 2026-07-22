@@ -1,6 +1,5 @@
 export { cn } from './utils/cn';
 
-// AWDS UI Components Export
 export { default as Button } from './components/Button.svelte';
 export { default as IconButton } from './components/IconButton.svelte';
 export { default as Badge } from './components/Badge.svelte';
@@ -8,7 +7,6 @@ export { default as Chip } from './components/Chip.svelte';
 export { default as Tag } from './components/Tag.svelte';
 export { default as Card } from './components/Card.svelte';
 
-// System Feedback & State Handling Primitives
 export { default as EmptyState } from './components/EmptyState.svelte';
 export { default as ErrorState } from './components/ErrorState.svelte';
 export { default as LoadingState } from './components/LoadingState.svelte';
@@ -16,24 +14,20 @@ export { default as SkeletonBlock } from './components/SkeletonBlock.svelte';
 export { default as StatusBanner } from './components/StatusBanner.svelte';
 export { default as ProgressIndicator } from './components/ProgressIndicator.svelte';
 
-// Accessibility & Focus Helpers
 export { default as SkipLink } from './components/SkipLink.svelte';
 export { default as VisuallyHidden } from './components/VisuallyHidden.svelte';
 export { default as AriaAnnouncer } from './components/AriaAnnouncer.svelte';
 
-// Responsive Primitives
 export { default as ResponsiveStack } from './components/ResponsiveStack.svelte';
 export { default as ResponsiveGrid } from './components/ResponsiveGrid.svelte';
 export { default as MobileActionBar } from './components/MobileActionBar.svelte';
 export { default as BreakpointVisibility } from './components/BreakpointVisibility.svelte';
 
-// Data & Information Presentation Primitives
 export { default as SkillGroup } from './components/SkillGroup.svelte';
 export { default as CvEntryCard } from './components/CvEntryCard.svelte';
 export { default as StatsGrid } from './components/StatsGrid.svelte';
 export { default as DataTable } from './components/DataTable.svelte';
 
-// Card, Row, Block & Profile Primitives
 export { default as RichCard } from './components/RichCard.svelte';
 export { default as ContactRow } from './components/ContactRow.svelte';
 export { default as FundingRow } from './components/FundingRow.svelte';
@@ -43,13 +37,11 @@ export { default as ProfileCard } from './components/ProfileCard.svelte';
 export { default as MetaList } from './components/MetaList.svelte';
 export { default as TagGroup } from './components/TagGroup.svelte';
 
-// Article Primitives
 export { default as ArticleHeader } from './article/ArticleHeader.svelte';
 export { default as ArticleMeta } from './article/ArticleMeta.svelte';
 export { default as Prose } from './article/Prose.svelte';
 export { default as HelpfulBlock } from './article/HelpfulBlock.svelte';
 
-// Form Primitives
 export { default as Input } from './components/Input.svelte';
 export { default as Textarea } from './components/Textarea.svelte';
 export { default as Select } from './components/Select.svelte';
@@ -61,7 +53,6 @@ export { default as FormField } from './components/FormField.svelte';
 export { default as FormActions } from './components/FormActions.svelte';
 export { default as ErrorSummary } from './components/ErrorSummary.svelte';
 
-// Dialog & Overlay Primitives
 export { default as Dialog } from './components/Dialog.svelte';
 export { default as DialogHeader } from './components/DialogHeader.svelte';
 export { default as DialogBody } from './components/DialogBody.svelte';
@@ -74,7 +65,6 @@ export { default as ListRow } from './components/ListRow.svelte';
 export { default as SectionHeader } from './components/SectionHeader.svelte';
 export { default as ActionGroup } from './components/ActionGroup.svelte';
 
-// AWDS Layout Components Export
 export { default as AppShell } from './layout/AppShell.svelte';
 export { default as PageContainer } from './layout/PageContainer.svelte';
 export { default as PageHeader } from './layout/PageHeader.svelte';
@@ -87,7 +77,6 @@ export { default as FormSection } from './layout/FormSection.svelte';
 export { default as ListSection } from './layout/ListSection.svelte';
 export { default as FooterSection } from './layout/FooterSection.svelte';
 
-// AWDS Filter & Sort Components Export
 export { default as DropdownTrigger } from './components/filter/DropdownTrigger.svelte';
 export { default as FilterToolbar } from './components/filter/FilterToolbar.svelte';
 export { default as FilterChip } from './components/filter/FilterChip.svelte';

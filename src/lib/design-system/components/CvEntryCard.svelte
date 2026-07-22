@@ -31,7 +31,6 @@
     'relative flex flex-col gap-3 rounded-2xl border border-border-subtle bg-surface/60 p-5 shadow-xs backdrop-blur-lg transition-all select-none hover:border-border-strong hover:bg-surface-hover sm:p-6',
     className,
   )}>
-  <!-- Top Row: Role + Organization & Period -->
   <div class="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
     <div>
       <h3 class="text-base font-bold text-text-primary">{role}</h3>
@@ -47,14 +46,12 @@
     </span>
   </div>
 
-  <!-- Description -->
   {#if description}
     <p class="text-xs leading-relaxed text-text-secondary">
       {description}
     </p>
   {/if}
 
-  <!-- Key Highlights Bullet List -->
   {#if highlights.length > 0}
     <ul class="list-disc space-y-1 pl-4 text-xs text-text-secondary">
       {#each highlights as item (item)}
@@ -63,7 +60,6 @@
     </ul>
   {/if}
 
-  <!-- Tech Tags -->
   {#if tags.length > 0}
     <TagGroup class="mt-1 border-t border-border-subtle/40 pt-3">
       {#each tags as t (t)}

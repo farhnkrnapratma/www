@@ -117,7 +117,7 @@
       .replace(/>/g, '&gt;')
       .replace(/"/g, '&quot;')
       .replace(/'/g, '&#x27;')
-      .replace(/\//g, '&#x2F;');
+      .replace(/\
   }
 
   function validateForm(e: Event) {
@@ -165,7 +165,6 @@
 
 <SkipLink />
 
-<!-- Top Header Navigation Bar -->
 <header
   class="fixed top-0 right-0 left-0 z-40 border-b border-border-subtle bg-surface-card/80 backdrop-blur-md">
   <div
@@ -181,7 +180,6 @@
     </a>
 
     <div class="flex items-center gap-3">
-      <!-- Theme Switcher -->
       <div class="relative">
         <button
           type="button"

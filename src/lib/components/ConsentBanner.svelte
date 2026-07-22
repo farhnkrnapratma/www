@@ -106,14 +106,12 @@
   </aside>
 {/if}
 
-<!-- Customize Consent Dialog -->
 <Dialog
   bind:isOpen={showCustomizeModal}
   title="Customize Privacy & Consent"
   description="Enable or disable specific Google Consent Mode v2 storage signals."
   onClose={() => (showCustomizeModal = false)}>
   <div class="flex flex-col gap-4 py-2">
-    <!-- Behavioral Analytics -->
     <div class="rounded-xl border border-border-subtle bg-surface-card p-3.5">
       <div class="flex items-start justify-between gap-3">
         <div>
@@ -130,7 +128,6 @@
       </div>
     </div>
 
-    <!-- Ad Storage -->
     <div class="rounded-xl border border-border-subtle bg-surface-card p-3.5">
       <div class="flex items-start justify-between gap-3">
         <div>
@@ -146,7 +143,6 @@
       </div>
     </div>
 
-    <!-- Ad User Data -->
     <div class="rounded-xl border border-border-subtle bg-surface-card p-3.5">
       <div class="flex items-start justify-between gap-3">
         <div>
@@ -162,7 +158,6 @@
       </div>
     </div>
 
-    <!-- Ad Personalization -->
     <div class="rounded-xl border border-border-subtle bg-surface-card p-3.5">
       <div class="flex items-start justify-between gap-3">
         <div>

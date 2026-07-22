@@ -146,7 +146,6 @@ export function createFilterSortStore(options: FilterSortOptions = {}) {
       url.searchParams.delete('dir');
     }
 
-    // Delete existing filter params
     for (const key of Array.from(url.searchParams.keys())) {
       if (key !== 'q' && key !== 'sort' && key !== 'dir' && key !== 'id') {
         url.searchParams.delete(key);

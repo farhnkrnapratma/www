@@ -2,7 +2,7 @@
   import { cn } from '../utils/cn';
 
   interface Props {
-    value: number; // 0 to 100
+    value: number;
     label?: string;
     class?: string;
   }

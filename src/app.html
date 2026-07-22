@@ -3,21 +3,18 @@
   lang="en"
   translate="no">
   <head>
-    <!-- Google Consent Mode v2 Initialization (Must run before gtag.js) -->
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag() {
         dataLayer.push(arguments);
       }
 
-      // Check if visitor has saved consent preferences in localStorage
       let savedConsent = null;
       try {
         const stored = localStorage.getItem('fkp_cookie_consent_v2');
         if (stored) savedConsent = JSON.parse(stored);
       } catch (e) {}
 
-      // Default consent configuration (Denied by default)
       const defaultConsent = {
         analytics_storage: 'denied',
         ad_storage: 'denied',
@@ -27,7 +24,6 @@
       };
 
       if (savedConsent) {
-        // Restore saved visitor choice if available
         defaultConsent.analytics_storage = savedConsent.analytics_storage || 'denied';
         defaultConsent.ad_storage = savedConsent.ad_storage || 'denied';
         defaultConsent.ad_user_data = savedConsent.ad_user_data || 'denied';

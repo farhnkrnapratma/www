@@ -177,7 +177,6 @@
     { category: 'Cybersecurity', items: ['GRC', 'IAM'] },
   ];
 
-  // Skill groups shown on the home snapshot — highest-priority categories only.
   const snapshotSkillGroups = [
     'Linux',
     'Unix',
@@ -300,7 +299,7 @@
       .replace(/>/g, '&gt;')
       .replace(/"/g, '&quot;')
       .replace(/'/g, '&#x27;')
-      .replace(/\//g, '&#x2F;');
+      .replace(/\
   }
 
   function validateForm(e: Event) {
@@ -965,7 +964,6 @@
         {/if}
       </div>
 
-      <!-- Skills Snapshot -->
       <div>
         <div class="mb-4 flex items-center justify-between gap-4">
           <h3 class="text-lg font-bold tracking-tight text-text-primary">Skills</h3>
@@ -990,7 +988,6 @@
         </div>
       </div>
 
-      <!-- Experience Highlight -->
       <div>
         <div class="mb-4 flex items-center justify-between gap-4">
           <h3 class="text-lg font-bold tracking-tight text-text-primary">Experience</h3>

@@ -46,7 +46,6 @@
   --font-serif-text: 'Libertinus Serif', ui-serif, Georgia, serif;
   --font-mono: 'Fira Code', monospace;
 
-  /* Legacy Adwaita Tokens (Preserved for compatibility) */
   --color-adwaita-bg: #f2f5f3;
   --color-adwaita-card: #ffffff;
   --color-adwaita-border: #e4ebe6;
@@ -68,7 +67,6 @@
   --color-palette-coral: #fe4c25;
   --color-palette-slate: #909692;
 
-  /* AWDS Semantic Token Mapping */
   --color-surface-base: #f2f5f3;
   --color-surface-card: #ffffff;
   --color-surface-elevated: #ffffff;
@@ -116,7 +114,6 @@
   --color-adwaita-accent: #26d058;
   --color-adwaita-accent-hover: #1db94c;
 
-  /* AWDS Semantic Tokens (Dark Mode) */
   --color-surface-base: #101411;
   --color-surface-card: #181d19;
   --color-surface-elevated: #232925;

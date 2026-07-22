@@ -141,7 +141,6 @@
               markdownContent = parsed.markdownContent;
             }
           } else {
-            // When editing an existing post, only use saved draft if non-template and different
             if (
               parsed.markdownContent &&
               parsed.markdownContent !== defaultTemplate &&
@@ -1402,7 +1401,6 @@
   {/if}
 </main>
 
-<!-- Discard changes confirmation -->
 <Dialog
   bind:isOpen={showCancelDialog}
   title="Discard unsaved changes?"
@@ -1420,7 +1418,6 @@
   {/snippet}
 </Dialog>
 
-<!-- Publish confirmation -->
 <Dialog
   bind:isOpen={showPublishDialog}
   title="Publish post?"
@@ -1438,7 +1435,6 @@
   {/snippet}
 </Dialog>
 
-<!-- Save draft confirmation -->
 <Dialog
   bind:isOpen={showSaveDraftDialog}
   title="Save as draft?"
@@ -1456,7 +1452,6 @@
   {/snippet}
 </Dialog>
 
-<!-- Toast notification -->
 {#if showToast}
   <div
     role="status"
@@ -1470,7 +1465,6 @@
 {/if}
 
 <style>
-  /* Editor font metrics — applied to textarea, syntax-highlight overlay, and line numbers */
   .editor-textarea,
   .editor-pre,
   .editor-pre code,

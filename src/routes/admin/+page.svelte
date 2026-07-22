@@ -88,7 +88,7 @@
       .replace(/>/g, '&gt;')
       .replace(/"/g, '&quot;')
       .replace(/'/g, '&#x27;')
-      .replace(/\//g, '&#x2F;');
+      .replace(/\
   }
 
   async function handleAdminSubmit(e: SubmitEvent, parentId: string, postId: string) {
@@ -422,7 +422,6 @@
 
 <SkipLink />
 
-<!-- Admin Navigation Bar -->
 <nav
   class="fixed top-0 z-40 flex h-15 w-full items-center justify-between border-b border-border-subtle bg-surface-card/60 px-5 font-sans shadow-xs backdrop-blur-lg transition-colors duration-300"
   aria-label="Admin navigation">
@@ -438,7 +437,6 @@
 
     <div class="h-4 w-[1px] bg-border-subtle"></div>
 
-    <!-- Navigation Tabs -->
     <div class="flex items-center gap-1">
       <a
         href="/admin"
@@ -454,7 +452,6 @@
   </div>
 
   <div class="flex items-center gap-2">
-    <!-- Theme Picker -->
     <div class="relative">
       <IconButton
         ariaLabel="Change theme"
@@ -516,7 +513,6 @@
   </div>
 </nav>
 
-<!-- Main Content -->
 <main
   id="main-content"
   class="flex min-h-[calc(100vh-3.75rem)] flex-col pt-15 font-sans">
@@ -529,7 +525,6 @@
         size="lg"
         class="py-20" />
     {:else}
-      <!-- Page Header -->
       <div class="mb-6 flex items-center justify-between gap-4">
         <h1 class="text-2xl font-bold tracking-tight text-text-primary sm:text-3xl">Posts</h1>
         <a href="/admin/new">
@@ -542,7 +537,6 @@
         </a>
       </div>
 
-      <!-- Filter & Search Toolbar -->
       {#if posts.length > 0}
         <div class="mb-6">
           <FilterToolbar title="Admin posts filter">
@@ -600,7 +594,6 @@
         </div>
       {/if}
 
-      <!-- Post List -->
       {#if posts.length === 0}
         <EmptyState
           title="No posts yet"
@@ -632,7 +625,6 @@
               class="action-row group flex flex-col items-stretch gap-4 py-4"
               role="listitem">
               <div class="flex items-start justify-between gap-3">
-                <!-- Post Meta -->
                 <div class="flex min-w-0 flex-1 flex-col gap-1">
                   <div class="flex flex-wrap items-center gap-2">
                     <span class="text-xs font-semibold text-text-secondary">
@@ -665,7 +657,6 @@
                   </p>
                 </div>
 
-                <!-- Post Actions -->
                 <div class="flex shrink-0 items-center gap-2">
                   <a
                     href="/admin/new?id={post.id}"
@@ -675,7 +666,6 @@
                       size="sm">Edit post</Button>
                   </a>
 
-                  <!-- Overflow Menu -->
                   <div class="relative">
                     <IconButton
                       ariaLabel="More actions for {post.title}"
@@ -733,7 +723,6 @@
                 </div>
               </div>
 
-              <!-- Comments Thread (expandable) -->
               {#if postComments.length > 0 && expandedPostIds.has(post.id)}
                 <div
                   id="comments-{post.id}"
@@ -808,7 +797,6 @@
                             </button>
                           </div>
 
-                          <!-- Inline Reply Form -->
                           {#if replyTo?.id === comment.id}
                             <form
                               onsubmit={e => handleAdminSubmit(e, comment.id, post.id)}
@@ -893,7 +881,6 @@
   </section>
 </main>
 
-<!-- Delete Post Confirmation Dialog -->
 <Dialog
   bind:isOpen={showDeletePostDialog}
   title="Delete post?"
@@ -915,7 +902,6 @@
   {/snippet}
 </Dialog>
 
-<!-- Delete Comment Confirmation Dialog -->
 <Dialog
   bind:isOpen={showDeleteCommentDialog}
   title="Delete comment?"

@@ -1,8 +1,3 @@
-/**
- * Svelte 5 reactive store for Google Consent Mode v2 and GA4 Data Retention settings.
- * Manages visitor consent signals, admin retention preferences, and gtag sync.
- */
-
 import { SvelteDate } from 'svelte/reactivity';
 
 export type ConsentStatus = 'granted' | 'denied';
@@ -71,7 +66,6 @@ export function createConsentStore() {
     },
   ];
 
-  // Derived states
   const isBehavioralActive = $derived(signals.analytics_storage === 'granted');
   const isAdvertisingActive = $derived(
     signals.ad_storage === 'granted' ||
@@ -88,7 +82,6 @@ export function createConsentStore() {
   function init() {
     if (typeof window === 'undefined') return;
 
-    // Load saved visitor consent
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
       if (stored) {
@@ -105,7 +98,6 @@ export function createConsentStore() {
       isBannerOpen = true;
     }
 
-    // Load saved retention settings
     try {
       const storedRet = localStorage.getItem(RETENTION_STORAGE_KEY);
       if (storedRet) {
@@ -114,9 +106,7 @@ export function createConsentStore() {
         retention.userDataRetention = parsedRet.userDataRetention || '14_months';
         retention.lastUpdated = parsedRet.lastUpdated;
       }
-    } catch {
-      // Ignore storage error
-    }
+    } catch {}
   }
 
   function applyGtagUpdate(newSignals: ConsentSignals) {
@@ -144,9 +134,7 @@ export function createConsentStore() {
 
       try {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(newSignals));
-      } catch {
-        // Ignore storage error
-      }
+      } catch {}
     }
   }
 
@@ -200,7 +188,6 @@ export function createConsentStore() {
     isSavingRetention = true;
     retentionSaveSuccess = false;
 
-    // Simulate save request
     await new Promise(res => setTimeout(res, 400));
 
     retention.eventDataRetention = eventPeriod;
@@ -210,9 +197,7 @@ export function createConsentStore() {
     if (typeof window !== 'undefined') {
       try {
         localStorage.setItem(RETENTION_STORAGE_KEY, JSON.stringify(retention));
-      } catch {
-        // Ignore storage error
-      }
+      } catch {}
     }
 
     isSavingRetention = false;

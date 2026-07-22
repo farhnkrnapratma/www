@@ -45,14 +45,12 @@
     </DropdownTrigger>
 
     {#if isOpen}
-      <!-- Backdrop -->
       <button
         type="button"
         class="fixed inset-0 z-40 cursor-default"
         onclick={() => (isOpen = false)}
         aria-label="Close {label} filter"></button>
 
-      <!-- Panel -->
       <div
         role="group"
         aria-label="{label} filters"

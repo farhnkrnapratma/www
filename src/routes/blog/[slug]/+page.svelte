@@ -478,7 +478,7 @@
       .replace(/>/g, '&gt;')
       .replace(/"/g, '&quot;')
       .replace(/'/g, '&#x27;')
-      .replace(/\//g, '&#x2F;');
+      .replace(/\
   }
 
   function validate() {
@@ -1351,7 +1351,6 @@
   </div>
 {/if}
 
-<!-- Share article dialog (shown after positive feedback) -->
 <Dialog
   bind:isOpen={showYesFeedbackDialog}
   title="Share this article?"
@@ -1397,7 +1396,6 @@
   {/snippet}
 </Dialog>
 
-<!-- Feedback dialog (shown after negative feedback) -->
 <Dialog
   bind:isOpen={showNoFeedbackDialog}
   title="Share your feedback?"

@@ -59,14 +59,12 @@
 
 {#if isOpen}
   <div class="fixed inset-0 z-[100] flex items-center justify-center p-4">
-    <!-- Backdrop Overlay -->
     <button
       type="button"
       class="absolute inset-0 cursor-default bg-overlay-backdrop backdrop-blur-sm"
       aria-label="Close modal"
       onclick={() => closeOnBackdrop && onClose()}></button>
 
-    <!-- Modal Card Box -->
     <div
       bind:this={dialogRef}
       role="dialog"

@@ -34,7 +34,6 @@
     className,
   )}>
   <div class="flex flex-col gap-2">
-    <!-- Header Title & Link -->
     <div class="flex items-start justify-between gap-3">
       <h3
         class="text-base font-bold tracking-tight text-text-primary transition-colors group-hover:text-accent">
@@ -55,14 +54,12 @@
       {/if}
     </div>
 
-    <!-- Metadata Slot -->
     {#if meta}
       <div class="text-xs text-text-muted select-none">
         {@render meta()}
       </div>
     {/if}
 
-    <!-- Description -->
     {#if description}
       <p class="mt-1 line-clamp-3 text-xs leading-relaxed text-text-secondary">
         {description}
@@ -74,7 +71,6 @@
     {/if}
   </div>
 
-  <!-- Footer Tags & Actions -->
   {#if tags || actions}
     <div
       class="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-border-subtle/40 pt-3 select-none">

@@ -19,7 +19,6 @@
 
   let isOpen = $state(false);
 
-  // Derive the display label from the selected value, with a stable fallback.
   let displayLabel = $derived(
     options.find(o => o.value === value)?.label ?? options[0]?.label ?? label,
   );
@@ -41,14 +40,12 @@
   </DropdownTrigger>
 
   {#if isOpen}
-    <!-- Backdrop to close on outside click -->
     <button
       type="button"
       class="fixed inset-0 z-40 cursor-default"
       onclick={() => (isOpen = false)}
       aria-label="Close {label} filter"></button>
 
-    <!-- Panel -->
     <div
       role="listbox"
       aria-label="{label} options"

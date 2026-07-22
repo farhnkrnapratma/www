@@ -30,7 +30,6 @@
     'flex flex-col gap-3 rounded-2xl border border-border-subtle bg-surface-card/40 p-4 shadow-xs backdrop-blur-md select-none',
     className,
   )}>
-  <!-- Row 1: Primary Search (Left) & Result Count (Right) -->
   <div class="flex flex-col gap-2.5 sm:flex-row sm:items-center sm:justify-between">
     <div class="w-full sm:w-72 sm:max-w-xs">
       {#if searchSlot}
@@ -45,7 +44,6 @@
     {/if}
   </div>
 
-  <!-- Row 2: Narrowing Filters (Left) & Ordering Sort (Right) -->
   <div
     class="flex flex-col gap-3 border-t border-border-subtle/40 pt-2.5 sm:flex-row sm:items-center sm:justify-between">
     <div class="flex flex-wrap items-center gap-3">
@@ -61,7 +59,6 @@
     </div>
   </div>
 
-  <!-- Row 3: Active Filter Chips (If Any) -->
   {#if chipsSlot}
     {@render chipsSlot()}
   {/if}
