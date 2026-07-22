@@ -13,9 +13,15 @@
     Button,
     Dialog,
     EmptyState,
+    FilterToolbar,
+    FilterChipGroup,
+    SortControl,
+    FilterCheckboxGroup,
+    SearchResultCount,
+    FilterEmptyState,
+    createFilterSortStore,
   } from '$lib';
   import { supabase } from '$lib/supabase';
-  import { SvelteMap } from 'svelte/reactivity';
 
   let { data } = $props();
 
@@ -212,26 +218,6 @@
   };
 
   const projects = $derived(data.projects);
-  let activeProjectTag = $state<string | null>(null);
-
-  const projectTags = $derived.by(() => {
-    const counts = new SvelteMap<string, number>();
-    data.projects.forEach(p => {
-      p.tags.forEach(t => {
-        const normalized = t.toLowerCase();
-        counts.set(normalized, (counts.get(normalized) || 0) + 1);
-      });
-    });
-    return Array.from(counts.entries())
-      .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
-      .slice(0, 10)
-      .map(entry => entry[0]);
-  });
-
-  const filteredProjects = $derived.by(() => {
-    if (!activeProjectTag) return data.projects;
-    return data.projects.filter(p => p.tags.some(t => t.toLowerCase() === activeProjectTag));
-  });
 
   type Theme = 'auto' | 'dark' | 'light';
 
@@ -372,7 +358,105 @@
     return selectedTheme.charAt(0).toUpperCase() + selectedTheme.slice(1);
   }
 
+  const blogFilterStore = createFilterSortStore({
+    defaultSortField: 'date',
+    defaultSortDir: 'desc',
+  });
+
+  const projectFilterStore = createFilterSortStore({
+    defaultSortField: 'date',
+    defaultSortDir: 'desc',
+  });
+
+  const allBlogTags = $derived.by(() => {
+    const set = new Set<string>();
+    for (const post of posts) {
+      if (post.tags) {
+        post.tags.forEach(t => set.add(t));
+      }
+    }
+    return Array.from(set);
+  });
+
+  const filteredBlogPosts = $derived.by(() => {
+    let list = posts;
+
+    const q = blogFilterStore.search.trim().toLowerCase();
+    if (q) {
+      list = list.filter(
+        p =>
+          p.title.toLowerCase().includes(q) || (p.excerpt && p.excerpt.toLowerCase().includes(q)),
+      );
+    }
+
+    const selectedTags = blogFilterStore.filters['tag'] || [];
+    if (selectedTags.length > 0) {
+      list = list.filter(p => p.tags && p.tags.some(t => selectedTags.includes(t)));
+    }
+
+    const sortField = blogFilterStore.sort.field;
+    const sortDir = blogFilterStore.sort.direction === 'asc' ? 1 : -1;
+
+    return [...list].sort((a, b) => {
+      if (sortField === 'title') {
+        return a.title.localeCompare(b.title) * sortDir;
+      } else if (sortField === 'readingTime') {
+        const readingA = parseInt(a.reading_time || '0', 10);
+        const readingB = parseInt(b.reading_time || '0', 10);
+        return (readingA - readingB) * sortDir;
+      } else {
+        const dateA = new Date(a.date || a.created_at || 0).getTime();
+        const dateB = new Date(b.date || b.created_at || 0).getTime();
+        return (dateA - dateB) * sortDir;
+      }
+    });
+  });
+
+  const allProjectTags = $derived.by(() => {
+    const set = new Set<string>();
+    for (const p of projects) {
+      if (p.tags) {
+        p.tags.forEach(t => set.add(t));
+      }
+    }
+    return Array.from(set);
+  });
+
+  const filteredProjectList = $derived.by(() => {
+    let list = projects;
+
+    const q = projectFilterStore.search.trim().toLowerCase();
+    if (q) {
+      list = list.filter(
+        p =>
+          p.name.toLowerCase().includes(q) ||
+          p.desc.toLowerCase().includes(q) ||
+          (p.lang && p.lang.toLowerCase().includes(q)),
+      );
+    }
+
+    const selectedTags = projectFilterStore.filters['tag'] || [];
+    if (selectedTags.length > 0) {
+      list = list.filter(p => p.tags && p.tags.some(t => selectedTags.includes(t)));
+    }
+
+    const sortField = projectFilterStore.sort.field;
+    const sortDir = projectFilterStore.sort.direction === 'asc' ? 1 : -1;
+
+    return [...list].sort((a, b) => {
+      if (sortField === 'name') {
+        return a.name.localeCompare(b.name) * sortDir;
+      } else if (sortField === 'stars') {
+        return ((a.stars || 0) - (b.stars || 0)) * sortDir;
+      } else {
+        return a.name.localeCompare(b.name) * sortDir;
+      }
+    });
+  });
+
   onMount(() => {
+    blogFilterStore.parseFromUrl(new URL(window.location.href));
+    projectFilterStore.parseFromUrl(new URL(window.location.href));
     const saved = localStorage.getItem('theme') as Theme;
     applyTheme(saved || 'auto');
 
@@ -1084,7 +1168,7 @@
   {#if activeSection === 'blogs'}
     <section
       class="relative z-10 mx-auto w-full px-6 pt-10 pb-24 md:w-[80%] md:max-w-none md:pt-14 md:pb-28 lg:w-[50%]">
-      <div class="flex items-end justify-between gap-4">
+      <div class="mb-6 flex items-end justify-between gap-4">
         <div>
           <h1 class="text-3xl font-bold tracking-tight text-text-primary">Blogs</h1>
           <p class="mt-2 text-sm text-text-secondary">
@@ -1103,15 +1187,76 @@
           <span class="hidden items-center leading-none sm:inline">Feed</span>
         </a>
       </div>
-      <div class="boxed-list mt-8">
-        {#if posts.length === 0}
-          <EmptyState
-            icon="bi-journal-x"
-            title="No posts yet"
-            description="Articles will appear here once published." />
-        {:else}
+
+      {#if posts.length > 0}
+        <div class="mb-6">
+          <FilterToolbar title="Blog posts filter">
+            {#snippet searchSlot()}
+              <div class="w-full sm:w-60">
+                <Input
+                  type="search"
+                  placeholder="Search articles..."
+                  value={blogFilterStore.search}
+                  onInput={val => blogFilterStore.setSearch(val)}
+                  size="sm"
+                  ariaLabel="Search blog articles" />
+              </div>
+            {/snippet}
+
+            {#snippet filterControlsSlot()}
+              {#if allBlogTags.length > 0}
+                <FilterCheckboxGroup
+                  label="Category/Tag"
+                  options={allBlogTags.map(t => ({ value: t, label: t }))}
+                  selectedValues={blogFilterStore.filters['tag'] || []}
+                  onChange={val => blogFilterStore.toggleMultiFilter('tag', val)} />
+              {/if}
+            {/snippet}
+
+            {#snippet countSlot()}
+              <SearchResultCount
+                count={filteredBlogPosts.length}
+                total={posts.length}
+                itemLabel="articles" />
+            {/snippet}
+
+            {#snippet sortSlot()}
+              <SortControl
+                fields={[
+                  { value: 'date', label: 'Date' },
+                  { value: 'readingTime', label: 'Reading time' },
+                  { value: 'title', label: 'Title' },
+                ]}
+                currentField={blogFilterStore.sort.field}
+                currentDirection={blogFilterStore.sort.direction}
+                onFieldChange={field => blogFilterStore.setSort(field)}
+                onDirectionToggle={() => blogFilterStore.toggleSortDirection()} />
+            {/snippet}
+
+            {#snippet chipsSlot()}
+              <FilterChipGroup
+                chips={blogFilterStore.activeChips}
+                onRemove={(type, val) => blogFilterStore.removeFilter(type, val)}
+                onClearAll={() => blogFilterStore.clearAllFilters()} />
+            {/snippet}
+          </FilterToolbar>
+        </div>
+      {/if}
+
+      {#if posts.length === 0}
+        <EmptyState
+          icon="bi-journal-x"
+          title="No posts yet"
+          description="Articles will appear here once published." />
+      {:else if filteredBlogPosts.length === 0}
+        <FilterEmptyState
+          title="No articles match these filters"
+          description="Try adjusting your tag filters or search keyword."
+          onClearFilters={() => blogFilterStore.clearAllFilters()} />
+      {:else}
+        <div class="boxed-list mt-2">
           <ul class="divide-y divide-border-subtle">
-            {#each posts as post (post.id)}
+            {#each filteredBlogPosts as post (post.id)}
               <li
                 class="group relative flex w-full flex-col gap-5 p-5 text-left transition-all duration-200 hover:bg-surface-hover/40 active:scale-[0.995] sm:flex-row sm:items-start">
                 <div
@@ -1191,131 +1336,170 @@
               </li>
             {/each}
           </ul>
-        {/if}
-      </div>
+        </div>
+      {/if}
     </section>
   {/if}
 
   {#if activeSection === 'projects'}
     <section
       class="relative z-10 mx-auto w-full px-6 pt-10 pb-24 md:w-[80%] md:max-w-none md:pt-14 md:pb-28 lg:w-[50%]">
-      <h1 class="text-3xl font-bold tracking-tight text-text-primary">Projects</h1>
-      <p class="mt-2 text-sm text-text-secondary">Open source work on GitHub.</p>
+      <div class="mb-6">
+        <h1 class="text-3xl font-bold tracking-tight text-text-primary">Projects</h1>
+        <p class="mt-2 text-sm text-text-secondary">Open source work on GitHub.</p>
+      </div>
 
-      {#if projectTags.length > 0}
-        <div class="mt-6 flex flex-wrap gap-2 select-none">
-          <button
-            type="button"
-            onclick={() => (activeProjectTag = null)}
-            class="cursor-pointer rounded-full px-3 py-1 text-xs font-semibold transition-all focus:outline-2 focus:outline-accent {(
-              activeProjectTag === null
-            ) ?
-              'bg-accent text-white shadow-xs'
-            : 'bg-border-subtle/40 text-text-muted hover:bg-surface-hover hover:text-text-primary'}">
-            All
-          </button>
-          {#each projectTags as tag (tag)}
-            <button
-              type="button"
-              onclick={() => (activeProjectTag = activeProjectTag === tag ? null : tag)}
-              class="cursor-pointer rounded-full px-3 py-1 text-xs font-semibold transition-all focus:outline-2 focus:outline-accent {(
-                activeProjectTag === tag
-              ) ?
-                'bg-accent text-white shadow-xs'
-              : 'bg-border-subtle/40 text-text-muted hover:bg-surface-hover hover:text-text-primary'}">
-              {tag}
-            </button>
-          {/each}
+      {#if projects.length > 0}
+        <div class="mb-6">
+          <FilterToolbar title="Projects filter">
+            {#snippet searchSlot()}
+              <div class="w-full sm:w-60">
+                <Input
+                  type="search"
+                  placeholder="Search projects..."
+                  value={projectFilterStore.search}
+                  onInput={val => projectFilterStore.setSearch(val)}
+                  size="sm"
+                  ariaLabel="Search projects" />
+              </div>
+            {/snippet}
+
+            {#snippet filterControlsSlot()}
+              {#if allProjectTags.length > 0}
+                <FilterCheckboxGroup
+                  label="Tech/Tag"
+                  options={allProjectTags.map(t => ({ value: t, label: t }))}
+                  selectedValues={projectFilterStore.filters['tag'] || []}
+                  onChange={val => projectFilterStore.toggleMultiFilter('tag', val)} />
+              {/if}
+            {/snippet}
+
+            {#snippet countSlot()}
+              <SearchResultCount
+                count={filteredProjectList.length}
+                total={projects.length}
+                itemLabel="projects" />
+            {/snippet}
+
+            {#snippet sortSlot()}
+              <SortControl
+                fields={[
+                  { value: 'name', label: 'Name' },
+                  { value: 'stars', label: 'Stars' },
+                ]}
+                currentField={projectFilterStore.sort.field}
+                currentDirection={projectFilterStore.sort.direction}
+                onFieldChange={field => projectFilterStore.setSort(field)}
+                onDirectionToggle={() => projectFilterStore.toggleSortDirection()} />
+            {/snippet}
+
+            {#snippet chipsSlot()}
+              <FilterChipGroup
+                chips={projectFilterStore.activeChips}
+                onRemove={(type, val) => projectFilterStore.removeFilter(type, val)}
+                onClearAll={() => projectFilterStore.clearAllFilters()} />
+            {/snippet}
+          </FilterToolbar>
         </div>
       {/if}
 
-      <div class="boxed-list mt-8">
-        <ul class="divide-y divide-border-subtle">
-          {#each filteredProjects as project (project.name)}
-            <li
-              class="group relative flex flex-col gap-3 p-5 text-left transition-all duration-200 hover:bg-surface-hover/40 active:scale-[0.995]">
-              <article class="contents">
-                <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-                  <div class="flex flex-wrap items-center gap-0.5">
-                    <h3
-                      class="text-base leading-snug font-bold text-text-primary transition-colors group-hover:text-accent">
-                      <a
-                        href={project.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        class="rounded-xs outline-none after:absolute after:inset-0 focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-surface-card">
-                        {project.name}
-                      </a>
-                    </h3>
-                    {#if project.lang}
-                      <span class="inline-flex items-center gap-1 select-none">
-                        <span
-                          class="h-1.5 w-1.5 rounded-full"
-                          style="background-color: {langColors[project.lang] ||
-                            'var(--color-accent)'}"></span>
-                        <span
-                          class="rounded-md bg-border-subtle/30 px-1.5 py-0.5 text-xs font-semibold text-text-muted">
-                          {project.lang}
+      {#if projects.length === 0}
+        <EmptyState
+          icon="bi-box-seam"
+          title="No projects yet"
+          description="Projects will appear here." />
+      {:else if filteredProjectList.length === 0}
+        <FilterEmptyState
+          title="No projects match these filters"
+          description="Try adjusting your tech stack filters or search keyword."
+          onClearFilters={() => projectFilterStore.clearAllFilters()} />
+      {:else}
+        <div class="boxed-list mt-2">
+          <ul class="divide-y divide-border-subtle">
+            {#each filteredProjectList as project (project.name)}
+              <li
+                class="group relative flex flex-col gap-3 p-5 text-left transition-all duration-200 hover:bg-surface-hover/40 active:scale-[0.995]">
+                <article class="contents">
+                  <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                    <div class="flex flex-wrap items-center gap-0.5">
+                      <h3
+                        class="text-base leading-snug font-bold text-text-primary transition-colors group-hover:text-accent">
+                        <a
+                          href={project.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          class="rounded-xs outline-none after:absolute after:inset-0 focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-surface-card">
+                          {project.name}
+                        </a>
+                      </h3>
+                      {#if project.lang}
+                        <span class="inline-flex items-center gap-1 select-none">
+                          <span
+                            class="h-1.5 w-1.5 rounded-full"
+                            style="background-color: {langColors[project.lang] ||
+                              'var(--color-accent)'}"></span>
+                          <span
+                            class="rounded-md bg-border-subtle/30 px-1.5 py-0.5 text-xs font-semibold text-text-muted">
+                            {project.lang}
+                          </span>
                         </span>
-                      </span>
-                    {/if}
-                  </div>
+                      {/if}
+                    </div>
 
-                  <div
-                    class="no-scrollbar relative z-20 flex items-center gap-x-3 overflow-x-auto font-sans text-xs font-semibold whitespace-nowrap text-text-muted select-none sm:justify-end">
-                    {#if project.licenseName}
+                    <div
+                      class="no-scrollbar relative z-20 flex items-center gap-x-3 overflow-x-auto font-sans text-xs font-semibold whitespace-nowrap text-text-muted select-none sm:justify-end">
+                      {#if project.licenseName}
+                        <span class="inline-flex items-center gap-1">
+                          <span
+                            class="material-symbols-rounded text-xs leading-none"
+                            style="font-variation-settings: 'wght' 300, 'opsz' 20;"
+                            aria-hidden="true">balance</span>
+                          {project.licenseName} License
+                        </span>
+                      {/if}
                       <span class="inline-flex items-center gap-1">
                         <span
                           class="material-symbols-rounded text-xs leading-none"
                           style="font-variation-settings: 'wght' 300, 'opsz' 20;"
-                          aria-hidden="true">balance</span>
-                        {project.licenseName} License
+                          aria-hidden="true">star_shine</span>
+                        {project.stars} stars
                       </span>
-                    {/if}
-                    <span class="inline-flex items-center gap-1">
-                      <span
-                        class="material-symbols-rounded text-xs leading-none"
-                        style="font-variation-settings: 'wght' 300, 'opsz' 20;"
-                        aria-hidden="true">star_shine</span>
-                      {project.stars} stars
-                    </span>
-                  </div>
-                </div>
-
-                <p class="line-clamp-2 text-xs leading-normal text-text-muted dark:text-zinc-300">
-                  {project.desc}
-                </p>
-
-                <div
-                  class="mt-1 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
-                  <div class="relative z-20 flex flex-wrap items-center gap-1.5">
-                    {#each project.tags as tag (tag)}
-                      <button
-                        type="button"
-                        onclick={() =>
-                          (activeProjectTag =
-                            activeProjectTag === tag.toLowerCase() ? null : tag.toLowerCase())}
-                        class="cursor-pointer rounded-md bg-border-subtle/30 px-2.5 py-0.5 text-xs font-medium transition-colors hover:bg-surface-hover hover:text-accent {(
-                          activeProjectTag === tag.toLowerCase()
-                        ) ?
-                          'font-semibold text-accent'
-                        : 'text-text-muted'}">
-                        {tag}
-                      </button>
-                    {/each}
+                    </div>
                   </div>
 
-                  <div class="flex items-center gap-1.5 text-xs font-bold text-accent">
-                    <span>View repository</span>
-                    <i class="bi bi-arrow-right transition-transform group-hover:translate-x-0.5"
-                    ></i>
+                  <p class="line-clamp-2 text-xs leading-normal text-text-muted dark:text-zinc-300">
+                    {project.desc}
+                  </p>
+
+                  <div
+                    class="mt-1 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
+                    <div class="relative z-20 flex flex-wrap items-center gap-1.5">
+                      {#each project.tags as tag (tag)}
+                        <button
+                          type="button"
+                          onclick={() => projectFilterStore.toggleMultiFilter('tag', tag)}
+                          class="cursor-pointer rounded-md bg-border-subtle/30 px-2.5 py-0.5 text-xs font-medium transition-colors hover:bg-surface-hover hover:text-accent {(
+                            projectFilterStore.filters['tag']?.includes(tag)
+                          ) ?
+                            'font-semibold text-accent'
+                          : 'text-text-muted'}">
+                          {tag}
+                        </button>
+                      {/each}
+                    </div>
+
+                    <div class="flex items-center gap-1.5 text-xs font-bold text-accent">
+                      <span>View repository</span>
+                      <i class="bi bi-arrow-right transition-transform group-hover:translate-x-0.5"
+                      ></i>
+                    </div>
                   </div>
-                </div>
-              </article>
-            </li>
-          {/each}
-        </ul>
-      </div>
+                </article>
+              </li>
+            {/each}
+          </ul>
+        </div>
+      {/if}
     </section>
   {/if}
 

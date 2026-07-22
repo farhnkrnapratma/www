@@ -86,3 +86,14 @@ export { default as ReadingContainer } from './layout/ReadingContainer.svelte';
 export { default as FormSection } from './layout/FormSection.svelte';
 export { default as ListSection } from './layout/ListSection.svelte';
 export { default as FooterSection } from './layout/FooterSection.svelte';
+
+// AWDS Filter & Sort Components Export
+export { default as FilterToolbar } from './components/filter/FilterToolbar.svelte';
+export { default as FilterChip } from './components/filter/FilterChip.svelte';
+export { default as FilterChipGroup } from './components/filter/FilterChipGroup.svelte';
+export { default as SortControl } from './components/filter/SortControl.svelte';
+export { default as FilterSelect } from './components/filter/FilterSelect.svelte';
+export { default as FilterCheckboxGroup } from './components/filter/FilterCheckboxGroup.svelte';
+export { default as SearchResultCount } from './components/filter/SearchResultCount.svelte';
+export { default as FilterEmptyState } from './components/filter/FilterEmptyState.svelte';
+export * from '../stores/useFilterSort';

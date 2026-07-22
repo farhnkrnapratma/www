@@ -9,9 +9,17 @@
     Badge,
     Textarea,
     FormField,
+    Input,
     LoadingState,
     EmptyState,
     SkipLink,
+    FilterToolbar,
+    FilterSelect,
+    SortControl,
+    SearchResultCount,
+    FilterChipGroup,
+    FilterEmptyState,
+    createFilterSortStore,
   } from '$lib';
 
   interface AdminPost {
@@ -27,6 +35,11 @@
   let posts = $state<AdminPost[]>([]);
   let isLoggingOut = $state(false);
   let openActionMenuId = $state<string | null>(null);
+
+  const filterStore = createFilterSortStore({
+    defaultSortField: 'date',
+    defaultSortDir: 'desc',
+  });
 
   let showDeletePostDialog = $state(false);
   let postToDelete = $state<AdminPost | null>(null);
@@ -148,7 +161,40 @@
 
   const ACTIVITY_EVENTS = ['mousemove', 'mousedown', 'keydown', 'scroll', 'touchstart'] as const;
 
+  const statusFilter = $derived(filterStore.filters['status']?.[0] || 'all');
+
+  const filteredPosts = $derived.by(() => {
+    let list = posts;
+
+    const q = filterStore.search.trim().toLowerCase();
+    if (q) {
+      list = list.filter(
+        p => p.title.toLowerCase().includes(q) || p.storage_path.toLowerCase().includes(q),
+      );
+    }
+
+    if (statusFilter === 'published') {
+      list = list.filter(p => p.published);
+    } else if (statusFilter === 'draft') {
+      list = list.filter(p => !p.published);
+    }
+
+    const sortField = filterStore.sort.field;
+    const sortDir = filterStore.sort.direction === 'asc' ? 1 : -1;
+
+    return [...list].sort((a, b) => {
+      if (sortField === 'title') {
+        return a.title.localeCompare(b.title) * sortDir;
+      } else if (sortField === 'status') {
+        return (Number(a.published) - Number(b.published)) * sortDir;
+      } else {
+        return (new Date(a.created_at).getTime() - new Date(b.created_at).getTime()) * sortDir;
+      }
+    });
+  });
+
   onMount(() => {
+    filterStore.parseFromUrl(new URL(window.location.href));
     const saved = localStorage.getItem('theme') as Theme;
     theme = saved || 'auto';
 
@@ -464,7 +510,7 @@
         class="py-20" />
     {:else}
       <!-- Page Header -->
-      <div class="mb-8 flex items-center justify-between gap-4">
+      <div class="mb-6 flex items-center justify-between gap-4">
         <h1 class="text-2xl font-bold tracking-tight text-text-primary sm:text-3xl">Posts</h1>
         <a href="/admin/new">
           <Button
@@ -475,6 +521,64 @@
           </Button>
         </a>
       </div>
+
+      <!-- Filter & Search Toolbar -->
+      {#if posts.length > 0}
+        <div class="mb-6">
+          <FilterToolbar title="Admin posts filter">
+            {#snippet searchSlot()}
+              <div class="w-full sm:w-64">
+                <Input
+                  type="search"
+                  placeholder="Search title or path..."
+                  value={filterStore.search}
+                  onInput={val => filterStore.setSearch(val)}
+                  size="sm"
+                  ariaLabel="Search posts" />
+              </div>
+            {/snippet}
+
+            {#snippet filterControlsSlot()}
+              <FilterSelect
+                label="Status"
+                value={statusFilter}
+                options={[
+                  { value: 'all', label: 'All Status' },
+                  { value: 'published', label: 'Published' },
+                  { value: 'draft', label: 'Draft' },
+                ]}
+                onChange={val => filterStore.setSingleFilter('status', val)} />
+            {/snippet}
+
+            {#snippet countSlot()}
+              <SearchResultCount
+                count={filteredPosts.length}
+                total={posts.length}
+                itemLabel="posts" />
+            {/snippet}
+
+            {#snippet sortSlot()}
+              <SortControl
+                fields={[
+                  { value: 'date', label: 'Date' },
+                  { value: 'title', label: 'Title' },
+                  { value: 'status', label: 'Status' },
+                ]}
+                currentField={filterStore.sort.field}
+                currentDirection={filterStore.sort.direction}
+                onFieldChange={field => filterStore.setSort(field)}
+                onDirectionToggle={() => filterStore.toggleSortDirection()} />
+            {/snippet}
+
+            {#snippet chipsSlot()}
+              <FilterChipGroup
+                chips={filterStore.activeChips}
+                onRemove={(type, val) => filterStore.removeFilter(type, val)}
+                onClearAll={() => filterStore.clearAllFilters()} />
+            {/snippet}
+          </FilterToolbar>
+        </div>
+      {/if}
 
       <!-- Post List -->
       {#if posts.length === 0}
@@ -491,13 +595,19 @@
             </a>
           {/snippet}
         </EmptyState>
+      {:else if filteredPosts.length === 0}
+        <FilterEmptyState
+          title="No matching posts found"
+          description="No posts match the current filter or search criteria."
+          onClearFilters={() => filterStore.clearAllFilters()} />
       {:else}
         <div
-          class="boxed-list text-left"
+          class="boxed-list overflow-visible! text-left"
           role="list"
           aria-label="Blog posts list">
-          {#each posts as post (post.id)}
+          {#each filteredPosts as post, index (post.id)}
             {@const postComments = getPostComments(post.id)}
+            {@const isLastItem = index >= filteredPosts.length - 2 && filteredPosts.length > 2}
             <div
               class="action-row group flex flex-col items-stretch gap-4 py-4"
               role="listitem">
@@ -568,7 +678,9 @@
                       <div
                         role="menu"
                         aria-label="Post actions"
-                        class="absolute top-9 right-0 z-50 flex min-w-36 flex-col rounded-xl border border-border-subtle bg-surface-elevated py-1.5 shadow-lg">
+                        class="absolute {isLastItem ? 'bottom-full mb-1' : (
+                          'top-9'
+                        )} right-0 z-50 flex min-w-36 flex-col rounded-xl border border-border-subtle bg-surface-elevated py-1.5 shadow-lg">
                         <button
                           type="button"
                           role="menuitem"
