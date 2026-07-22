@@ -87,7 +87,12 @@
     }, 250);
   }
 
+  let previouslyFocusedElement = $state<HTMLElement | null>(null);
+
   function open() {
+    if (typeof document !== 'undefined') {
+      previouslyFocusedElement = document.activeElement as HTMLElement;
+    }
     isOpen = true;
     query = '';
     results = [];
@@ -100,6 +105,12 @@
     query = '';
     results = [];
     activeIndex = -1;
+    if (previouslyFocusedElement) {
+      setTimeout(() => {
+        previouslyFocusedElement?.focus();
+        previouslyFocusedElement = null;
+      }, 30);
+    }
   }
 
   function select(result: SearchResult) {
@@ -250,6 +261,18 @@
             aria-autocomplete="list"
             aria-controls="search-results"
             aria-activedescendant={activeIndex >= 0 ? `result-${activeIndex}` : undefined} />
+
+          <button
+            type="button"
+            onclick={close}
+            class="inline-flex shrink-0 cursor-pointer items-center gap-1.5 rounded-lg px-2.5 py-1 text-xs font-semibold text-text-muted transition-colors hover:bg-surface-hover hover:text-text-primary focus-visible:outline-none"
+            aria-label="Close search">
+            <span>Cancel</span>
+            <kbd
+              class="hidden items-center rounded border border-border-subtle bg-surface-card px-1.5 py-0.5 font-mono text-[9px] leading-none text-text-muted select-none sm:inline-flex">
+              Esc
+            </kbd>
+          </button>
         </div>
       </div>
 

@@ -9,6 +9,8 @@
     size?: 'sm' | 'md' | 'lg';
     isDestructive?: boolean;
     closeOnBackdrop?: boolean;
+    closeOnEscape?: boolean;
+    returnFocusToTrigger?: boolean;
     onClose: () => void;
     children?: Snippet;
     footer?: Snippet;
@@ -22,6 +24,8 @@
     size = 'md',
     isDestructive = false,
     closeOnBackdrop = true,
+    closeOnEscape = true,
+    returnFocusToTrigger = true,
     onClose,
     children,
     footer,
@@ -29,6 +33,7 @@
   }: Props = $props();
 
   let dialogRef = $state<HTMLElement | null>(null);
+  let previouslyFocusedElement = $state<HTMLElement | null>(null);
 
   const sizeStyles = {
     sm: 'max-w-sm',
@@ -37,19 +42,50 @@
   };
 
   function handleKeydown(e: KeyboardEvent) {
-    if (isOpen && e.key === 'Escape') {
+    if (!isOpen) return;
+
+    if (e.key === 'Escape' && closeOnEscape) {
       e.preventDefault();
       onClose();
+      return;
+    }
+
+    if (e.key === 'Tab' && dialogRef) {
+      const focusables = dialogRef.querySelectorAll<HTMLElement>(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+      );
+      if (focusables.length === 0) return;
+
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
     }
   }
 
   $effect(() => {
     if (isOpen && typeof document !== 'undefined') {
+      previouslyFocusedElement = document.activeElement as HTMLElement;
       setTimeout(() => {
-        const focusable = dialogRef?.querySelector(
+        const focusable = dialogRef?.querySelector<HTMLElement>(
           'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
-        ) as HTMLElement;
-        focusable?.focus();
+        );
+        if (focusable) {
+          focusable.focus();
+        } else if (dialogRef) {
+          dialogRef.focus();
+        }
+      }, 30);
+    } else if (!isOpen && previouslyFocusedElement && returnFocusToTrigger) {
+      setTimeout(() => {
+        previouslyFocusedElement?.focus();
+        previouslyFocusedElement = null;
       }, 30);
     }
   });
@@ -69,10 +105,11 @@
       bind:this={dialogRef}
       role="dialog"
       aria-modal="true"
+      tabindex="-1"
       aria-labelledby="dialog-title"
       aria-describedby={description ? 'dialog-desc' : undefined}
       class={cn(
-        'relative z-10 w-full transform rounded-2xl border border-border-subtle bg-surface-elevated p-6 shadow-2xl transition-all select-none',
+        'relative z-10 w-full transform rounded-2xl border border-border-subtle bg-surface-elevated p-6 shadow-2xl transition-all select-none focus:outline-none',
         sizeStyles[size],
         isDestructive ? 'border-danger/30' : '',
         className,

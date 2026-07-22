@@ -290,7 +290,13 @@
       variant="secondary"
       size="md"
       onclick={() => consentStore.closeCustomizeModal()}>
-      Cancel
+      <span class="inline-flex items-center gap-1.5">
+        <span>Cancel</span>
+        <kbd
+          class="hidden items-center rounded border border-border-subtle/80 bg-surface-elevated/80 px-1 py-0.5 font-mono text-[9px] leading-none text-text-muted select-none sm:inline-flex">
+          Esc
+        </kbd>
+      </span>
     </Button>
     <Button
       variant="primary"
