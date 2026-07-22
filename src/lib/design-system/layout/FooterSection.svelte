@@ -121,6 +121,9 @@
       <a
         href="/sitemap.xml"
         class="transition-colors hover:text-accent">Sitemap</a>
+      <a
+        href="/privacy"
+        class="transition-colors hover:text-accent">Privacy Policy</a>
     </div>
   </div>
 </footer>
