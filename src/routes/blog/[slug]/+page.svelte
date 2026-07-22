@@ -14,6 +14,7 @@
     StatusBanner,
     FormField,
     Textarea,
+    FooterSection,
   } from '$lib';
   import Dialog from '$lib/design-system/components/Dialog.svelte';
   import { page } from '$app/state';
@@ -1278,65 +1279,7 @@
     </aside>
   </div>
 
-  <footer
-    class="relative z-10 mx-auto mt-auto w-full border-t border-border-subtle px-6 pt-16 pb-12 font-sans text-xs text-text-muted/75 md:w-[80%] lg:w-[50%]">
-    <div class="grid grid-cols-1 gap-8 pb-10 md:grid-cols-12">
-      <div class="flex flex-col gap-4 md:col-span-7">
-        <div>
-          <h3 class="text-base font-bold text-text-primary">{name}</h3>
-          <p class="mt-2 max-w-md text-xs leading-relaxed text-text-secondary">
-            {desc}
-          </p>
-        </div>
-
-        <div class="flex items-center gap-3">
-          {#each [{ href: 'https://github.com/farhnkrnapratma', icon: 'bi-github', label: 'GitHub (opens in a new tab)' }, { href: 'https://linkedin.com/in/farhnkrnapratma', icon: 'bi-linkedin', label: 'LinkedIn (opens in a new tab)' }, { href: 'https://x.com/farhnkrnapratma', icon: 'bi-twitter-x', label: 'X (opens in a new tab)' }, { href: 'https://instagram.com/farhnkrnapratma', icon: 'bi-instagram', label: 'Instagram (opens in a new tab)' }] as social (social.href)}
-            <a
-              href={social.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-border-subtle bg-surface-card text-text-secondary transition-colors hover:bg-surface-hover hover:text-accent"
-              aria-label={social.label}>
-              <i
-                class="bi {social.icon} text-base leading-none"
-                aria-hidden="true"></i>
-            </a>
-          {/each}
-        </div>
-      </div>
-
-      <div class="flex flex-col pt-1 md:col-span-5 md:pt-8">
-        <ul class="grid grid-cols-2 gap-x-4 gap-y-2">
-          {#each footerNavItems as item (item.url)}
-            <li>
-              <a
-                href={item.url}
-                class="cursor-pointer text-left font-medium transition-colors hover:text-accent">
-                {item.label}
-              </a>
-            </li>
-          {/each}
-        </ul>
-      </div>
-    </div>
-
-    <div
-      class="flex flex-col items-center justify-between gap-4 border-t border-border-subtle pt-6 select-none sm:flex-row">
-      <p>&copy; {new Date().getFullYear()} {name}. All rights reserved.</p>
-      <div class="flex items-center gap-4 text-[11px] text-text-muted">
-        <a
-          href="/atom.xml"
-          class="inline-flex items-center gap-1 transition-colors hover:text-[#f26522]">
-          <i
-            class="bi bi-rss-fill"
-            aria-hidden="true"></i> RSS feed
-        </a>
-        <a
-          href="/sitemap.xml"
-          class="transition-colors hover:text-accent">Sitemap</a>
-      </div>
-    </div>
-  </footer>
+  <FooterSection />
 </main>
 
 {#if showToast}

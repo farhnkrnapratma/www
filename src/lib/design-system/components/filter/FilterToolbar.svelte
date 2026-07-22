@@ -27,7 +27,7 @@
   role="region"
   aria-label={title || 'Filter and sort options'}
   class={cn(
-    'flex flex-col gap-3 rounded-2xl border border-border-subtle bg-surface-card/40 p-4 shadow-xs backdrop-blur-md select-none',
+    'relative z-30 flex flex-col gap-3 rounded-2xl border border-border-subtle bg-surface-card/40 p-4 shadow-xs backdrop-blur-md select-none',
     className,
   )}>
   <div class="flex flex-col gap-2.5 sm:flex-row sm:items-center sm:justify-between">

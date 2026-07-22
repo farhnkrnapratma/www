@@ -14,6 +14,16 @@
     class?: string;
   }
 
+  const defaultNavItems: NavItem[] = [
+    { label: 'Overview', url: '/' },
+    { label: 'Projects', url: '/#projects' },
+    { label: 'Blog', url: '/#posts' },
+    { label: 'Skills', url: '/#skills' },
+    { label: 'Experience', url: '/#experience' },
+    { label: 'CV / Resume', url: '/#cv' },
+    { label: 'Contact', url: '/#contact' },
+  ];
+
   let {
     name = 'Farhan Kurnia Pratama',
     description = 'Security-focused Software Engineer with expertise in Linux/Unix, AI, and Open-Source Software.',
@@ -21,6 +31,8 @@
     onNavClick,
     class: className = '',
   }: Props = $props();
+
+  let resolvedNavItems = $derived(navItems.length > 0 ? navItems : defaultNavItems);
 </script>
 
 <footer
@@ -81,10 +93,10 @@
       </div>
     </div>
 
-    {#if navItems.length > 0}
+    {#if resolvedNavItems.length > 0}
       <div class="flex flex-col pt-1 md:col-span-5 md:pt-8">
         <ul class="grid grid-cols-2 gap-x-4 gap-y-2">
-          {#each navItems as item (item.url)}
+          {#each resolvedNavItems as item (item.url)}
             <li>
               {#if onNavClick}
                 <button

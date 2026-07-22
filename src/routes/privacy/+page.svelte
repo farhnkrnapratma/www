@@ -208,7 +208,4 @@
   </div>
 </main>
 
-<FooterSection
-  {name}
-  description={desc}
-  navItems={footerNavItems} />
+<FooterSection />

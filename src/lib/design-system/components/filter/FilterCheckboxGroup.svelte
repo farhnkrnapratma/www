@@ -33,7 +33,12 @@
   );
 </script>
 
-<div class={cn('relative inline-flex items-center gap-2 text-left select-none', className)}>
+<div
+  class={cn(
+    'relative inline-flex items-center gap-2 text-left select-none',
+    isOpen ? 'z-50' : 'z-20',
+    className,
+  )}>
   <span class="text-xs font-medium whitespace-nowrap text-text-secondary">{label}</span>
 
   {#if collapsible}
@@ -54,7 +59,7 @@
       <div
         role="group"
         aria-label="{label} filters"
-        class="absolute top-[calc(100%+4px)] left-0 z-50 flex min-w-48 flex-col rounded-xl border border-border-subtle bg-surface-elevated shadow-xl backdrop-blur-md">
+        class="absolute top-[calc(100%+4px)] left-0 z-[60] flex min-w-48 flex-col rounded-xl border border-border-subtle bg-surface-elevated shadow-xl backdrop-blur-md">
         <div
           class="border-b border-border-subtle/40 px-3 py-2 text-[11px] font-semibold text-text-secondary">
           Filter by {label}

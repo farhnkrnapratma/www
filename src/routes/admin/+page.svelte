@@ -615,7 +615,7 @@
           onClearFilters={() => filterStore.clearAllFilters()} />
       {:else}
         <div
-          class="boxed-list overflow-visible! text-left"
+          class="boxed-list relative z-0 overflow-visible! text-left"
           role="list"
           aria-label="Blog posts list">
           {#each filteredPosts as post, index (post.id)}

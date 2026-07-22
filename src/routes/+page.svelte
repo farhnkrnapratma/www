@@ -20,6 +20,7 @@
     SearchResultCount,
     FilterEmptyState,
     createFilterSortStore,
+    FooterSection,
   } from '$lib';
   import { supabase } from '$lib/supabase';
   import { SvelteSet } from 'svelte/reactivity';
@@ -1328,7 +1329,7 @@
           description="Try adjusting your tag filters or search keyword."
           onClearFilters={() => blogFilterStore.clearAllFilters()} />
       {:else}
-        <div class="boxed-list mt-2">
+        <div class="boxed-list relative z-0 mt-2">
           <ul class="divide-y divide-border-subtle">
             {#each filteredBlogPosts as post (post.id)}
               <li
@@ -1488,7 +1489,7 @@
           description="Try adjusting your tech stack filters or search keyword."
           onClearFilters={() => projectFilterStore.clearAllFilters()} />
       {:else}
-        <div class="boxed-list mt-2">
+        <div class="boxed-list relative z-0 mt-2">
           <ul class="divide-y divide-border-subtle">
             {#each filteredProjectList as project (project.name)}
               <li
@@ -1584,99 +1585,16 @@
       items={fundingPlatforms} />
   {/if}
 
-  <footer
-    class="relative z-10 mx-auto mt-auto w-full border-t border-border-subtle px-6 pt-16 pb-12 font-sans text-xs text-text-muted/75 md:w-[80%] lg:w-[50%]">
-    <div class="grid grid-cols-1 gap-8 pb-10 md:grid-cols-12">
-      <div class="flex flex-col gap-4 md:col-span-7">
-        <div>
-          <h3 class="text-base font-bold text-text-primary">{name}</h3>
-          <p class="mt-2 max-w-md text-xs leading-relaxed text-text-secondary">
-            {desc}
-          </p>
-        </div>
-
-        <div class="flex items-center gap-3">
-          <a
-            href="https://github.com/farhnkrnapratma"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-border-subtle bg-surface-card text-text-secondary transition-colors hover:bg-surface-hover hover:text-accent"
-            aria-label="GitHub (opens in a new tab)">
-            <i
-              class="bi bi-github text-base leading-none"
-              aria-hidden="true"></i>
-          </a>
-          <a
-            href="https://linkedin.com/in/farhnkrnapratma"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-border-subtle bg-surface-card text-text-secondary transition-colors hover:bg-surface-hover hover:text-accent"
-            aria-label="LinkedIn (opens in a new tab)">
-            <i
-              class="bi bi-linkedin text-base leading-none"
-              aria-hidden="true"></i>
-          </a>
-          <a
-            href="https://x.com/farhnkrnapratma"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-border-subtle bg-surface-card text-text-secondary transition-colors hover:bg-surface-hover hover:text-accent"
-            aria-label="X (opens in a new tab)">
-            <i
-              class="bi bi-twitter-x text-base leading-none"
-              aria-hidden="true"></i>
-          </a>
-          <a
-            href="https://instagram.com/farhnkrnapratma"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-border-subtle bg-surface-card text-text-secondary transition-colors hover:bg-surface-hover hover:text-accent"
-            aria-label="Instagram (opens in a new tab)">
-            <i
-              class="bi bi-instagram text-base leading-none"
-              aria-hidden="true"></i>
-          </a>
-        </div>
-      </div>
-
-      <div class="flex flex-col pt-1 md:col-span-5 md:pt-8">
-        <ul class="grid grid-cols-2 gap-x-4 gap-y-2">
-          {#each navItems as item (item.id)}
-            <li>
-              <button
-                onclick={() => {
-                  navigate(item.id);
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
-                }}
-                class="cursor-pointer text-left font-medium transition-colors hover:text-accent">
-                {item.label}
-              </button>
-            </li>
-          {/each}
-        </ul>
-      </div>
-    </div>
-
-    <div
-      class="flex flex-col items-center justify-between gap-4 border-t border-border-subtle pt-6 select-none sm:flex-row">
-      <p>&copy; {new Date().getFullYear()} {name}. All rights reserved.</p>
-      <div class="flex items-center gap-4 text-[11px] text-text-muted">
-        <a
-          href="/atom.xml"
-          class="inline-flex items-center gap-1 transition-colors hover:text-[#f26522]">
-          <i
-            class="bi bi-rss-fill"
-            aria-hidden="true"></i> RSS feed
-        </a>
-        <a
-          href="/sitemap.xml"
-          class="transition-colors hover:text-accent">Sitemap</a>
-        <a
-          href="/privacy"
-          class="transition-colors hover:text-accent">Privacy Policy</a>
-      </div>
-    </div>
-  </footer>
+  <FooterSection
+    onNavClick={url => {
+      if (url.startsWith('/#')) {
+        const sectionId = url.replace('/#', '');
+        navigate(sectionId as any);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        window.location.href = url;
+      }
+    }} />
 </main>
 
 <Dialog

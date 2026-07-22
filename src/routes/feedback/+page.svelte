@@ -434,10 +434,7 @@
     </form>
   </section>
 
-  <FooterSection
-    {name}
-    description={desc}
-    navItems={footerNavItems} />
+  <FooterSection />
 </main>
 
 <Dialog

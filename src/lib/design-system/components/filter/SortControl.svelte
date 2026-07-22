@@ -41,7 +41,8 @@
   }
 </script>
 
-<div class={cn('relative flex items-center gap-2 select-none', className)}>
+<div
+  class={cn('relative flex items-center gap-2 select-none', isOpen ? 'z-50' : 'z-20', className)}>
   <span class="text-xs font-medium whitespace-nowrap text-text-secondary">Sort by</span>
 
   <DropdownTrigger
@@ -61,7 +62,7 @@
     <div
       role="listbox"
       aria-label="Sort field options"
-      class="absolute top-[calc(100%+4px)] right-0 z-50 flex min-w-36 flex-col rounded-xl border border-border-subtle bg-surface-elevated py-1 shadow-xl backdrop-blur-md">
+      class="absolute top-[calc(100%+4px)] right-0 z-[60] flex min-w-36 flex-col rounded-xl border border-border-subtle bg-surface-elevated py-1 shadow-xl backdrop-blur-md">
       {#each fields as field (field.value)}
         <button
           type="button"
