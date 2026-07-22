@@ -34,7 +34,7 @@
       .replace(/>/g, '&gt;')
       .replace(/"/g, '&quot;')
       .replace(/'/g, '&#x27;')
-      .replace(/\
+      .replace(/\//g, '&#x2F;');
   }
 
   function debounce<T extends unknown[]>(cb: (...args: T) => void, ms: number) {

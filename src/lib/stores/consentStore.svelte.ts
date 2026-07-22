@@ -106,7 +106,9 @@ export function createConsentStore() {
         retention.userDataRetention = parsedRet.userDataRetention || '14_months';
         retention.lastUpdated = parsedRet.lastUpdated;
       }
-    } catch {}
+    } catch {
+      /* ignore */
+    }
   }
 
   function applyGtagUpdate(newSignals: ConsentSignals) {
@@ -134,7 +136,9 @@ export function createConsentStore() {
 
       try {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(newSignals));
-      } catch {}
+      } catch {
+        /* ignore */
+      }
     }
   }
 
@@ -197,7 +201,9 @@ export function createConsentStore() {
     if (typeof window !== 'undefined') {
       try {
         localStorage.setItem(RETENTION_STORAGE_KEY, JSON.stringify(retention));
-      } catch {}
+      } catch {
+        /* ignore */
+      }
     }
 
     isSavingRetention = false;
