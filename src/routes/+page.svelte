@@ -1004,7 +1004,7 @@
                   {exp.period}
                 </span>
               </div>
-              <p class="mt-1.5 line-clamp-2 text-sm leading-relaxed text-text-secondary">
+              <p class="mt-1.5 text-sm leading-relaxed text-text-secondary">
                 {exp.desc}
               </p>
             </div>
