@@ -96,4 +96,4 @@ export { default as FilterSelect } from './components/filter/FilterSelect.svelte
 export { default as FilterCheckboxGroup } from './components/filter/FilterCheckboxGroup.svelte';
 export { default as SearchResultCount } from './components/filter/SearchResultCount.svelte';
 export { default as FilterEmptyState } from './components/filter/FilterEmptyState.svelte';
-export * from '../stores/useFilterSort';
+export * from '../stores/useFilterSort.svelte';
