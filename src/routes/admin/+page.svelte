@@ -758,30 +758,31 @@
                         <div class="min-w-0 flex-1">
                           <div
                             class="inline-block max-w-full rounded-2xl border border-border-subtle bg-surface-card/70 px-4 py-2.5 text-left">
-                            <div
-                              class="flex items-center gap-1 text-xs font-bold text-text-primary">
-                              <span>{getCommentAuthor(comment)}</span>
-                              {#if comment.author_name === 'Admin' || getCommentAuthor(comment) === 'Admin'}
-                                <span
-                                  class="material-symbols-rounded text-[14px] leading-none text-accent select-none"
-                                  style="font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 20;"
-                                  aria-label="Verified Admin"
-                                  title="Verified Admin">verified</span>
-                              {/if}
+                            <div class="text-xs font-bold text-text-primary">
+                              {getCommentAuthor(
+                                comment,
+                              )}{#if comment.author_name === 'Admin' || getCommentAuthor(comment) === 'Admin'}<sup
+                                  class="text-[9px] text-accent select-none"
+                                  ><span
+                                    class="material-symbols-rounded text-[9px] leading-none"
+                                    style="font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 20;"
+                                    aria-label="Verified Admin"
+                                    title="Verified Admin">verified</span
+                                  ></sup
+                                >{/if}
                             </div>
                             <p class="mt-0.5 text-sm leading-relaxed text-text-secondary">
                               {#if comment.reply_to_author}
-                                <span
-                                  class="mr-1.5 inline-flex items-center gap-0.5 text-xs font-bold text-accent">
-                                  <span>{comment.reply_to_author}</span>
-                                  {#if comment.reply_to_author === 'Admin'}
-                                    <span
-                                      class="material-symbols-rounded text-[13px] leading-none text-accent select-none"
-                                      style="font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 20;"
-                                      aria-label="Verified Admin"
-                                      title="Verified Admin">verified</span>
-                                  {/if}
-                                </span>
+                                <span class="mr-1.5 text-xs font-bold text-accent"
+                                  >{comment.reply_to_author}{#if comment.reply_to_author === 'Admin'}<sup
+                                      class="text-[9px] text-accent select-none"
+                                      ><span
+                                        class="material-symbols-rounded text-[9px] leading-none"
+                                        style="font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 20;"
+                                        aria-label="Verified Admin"
+                                        title="Verified Admin">verified</span
+                                      ></sup
+                                    >{/if}</span>
                               {/if}
                               <span class="whitespace-pre-line">{comment.content}</span>
                             </p>
