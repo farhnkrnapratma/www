@@ -15,6 +15,10 @@
     FormField,
     Textarea,
     FooterSection,
+    formatBlogDate,
+    formatReadTime,
+    formatCommentCount,
+    formatViewCount,
   } from '$lib';
   import Dialog from '$lib/design-system/components/Dialog.svelte';
   import { page } from '$app/state';
@@ -334,10 +338,6 @@
     });
   }
 
-  function formatReadTime(readTime?: string | null) {
-    return (readTime || '1 min read').replace(/\s*read\s*/gi, '');
-  }
-
   function buildCommentTree(items: BlogComment[]): FlatComment[] {
     const commentMap = new SvelteMap<string, FlatComment>();
     for (const item of items) {
@@ -374,7 +374,7 @@
   }
 
   function getCommentIcon(comment: BlogComment) {
-    if (comment.author_name === 'Admin') return 'crown';
+    if (comment.author_name === 'Admin') return 'person_shield';
     return comment.is_anonymous ? 'domino_mask' : 'person';
   }
 
@@ -681,40 +681,15 @@
           </p>
         {/if}
         <div
-          class="no-scrollbar mt-4 flex w-full items-center gap-x-2.5 overflow-x-auto font-sans text-[11px] font-semibold whitespace-nowrap text-text-muted select-none">
-          <span class="inline-flex items-center gap-1">
-            <span
-              class="material-symbols-rounded text-[10px] leading-none"
-              style="font-variation-settings: 'wght' 300, 'opsz' 20;"
-              aria-hidden="true">calendar_today</span>
-            <time datetime={post.created_at}>{formatDate(post.created_at)}</time>
-          </span>
-          <span class="inline-flex items-center gap-1">
-            <span
-              class="material-symbols-rounded text-[10px] leading-none"
-              style="font-variation-settings: 'wght' 300, 'opsz' 20;"
-              aria-hidden="true">schedule</span>
-            {formatReadTime(post.read_time)}
-          </span>
-          <span
-            class="inline-flex items-center gap-1"
-            aria-label="{comments.length} comments">
-            <span
-              class="material-symbols-rounded text-[10px] leading-none"
-              style="font-variation-settings: 'wght' 300, 'opsz' 20;"
-              aria-hidden="true">forum</span>
-            {comments.length}
-          </span>
+          class="no-scrollbar mt-4 flex w-full flex-wrap items-center gap-x-1.5 overflow-x-auto font-sans text-[11px] font-semibold whitespace-nowrap text-text-muted select-none">
+          <time datetime={post.created_at}>{formatBlogDate(post.created_at)}</time>
+          <span aria-hidden="true">&middot;</span>
+          <span>{formatReadTime(post.read_time)}</span>
+          <span aria-hidden="true">&middot;</span>
+          <span>{formatCommentCount(comments.length)}</span>
           {#if viewCount !== null}
-            <span
-              class="inline-flex items-center gap-1"
-              aria-label="{viewCount} views">
-              <span
-                class="material-symbols-rounded text-[10px] leading-none"
-                style="font-variation-settings: 'wght' 300, 'opsz' 20;"
-                aria-hidden="true">visibility</span>
-              {viewCount}
-            </span>
+            <span aria-hidden="true">&middot;</span>
+            <span>{formatViewCount(viewCount)}</span>
           {/if}
         </div>
       </header>

@@ -21,6 +21,10 @@
     FilterEmptyState,
     createFilterSortStore,
     FooterSection,
+    formatBlogDate,
+    formatReadTime,
+    formatCommentCount,
+    formatViewCount,
   } from '$lib';
   import { supabase } from '$lib/supabase';
   import { SvelteSet } from 'svelte/reactivity';
@@ -54,6 +58,7 @@
     major: string;
     faculty: string;
     university: string;
+    url?: string;
     period: string;
     gpa?: string;
   }
@@ -155,7 +160,8 @@
       degree: "Bachelor's (S1)",
       major: 'Informatics Engineering',
       faculty: 'Faculty of Computer Science and Sciences',
-      university: 'Universitas Indo Global Mandiri',
+      university: 'Indo Global Mandiri University, Palembang, Indonesia',
+      url: 'https://www.uigm.ac.id/',
       period: '2024 – Present',
       gpa: '3.44/4.00',
     },
@@ -814,7 +820,7 @@
                           <span
                             class="material-symbols-rounded text-xs leading-none"
                             style="font-variation-settings: 'wght' 300, 'opsz' 20;"
-                            aria-hidden="true">balance</span>
+                            aria-hidden="true">gavel</span>
                           {project.licenseName} License
                         </span>
                       {/if}
@@ -1218,7 +1224,19 @@
                 <div>
                   <h3 class="text-base font-bold text-text-primary">{edu.degree} in {edu.major}</h3>
                   <p class="text-sm text-text-secondary">{edu.faculty}</p>
-                  <p class="mt-1 text-sm font-semibold text-text-primary">{edu.university}</p>
+                  <p class="mt-1 text-sm font-semibold text-text-primary">
+                    {#if edu.url}
+                      <a
+                        href={edu.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="transition-colors hover:text-accent hover:underline">
+                        {edu.university}
+                      </a>
+                    {:else}
+                      {edu.university}
+                    {/if}
+                  </p>
                   {#if edu.gpa}
                     <p class="mt-1.5 text-xs font-semibold text-text-secondary">
                       Current GPA: <span class="text-text-primary">{edu.gpa}</span>
@@ -1365,32 +1383,15 @@
 
                 <div class="flex flex-1 flex-col gap-2 font-sans">
                   <div
-                    class="no-scrollbar flex w-full items-center gap-x-2.5 overflow-x-auto font-sans text-[11px] font-semibold whitespace-nowrap text-text-muted select-none">
-                    <span class="inline-flex items-center gap-1"
-                      ><span
-                        class="material-symbols-rounded text-[10px] leading-none"
-                        style="font-variation-settings: 'wght' 300, 'opsz' 20;"
-                        aria-hidden="true">calendar_today</span>
-                      {getPostDate(post)}</span>
-                    <span class="inline-flex items-center gap-1"
-                      ><span
-                        class="material-symbols-rounded text-[10px] leading-none"
-                        style="font-variation-settings: 'wght' 300, 'opsz' 20;"
-                        aria-hidden="true">schedule</span>
-                      {(post.read_time || '').replace(/\s*read\s*/gi, '')}</span>
-                    <span class="inline-flex items-center gap-1"
-                      ><span
-                        class="material-symbols-rounded text-[10px] leading-none"
-                        style="font-variation-settings: 'wght' 300, 'opsz' 20;"
-                        aria-hidden="true">forum</span>
-                      {post.comment_count || 0}</span>
+                    class="no-scrollbar flex w-full flex-wrap items-center gap-x-1.5 overflow-x-auto font-sans text-[11px] font-semibold whitespace-nowrap text-text-muted select-none">
+                    <span>{formatBlogDate(post.created_at)}</span>
+                    <span aria-hidden="true">&middot;</span>
+                    <span>{formatReadTime(post.read_time)}</span>
+                    <span aria-hidden="true">&middot;</span>
+                    <span>{formatCommentCount(post.comment_count)}</span>
                     {#if post.views_count !== undefined}
-                      <span class="inline-flex items-center gap-1"
-                        ><span
-                          class="material-symbols-rounded text-[10px] leading-none"
-                          style="font-variation-settings: 'wght' 300, 'opsz' 20;"
-                          aria-hidden="true">visibility</span>
-                        {post.views_count}</span>
+                      <span aria-hidden="true">&middot;</span>
+                      <span>{formatViewCount(post.views_count)}</span>
                     {/if}
                   </div>
                   <div class="mt-1">
@@ -1529,15 +1530,16 @@
                     </div>
 
                     <div
-                      class="no-scrollbar relative z-20 flex items-center gap-x-3 overflow-x-auto font-sans text-xs font-semibold whitespace-nowrap text-text-muted select-none sm:justify-end">
+                      class="no-scrollbar relative z-20 flex items-center gap-x-2 overflow-x-auto font-sans text-xs font-semibold whitespace-nowrap text-text-muted select-none sm:justify-end">
                       {#if project.licenseName}
                         <span class="inline-flex items-center gap-1">
                           <span
                             class="material-symbols-rounded text-xs leading-none"
                             style="font-variation-settings: 'wght' 300, 'opsz' 20;"
-                            aria-hidden="true">balance</span>
+                            aria-hidden="true">gavel</span>
                           {project.licenseName} License
                         </span>
+                        <span aria-hidden="true">&middot;</span>
                       {/if}
                       <span class="inline-flex items-center gap-1">
                         <span
@@ -1572,8 +1574,10 @@
 
                     <div class="flex items-center gap-1.5 text-xs font-bold text-accent">
                       <span>View repository</span>
-                      <i class="bi bi-arrow-right transition-transform group-hover:translate-x-0.5"
-                      ></i>
+                      <span
+                        class="material-symbols-rounded text-sm leading-none transition-transform group-hover:translate-x-0.5"
+                        style="font-variation-settings: 'wght' 400, 'opsz' 20;"
+                        aria-hidden="true">open_in_new</span>
                     </div>
                   </div>
                 </article>

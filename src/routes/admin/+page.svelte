@@ -411,7 +411,7 @@
   }
 
   function getCommentIcon(comment: AdminComment) {
-    if (comment.author_name === 'Admin') return 'crown';
+    if (comment.author_name === 'Admin') return 'person_shield';
     return comment.is_anonymous ? 'domino_mask' : 'person';
   }
 </script>
