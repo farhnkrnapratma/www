@@ -86,10 +86,10 @@
     'relative z-10 mx-auto mt-auto w-full border-t border-border-subtle px-6 pt-12 pb-8 font-sans text-xs text-text-muted md:w-[80%] lg:w-[50%]',
     className,
   )}>
-  <!-- Layer 1: Upper Footer (50/50 Balanced 2-Zone Layout: Left Brand/Bio/Socials, Right Nav/Preferences Subgrid) -->
+  <!-- Layer 1: Upper Footer (2-Zone Layout: Left Brand/Bio/Socials, Right Nav/Preferences Subgrid) -->
   <div class="grid grid-cols-1 gap-8 pb-8 md:grid-cols-12">
     <!-- Zone 1 (Left): Brand, Bio & Social Links -->
-    <div class="flex flex-col gap-4 md:col-span-6">
+    <div class="flex flex-col gap-4 md:col-span-7">
       <div>
         <h3 class="text-base font-bold text-text-primary">{name}</h3>
         <p class="mt-2 max-w-md text-xs leading-relaxed text-text-secondary">
@@ -143,7 +143,7 @@
 
     <!-- Zone 2 (Right Subgrid): Navigation & Preferences Columns -->
     {#if resolvedNavItems.length > 0}
-      <div class="grid grid-cols-2 gap-6 pt-2 md:col-span-6 md:pt-0">
+      <div class="grid grid-cols-2 gap-6 pt-2 md:col-span-5 md:pt-0">
         <!-- Navigation Subcolumn -->
         <div class="flex flex-col gap-2.5">
           <h4 class="text-[11px] font-bold tracking-wider text-text-primary uppercase">
@@ -171,85 +171,74 @@
           </ul>
         </div>
 
-        <!-- Preferences Subcolumn (Integrated Theme & Cookie Settings) -->
+        <!-- Preferences Subcolumn (UI Preferences Only: Theme Selector) -->
         <div class="flex flex-col gap-2.5">
           <h4 class="text-[11px] font-bold tracking-wider text-text-primary uppercase">
             Preferences
           </h4>
-          <div class="flex flex-col items-start gap-2.5">
-            <div class="relative w-full">
-              <button
-                type="button"
-                onclick={() => (themeDropdownOpen = !themeDropdownOpen)}
-                class="inline-flex h-8 w-full items-center justify-between gap-2 rounded-lg border border-border-subtle bg-surface-card px-3 text-xs font-semibold text-text-secondary shadow-2xs transition-all hover:bg-surface-hover hover:text-text-primary focus-visible:outline-none"
-                aria-label="Change theme"
-                aria-haspopup="true"
-                aria-expanded={themeDropdownOpen}>
-                <span class="inline-flex items-center gap-2">
-                  <i
-                    class="bi {getThemeIcon()} text-xs text-text-secondary"
-                    aria-hidden="true"></i>
-                  <span>{getThemeLabel()}</span>
-                </span>
-                <span
-                  class="inline-flex h-3.5 w-3.5 shrink-0 origin-center items-center justify-center text-text-muted transition-transform duration-200 ease-out {(
-                    themeDropdownOpen
-                  ) ?
-                    'rotate-180'
-                  : ''}">
-                  <i
-                    class="bi bi-chevron-down text-[9px] leading-none"
-                    aria-hidden="true"></i>
-                </span>
-              </button>
-
-              {#if themeDropdownOpen}
-                <button
-                  type="button"
-                  class="fixed inset-0 z-40 cursor-default"
-                  onclick={() => (themeDropdownOpen = false)}
-                  aria-label="Close theme menu"></button>
-                <div
-                  class="absolute bottom-full left-0 z-50 mb-1.5 flex w-full min-w-32 flex-col rounded-xl border border-border-subtle bg-surface-elevated p-1 shadow-xl backdrop-blur-md">
-                  {#each ['auto', 'light', 'dark'] as const as option (option)}
-                    <button
-                      type="button"
-                      onclick={() => {
-                        applyTheme(option);
-                        themeDropdownOpen = false;
-                      }}
-                      class="flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-left text-xs font-medium transition-colors {(
-                        theme === option
-                      ) ?
-                        'bg-accent/10 font-semibold text-accent'
-                      : 'text-text-primary hover:bg-surface-hover'}">
-                      <i
-                        class="bi {getThemeIcon(option)} text-xs {theme === option ? 'text-accent'
-                        : 'text-text-secondary'}"
-                        aria-hidden="true"></i>
-                      <span>{getThemeLabel(option)}</span>
-                    </button>
-                  {/each}
-                </div>
-              {/if}
-            </div>
-
+          <div class="relative w-full">
             <button
               type="button"
-              onclick={() => consentStore.openCustomizeModal()}
-              class="inline-flex items-center gap-1.5 text-xs font-semibold text-text-secondary transition-colors hover:text-accent focus-visible:outline-none">
-              <i
-                class="bi bi-sliders text-[11px]"
-                aria-hidden="true"></i>
-              <span>Cookie Settings</span>
+              onclick={() => (themeDropdownOpen = !themeDropdownOpen)}
+              class="inline-flex h-8 w-full items-center justify-between gap-2 rounded-lg border border-border-subtle bg-surface-card px-3 text-xs font-semibold text-text-secondary shadow-2xs transition-all hover:bg-surface-hover hover:text-text-primary focus-visible:outline-none"
+              aria-label="Change theme"
+              aria-haspopup="true"
+              aria-expanded={themeDropdownOpen}>
+              <span class="inline-flex items-center gap-2">
+                <i
+                  class="bi {getThemeIcon()} text-xs text-text-secondary"
+                  aria-hidden="true"></i>
+                <span>{getThemeLabel()}</span>
+              </span>
+              <span
+                class="inline-flex h-3.5 w-3.5 shrink-0 origin-center items-center justify-center text-text-muted transition-transform duration-200 ease-out {(
+                  themeDropdownOpen
+                ) ?
+                  'rotate-180'
+                : ''}">
+                <i
+                  class="bi bi-chevron-down text-[9px] leading-none"
+                  aria-hidden="true"></i>
+              </span>
             </button>
+
+            {#if themeDropdownOpen}
+              <button
+                type="button"
+                class="fixed inset-0 z-40 cursor-default"
+                onclick={() => (themeDropdownOpen = false)}
+                aria-label="Close theme menu"></button>
+              <div
+                class="absolute bottom-full left-0 z-50 mb-1.5 flex w-full min-w-32 flex-col rounded-xl border border-border-subtle bg-surface-elevated p-1 shadow-xl backdrop-blur-md">
+                {#each ['auto', 'light', 'dark'] as const as option (option)}
+                  <button
+                    type="button"
+                    onclick={() => {
+                      applyTheme(option);
+                      themeDropdownOpen = false;
+                    }}
+                    class="flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-left text-xs font-medium transition-colors {(
+                      theme === option
+                    ) ?
+                      'bg-accent/10 font-semibold text-accent'
+                    : 'text-text-primary hover:bg-surface-hover'}">
+                    <i
+                      class="bi {getThemeIcon(option)} text-xs {theme === option ? 'text-accent' : (
+                        'text-text-secondary'
+                      )}"
+                      aria-hidden="true"></i>
+                    <span>{getThemeLabel(option)}</span>
+                  </button>
+                {/each}
+              </div>
+            {/if}
           </div>
         </div>
       </div>
     {/if}
   </div>
 
-  <!-- Layer 2: Utility / Legal Grouped Horizontal Row (Softened Tonal Contrast) -->
+  <!-- Layer 2: Utility / Legal Grouped Horizontal Row (Single Location for Cookie Settings) -->
   <div class="border-t border-border-subtle/60 pt-5 select-none">
     <div
       class="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-xs font-medium text-text-muted">
