@@ -818,13 +818,12 @@
 <nav
   class="fixed top-0 z-40 flex h-15 w-full items-center justify-between border-b border-border-subtle bg-surface-card/60 px-5 font-sans shadow-xs backdrop-blur-lg transition-colors duration-300"
   aria-label="Editor navigation">
-  <Button
-    variant="ghost"
-    size="sm"
-    leadingIcon="bi-arrow-left"
-    onclick={handleCancelClick}>
+  <button
+    type="button"
+    onclick={handleCancelClick}
+    class="inline-flex h-8 cursor-pointer items-center justify-center rounded-lg border border-border-subtle bg-surface-card px-4 text-xs font-semibold text-text-primary transition-colors hover:bg-surface-hover focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none">
     Back to Admin
-  </Button>
+  </button>
 
   <div class="flex items-center gap-2">
     <div class="relative">
