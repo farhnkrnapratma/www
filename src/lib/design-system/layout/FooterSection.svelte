@@ -86,7 +86,7 @@
     'relative z-10 mx-auto mt-auto w-full border-t border-border-subtle px-6 pt-10 pb-8 font-sans text-xs text-text-muted md:w-[80%] lg:w-[50%]',
     className,
   )}>
-  <!-- Layer 1: Upper Footer (Left: Brand/Bio; Right: 2x3 Nav Grid; Shared Row 3 for Social Icons + Floated Right Theme Switcher) -->
+  <!-- Layer 1: Upper Footer (Left: Brand/Bio; Right: 2x3 Nav Grid with Vertical Divider; Row 3 for Social Icons + Floated Right Theme Switcher) -->
   <div class="grid grid-cols-1 gap-x-8 gap-y-2.5 pb-6 md:grid-cols-12">
     <!-- Row 1: Name on Left -->
     <div class="md:col-span-7">
@@ -98,15 +98,15 @@
       <div class="hidden md:col-span-5 md:block"></div>
     {/if}
 
-    <!-- Row 2: Bio on Left; 2x3 Navigation Grid on Right -->
-    <div class="pt-0.5 md:col-span-7">
+    <!-- Row 2: Bio on Left; 2x3 Navigation Grid on Right with Subtle Vertical Divider -->
+    <div class="pt-0.5 md:col-span-7 md:pr-4">
       <p class="max-w-md text-xs leading-relaxed text-text-secondary">
         {description}
       </p>
     </div>
 
     {#if resolvedNavItems.length > 0}
-      <div class="pt-0.5 md:col-span-5">
+      <div class="pt-0.5 md:col-span-5 md:border-l md:border-border-subtle/40 md:pl-5 lg:pl-6">
         <nav aria-label="Footer navigation">
           <ul class="grid grid-cols-2 gap-x-6 gap-y-0 text-xs font-normal text-text-secondary">
             {#each resolvedNavItems as item (item.url)}
