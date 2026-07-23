@@ -169,6 +169,16 @@
               aria-hidden="true"></i>
           </a>
           <a
+            href="https://facebook.com/farhnkrnapratma"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-border-subtle bg-surface text-text-secondary transition-colors hover:bg-surface-hover hover:text-accent focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none"
+            aria-label="Facebook profile (opens in a new tab)">
+            <i
+              class="bi bi-facebook text-base leading-none"
+              aria-hidden="true"></i>
+          </a>
+          <a
             href="https://instagram.com/farhnkrnapratma"
             target="_blank"
             rel="noopener noreferrer"
@@ -176,6 +186,16 @@
             aria-label="Instagram profile (opens in a new tab)">
             <i
               class="bi bi-instagram text-base leading-none"
+              aria-hidden="true"></i>
+          </a>
+          <a
+            href="https://threads.net/@farhnkrnapratma"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-border-subtle bg-surface text-text-secondary transition-colors hover:bg-surface-hover hover:text-accent focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none"
+            aria-label="Threads profile (opens in a new tab)">
+            <i
+              class="bi bi-threads text-base leading-none"
               aria-hidden="true"></i>
           </a>
         </div>
