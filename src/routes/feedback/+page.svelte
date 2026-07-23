@@ -5,8 +5,6 @@
   import SpotlightSearch from '$lib/components/SpotlightSearch.svelte';
   import IconButton from '$lib/components/ui/IconButton.svelte';
 
-  const name = 'Farhan Kurnia Pratama';
-
   type Theme = 'auto' | 'dark' | 'light';
   let theme = $state<Theme>('auto');
   let themeDropdownOpen = $state(false);
