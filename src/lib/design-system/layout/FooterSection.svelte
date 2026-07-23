@@ -111,7 +111,7 @@
           <nav aria-label="Footer navigation">
             <ul class="grid grid-cols-2 gap-x-6 gap-y-1.5 text-xs font-normal text-text-secondary">
               {#each resolvedNavItems as item, index (item.url)}
-                <li class="text-xs leading-[29px] {index % 2 === 0 ? 'pl-2.5' : ''}">
+                <li class="text-xs leading-[29px] {index % 2 === 0 ? 'md:pl-2.5' : ''}">
                   {#if onNavClick}
                     <button
                       type="button"
