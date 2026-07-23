@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
   import { cn } from '../utils/cn';
   import { consentStore } from '../../stores/consentStore.svelte';
 
@@ -24,6 +25,8 @@
     { label: 'Contacts', url: '/#contacts' },
   ];
 
+  type Theme = 'auto' | 'dark' | 'light';
+
   let {
     name = 'Farhan Kurnia Pratama',
     description = 'Security-focused Software Engineer with expertise in Linux/Unix, AI, and Open-Source Software, dedicated to building reliable, maintainable, and privacy-centric systems.',
@@ -32,7 +35,50 @@
     class: className = '',
   }: Props = $props();
 
+  let theme = $state<Theme>('auto');
+  let themeDropdownOpen = $state(false);
+
   let resolvedNavItems = $derived(navItems.length > 0 ? navItems : defaultNavItems);
+
+  function applyTheme(newTheme: Theme) {
+    theme = newTheme;
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('theme', newTheme);
+      if (newTheme === 'dark') {
+        document.documentElement.classList.add('dark');
+      } else if (newTheme === 'light') {
+        document.documentElement.classList.remove('dark');
+      } else {
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        if (prefersDark) {
+          document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+        }
+      }
+    }
+  }
+
+  function getThemeIcon(t: Theme = theme) {
+    if (t === 'dark') return 'bi-moon-stars-fill';
+    if (t === 'light') return 'bi-sun-fill';
+    return 'bi-circle-half';
+  }
+
+  function getThemeLabel(t: Theme = theme) {
+    if (t === 'dark') return 'Dark';
+    if (t === 'light') return 'Light';
+    return 'Auto';
+  }
+
+  onMount(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('theme') as Theme;
+      if (saved) {
+        theme = saved;
+      }
+    }
+  });
 </script>
 
 <footer
@@ -40,19 +86,19 @@
     'relative z-10 mx-auto mt-auto w-full border-t border-border-subtle px-6 pt-10 pb-8 font-sans text-xs text-text-muted md:w-[80%] lg:w-[50%]',
     className,
   )}>
-  <!-- Layer 1: Upper Footer (Grid Alignment: Left Brand/Bio; Right 2x3 Navigation Grid Aligned with Description) -->
+  <!-- Layer 1: Upper Footer (Grid Alignment: Left Brand/Bio; Right 2x3 Nav Grid + Theme Switcher Aligned with Social Icons) -->
   <div class="grid grid-cols-1 gap-x-8 gap-y-1.5 pb-6 md:grid-cols-12">
     <!-- Header Row: Name on Left -->
     <div class="md:col-span-7">
       <h3 class="text-base font-bold text-text-primary">{name}</h3>
     </div>
 
-    <!-- Empty Header Slot on Right to aligned navigation start with description baseline -->
+    <!-- Empty Header Slot on Right to align navigation start with description baseline -->
     {#if resolvedNavItems.length > 0}
       <div class="hidden md:col-span-5 md:block"></div>
     {/if}
 
-    <!-- Content Row: Bio & Socials on Left; 2x3 Navigation Grid on Right -->
+    <!-- Left Column: Bio & Social Icons -->
     <div class="flex flex-col gap-3.5 pt-0.5 md:col-span-7">
       <p class="max-w-md text-xs leading-relaxed text-text-secondary">
         {description}
@@ -102,8 +148,9 @@
       </div>
     </div>
 
+    <!-- Right Column: 2x3 Nav Grid + Theme Switcher Floated Right (Aligned with Social Icons) -->
     {#if resolvedNavItems.length > 0}
-      <div class="pt-0.5 md:col-span-5">
+      <div class="flex flex-col gap-3.5 pt-0.5 md:col-span-5">
         <nav aria-label="Footer navigation">
           <ul class="grid grid-cols-2 gap-x-6 gap-y-0 text-xs font-normal text-text-secondary">
             {#each resolvedNavItems as item (item.url)}
@@ -126,6 +173,67 @@
             {/each}
           </ul>
         </nav>
+
+        <!-- Theme Switcher Button (Aligned with social media buttons on left, floated right) -->
+        <div class="flex items-center justify-end pt-0.5">
+          <div class="relative w-fit">
+            <button
+              type="button"
+              onclick={() => (themeDropdownOpen = !themeDropdownOpen)}
+              class="inline-flex h-8 w-fit min-w-[5.5rem] cursor-pointer items-center justify-between gap-2 rounded-lg border border-border-subtle bg-surface-card px-2.5 text-xs font-semibold text-text-secondary shadow-2xs transition-all hover:border-border-subtle/80 hover:bg-surface-hover hover:text-text-primary focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none"
+              aria-label="Change theme"
+              aria-haspopup="true"
+              aria-expanded={themeDropdownOpen}>
+              <span class="inline-flex items-center gap-1.5 whitespace-nowrap">
+                <i
+                  class="bi {getThemeIcon()} text-xs text-text-secondary"
+                  aria-hidden="true"></i>
+                <span>{getThemeLabel()}</span>
+              </span>
+              <span
+                class="inline-flex h-3.5 w-3.5 shrink-0 origin-center items-center justify-center text-text-muted transition-transform duration-200 ease-out {(
+                  themeDropdownOpen
+                ) ?
+                  'rotate-180'
+                : ''}">
+                <i
+                  class="bi bi-chevron-down text-[9px] leading-none"
+                  aria-hidden="true"></i>
+              </span>
+            </button>
+
+            {#if themeDropdownOpen}
+              <button
+                type="button"
+                class="fixed inset-0 z-40 cursor-default"
+                onclick={() => (themeDropdownOpen = false)}
+                aria-label="Close theme menu"></button>
+              <div
+                class="absolute right-0 bottom-full z-50 mb-1.5 flex min-w-[7rem] flex-col rounded-xl border border-border-subtle bg-surface-elevated p-1 shadow-xl backdrop-blur-md">
+                {#each ['auto', 'light', 'dark'] as const as option (option)}
+                  <button
+                    type="button"
+                    onclick={() => {
+                      applyTheme(option);
+                      themeDropdownOpen = false;
+                    }}
+                    class="flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-left text-xs font-medium transition-colors {(
+                      theme === option
+                    ) ?
+                      'bg-accent/10 font-semibold text-accent'
+                    : 'text-text-primary hover:bg-surface-hover'}">
+                    <i
+                      class="bi {getThemeIcon(option)} text-xs {theme === option ? 'text-accent' : (
+                        'text-text-secondary'
+                      )}"
+                      aria-hidden="true"></i>
+                    <span>{getThemeLabel(option)}</span>
+                  </button>
+                {/each}
+              </div>
+            {/if}
+          </div>
+        </div>
       </div>
     {/if}
   </div>
