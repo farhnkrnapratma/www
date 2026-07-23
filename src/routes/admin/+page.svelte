@@ -30,6 +30,13 @@
     published: boolean;
     storage_path: string;
     created_at: string;
+    banner_path?: string | null;
+  }
+
+  function getBannerUrl(bannerPath: string | null | undefined): string | null {
+    if (!bannerPath) return null;
+    const { data: res } = supabase.storage.from('blog-posts').getPublicUrl(bannerPath);
+    return res.publicUrl;
   }
 
   let isLoading = $state(true);
@@ -608,42 +615,69 @@
             {@const postComments = getPostComments(post.id)}
             {@const isLastItem = index >= filteredPosts.length - 2 && filteredPosts.length > 2}
             <div
-              class="action-row group flex flex-col items-stretch gap-4 py-4"
+              class="action-row group flex flex-col gap-5 p-5 text-left transition-all duration-200 hover:bg-surface-hover/40 sm:flex-row sm:items-start"
               role="listitem">
-              <div class="flex items-start justify-between gap-3">
-                <div class="flex min-w-0 flex-1 flex-col gap-1">
-                  <div class="flex flex-wrap items-center gap-2">
-                    <span class="text-xs font-semibold text-text-secondary">
-                      {formatDate(post.created_at)}
-                    </span>
-                    {#if post.published}
-                      <Badge variant="success">Published</Badge>
-                    {:else}
-                      <Badge variant="warning">Draft</Badge>
-                    {/if}
-                    {#if postComments.length > 0}
-                      <button
-                        type="button"
-                        onclick={() => toggleComments(post.id)}
-                        aria-expanded={expandedPostIds.has(post.id)}
-                        aria-controls="comments-{post.id}"
-                        class="inline-flex h-6 cursor-pointer items-center gap-1 rounded-lg bg-border-subtle/40 px-2 text-[10px] font-semibold text-text-secondary transition-colors hover:bg-border-subtle focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">
-                        <i
-                          class="bi bi-chat-left-text-fill text-[10px] text-accent"
-                          aria-hidden="true"></i>
-                        {expandedPostIds.has(post.id) ? 'Hide' : 'Show'} comments ({postComments.length})
-                      </button>
-                    {/if}
+              <div
+                class="relative aspect-video w-full shrink-0 animate-pulse overflow-hidden rounded-lg border border-border-subtle bg-surface-card/60 select-none sm:w-40 md:w-48">
+                {#if post.banner_path}
+                  <img
+                    src={getBannerUrl(post.banner_path)}
+                    alt=""
+                    loading="lazy"
+                    onload={e =>
+                      (
+                        e.currentTarget.closest('.animate-pulse') as HTMLElement | null
+                      )?.classList.remove('animate-pulse')}
+                    class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-103" />
+                {:else}
+                  <div
+                    class="to-palette-purple/15 flex h-full w-full items-center justify-center bg-linear-to-br from-accent/15 select-none">
+                    <i
+                      class="bi bi-journal-text text-xl text-accent/50"
+                      aria-hidden="true"></i>
                   </div>
-                  <h2 class="text-base font-bold text-text-primary">{post.title}</h2>
+                {/if}
+              </div>
+
+              <div class="flex flex-1 flex-col gap-2 font-sans">
+                <div
+                  class="flex flex-wrap items-center gap-2 text-xs font-semibold text-text-muted select-none">
+                  <span>{formatDate(post.created_at)}</span>
+                  {#if post.published}
+                    <Badge variant="success">Published</Badge>
+                  {:else}
+                    <Badge variant="warning">Draft</Badge>
+                  {/if}
+                  {#if postComments.length > 0}
+                    {@const commentWord = postComments.length > 1 ? 'comments' : 'comment'}
+                    <button
+                      type="button"
+                      onclick={() => toggleComments(post.id)}
+                      aria-expanded={expandedPostIds.has(post.id)}
+                      aria-controls="comments-{post.id}"
+                      class="inline-flex h-6 cursor-pointer items-center gap-1 rounded-lg bg-border-subtle/40 px-2 text-[10px] font-semibold text-text-secondary transition-colors hover:bg-border-subtle focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">
+                      <i
+                        class="bi bi-chat-left-text-fill text-[10px] text-accent"
+                        aria-hidden="true"></i>
+                      {expandedPostIds.has(post.id) ? 'Hide' : 'Show'}
+                      {commentWord} ({postComments.length})
+                    </button>
+                  {/if}
+                </div>
+
+                <div class="mt-0.5">
+                  <h2
+                    class="text-base font-bold text-text-primary transition-colors group-hover:text-accent">
+                    {post.title}
+                  </h2>
                   <p
-                    class="line-clamp-1 font-mono text-xs text-text-muted"
+                    class="mt-1 line-clamp-1 font-mono text-xs text-text-muted"
                     aria-label="Storage path">
                     {post.storage_path}
                   </p>
                 </div>
 
-                <div class="flex shrink-0 items-center gap-2">
+                <div class="mt-2 flex items-center gap-2">
                   <a
                     href="/admin/new?id={post.id}"
                     aria-label="Edit post: {post.title}">

@@ -54,14 +54,14 @@
     <div
       role="listbox"
       aria-label="{label} options"
-      class="absolute top-[calc(100%+4px)] left-0 z-[60] flex min-w-36 flex-col rounded-xl border border-border-subtle bg-surface-elevated py-1 shadow-xl backdrop-blur-md">
+      class="absolute top-[calc(100%+4px)] left-0 z-[60] flex min-w-36 flex-col overflow-hidden rounded-xl border border-border-subtle bg-surface-elevated py-0 shadow-xl backdrop-blur-md">
       {#each options as option (option.value)}
         <button
           type="button"
           role="option"
           aria-selected={option.value === value}
           onclick={() => select(option.value)}
-          class="flex items-center justify-between gap-2 px-3 py-1.5 text-left text-xs font-medium transition-colors
+          class="flex items-center justify-between gap-2 px-3 py-2 text-left text-xs font-medium transition-colors
             {option.value === value ?
             'bg-accent/10 text-accent'
           : 'text-text-primary hover:bg-surface-hover'}">

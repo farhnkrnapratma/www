@@ -415,6 +415,14 @@
         const readingA = parseInt(a.read_time || '0', 10);
         const readingB = parseInt(b.read_time || '0', 10);
         return (readingA - readingB) * sortDir;
+      } else if (sortField === 'views') {
+        const viewsA = a.views_count ?? 0;
+        const viewsB = b.views_count ?? 0;
+        return (viewsA - viewsB) * sortDir;
+      } else if (sortField === 'comments') {
+        const commentsA = a.comment_count ?? 0;
+        const commentsB = b.comment_count ?? 0;
+        return (commentsA - commentsB) * sortDir;
       } else {
         const dateA = new Date(a.created_at || 0).getTime();
         const dateB = new Date(b.created_at || 0).getTime();
@@ -1299,6 +1307,8 @@
               <SortControl
                 fields={[
                   { value: 'date', label: 'Date' },
+                  { value: 'views', label: 'Views' },
+                  { value: 'comments', label: 'Comments' },
                   { value: 'readingTime', label: 'Reading time' },
                   { value: 'title', label: 'Title' },
                 ]}
