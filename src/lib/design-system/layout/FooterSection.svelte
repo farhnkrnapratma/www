@@ -275,9 +275,10 @@
       <a
         href="/atom.xml"
         class="group inline-flex shrink-0 items-center justify-center gap-1.5 transition-colors hover:text-text-primary focus-visible:text-text-primary focus-visible:outline-none">
-        <i
-          class="bi bi-rss-fill text-[11px] text-text-muted transition-colors group-hover:text-text-primary"
-          aria-hidden="true"></i>
+        <span
+          class="material-symbols-rounded text-xs leading-none text-text-muted transition-colors group-hover:text-text-primary"
+          style="font-variation-settings: 'wght' 200, 'opsz' 20;"
+          aria-hidden="true">rss_feed</span>
         <span>RSS</span>
       </a>
       <a
