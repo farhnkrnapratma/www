@@ -89,17 +89,13 @@
   <!-- Layer 1: Upper Footer Wrapped in Rounded Card Container -->
   <div class="rounded-2xl border border-border-subtle/80 bg-surface-card/60 p-4 shadow-2xs sm:p-6">
     <div class="grid grid-cols-1 gap-x-0 gap-y-1 md:grid-cols-12">
-      <!-- Row 1: Name & Headline on the exact same line with clear visual hierarchy -->
+      <!-- Row 1: Name with Headline stacked directly underneath on all screen sizes -->
       <div class="md:col-span-12">
-        <div
-          class="flex min-w-0 flex-col gap-0.5 overflow-hidden sm:flex-row sm:items-center sm:gap-2">
-          <h3 class="shrink-0 text-sm font-bold tracking-tight text-text-primary sm:text-base">
+        <div class="flex min-w-0 flex-col gap-0.5">
+          <h3 class="text-base font-bold tracking-tight text-text-primary sm:text-lg">
             {name}
           </h3>
-          <span
-            class="hidden shrink-0 text-text-muted/50 select-none sm:inline"
-            aria-hidden="true">&middot;</span>
-          <p class="truncate text-xs font-medium text-text-secondary">
+          <p class="text-xs font-medium text-text-secondary sm:text-sm">
             Linux/Unix, AI, Open-Source Software, and Cybersecurity.
           </p>
         </div>
