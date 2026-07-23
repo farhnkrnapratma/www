@@ -4,11 +4,10 @@
   interface Props {
     label: string;
     href: string;
-    icon?: string;
     class?: string;
   }
 
-  let { label, href, icon = 'bi-arrow-right', class: className = '' }: Props = $props();
+  let { label, href, class: className = '' }: Props = $props();
 </script>
 
 <div
