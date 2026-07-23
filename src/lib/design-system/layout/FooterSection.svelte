@@ -274,12 +274,12 @@
       </span>
       <a
         href="/atom.xml"
-        class="group inline-flex shrink-0 items-center justify-center gap-1.5 transition-colors hover:text-text-primary focus-visible:text-text-primary focus-visible:outline-none">
+        class="group inline-flex shrink-0 items-center justify-center gap-1 transition-colors hover:text-text-primary focus-visible:text-text-primary focus-visible:outline-none">
         <span
-          class="material-symbols-rounded text-xs text-text-muted transition-colors select-none group-hover:text-text-primary"
-          style="font-variation-settings: 'wght' 400, 'opsz' 20;"
+          class="material-symbols-rounded text-[10px] text-text-muted transition-colors select-none group-hover:text-text-primary"
+          style="font-variation-settings: 'wght' 200, 'opsz' 20;"
           aria-hidden="true">rss_feed</span>
-        <span class="text-xs">RSS</span>
+        <span>RSS</span>
       </a>
       <a
         href="/sitemap.xml"

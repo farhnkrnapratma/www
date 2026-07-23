@@ -1271,8 +1271,8 @@
           title="Subscribe via Atom/RSS feed"
           class="mb-0.5 inline-flex h-9 shrink-0 items-center justify-center gap-1.5 rounded-lg border border-border-subtle bg-surface-card px-3 text-xs font-semibold text-text-muted transition-colors select-none hover:bg-surface-hover hover:text-[#f26522]">
           <span
-            class="material-symbols-rounded text-xs select-none"
-            style="font-variation-settings: 'wght' 400, 'opsz' 20;"
+            class="material-symbols-rounded text-[11px] select-none"
+            style="font-variation-settings: 'wght' 200, 'opsz' 20;"
             aria-hidden="true">rss_feed</span>
           <span class="hidden items-center sm:inline">Feed</span>
         </a>
