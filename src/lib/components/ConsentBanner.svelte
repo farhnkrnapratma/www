@@ -208,7 +208,7 @@
             <div
               role="listbox"
               aria-label="Behavioral Analytics options"
-              class="absolute top-[calc(100%+4px)] right-0 z-[60] flex min-w-28 flex-col rounded-xl border border-border-subtle bg-surface-elevated p-1 shadow-xl backdrop-blur-md">
+              class="absolute top-[calc(100%+4px)] right-0 z-[60] flex min-w-36 flex-col overflow-hidden rounded-xl border border-border-subtle bg-surface-elevated py-0 shadow-xl backdrop-blur-md">
               <button
                 type="button"
                 role="option"
@@ -217,7 +217,7 @@
                   tempAnalytics = 'denied';
                   activeDropdown = null;
                 }}
-                class="flex items-center justify-between gap-2 rounded-lg px-2.5 py-1.5 text-left text-xs font-semibold transition-colors {(
+                class="flex items-center justify-between gap-2 px-3 py-2 text-left text-xs font-medium transition-colors {(
                   tempAnalytics === 'denied'
                 ) ?
                   'bg-accent/10 text-accent'
@@ -237,7 +237,7 @@
                   tempAnalytics = 'granted';
                   activeDropdown = null;
                 }}
-                class="flex items-center justify-between gap-2 rounded-lg px-2.5 py-1.5 text-left text-xs font-semibold transition-colors {(
+                class="flex items-center justify-between gap-2 px-3 py-2 text-left text-xs font-medium transition-colors {(
                   tempAnalytics === 'granted'
                 ) ?
                   'bg-accent/10 text-accent'
@@ -291,7 +291,7 @@
             <div
               role="listbox"
               aria-label="Advertising Storage options"
-              class="absolute top-[calc(100%+4px)] right-0 z-[60] flex min-w-28 flex-col rounded-xl border border-border-subtle bg-surface-elevated p-1 shadow-xl backdrop-blur-md">
+              class="absolute top-[calc(100%+4px)] right-0 z-[60] flex min-w-36 flex-col overflow-hidden rounded-xl border border-border-subtle bg-surface-elevated py-0 shadow-xl backdrop-blur-md">
               <button
                 type="button"
                 role="option"
@@ -300,7 +300,7 @@
                   tempAdStorage = 'denied';
                   activeDropdown = null;
                 }}
-                class="flex items-center justify-between gap-2 rounded-lg px-2.5 py-1.5 text-left text-xs font-semibold transition-colors {(
+                class="flex items-center justify-between gap-2 px-3 py-2 text-left text-xs font-medium transition-colors {(
                   tempAdStorage === 'denied'
                 ) ?
                   'bg-accent/10 text-accent'
@@ -320,7 +320,7 @@
                   tempAdStorage = 'granted';
                   activeDropdown = null;
                 }}
-                class="flex items-center justify-between gap-2 rounded-lg px-2.5 py-1.5 text-left text-xs font-semibold transition-colors {(
+                class="flex items-center justify-between gap-2 px-3 py-2 text-left text-xs font-medium transition-colors {(
                   tempAdStorage === 'granted'
                 ) ?
                   'bg-accent/10 text-accent'
@@ -377,7 +377,7 @@
             <div
               role="listbox"
               aria-label="Ad User Data options"
-              class="absolute top-[calc(100%+4px)] right-0 z-[60] flex min-w-28 flex-col rounded-xl border border-border-subtle bg-surface-elevated p-1 shadow-xl backdrop-blur-md">
+              class="absolute top-[calc(100%+4px)] right-0 z-[60] flex min-w-36 flex-col overflow-hidden rounded-xl border border-border-subtle bg-surface-elevated py-0 shadow-xl backdrop-blur-md">
               <button
                 type="button"
                 role="option"
@@ -386,7 +386,7 @@
                   tempAdUserData = 'denied';
                   activeDropdown = null;
                 }}
-                class="flex items-center justify-between gap-2 rounded-lg px-2.5 py-1.5 text-left text-xs font-semibold transition-colors {(
+                class="flex items-center justify-between gap-2 px-3 py-2 text-left text-xs font-medium transition-colors {(
                   tempAdUserData === 'denied'
                 ) ?
                   'bg-accent/10 text-accent'
@@ -406,7 +406,7 @@
                   tempAdUserData = 'granted';
                   activeDropdown = null;
                 }}
-                class="flex items-center justify-between gap-2 rounded-lg px-2.5 py-1.5 text-left text-xs font-semibold transition-colors {(
+                class="flex items-center justify-between gap-2 px-3 py-2 text-left text-xs font-medium transition-colors {(
                   tempAdUserData === 'granted'
                 ) ?
                   'bg-accent/10 text-accent'
@@ -465,7 +465,7 @@
             <div
               role="listbox"
               aria-label="Ad Personalization options"
-              class="absolute top-[calc(100%+4px)] right-0 z-[60] flex min-w-28 flex-col rounded-xl border border-border-subtle bg-surface-elevated p-1 shadow-xl backdrop-blur-md">
+              class="absolute top-[calc(100%+4px)] right-0 z-[60] flex min-w-36 flex-col overflow-hidden rounded-xl border border-border-subtle bg-surface-elevated py-0 shadow-xl backdrop-blur-md">
               <button
                 type="button"
                 role="option"
@@ -474,7 +474,7 @@
                   tempAdPersonalization = 'denied';
                   activeDropdown = null;
                 }}
-                class="flex items-center justify-between gap-2 rounded-lg px-2.5 py-1.5 text-left text-xs font-semibold transition-colors {(
+                class="flex items-center justify-between gap-2 px-3 py-2 text-left text-xs font-medium transition-colors {(
                   tempAdPersonalization === 'denied'
                 ) ?
                   'bg-accent/10 text-accent'
@@ -494,10 +494,11 @@
                   tempAdPersonalization = 'granted';
                   activeDropdown = null;
                 }}
-                class="flex items-center justify-between gap-2 rounded-lg px-2.5 py-1.5 text-left text-xs font-semibold transition-colors {(
+                class="flex items-center justify-between gap-2 px-3 py-2 text-left text-xs font-medium transition-colors {(
                   tempAdPersonalization === 'granted'
                 ) ?
                   'bg-accent/10 text-accent'
+                : 'text-text-primary hover:bg-surface-hover'}">
                 : 'text-text-primary hover:bg-surface-hover'}">
                 <span>Allow</span>
                 {#if tempAdPersonalization === 'granted'}

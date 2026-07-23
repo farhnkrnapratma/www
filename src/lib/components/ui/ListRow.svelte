@@ -49,9 +49,9 @@
     </div>
     <div class="flex min-w-0 items-center justify-end gap-3">
       {@render children?.()}
-      <i
-        class="bi bi-chevron-right shrink-0 text-xs text-text-muted transition-transform group-hover:translate-x-0.5 group-hover:text-accent"
-        aria-hidden="true"></i>
+      <span
+        class="material-symbols-rounded shrink-0 text-sm text-text-muted transition-colors select-none group-hover:text-accent"
+        aria-hidden="true">open_in_new</span>
     </div>
   </a>
 {:else}

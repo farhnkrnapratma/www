@@ -21,6 +21,7 @@
     FilterEmptyState,
     createFilterSortStore,
     formatBlogDate,
+    formatViewCount,
   } from '$lib';
 
   interface AdminPost {
@@ -226,6 +227,8 @@
     };
   });
 
+  let postViewsMap = $state<SvelteMap<string, number>>(new SvelteMap());
+
   async function fetchPosts() {
     const { data, error } = await supabase
       .from('posts')
@@ -234,6 +237,20 @@
 
     if (!error && data) {
       posts = data;
+      try {
+        const { data: viewsData } = await supabase.from('post_views').select('post_id');
+        if (viewsData) {
+          const map = new Map<string, number>();
+          for (const row of viewsData) {
+            map.set(row.post_id, (map.get(row.post_id) ?? 0) + 1);
+          }
+          const sMap = new SvelteMap<string, number>();
+          map.forEach((val, key) => sMap.set(key, val));
+          postViewsMap = sMap;
+        }
+      } catch (err) {
+        console.error('Error fetching view counts:', err);
+      }
     }
   }
 
@@ -641,27 +658,15 @@
 
               <div class="flex flex-1 flex-col gap-2 font-sans">
                 <div
-                  class="flex flex-wrap items-center gap-2 text-xs font-semibold text-text-muted select-none">
-                  <span>{formatDate(post.created_at)}</span>
+                  class="flex flex-wrap items-center gap-1.5 text-xs font-semibold text-text-muted select-none">
+                  <span>{formatBlogDate(post.created_at)}</span>
+                  <span aria-hidden="true">&middot;</span>
+                  <span>{formatViewCount(postViewsMap.get(post.id) ?? 0)}</span>
+                  <span aria-hidden="true">&middot;</span>
                   {#if post.published}
                     <Badge variant="success">Published</Badge>
                   {:else}
                     <Badge variant="warning">Draft</Badge>
-                  {/if}
-                  {#if postComments.length > 0}
-                    {@const commentWord = postComments.length > 1 ? 'comments' : 'comment'}
-                    <button
-                      type="button"
-                      onclick={() => toggleComments(post.id)}
-                      aria-expanded={expandedPostIds.has(post.id)}
-                      aria-controls="comments-{post.id}"
-                      class="inline-flex h-6 cursor-pointer items-center gap-1 rounded-lg bg-border-subtle/40 px-2 text-[10px] font-semibold text-text-secondary transition-colors hover:bg-border-subtle focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">
-                      <i
-                        class="bi bi-chat-left-text-fill text-[10px] text-accent"
-                        aria-hidden="true"></i>
-                      {expandedPostIds.has(post.id) ? 'Hide' : 'Show'}
-                      {commentWord} ({postComments.length})
-                    </button>
                   {/if}
                 </div>
 
@@ -677,69 +682,43 @@
                   </p>
                 </div>
 
-                <div class="mt-2 flex items-center gap-2">
+                <div class="mt-2 flex flex-wrap items-center gap-2">
                   <a
                     href="/admin/new?id={post.id}"
                     aria-label="Edit post: {post.title}">
-                    <Button
-                      variant="secondary"
-                      size="sm">Edit post</Button>
+                    <button
+                      type="button"
+                      class="inline-flex h-8 cursor-pointer items-center justify-center rounded-lg border border-border-subtle bg-surface-card px-3 text-xs font-semibold text-text-primary transition-colors hover:bg-surface-hover focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none">
+                      Edit
+                    </button>
                   </a>
 
-                  <div class="relative">
-                    <IconButton
-                      ariaLabel="More actions for {post.title}"
-                      variant="default"
-                      size="sm"
-                      onclick={() =>
-                        (openActionMenuId = openActionMenuId === post.id ? null : post.id)}
-                      aria-haspopup="true"
-                      aria-expanded={openActionMenuId === post.id}>
-                      <i
-                        class="bi bi-three-dots-vertical text-sm"
-                        aria-hidden="true"></i>
-                    </IconButton>
+                  {@const commentCount = postComments.length}
+                  {@const commentWord = commentCount > 1 ? 'comments' : 'comment'}
+                  <button
+                    type="button"
+                    disabled={commentCount === 0}
+                    onclick={() => toggleComments(post.id)}
+                    aria-expanded={expandedPostIds.has(post.id)}
+                    aria-controls="comments-{post.id}"
+                    class="inline-flex h-8 items-center justify-center rounded-lg border border-border-subtle bg-surface-card px-3 text-xs font-semibold text-text-primary transition-colors hover:bg-surface-hover focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none disabled:cursor-not-allowed disabled:border-border-subtle/40 disabled:bg-surface-subtle/20 disabled:text-text-muted/50 disabled:opacity-50">
+                    {expandedPostIds.has(post.id) ? 'Hide' : 'Show'}
+                    {commentWord} ({commentCount})
+                  </button>
 
-                    {#if openActionMenuId === post.id}
-                      <button
-                        class="fixed inset-0 z-40 cursor-default"
-                        onclick={() => (openActionMenuId = null)}
-                        aria-label="Close menu"></button>
-                      <div
-                        role="menu"
-                        aria-label="Post actions"
-                        class="absolute {isLastItem ? 'bottom-full mb-1' : (
-                          'top-9'
-                        )} right-0 z-50 flex min-w-36 flex-col rounded-xl border border-border-subtle bg-surface-elevated py-1.5 shadow-lg">
-                        <button
-                          type="button"
-                          role="menuitem"
-                          onclick={() => {
-                            togglePublish(post);
-                            openActionMenuId = null;
-                          }}
-                          class="flex w-full cursor-pointer items-center gap-2.5 px-4 py-2.5 text-left text-xs font-bold text-text-primary transition-colors hover:bg-surface-hover">
-                          <i
-                            class="bi {post.published ? 'bi-eye-slash' : 'bi-eye'} text-sm"
-                            aria-hidden="true"></i>
-                          {post.published ? 'Unpublish' : 'Publish post'}
-                        </button>
-                        <button
-                          type="button"
-                          role="menuitem"
-                          onclick={() => {
-                            openActionMenuId = null;
-                            confirmDeletePost(post);
-                          }}
-                          class="flex w-full cursor-pointer items-center gap-2.5 px-4 py-2.5 text-left text-xs font-bold text-danger transition-colors hover:bg-danger-subtle">
-                          <i
-                            class="bi bi-trash3 text-sm"
-                            aria-hidden="true"></i>
-                          Delete post
-                        </button>
-                      </div>
-                    {/if}
-                  </div>
+                  <button
+                    type="button"
+                    onclick={() => togglePublish(post)}
+                    class="inline-flex h-8 cursor-pointer items-center justify-center rounded-lg border border-border-subtle bg-surface-card px-3 text-xs font-semibold text-text-primary transition-colors hover:bg-surface-hover focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none">
+                    {post.published ? 'Unpublish' : 'Publish'}
+                  </button>
+
+                  <button
+                    type="button"
+                    onclick={() => confirmDeletePost(post)}
+                    class="inline-flex h-8 cursor-pointer items-center justify-center rounded-lg border border-[#FE4C25]/40 bg-[#FE4C25]/10 px-3 text-xs font-semibold text-[#FE4C25] transition-colors hover:bg-[#FE4C25] hover:text-white focus-visible:ring-2 focus-visible:ring-[#FE4C25] focus-visible:outline-none">
+                    Delete
+                  </button>
                 </div>
               </div>
 

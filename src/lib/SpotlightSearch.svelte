@@ -209,7 +209,7 @@
   <div class="fixed inset-0 z-[9999] flex items-start justify-center px-4 pt-[15vh]">
     <button
       type="button"
-      class="absolute inset-0 cursor-default bg-black/55 backdrop-blur-md transition-all duration-300"
+      class="absolute inset-0 cursor-default bg-overlay-backdrop backdrop-blur-sm transition-all duration-300"
       aria-label="Close search"
       onclick={close}></button>
 
@@ -220,9 +220,9 @@
       aria-modal="true"
       aria-label="Spotlight Search"
       onkeydown={handleKeydown}>
-      <div class="border-b border-border-subtle px-4 py-2">
+      <div class="border-b border-border-subtle px-4 py-1.5">
         <div
-          class="bg-surface-canvas/40 flex items-center gap-3 rounded-xl border border-border-subtle px-3 py-1.5 transition-all duration-150 focus-within:border-accent/60 focus-within:ring-1 focus-within:ring-accent/20">
+          class="bg-surface-canvas/40 flex items-center gap-3 rounded-xl border border-border-subtle px-3 py-0.5 transition-all duration-150 focus-within:border-accent/60 focus-within:ring-1 focus-within:ring-accent/20">
           {#if isLoading}
             <svg
               class="h-4 w-4 shrink-0 animate-spin text-accent"

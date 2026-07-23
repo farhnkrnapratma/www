@@ -20,7 +20,7 @@
 </script>
 
 <section
-  class="relative z-10 mx-auto w-full px-6 pt-10 pb-24 md:w-[70%] md:max-w-none md:pt-14 md:pb-28 lg:w-[45%]">
+  class="relative z-10 mx-auto w-full px-6 pt-10 pb-24 md:w-[80%] md:max-w-none md:pt-14 md:pb-28 lg:w-[50%]">
   <SectionHeader
     {title}
     {subtitle} />
@@ -36,7 +36,7 @@
         rel="noopener noreferrer"
         icon={item.icon}
         iconColor={item.color || 'text-text-secondary'}>
-        <span class="hidden truncate text-sm font-medium text-text-secondary sm:inline">
+        <span class="hidden truncate font-mono text-sm font-medium text-text-secondary sm:inline">
           {item.value}
         </span>
         <span class="sr-only">(opens in a new tab)</span>
