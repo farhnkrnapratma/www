@@ -32,6 +32,7 @@
     storage_path: string;
     created_at: string;
     banner_path?: string | null;
+    excerpt?: string | null;
   }
 
   function getBannerUrl(bannerPath: string | null | undefined): string | null {
@@ -622,98 +623,114 @@
             {@const commentCount = postComments.length}
             {@const commentWord = commentCount > 1 ? 'comments' : 'comment'}
             <div
-              class="action-row group flex flex-col gap-5 p-5 text-left transition-all duration-200 hover:bg-surface-hover/40 sm:flex-row sm:items-start"
+              class="action-row group flex flex-col gap-5 p-5 text-left transition-all duration-200 hover:bg-surface-hover/40"
               role="listitem">
-              <div
-                class="relative aspect-video w-full shrink-0 animate-pulse overflow-hidden rounded-lg border border-border-subtle bg-surface-card/60 select-none sm:w-40 md:w-48">
-                {#if post.banner_path}
-                  <img
-                    src={getBannerUrl(post.banner_path)}
-                    alt=""
-                    loading="lazy"
-                    onload={e =>
-                      (
-                        e.currentTarget.closest('.animate-pulse') as HTMLElement | null
-                      )?.classList.remove('animate-pulse')}
-                    class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-103" />
-                {:else}
+              <div class="flex flex-col gap-5 sm:flex-row sm:items-start">
+                <div class="flex shrink-0 flex-col gap-3 sm:w-48">
                   <div
-                    class="to-palette-purple/15 flex h-full w-full items-center justify-center bg-linear-to-br from-accent/15 select-none">
-                    <i
-                      class="bi bi-journal-text text-xl text-accent/50"
-                      aria-hidden="true"></i>
+                    class="relative aspect-video w-full overflow-hidden rounded-lg border border-border-subtle bg-surface-card/60 select-none">
+                    {#if post.banner_path}
+                      <img
+                        src={getBannerUrl(post.banner_path)}
+                        alt=""
+                        loading="lazy"
+                        onload={e =>
+                          (
+                            e.currentTarget.closest('.animate-pulse') as HTMLElement | null
+                          )?.classList.remove('animate-pulse')}
+                        class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-103" />
+                    {:else}
+                      <div
+                        class="to-palette-purple/15 flex h-full w-full items-center justify-center bg-linear-to-br from-accent/15 select-none">
+                        <i
+                          class="bi bi-journal-text text-xl text-accent/50"
+                          aria-hidden="true"></i>
+                      </div>
+                    {/if}
                   </div>
-                {/if}
-              </div>
 
-              <div class="flex flex-1 flex-col gap-2 font-sans">
-                <div
-                  class="flex flex-wrap items-center gap-1.5 text-xs font-semibold text-text-muted select-none">
-                  <span>{formatBlogDate(post.created_at)}</span>
-                  <span aria-hidden="true">&middot;</span>
-                  <span>{formatViewCount(postViewsMap.get(post.id) ?? 0)}</span>
-                  <span aria-hidden="true">&middot;</span>
-                  {#if post.published}
-                    <Badge variant="success">Published</Badge>
-                  {:else}
-                    <Badge variant="warning">Draft</Badge>
-                  {/if}
-                </div>
+                  <div class="flex flex-wrap items-center gap-2">
+                    <a
+                      href="/blog/{post.slug}"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label="Read article: {post.title}">
+                      <button
+                        type="button"
+                        class="inline-flex h-8 cursor-pointer items-center justify-center rounded-lg border border-border-subtle bg-surface-card px-3 text-xs font-semibold text-text-primary transition-colors hover:bg-surface-hover focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none">
+                        Read article
+                      </button>
+                    </a>
 
-                <div class="mt-0.5">
-                  <h2
-                    class="text-base font-bold text-text-primary transition-colors group-hover:text-accent">
-                    {post.title}
-                  </h2>
-                  <p
-                    class="mt-1 line-clamp-1 font-mono text-xs text-text-muted"
-                    aria-label="Storage path">
-                    {post.storage_path}
-                  </p>
-                </div>
+                    <a
+                      href="/admin/new?id={post.id}"
+                      aria-label="Edit post: {post.title}">
+                      <button
+                        type="button"
+                        class="inline-flex h-8 cursor-pointer items-center justify-center rounded-lg border border-border-subtle bg-surface-card px-3 text-xs font-semibold text-text-primary transition-colors hover:bg-surface-hover focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none">
+                        Edit
+                      </button>
+                    </a>
 
-                <div class="mt-2 flex flex-wrap items-center gap-2">
-                  <a
-                    href="/admin/new?id={post.id}"
-                    aria-label="Edit post: {post.title}">
                     <button
                       type="button"
-                      class="inline-flex h-8 cursor-pointer items-center justify-center rounded-lg border border-border-subtle bg-surface-card px-3 text-xs font-semibold text-text-primary transition-colors hover:bg-surface-hover focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none">
-                      Edit
+                      disabled={commentCount === 0}
+                      onclick={() => toggleComments(post.id)}
+                      aria-expanded={expandedPostIds.has(post.id)}
+                      aria-controls="comments-{post.id}"
+                      class="inline-flex h-8 items-center justify-center rounded-lg border border-border-subtle bg-surface-card px-3 text-xs font-semibold text-text-primary transition-colors hover:bg-surface-hover focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none disabled:cursor-not-allowed disabled:border-border-subtle/40 disabled:bg-surface-subtle/20 disabled:text-text-muted/50 disabled:opacity-50">
+                      {expandedPostIds.has(post.id) ? 'Hide' : 'Show'}
+                      {commentWord} ({commentCount})
                     </button>
-                  </a>
 
-                  <button
-                    type="button"
-                    disabled={commentCount === 0}
-                    onclick={() => toggleComments(post.id)}
-                    aria-expanded={expandedPostIds.has(post.id)}
-                    aria-controls="comments-{post.id}"
-                    class="inline-flex h-8 items-center justify-center rounded-lg border border-border-subtle bg-surface-card px-3 text-xs font-semibold text-text-primary transition-colors hover:bg-surface-hover focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none disabled:cursor-not-allowed disabled:border-border-subtle/40 disabled:bg-surface-subtle/20 disabled:text-text-muted/50 disabled:opacity-50">
-                    {expandedPostIds.has(post.id) ? 'Hide' : 'Show'}
-                    {commentWord} ({commentCount})
-                  </button>
+                    <button
+                      type="button"
+                      onclick={() => togglePublish(post)}
+                      class="inline-flex h-8 cursor-pointer items-center justify-center rounded-lg border border-border-subtle bg-surface-card px-3 text-xs font-semibold text-text-primary transition-colors hover:bg-surface-hover focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none">
+                      {post.published ? 'Unpublish' : 'Publish'}
+                    </button>
 
-                  <button
-                    type="button"
-                    onclick={() => togglePublish(post)}
-                    class="inline-flex h-8 cursor-pointer items-center justify-center rounded-lg border border-border-subtle bg-surface-card px-3 text-xs font-semibold text-text-primary transition-colors hover:bg-surface-hover focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none">
-                    {post.published ? 'Unpublish' : 'Publish'}
-                  </button>
+                    <button
+                      type="button"
+                      onclick={() => confirmDeletePost(post)}
+                      class="inline-flex h-8 cursor-pointer items-center justify-center rounded-lg border border-[#FE4C25]/40 bg-[#FE4C25]/10 px-3 text-xs font-semibold text-[#FE4C25] transition-colors hover:bg-[#FE4C25] hover:text-white focus-visible:ring-2 focus-visible:ring-[#FE4C25] focus-visible:outline-none">
+                      Delete
+                    </button>
+                  </div>
+                </div>
 
-                  <button
-                    type="button"
-                    onclick={() => confirmDeletePost(post)}
-                    class="inline-flex h-8 cursor-pointer items-center justify-center rounded-lg border border-[#FE4C25]/40 bg-[#FE4C25]/10 px-3 text-xs font-semibold text-[#FE4C25] transition-colors hover:bg-[#FE4C25] hover:text-white focus-visible:ring-2 focus-visible:ring-[#FE4C25] focus-visible:outline-none">
-                    Delete
-                  </button>
+                <div class="flex flex-1 flex-col gap-2 font-sans">
+                  <div
+                    class="flex flex-wrap items-center gap-1.5 text-xs font-semibold text-text-muted select-none">
+                    <span>{formatBlogDate(post.created_at)}</span>
+                    <span aria-hidden="true">&middot;</span>
+                    <span>{formatViewCount(postViewsMap.get(post.id) ?? 0)}</span>
+                    <span aria-hidden="true">&middot;</span>
+                    {#if post.published}
+                      <span class="font-bold text-success select-none">Published</span>
+                    {:else}
+                      <span class="font-bold text-warning select-none">Draft</span>
+                    {/if}
+                  </div>
+
+                  <div class="mt-0.5">
+                    <h2
+                      class="text-base font-bold text-text-primary transition-colors group-hover:text-accent">
+                      {post.title}
+                    </h2>
+                    {#if post.excerpt}
+                      <p class="mt-1 line-clamp-2 text-xs text-text-muted">
+                        {post.excerpt}
+                      </p>
+                    {/if}
+                  </div>
                 </div>
               </div>
 
               {#if postComments.length > 0 && expandedPostIds.has(post.id)}
                 <div
                   id="comments-{post.id}"
-                  class="flex flex-col gap-6 p-4">
+                  class="mt-2 flex w-full flex-col gap-6 border-t border-border-subtle/50 pt-4">
                   {#snippet commentNode(
                     comment: FlatAdminComment,
                     depth: number,

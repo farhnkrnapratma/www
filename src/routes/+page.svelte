@@ -849,7 +849,8 @@
                       {/each}
                     </div>
 
-                    <div class="flex items-center gap-1.5 text-xs font-bold text-accent">
+                    <div
+                      class="flex items-center gap-1.5 text-xs font-bold text-text-secondary transition-colors group-hover:text-accent">
                       <span>View repository</span>
                       <span
                         class="material-symbols-rounded text-sm leading-none transition-transform group-hover:translate-x-0.5"
@@ -867,9 +868,9 @@
             <button
               onclick={() => navigate('projects')}
               class="group inline-flex cursor-pointer items-center gap-1.5 text-xs font-bold text-accent hover:underline">
-              <span>View all projects</span>
+              <span class="leading-none">View all projects</span>
               <i
-                class="bi bi-arrow-right transition-transform group-hover:translate-x-0.5"
+                class="bi bi-arrow-right inline-flex items-center justify-center text-xs leading-none transition-transform group-hover:translate-x-0.5"
                 aria-hidden="true"></i>
             </button>
           </div>
@@ -939,8 +940,9 @@
                       </p>
                     {/if}
                     <div class="mt-1 flex items-center gap-1.5 text-xs font-bold text-accent">
-                      <span>Read article</span>
-                      <i class="bi bi-arrow-right transition-transform group-hover:translate-x-0.5"
+                      <span class="leading-none">Read article</span>
+                      <i
+                        class="bi bi-arrow-right inline-flex items-center justify-center text-xs leading-none transition-transform group-hover:translate-x-0.5"
                       ></i>
                     </div>
                   </div>
@@ -954,9 +956,9 @@
             <button
               onclick={() => navigate('blogs')}
               class="group inline-flex cursor-pointer items-center gap-1.5 text-xs font-bold text-accent hover:underline">
-              <span>View all posts</span>
+              <span class="leading-none">View all posts</span>
               <i
-                class="bi bi-arrow-right transition-transform group-hover:translate-x-0.5"
+                class="bi bi-arrow-right inline-flex items-center justify-center text-xs leading-none transition-transform group-hover:translate-x-0.5"
                 aria-hidden="true"></i>
             </button>
           </div>
@@ -1003,9 +1005,9 @@
             onclick={() => navigate('cv')}
             class="group inline-flex cursor-pointer items-center gap-1.5 text-xs font-bold text-accent hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
             aria-label="View full CV including education and experience">
-            <span>View full CV</span>
+            <span class="leading-none">View full CV</span>
             <i
-              class="bi bi-arrow-right transition-transform group-hover:translate-x-0.5"
+              class="bi bi-arrow-right inline-flex items-center justify-center text-xs leading-none transition-transform group-hover:translate-x-0.5"
               aria-hidden="true"></i>
           </button>
         </div>
@@ -1381,7 +1383,7 @@
                   </div>
                   <div class="mt-1">
                     <h2
-                      class="text-lg leading-snug font-bold text-text-primary transition-colors group-hover:text-accent">
+                      class="text-lg leading-snug font-bold text-text-primary transition-colors group-hover:text-text-primary hover:text-text-primary">
                       <a
                         href="/blog/{post.slug}"
                         class="rounded-xs outline-none after:absolute after:inset-0 focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-surface-card">
@@ -1396,8 +1398,9 @@
                     </p>
                   {/if}
                   <div class="mt-1 flex items-center gap-1.5 text-xs font-bold text-accent">
-                    <span>Read article</span>
-                    <i class="bi bi-arrow-right transition-transform group-hover:translate-x-0.5"
+                    <span class="leading-none">Read article</span>
+                    <i
+                      class="bi bi-arrow-right inline-flex items-center justify-center text-xs leading-none transition-transform group-hover:translate-x-0.5"
                     ></i>
                   </div>
                 </div>
@@ -1557,7 +1560,8 @@
                       {/each}
                     </div>
 
-                    <div class="flex items-center gap-1.5 text-xs font-bold text-accent">
+                    <div
+                      class="flex items-center gap-1.5 text-xs font-bold text-text-secondary transition-colors group-hover:text-accent">
                       <span>View repository</span>
                       <span
                         class="material-symbols-rounded text-sm leading-none transition-transform group-hover:translate-x-0.5"

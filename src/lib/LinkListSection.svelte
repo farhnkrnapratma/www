@@ -36,7 +36,7 @@
         rel="noopener noreferrer"
         icon={item.icon}
         iconColor={item.color || 'text-text-secondary'}>
-        <span class="hidden truncate font-mono text-sm font-medium text-text-secondary sm:inline">
+        <span class="hidden truncate font-mono text-xs font-light text-text-secondary sm:inline">
           {item.value}
         </span>
         <span class="sr-only">(opens in a new tab)</span>
