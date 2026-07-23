@@ -964,21 +964,10 @@
               {/if}
             </div>
 
-            <div class="flex flex-col gap-4 lg:col-span-7">
-              {#if slug}
-                <div
-                  class="flex items-center gap-1 font-sans text-xs leading-none text-text-secondary select-none">
-                  <span
-                    class="material-symbols-rounded text-base leading-none text-accent select-none"
-                    style="font-variation-settings: 'wght' 200, 'opsz' 20;"
-                    aria-hidden="true">link_2</span>
-                  <span>fkp.my.id/blog/</span><span class="font-bold text-accent">{slug}</span>
-                </div>
-              {/if}
-
+            <div class="flex flex-col gap-2.5 lg:col-span-7">
               <FormField
                 id="post-title"
-                label="Title"
+                label="Title*"
                 required
                 error={titleError}
                 valid={titleValid}
