@@ -2,6 +2,8 @@
   import { onMount } from 'svelte';
   import { isNameReserved } from '$lib/nameValidator';
   import { Card, FormField, Input, Textarea, Button, Dialog, SkipLink, FooterSection } from '$lib';
+  import SpotlightSearch from '$lib/components/SpotlightSearch.svelte';
+  import IconButton from '$lib/components/ui/IconButton.svelte';
 
   const name = 'Farhan Kurnia Pratama';
 
@@ -155,74 +157,71 @@
 
 <SkipLink />
 
-<header
-  class="fixed top-0 right-0 left-0 z-40 border-b border-border-subtle bg-surface-card/80 backdrop-blur-md">
-  <div
-    class="mx-auto flex h-15 items-center justify-between px-6 font-sans md:w-[80%] md:max-w-none lg:w-[50%]">
-    <!-- Left side: Ghost Back to Home button -->
-    <a
-      href="/"
-      class="inline-flex items-center gap-1.5 text-xs font-semibold text-text-secondary transition-colors hover:text-text-primary focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none">
-      <i
-        class="bi bi-arrow-left text-sm"
-        aria-hidden="true"></i>
-      <span>Back to Home</span>
-    </a>
+<nav
+  class="fixed top-0 z-40 flex h-15 w-full items-center justify-between border-b border-border-subtle bg-surface-card/60 px-3 font-sans shadow-xs backdrop-blur-lg transition-colors duration-300 sm:px-5"
+  aria-label="Feedback page navigation">
+  <!-- Left side: Bordered Back to Home button without icon (Matching Sign out button styling) -->
+  <a
+    href="/"
+    class="inline-flex h-9 items-center justify-center rounded-lg border border-border-subtle bg-surface-card px-4 text-xs font-semibold text-text-primary transition-colors hover:bg-surface-hover focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none">
+    Back to Home
+  </a>
 
-    <!-- Right side: Text Name Identity Block + Theme Selector -->
-    <div class="flex items-center gap-4">
-      <a
-        href="/"
-        class="text-sm font-bold tracking-tight text-text-primary transition-opacity hover:opacity-85">
-        {name}
-      </a>
+  <!-- Right side: Search bar (SpotlightSearch) + Theme selector -->
+  <div class="flex items-center gap-2">
+    <SpotlightSearch />
+    <div class="relative">
+      <IconButton
+        ariaLabel="Change theme"
+        variant="default"
+        size="md"
+        onclick={() => (themeDropdownOpen = !themeDropdownOpen)}
+        aria-haspopup="true"
+        aria-expanded={themeDropdownOpen}>
+        {#if theme === 'auto'}
+          <i
+            class="bi bi-circle-half"
+            aria-hidden="true"></i>
+        {:else}
+          <i
+            class="bi {theme === 'dark' ? 'bi-moon-stars-fill' : 'bi-sun-fill'}"
+            aria-hidden="true"></i>
+        {/if}
+      </IconButton>
 
-      <div class="relative">
+      {#if themeDropdownOpen}
         <button
           type="button"
-          onclick={() => (themeDropdownOpen = !themeDropdownOpen)}
-          aria-label="Select theme"
-          aria-expanded={themeDropdownOpen}
-          class="flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg border border-border-subtle bg-surface-card text-text-secondary transition-colors hover:bg-surface-hover hover:text-text-primary focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none">
-          <i
-            class="bi {theme === 'dark' ? 'bi-moon-stars-fill'
-            : theme === 'light' ? 'bi-sun-fill'
-            : 'bi-circle-half'} text-sm"
-            aria-hidden="true"></i>
-        </button>
-
-        {#if themeDropdownOpen}
-          <button
-            type="button"
-            class="fixed inset-0 z-40 cursor-default"
-            onclick={() => (themeDropdownOpen = false)}
-            aria-label="Close menu"></button>
-          <div
-            class="absolute top-11 right-0 z-50 flex min-w-32 flex-col rounded-xl border border-border-subtle bg-surface-elevated py-1 shadow-xl backdrop-blur-md">
-            {#each [['auto', 'bi-circle-half', 'Auto'], ['light', 'bi-sun-fill', 'Light'], ['dark', 'bi-moon-stars-fill', 'Dark']] as const as [val, icon, label] (val)}
-              <button
-                type="button"
-                onclick={() => {
-                  applyTheme(val);
-                  themeDropdownOpen = false;
-                }}
-                class="flex w-full cursor-pointer items-center gap-2.5 px-3 py-1.5 text-left text-xs font-semibold transition-colors hover:bg-surface-hover {(
-                  theme === val
-                ) ?
-                  'text-accent'
-                : 'text-text-primary'}">
-                <i
-                  class="bi {icon} text-xs"
-                  aria-hidden="true"></i>
-                <span>{label}</span>
-              </button>
-            {/each}
-          </div>
-        {/if}
-      </div>
+          class="fixed inset-0 z-40 cursor-default"
+          onclick={() => (themeDropdownOpen = false)}
+          aria-label="Close theme menu"></button>
+        <div
+          role="menu"
+          class="absolute top-11 right-0 z-50 flex min-w-31 flex-col rounded-xl border border-border-subtle bg-surface-elevated py-1.5 shadow-lg">
+          {#each [['auto', 'bi-circle-half', 'Auto'], ['light', 'bi-sun-fill', 'Light'], ['dark', 'bi-moon-stars-fill', 'Dark']] as const as [val, icon, label] (val)}
+            <button
+              type="button"
+              role="menuitem"
+              onclick={() => {
+                applyTheme(val);
+                themeDropdownOpen = false;
+              }}
+              class="flex w-full cursor-pointer items-center gap-3 px-4 py-2.5 text-left text-xs font-bold transition-colors hover:bg-surface-hover {(
+                theme === val
+              ) ?
+                'text-accent'
+              : 'text-text-primary'}">
+              <i
+                class="bi {icon} text-sm"
+                aria-hidden="true"></i>
+              {label}
+            </button>
+          {/each}
+        </div>
+      {/if}
     </div>
   </div>
-</header>
+</nav>
 
 <main
   id="main-content"

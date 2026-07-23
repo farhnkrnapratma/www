@@ -1,6 +1,8 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { SkipLink, FooterSection } from '$lib';
+  import SpotlightSearch from '$lib/components/SpotlightSearch.svelte';
+  import IconButton from '$lib/components/ui/IconButton.svelte';
   import { consentStore } from '$lib/stores/consentStore.svelte';
 
   const name = 'Farhan Kurnia Pratama';
@@ -52,74 +54,71 @@
 
 <SkipLink />
 
-<header
-  class="fixed top-0 right-0 left-0 z-40 border-b border-border-subtle bg-surface-card/80 backdrop-blur-md">
-  <div
-    class="mx-auto flex h-15 items-center justify-between px-6 font-sans md:w-[80%] md:max-w-none lg:w-[50%]">
-    <!-- Left side: Ghost Back to Home button -->
-    <a
-      href="/"
-      class="inline-flex items-center gap-1.5 text-xs font-semibold text-text-secondary transition-colors hover:text-text-primary focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none">
-      <i
-        class="bi bi-arrow-left text-sm"
-        aria-hidden="true"></i>
-      <span>Back to Home</span>
-    </a>
+<nav
+  class="fixed top-0 z-40 flex h-15 w-full items-center justify-between border-b border-border-subtle bg-surface-card/60 px-3 font-sans shadow-xs backdrop-blur-lg transition-colors duration-300 sm:px-5"
+  aria-label="Privacy page navigation">
+  <!-- Left side: Bordered Back to Home button without icon (Matching Sign out button styling) -->
+  <a
+    href="/"
+    class="inline-flex h-9 items-center justify-center rounded-lg border border-border-subtle bg-surface-card px-4 text-xs font-semibold text-text-primary transition-colors hover:bg-surface-hover focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none">
+    Back to Home
+  </a>
 
-    <!-- Right side: Text Name Identity Block + Theme Selector -->
-    <div class="flex items-center gap-4">
-      <a
-        href="/"
-        class="text-sm font-bold tracking-tight text-text-primary transition-opacity hover:opacity-85">
-        {name}
-      </a>
+  <!-- Right side: Search bar (SpotlightSearch) + Theme selector -->
+  <div class="flex items-center gap-2">
+    <SpotlightSearch />
+    <div class="relative">
+      <IconButton
+        ariaLabel="Change theme"
+        variant="default"
+        size="md"
+        onclick={() => (themeDropdownOpen = !themeDropdownOpen)}
+        aria-haspopup="true"
+        aria-expanded={themeDropdownOpen}>
+        {#if theme === 'auto'}
+          <i
+            class="bi bi-circle-half"
+            aria-hidden="true"></i>
+        {:else}
+          <i
+            class="bi {theme === 'dark' ? 'bi-moon-stars-fill' : 'bi-sun-fill'}"
+            aria-hidden="true"></i>
+        {/if}
+      </IconButton>
 
-      <div class="relative">
+      {#if themeDropdownOpen}
         <button
           type="button"
-          onclick={() => (themeDropdownOpen = !themeDropdownOpen)}
-          aria-label="Select theme"
-          aria-expanded={themeDropdownOpen}
-          class="flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg border border-border-subtle bg-surface-card text-text-secondary transition-colors hover:bg-surface-hover hover:text-text-primary focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none">
-          <i
-            class="bi {theme === 'dark' ? 'bi-moon-stars-fill'
-            : theme === 'light' ? 'bi-sun-fill'
-            : 'bi-circle-half'} text-sm"
-            aria-hidden="true"></i>
-        </button>
-
-        {#if themeDropdownOpen}
-          <button
-            type="button"
-            class="fixed inset-0 z-40 cursor-default"
-            onclick={() => (themeDropdownOpen = false)}
-            aria-label="Close menu"></button>
-          <div
-            class="absolute top-11 right-0 z-50 flex min-w-32 flex-col rounded-xl border border-border-subtle bg-surface-elevated py-1 shadow-xl backdrop-blur-md">
-            {#each [['auto', 'bi-circle-half', 'Auto'], ['light', 'bi-sun-fill', 'Light'], ['dark', 'bi-moon-stars-fill', 'Dark']] as const as [val, icon, label] (val)}
-              <button
-                type="button"
-                onclick={() => {
-                  applyTheme(val);
-                  themeDropdownOpen = false;
-                }}
-                class="flex w-full cursor-pointer items-center gap-2.5 px-3 py-1.5 text-left text-xs font-semibold transition-colors hover:bg-surface-hover {(
-                  theme === val
-                ) ?
-                  'text-accent'
-                : 'text-text-primary'}">
-                <i
-                  class="bi {icon} text-xs"
-                  aria-hidden="true"></i>
-                <span>{label}</span>
-              </button>
-            {/each}
-          </div>
-        {/if}
-      </div>
+          class="fixed inset-0 z-40 cursor-default"
+          onclick={() => (themeDropdownOpen = false)}
+          aria-label="Close theme menu"></button>
+        <div
+          role="menu"
+          class="absolute top-11 right-0 z-50 flex min-w-31 flex-col rounded-xl border border-border-subtle bg-surface-elevated py-1.5 shadow-lg">
+          {#each [['auto', 'bi-circle-half', 'Auto'], ['light', 'bi-sun-fill', 'Light'], ['dark', 'bi-moon-stars-fill', 'Dark']] as const as [val, icon, label] (val)}
+            <button
+              type="button"
+              role="menuitem"
+              onclick={() => {
+                applyTheme(val);
+                themeDropdownOpen = false;
+              }}
+              class="flex w-full cursor-pointer items-center gap-3 px-4 py-2.5 text-left text-xs font-bold transition-colors hover:bg-surface-hover {(
+                theme === val
+              ) ?
+                'text-accent'
+              : 'text-text-primary'}">
+              <i
+                class="bi {icon} text-sm"
+                aria-hidden="true"></i>
+              {label}
+            </button>
+          {/each}
+        </div>
+      {/if}
     </div>
   </div>
-</header>
+</nav>
 
 <main
   id="main-content"
@@ -129,88 +128,118 @@
     <p class="mt-2 text-xs text-text-muted">Last updated: July 22, 2026</p>
   </div>
 
-  <div class="flex flex-col gap-6 text-sm leading-relaxed text-text-secondary">
-    <section
-      class="rounded-2xl border border-border-subtle bg-surface-card/60 p-6 shadow-xs backdrop-blur-lg">
-      <h2 class="text-base font-bold text-text-primary">1. Overview</h2>
+  <div class="space-y-8 text-sm leading-relaxed text-text-secondary">
+    <!-- Section 1: Overview & Scope -->
+    <section>
+      <h2 class="text-base font-bold text-text-primary">1. Overview & Data Transparency</h2>
       <p class="mt-2">
-        This Privacy Policy outlines how personal and usage information is handled on
-        <strong class="text-text-primary">fkp.my.id</strong>. I am committed to respecting your
-        privacy and building privacy-centric, security-focused web experiences.
+        Farhan Kurnia Pratama ("we", "our", or "us") is committed to respecting your privacy and
+        maintaining complete transparency regarding how your data is handled when you visit <a
+          href={siteUrl}
+          class="font-medium text-accent hover:underline">{siteUrl}</a
+        >. This site operates with a strict privacy-by-default policy. We do not sell, rent, or
+        monetize any user information.
       </p>
     </section>
 
-    <section
-      class="rounded-2xl border border-border-subtle bg-surface-card/60 p-6 shadow-xs backdrop-blur-lg">
-      <h2 class="text-base font-bold text-text-primary">2. Data Collection & Analytics</h2>
+    <!-- Section 2: Visitor Analytics & Consent Mode -->
+    <section>
+      <h2 class="text-base font-bold text-text-primary">2. Google Analytics 4 & Consent Mode v2</h2>
       <p class="mt-2">
-        This website uses <strong>Google Analytics (gtag.js)</strong> to understand aggregate site traffic,
-        popular content, and visitor demographics.
+        We use Google Analytics 4 (GA4) solely to analyze aggregate site traffic, measure content
+        reach, and optimize site performance. Our analytics implementation fully adheres to <strong
+          class="font-semibold text-text-primary">Google Consent Mode v2</strong
+        >:
       </p>
-      <ul class="mt-3 list-disc space-y-1.5 pl-5 text-xs text-text-secondary">
+      <ul class="mt-2 list-disc space-y-1.5 pl-5">
         <li>
-          <strong>Information Collected:</strong> Pages visited, time spent, browser/device type, general
-          geographic location, and referral sources.
+          <strong class="font-semibold text-text-primary">Default Denial:</strong> All optional
+          consent signals (<code class="rounded bg-surface-hover px-1 py-0.5 font-mono text-xs"
+            >analytics_storage</code
+          >,
+          <code class="rounded bg-surface-hover px-1 py-0.5 font-mono text-xs">ad_storage</code>,
+          <code class="rounded bg-surface-hover px-1 py-0.5 font-mono text-xs">ad_user_data</code>,
+          <code class="rounded bg-surface-hover px-1 py-0.5 font-mono text-xs"
+            >ad_personalization</code
+          >) default to <strong class="text-accent">Denied</strong> until you explicitly grant consent
+          via our Cookie Settings.
         </li>
         <li>
-          <strong>No Personal Selling:</strong> No personal identification data (PII) is sold, traded,
-          or shared with third-party advertisers.
+          <strong class="font-semibold text-text-primary">IP Anonymization:</strong> IP addresses are
+          automatically masked and anonymized by GA4 prior to processing.
         </li>
         <li>
-          <strong>Cookies & Identifiers:</strong> Google Analytics uses first-party cookies and anonymous
-          identifiers to distinguish unique users and sessions.
+          <strong class="font-semibold text-text-primary">No Cross-Site Tracking:</strong> We do not use
+          third-party advertising cookies or cross-site tracking technologies.
         </li>
       </ul>
     </section>
 
-    <section
-      class="rounded-2xl border border-border-subtle bg-surface-card/60 p-6 shadow-xs backdrop-blur-lg">
-      <h2 class="text-base font-bold text-text-primary">3. Data Retention</h2>
+    <!-- Section 3: Data Retention -->
+    <section>
+      <h2 class="text-base font-bold text-text-primary">
+        3. Data Retention Policy (14-Month Standard)
+      </h2>
       <p class="mt-2">
-        The data retention period for user-level and event-level analytics data collected via Google
-        Analytics 4 is set to <strong>14 months</strong>. Once this retention period expires, stored
-        event and user data is automatically purged from Google Analytics servers.
+        In accordance with Google Analytics 4 data retention capabilities and privacy best
+        practices, user-level and event-level data (such as pageview events, session duration, and
+        browser metrics) is strictly retained for a maximum duration of <strong
+          class="font-semibold text-text-primary">14 months</strong> from the date of collection.
+      </p>
+      <p class="mt-2">
+        After 14 months, all associated user data is automatically deleted from Google Analytics
+        servers. Aggregate, non-identifiable summary reporting (such as monthly traffic totals) may
+        be retained solely for historical site performance analysis.
       </p>
     </section>
 
-    <section
-      class="rounded-2xl border border-border-subtle bg-surface-card/60 p-6 shadow-xs backdrop-blur-lg">
-      <h2 class="text-base font-bold text-text-primary">4. Form Submissions</h2>
+    <!-- Section 4: Public Comments & Interactive Features -->
+    <section>
+      <h2 class="text-base font-bold text-text-primary">4. Public Comments & Feedback</h2>
       <p class="mt-2">
-        If you submit a message via the Contact or Feedback forms, the information you provide
-        (name, email, message) is used solely to respond to your inquiry. Form entries are
-        transmitted securely and are never shared for marketing purposes.
+        When you submit a comment on a blog post or send feedback via our feedback form:
       </p>
+      <ul class="mt-2 list-disc space-y-1.5 pl-5">
+        <li>
+          The name (or "Anonymous") and comment message you submit are stored securely in our
+          database and displayed publicly on the post.
+        </li>
+        <li>
+          We process comments through automated spam detection filter algorithms to prevent abuse.
+        </li>
+        <li>You may request the deletion of your published comments at any time.</li>
+      </ul>
     </section>
 
-    <section
-      class="rounded-2xl border border-border-subtle bg-surface-card/60 p-6 shadow-xs backdrop-blur-lg">
-      <h2 class="text-base font-bold text-text-primary">5. Your Choices & Controls</h2>
+    <!-- Section 5: Cookie Preferences & Controls -->
+    <section>
+      <h2 class="text-base font-bold text-text-primary">5. Your Choices & Cookie Preferences</h2>
       <p class="mt-2">
-        You can customize your tracking preferences anytime by clicking <button
+        You retain full control over your cookie preferences at all times. You can modify or revoke
+        your consent decisions whenever you choose:
+      </p>
+      <div class="mt-3">
+        <button
           type="button"
           onclick={() => consentStore.openCustomizeModal()}
-          class="font-semibold text-accent underline hover:text-accent-hover"
-          >Cookies Settings</button>
-        in the footer, or disable cookies in your browser settings. You can also use extensions like
-        <em>uBlock Origin</em>
-        or <em>Google Analytics Opt-out Browser Add-on</em> to prevent data collection.
-      </p>
+          class="inline-flex cursor-pointer items-center justify-center rounded-lg border border-border-subtle bg-surface-card px-4 py-2 text-xs font-semibold text-text-primary transition-colors hover:bg-surface-hover focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none">
+          Manage Cookie Settings
+        </button>
+      </div>
     </section>
 
-    <section
-      class="rounded-2xl border border-border-subtle bg-surface-card/60 p-6 shadow-xs backdrop-blur-lg">
+    <!-- Section 6: Contact -->
+    <section>
       <h2 class="text-base font-bold text-text-primary">6. Contact Information</h2>
       <p class="mt-2">
-        If you have any questions regarding this privacy policy or data collection practices, please
-        feel free to reach out via email at
-        <a
+        If you have any questions or privacy inquiries regarding this policy or your data, please
+        contact us at <a
           href="mailto:contact@fkp.my.id"
-          class="font-semibold text-accent hover:underline">contact@fkp.my.id</a
+          class="font-medium text-accent hover:underline">contact@fkp.my.id</a
         >.
       </p>
     </section>
   </div>
 </main>
 
-<FooterSection />
+<FooterSection {name} />
