@@ -277,9 +277,9 @@
         class="group inline-flex shrink-0 items-center justify-center gap-1.5 transition-colors hover:text-text-primary focus-visible:text-text-primary focus-visible:outline-none">
         <span
           class="material-symbols-rounded text-xs leading-none text-text-muted transition-colors group-hover:text-text-primary"
-          style="font-variation-settings: 'wght' 200, 'opsz' 20;"
+          style="font-variation-settings: 'wght' 300, 'opsz' 20;"
           aria-hidden="true">rss_feed</span>
-        <span>RSS</span>
+        <span class="leading-none">RSS</span>
       </a>
       <a
         href="/sitemap.xml"

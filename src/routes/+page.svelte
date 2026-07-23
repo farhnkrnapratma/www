@@ -1272,7 +1272,7 @@
           class="mb-0.5 flex h-9 shrink-0 items-center justify-center gap-1.5 rounded-lg border border-border-subtle bg-surface-card px-3 text-xs font-semibold text-text-muted transition-colors select-none hover:bg-surface-hover hover:text-[#f26522]">
           <span
             class="material-symbols-rounded text-xs leading-none"
-            style="font-variation-settings: 'wght' 200, 'opsz' 20;"
+            style="font-variation-settings: 'wght' 300, 'opsz' 20;"
             aria-hidden="true">rss_feed</span>
           <span class="hidden items-center leading-none sm:inline">Feed</span>
         </a>
