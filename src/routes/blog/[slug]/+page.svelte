@@ -203,20 +203,16 @@
   const headings = $derived(data.headings || []);
   let activeHeadingId = $state('');
   let isStretching = $state(false);
-  let indicatorY = $state(0);
+  let indicatorTop = $state(0);
   let indicatorHeight = $state(0);
-  let indicatorScaleY = $state(1);
-  let transformOrigin = $state('top');
   let isIndicatorVisible = $state(false);
   let tocListEl = $state<HTMLElement | null>(null);
 
   function updateIndicatorPos(
     headingId: string,
     stretch = false,
-    yOverride?: number,
+    topOverride?: number,
     heightOverride?: number,
-    scaleOverride?: number,
-    originOverride = 'top',
   ) {
     if (!tocListEl) return;
     const targetLink = tocListEl.querySelector<HTMLElement>(`a[href="#${headingId}"]`);
@@ -229,16 +225,12 @@
 
     const baseHeight = targetLink.getBoundingClientRect().height || targetLink.offsetHeight;
 
-    if (yOverride !== undefined && heightOverride !== undefined && scaleOverride !== undefined) {
-      indicatorY = yOverride;
-      indicatorHeight = baseHeight;
-      indicatorScaleY = scaleOverride;
-      transformOrigin = originOverride;
+    if (topOverride !== undefined && heightOverride !== undefined) {
+      indicatorTop = topOverride;
+      indicatorHeight = heightOverride;
     } else {
-      indicatorY = targetLink.offsetTop;
+      indicatorTop = targetLink.offsetTop;
       indicatorHeight = baseHeight;
-      indicatorScaleY = 1;
-      transformOrigin = 'top';
     }
   }
 
@@ -324,9 +316,6 @@
           }
 
           const currentHeading = headingPositions[activeIndex];
-          const nextHeading = headingPositions[activeIndex + 1];
-          const prevHeading = headingPositions[activeIndex - 1];
-
           if (!currentHeading) return;
 
           const currentLink = tocListEl.querySelector<HTMLElement>(
@@ -338,10 +327,12 @@
           const currentHeight =
             currentLink.getBoundingClientRect().height || currentLink.offsetHeight;
 
+          const nextHeading = headingPositions[activeIndex + 1];
+          const prevHeading = headingPositions[activeIndex - 1];
+
           let isCurrentlyStretching = false;
-          let calcY = currentTop;
-          let calcScaleY = 1;
-          let origin = 'top';
+          let calcTop = currentTop;
+          let calcHeight = currentHeight;
 
           // Stretch towards NEXT heading when scrolling down
           if (nextHeading) {
@@ -349,37 +340,38 @@
             if (nextLink) {
               const nextTop = nextLink.offsetTop;
               const nextHeight = nextLink.getBoundingClientRect().height || nextLink.offsetHeight;
-              const distance = nextHeading.top - currentHeading.top;
-              if (distance > 0) {
-                const rawProgress = (scrollY - (currentHeading.top - viewportOffset)) / distance;
-                if (rawProgress > 0.02 && rawProgress < 0.98) {
+              const scrollDistance = nextHeading.top - currentHeading.top;
+              if (scrollDistance > 0) {
+                const progress = Math.max(
+                  0,
+                  Math.min(1, (scrollY - (currentHeading.top - viewportOffset)) / scrollDistance),
+                );
+                if (progress > 0.08 && progress < 0.92) {
                   isCurrentlyStretching = true;
-                  calcY = currentTop;
-                  const stretchedDist =
-                    (nextTop + nextHeight - currentTop) * rawProgress +
-                    currentHeight * (1 - rawProgress);
-                  calcScaleY = stretchedDist / currentHeight;
-                  origin = 'top';
+                  calcTop = currentTop;
+                  calcHeight =
+                    currentHeight +
+                    (nextTop + nextHeight - (currentTop + currentHeight)) * progress;
                 }
               }
             }
           }
 
           // Stretch towards PREVIOUS heading when scrolling up
-          if (!isCurrentlyStretching && prevHeading) {
+          if (!isCurrentlyStretching && prevHeading && activeIndex > 0) {
             const prevLink = tocListEl.querySelector<HTMLElement>(`a[href="#${prevHeading.id}"]`);
             if (prevLink) {
               const prevTop = prevLink.offsetTop;
-              const distance = currentHeading.top - prevHeading.top;
-              if (distance > 0) {
-                const rawProgress = (currentHeading.top - viewportOffset - scrollY) / distance;
-                if (rawProgress > 0.02 && rawProgress < 0.98) {
+              const scrollDistance = currentHeading.top - prevHeading.top;
+              if (scrollDistance > 0) {
+                const progress = Math.max(
+                  0,
+                  Math.min(1, (currentHeading.top - viewportOffset - scrollY) / scrollDistance),
+                );
+                if (progress > 0.08 && progress < 0.92) {
                   isCurrentlyStretching = true;
-                  const targetTop = currentTop - (currentTop - prevTop) * rawProgress;
-                  const stretchedDist = currentTop + currentHeight - targetTop;
-                  calcY = targetTop;
-                  calcScaleY = stretchedDist / currentHeight;
-                  origin = 'bottom';
+                  calcTop = currentTop - (currentTop - prevTop) * progress;
+                  calcHeight = currentTop + currentHeight - calcTop;
                 }
               }
             }
@@ -387,7 +379,7 @@
 
           activeHeadingId = currentHeading.id;
           if (isCurrentlyStretching) {
-            updateIndicatorPos(currentHeading.id, true, calcY, currentHeight, calcScaleY, origin);
+            updateIndicatorPos(currentHeading.id, true, calcTop, calcHeight);
           } else {
             updateIndicatorPos(currentHeading.id, false);
           }
@@ -1389,15 +1381,15 @@
               aria-hidden="true">
             </div>
 
-            <!-- Single GPU-Accelerated Rubber Band Stretching Line Indicator -->
+            <!-- Single Rubber Band Stretching Line Indicator with Perfect Rounded-Full Caps -->
             {#if isIndicatorVisible}
               <div
-                class="absolute top-0 left-0 w-1 rounded-full bg-accent shadow-xs"
-                style="height: {indicatorHeight}px; transform: translateY({indicatorY}px) scaleY({indicatorScaleY}); transform-origin: {transformOrigin}; will-change: transform; transition: {(
+                class="absolute left-0 w-1 rounded-full bg-accent shadow-xs"
+                style="top: {indicatorTop}px; height: {indicatorHeight}px; transition: {(
                   isStretching
                 ) ?
-                  'none'
-                : 'transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), height 0.6s cubic-bezier(0.34, 1.56, 0.64, 1)'};"
+                  'top 0.12s ease-out, height 0.12s ease-out'
+                : 'top 0.45s cubic-bezier(0.34, 1.56, 0.64, 1), height 0.45s cubic-bezier(0.34, 1.56, 0.64, 1)'};"
                 aria-hidden="true">
               </div>
             {/if}
