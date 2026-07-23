@@ -241,10 +241,10 @@
     </div>
   </div>
 
-  <!-- Layer 2: Consolidated Single Bottom Meta Row (NO interpunct &middot; dots) -->
-  <div class="pt-5 select-none">
+  <!-- Layer 2: Consolidated Single Bottom Meta Row (Center Aligned) -->
+  <div class="pt-5 text-center select-none">
     <div
-      class="no-scrollbar flex max-w-full items-center justify-start gap-x-4 overflow-x-auto text-xs font-medium whitespace-nowrap text-text-muted">
+      class="no-scrollbar flex max-w-full items-center justify-center gap-x-4 overflow-x-auto text-xs font-medium whitespace-nowrap text-text-muted">
       <span class="shrink-0 text-text-muted/70">
         &copy; {new Date().getFullYear()}
         {name}.
