@@ -526,7 +526,7 @@
         class="py-20" />
     {:else}
       <div class="mb-6 flex items-center justify-between gap-4">
-        <h1 class="text-2xl font-bold tracking-tight text-text-primary sm:text-3xl">Posts</h1>
+        <h1 class="text-2xl font-bold tracking-tight text-text-primary sm:text-3xl">Blog Posts</h1>
         <a href="/admin/new">
           <Button
             variant="primary"
@@ -733,9 +733,10 @@
                   type="button"
                   onclick={() => confirmDeletePost(post)}
                   class="ml-auto inline-flex h-8 shrink-0 cursor-pointer items-center justify-center gap-1.5 rounded-lg border border-[#FE4C25]/40 bg-[#FE4C25]/10 px-3 text-xs font-semibold whitespace-nowrap text-[#FE4C25] transition-colors hover:bg-[#FE4C25] hover:text-white focus-visible:ring-2 focus-visible:ring-[#FE4C25] focus-visible:outline-none">
-                  <i
-                    class="bi bi-trash3 text-xs"
-                    aria-hidden="true"></i>
+                  <span
+                    class="material-symbols-rounded text-base leading-none select-none"
+                    style="font-variation-settings: 'wght' 300, 'opsz' 20;"
+                    aria-hidden="true">delete_forever</span>
                   <span>Delete</span>
                 </button>
               </div>
@@ -844,12 +845,12 @@
                                 <FormField
                                   id="reply-msg-{comment.id}"
                                   label="Message"
-                                  counter="{1000 - commentContent.length} characters left">
+                                  counter="{2000 - commentContent.length} characters left">
                                   <Textarea
                                     id="reply-msg-{comment.id}"
                                     required
                                     rows={3}
-                                    maxlength={1000}
+                                    maxlength={2000}
                                     placeholder="Write your reply…"
                                     bind:value={commentContent} />
                                 </FormField>

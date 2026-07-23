@@ -903,7 +903,7 @@
                     autocomplete="name"
                     aria-invalid={!!errors.authorName}
                     aria-describedby="comment-author-fb"
-                    placeholder={isAnonymous ? 'Anonymous' : 'Your name'}
+                    placeholder={isAnonymous ? 'Anonymous' : 'Enter your name'}
                     bind:value={authorName}
                     oninput={() => {
                       errors.authorName = '';
@@ -944,11 +944,11 @@
                 required
                 error={errors.commentContent}
                 valid={valid.commentContent}
-                counter="{1000 - commentContent.length} left">
+                counter="{2000 - commentContent.length} left">
                 <Textarea
                   id="comment-msg"
                   rows={3}
-                  maxlength={1000}
+                  maxlength={2000}
                   placeholder="Write your message…"
                   bind:value={commentContent}
                   error={!!errors.commentContent}
@@ -1091,7 +1091,7 @@
                               autocomplete="name"
                               aria-invalid={!!errors.authorName}
                               aria-describedby="reply-author-fb-{comment.id}"
-                              placeholder={isAnonymous ? 'Anonymous' : 'Your name'}
+                              placeholder={isAnonymous ? 'Anonymous' : 'Enter your name'}
                               bind:value={authorName}
                               oninput={() => {
                                 errors.authorName = '';
@@ -1132,11 +1132,11 @@
                           required
                           error={errors.commentContent}
                           valid={valid.commentContent}
-                          counter="{1000 - commentContent.length} left">
+                          counter="{2000 - commentContent.length} left">
                           <Textarea
                             id="reply-msg-{comment.id}"
                             rows={3}
-                            maxlength={1000}
+                            maxlength={2000}
                             placeholder="Write your reply…"
                             bind:value={commentContent}
                             error={!!errors.commentContent}

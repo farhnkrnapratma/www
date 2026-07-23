@@ -342,7 +342,7 @@
           name="name"
           aria-required="true"
           autocomplete="name"
-          placeholder="Your name"
+          placeholder="Enter your name"
           bind:value={formName}
           error={!!formErrors.name}
           valid={formValid.name}
@@ -365,7 +365,7 @@
           name="email"
           aria-required="true"
           autocomplete="email"
-          placeholder="your@email.com"
+          placeholder="Enter your email"
           bind:value={formEmail}
           error={!!formErrors.email}
           valid={formValid.email}
@@ -404,12 +404,12 @@
         required
         error={formErrors.message}
         valid={formValid.message}
-        counter="{1000 - formMessage.length} left">
+        counter="{2000 - formMessage.length} left">
         <Textarea
           id="form-message"
           name="message"
           rows={4}
-          maxlength={1000}
+          maxlength={2000}
           placeholder="Describe the issue in detail…"
           bind:value={formMessage}
           error={!!formErrors.message}

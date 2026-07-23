@@ -139,7 +139,7 @@
           <Input
             type="email"
             id="login-email"
-            placeholder="your@email.com"
+            placeholder="Enter your email"
             autocomplete="username"
             bind:value={email}
             error={!!errors.email}
