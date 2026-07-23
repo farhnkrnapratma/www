@@ -1196,49 +1196,55 @@
       class="sticky top-24 hidden h-fit select-none xl:col-span-3 xl:col-start-10 xl:block"
       aria-label="Table of contents">
       <div class="boxed-list border border-border-subtle bg-surface-card/45 p-5 backdrop-blur-lg">
-        <h3
-          class="mb-3 px-2 text-xs font-bold tracking-wider text-text-secondary uppercase select-none">
+        <h3 class="mb-3 text-xs font-bold tracking-wider text-text-secondary uppercase select-none">
           In this article
         </h3>
 
         {#if headings.length === 0}
-          <p class="px-2 text-xs text-text-muted italic">No subheadings found.</p>
+          <p class="text-xs text-text-muted italic">No subheadings found.</p>
         {:else}
-          <ul
-            class="flex flex-col gap-1"
-            role="list">
-            {#each headings as heading, index (heading.id + '-' + index)}
-              {@const isActive = activeHeadingId === heading.id}
-              <li
-                class="text-xs"
-                style="padding-left: {(heading.level - 2) * 12}px;">
-                <a
-                  href="#{heading.id}"
-                  onclick={e => {
-                    e.preventDefault();
-                    const target = document.getElementById(heading.id);
-                    if (target) {
-                      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                      history.pushState(null, '', `#${heading.id}`);
-                      activeHeadingId = heading.id;
-                    }
-                  }}
-                  aria-current={isActive ? 'true' : undefined}
-                  class="group relative block rounded-md px-2 py-1 leading-relaxed transition-all duration-300 ease-in-out hover:text-accent {(
-                    isActive
-                  ) ?
-                    'font-medium text-accent'
-                  : 'font-normal text-text-secondary'}">
-                  {#if isActive}
-                    <span
-                      class="absolute top-1/2 left-0 h-3.5 w-1 -translate-y-1/2 rounded-full bg-accent transition-all duration-300 ease-in-out"
-                      aria-hidden="true"></span>
-                  {/if}
-                  <span class="transition-colors duration-300 ease-in-out">{heading.text}</span>
-                </a>
-              </li>
-            {/each}
-          </ul>
+          <div class="relative pl-3">
+            <div
+              class="absolute top-1 bottom-1 left-0 w-0.5 rounded-full bg-border-subtle/80"
+              aria-hidden="true">
+            </div>
+
+            <ul
+              class="flex flex-col gap-1"
+              role="list">
+              {#each headings as heading, index (heading.id + '-' + index)}
+                {@const isActive = activeHeadingId === heading.id}
+                <li
+                  class="text-xs"
+                  style="padding-left: {(heading.level - 2) * 12}px;">
+                  <a
+                    href="#{heading.id}"
+                    onclick={e => {
+                      e.preventDefault();
+                      const target = document.getElementById(heading.id);
+                      if (target) {
+                        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        history.pushState(null, '', `#${heading.id}`);
+                        activeHeadingId = heading.id;
+                      }
+                    }}
+                    aria-current={isActive ? 'true' : undefined}
+                    class="group relative block rounded-md py-1 pr-2 leading-relaxed transition-all duration-300 ease-in-out hover:text-accent {(
+                      isActive
+                    ) ?
+                      'font-medium text-accent'
+                    : 'font-normal text-text-secondary'}">
+                    {#if isActive}
+                      <span
+                        class="absolute top-1/2 -left-3 h-4 w-1 -translate-y-1/2 rounded-full bg-accent shadow-xs transition-all duration-300 ease-in-out"
+                        aria-hidden="true"></span>
+                    {/if}
+                    <span class="transition-colors duration-300 ease-in-out">{heading.text}</span>
+                  </a>
+                </li>
+              {/each}
+            </ul>
+          </div>
         {/if}
       </div>
     </aside>
