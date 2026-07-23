@@ -40,7 +40,7 @@
     'relative z-10 mx-auto mt-auto w-full border-t border-border-subtle px-6 pt-10 pb-8 font-sans text-xs text-text-muted md:w-[80%] lg:w-[50%]',
     className,
   )}>
-  <!-- Layer 1: Upper Footer (2-Zone Grid with Matched Baseline, Gap, and Rhythm) -->
+  <!-- Layer 1: Upper Footer (2-Zone Grid with Baseline Alignment & Matched Description Rhythm) -->
   <div class="grid grid-cols-1 gap-8 pb-6 md:grid-cols-12">
     <!-- Zone 1 (Left): Brand, Bio & Social Links -->
     <div class="flex flex-col gap-3.5 md:col-span-7">
@@ -95,10 +95,13 @@
       </div>
     </div>
 
-    <!-- Zone 2 (Right Zone): Navigation Column (Baseline & Vertical Rhythm Matched with Left Zone) -->
+    <!-- Zone 2 (Right Zone): Navigation Column (Baseline Aligned with Name, Non-Bold Text Matched with Description) -->
     {#if resolvedNavItems.length > 0}
       <div class="flex flex-col md:col-span-5">
-        <h3 class="text-base font-bold text-text-primary">Navigation</h3>
+        <h4
+          class="pt-0.5 text-[11px] font-bold tracking-wider text-text-primary uppercase md:pt-[3px]">
+          Navigation
+        </h4>
         <ul class="mt-1.5 flex flex-col gap-1">
           {#each resolvedNavItems as item (item.url)}
             <li>
@@ -106,13 +109,13 @@
                 <button
                   type="button"
                   onclick={() => onNavClick(item.url)}
-                  class="cursor-pointer text-left text-xs leading-relaxed font-semibold text-text-secondary transition-colors hover:text-accent focus-visible:text-accent focus-visible:outline-none">
+                  class="cursor-pointer text-left text-xs leading-relaxed font-normal text-text-secondary transition-colors hover:text-accent focus-visible:text-accent focus-visible:outline-none">
                   {item.label}
                 </button>
               {:else}
                 <a
                   href={item.url}
-                  class="cursor-pointer text-left text-xs leading-relaxed font-semibold text-text-secondary transition-colors hover:text-accent focus-visible:text-accent focus-visible:outline-none">
+                  class="cursor-pointer text-left text-xs leading-relaxed font-normal text-text-secondary transition-colors hover:text-accent focus-visible:text-accent focus-visible:outline-none">
                   {item.label}
                 </a>
               {/if}
