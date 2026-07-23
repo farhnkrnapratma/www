@@ -268,20 +268,10 @@
   <div class="pt-4 text-center select-none">
     <div
       class="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-xs font-medium text-text-muted">
-      <span class="inline-flex shrink-0 items-center text-text-muted/70">
+      <span class="inline-flex shrink-0 items-center text-text-muted">
         &copy; {new Date().getFullYear()}
         {name}.
       </span>
-      <a
-        href="/atom.xml"
-        class="inline-flex shrink-0 items-center transition-colors hover:text-text-primary focus-visible:text-text-primary focus-visible:outline-none">
-        RSS
-      </a>
-      <a
-        href="/sitemap.xml"
-        class="inline-flex shrink-0 items-center transition-colors hover:text-text-primary focus-visible:text-text-primary focus-visible:outline-none">
-        Sitemap
-      </a>
       <a
         href="/privacy"
         class="inline-flex shrink-0 items-center transition-colors hover:text-text-primary focus-visible:text-text-primary focus-visible:outline-none">
@@ -293,6 +283,16 @@
         class="inline-flex shrink-0 cursor-pointer items-center transition-colors hover:text-text-primary focus-visible:text-text-primary focus-visible:outline-none">
         Manage cookies
       </button>
+      <a
+        href="/sitemap.xml"
+        class="inline-flex shrink-0 items-center transition-colors hover:text-text-primary focus-visible:text-text-primary focus-visible:outline-none">
+        Sitemap
+      </a>
+      <a
+        href="/atom.xml"
+        class="inline-flex shrink-0 items-center transition-colors hover:text-text-primary focus-visible:text-text-primary focus-visible:outline-none">
+        RSS
+      </a>
     </div>
   </div>
 </footer>
