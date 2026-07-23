@@ -203,16 +203,20 @@
   const headings = $derived(data.headings || []);
   let activeHeadingId = $state('');
   let isStretching = $state(false);
-  let indicatorTop = $state(0);
+  let indicatorY = $state(0);
   let indicatorHeight = $state(0);
+  let indicatorScaleY = $state(1);
+  let transformOrigin = $state('top');
   let isIndicatorVisible = $state(false);
   let tocListEl = $state<HTMLElement | null>(null);
 
   function updateIndicatorPos(
     headingId: string,
     stretch = false,
-    topOverride?: number,
+    yOverride?: number,
     heightOverride?: number,
+    scaleOverride?: number,
+    originOverride = 'top',
   ) {
     if (!tocListEl) return;
     const targetLink = tocListEl.querySelector<HTMLElement>(`a[href="#${headingId}"]`);
@@ -222,12 +226,19 @@
     }
     isIndicatorVisible = true;
     isStretching = stretch;
-    if (topOverride !== undefined && heightOverride !== undefined) {
-      indicatorTop = topOverride;
-      indicatorHeight = heightOverride;
+
+    const baseHeight = targetLink.getBoundingClientRect().height || targetLink.offsetHeight;
+
+    if (yOverride !== undefined && heightOverride !== undefined && scaleOverride !== undefined) {
+      indicatorY = yOverride;
+      indicatorHeight = baseHeight;
+      indicatorScaleY = scaleOverride;
+      transformOrigin = originOverride;
     } else {
-      indicatorTop = targetLink.offsetTop;
-      indicatorHeight = targetLink.offsetHeight;
+      indicatorY = targetLink.offsetTop;
+      indicatorHeight = baseHeight;
+      indicatorScaleY = 1;
+      transformOrigin = 'top';
     }
   }
 
@@ -249,6 +260,7 @@
     void html;
     let headingObserver: IntersectionObserver | null = null;
     let scrollTimeout: ReturnType<typeof setTimeout> | null = null;
+    let rafId: number | null = null;
 
     tick().then(() => {
       const container = document.querySelector('.prose-custom');
@@ -290,7 +302,7 @@
           updateIndicatorPos(initialId, false);
         }
 
-        const handleScroll = () => {
+        const updateScrollspyPosition = () => {
           if (!tocListEl) return;
           const scrollY = window.scrollY;
           const viewportOffset = 120;
@@ -323,27 +335,31 @@
           if (!currentLink) return;
 
           const currentTop = currentLink.offsetTop;
-          const currentHeight = currentLink.offsetHeight;
+          const currentHeight =
+            currentLink.getBoundingClientRect().height || currentLink.offsetHeight;
 
           let isCurrentlyStretching = false;
-          let calcTop = currentTop;
-          let calcHeight = currentHeight;
+          let calcY = currentTop;
+          let calcScaleY = 1;
+          let origin = 'top';
 
           // Stretch towards NEXT heading when scrolling down
           if (nextHeading) {
             const nextLink = tocListEl.querySelector<HTMLElement>(`a[href="#${nextHeading.id}"]`);
             if (nextLink) {
               const nextTop = nextLink.offsetTop;
-              const nextHeight = nextLink.offsetHeight;
+              const nextHeight = nextLink.getBoundingClientRect().height || nextLink.offsetHeight;
               const distance = nextHeading.top - currentHeading.top;
               if (distance > 0) {
                 const rawProgress = (scrollY - (currentHeading.top - viewportOffset)) / distance;
                 if (rawProgress > 0.02 && rawProgress < 0.98) {
                   isCurrentlyStretching = true;
-                  calcTop = currentTop;
-                  calcHeight =
+                  calcY = currentTop;
+                  const stretchedDist =
                     (nextTop + nextHeight - currentTop) * rawProgress +
                     currentHeight * (1 - rawProgress);
+                  calcScaleY = stretchedDist / currentHeight;
+                  origin = 'top';
                 }
               }
             }
@@ -359,8 +375,11 @@
                 const rawProgress = (currentHeading.top - viewportOffset - scrollY) / distance;
                 if (rawProgress > 0.02 && rawProgress < 0.98) {
                   isCurrentlyStretching = true;
-                  calcTop = currentTop - (currentTop - prevTop) * rawProgress;
-                  calcHeight = currentTop + currentHeight - calcTop;
+                  const targetTop = currentTop - (currentTop - prevTop) * rawProgress;
+                  const stretchedDist = currentTop + currentHeight - targetTop;
+                  calcY = targetTop;
+                  calcScaleY = stretchedDist / currentHeight;
+                  origin = 'bottom';
                 }
               }
             }
@@ -368,7 +387,7 @@
 
           activeHeadingId = currentHeading.id;
           if (isCurrentlyStretching) {
-            updateIndicatorPos(currentHeading.id, true, calcTop, calcHeight);
+            updateIndicatorPos(currentHeading.id, true, calcY, currentHeight, calcScaleY, origin);
           } else {
             updateIndicatorPos(currentHeading.id, false);
           }
@@ -379,6 +398,14 @@
               updateIndicatorPos(activeHeadingId, false);
             }
           }, 150);
+        };
+
+        const handleScroll = () => {
+          if (rafId !== null) return;
+          rafId = requestAnimationFrame(() => {
+            rafId = null;
+            updateScrollspyPosition();
+          });
         };
 
         window.addEventListener('scroll', handleScroll, { passive: true });
@@ -403,6 +430,7 @@
 
         return () => {
           window.removeEventListener('scroll', handleScroll);
+          if (rafId !== null) cancelAnimationFrame(rafId);
           if (scrollTimeout) clearTimeout(scrollTimeout);
           if (headingObserver) headingObserver.disconnect();
         };
@@ -1355,21 +1383,21 @@
           <p class="text-xs text-text-muted italic">No subheadings found.</p>
         {:else}
           <div class="relative pl-3">
-            <!-- Full continuous vertical track/rail with exact same width as indicator -->
+            <!-- Full continuous vertical track/rail spanning 100% container height with exact same width -->
             <div
-              class="absolute top-1 bottom-1 left-0 w-1 rounded-full bg-border-subtle/40"
+              class="absolute top-0 bottom-0 left-0 w-1 rounded-full bg-border-subtle/40"
               aria-hidden="true">
             </div>
 
-            <!-- Single Rubber Band Stretching Line Indicator -->
+            <!-- Single GPU-Accelerated Rubber Band Stretching Line Indicator -->
             {#if isIndicatorVisible}
               <div
-                class="absolute left-0 w-1 rounded-full bg-accent shadow-xs"
-                style="top: {indicatorTop}px; height: {indicatorHeight}px; transition: {(
+                class="absolute top-0 left-0 w-1 rounded-full bg-accent shadow-xs"
+                style="height: {indicatorHeight}px; transform: translateY({indicatorY}px) scaleY({indicatorScaleY}); transform-origin: {transformOrigin}; will-change: transform; transition: {(
                   isStretching
                 ) ?
                   'none'
-                : 'top 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), height 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)'};"
+                : 'transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), height 0.6s cubic-bezier(0.34, 1.56, 0.64, 1)'};"
                 aria-hidden="true">
               </div>
             {/if}
