@@ -83,7 +83,7 @@
 
 <footer
   class={cn(
-    'relative z-10 mx-auto mt-auto w-full px-6 pt-4 pb-20 font-sans text-xs text-text-muted md:w-[80%] md:pb-20 lg:w-[50%] lg:pb-6',
+    'relative z-10 mx-auto mt-auto w-full px-6 pt-1 pb-20 font-sans text-xs text-text-muted md:w-[80%] md:pb-20 lg:w-[50%] lg:pb-6',
     className,
   )}>
   <!-- Layer 1: Upper Footer Wrapped in Rounded Card Container -->
