@@ -815,7 +815,7 @@
                               type="button"
                               onclick={() => confirmDeleteComment(comment.id)}
                               aria-label="Delete comment by {getCommentAuthor(comment)}"
-                              class="cursor-pointer font-bold text-danger transition-colors hover:text-danger-hover hover:underline focus-visible:outline-none">
+                              class="cursor-pointer font-bold text-[#FE4C25] transition-colors hover:text-[#e03e19] hover:underline focus-visible:outline-none">
                               Delete
                             </button>
                           </div>

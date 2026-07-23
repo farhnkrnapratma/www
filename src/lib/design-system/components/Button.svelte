@@ -38,8 +38,8 @@
     secondary:
       'border border-border-default bg-surface text-text-primary hover:bg-surface-hover hover:border-border-strong shadow-xs',
     ghost: 'bg-transparent text-text-secondary hover:bg-surface-hover hover:text-text-primary',
-    danger: 'bg-danger text-white hover:bg-danger-hover shadow-xs',
-    destructive: 'bg-danger text-white hover:bg-danger-hover shadow-xs',
+    danger: 'bg-[#FE4C25] text-white hover:bg-[#e03e19] shadow-xs',
+    destructive: 'bg-[#FE4C25] text-white hover:bg-[#e03e19] shadow-xs',
     subtle: 'bg-accent-subtle text-accent hover:bg-accent/20 font-bold',
   };
 
