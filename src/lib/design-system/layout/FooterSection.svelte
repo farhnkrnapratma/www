@@ -83,10 +83,12 @@
 
 <footer
   class={cn(
-    'relative z-10 mx-auto mt-auto w-full border-t border-border-subtle px-6 pt-16 pb-12 font-sans text-xs text-text-muted md:w-[80%] lg:w-[50%]',
+    'relative z-10 mx-auto mt-auto w-full border-t border-border-subtle px-6 pt-12 pb-8 font-sans text-xs text-text-muted md:w-[80%] lg:w-[50%]',
     className,
   )}>
-  <div class="grid grid-cols-1 gap-8 pb-10 md:grid-cols-12">
+  <!-- Layer 1: Upper Footer (2-Zone Layout: Left Brand/Bio/Socials, Right Nav/Preferences Subgrid) -->
+  <div class="grid grid-cols-1 gap-8 pb-8 md:grid-cols-12">
+    <!-- Zone 1 (Left): Brand, Bio & Social Links -->
     <div class="flex flex-col gap-4 md:col-span-7">
       <div>
         <h3 class="text-base font-bold text-text-primary">{name}</h3>
@@ -139,136 +141,146 @@
       </div>
     </div>
 
+    <!-- Zone 2 (Right Subgrid): Navigation & Preferences Columns -->
     {#if resolvedNavItems.length > 0}
-      <div class="flex flex-col justify-between pt-8 md:col-span-5 md:pt-8">
-        <ul class="grid grid-cols-2 gap-x-4 gap-y-2">
-          {#each resolvedNavItems as item (item.url)}
-            <li>
-              {#if onNavClick}
-                <button
-                  type="button"
-                  onclick={() => onNavClick(item.url)}
-                  class="cursor-pointer text-left font-medium transition-colors hover:text-accent">
-                  {item.label}
-                </button>
-              {:else}
-                <a
-                  href={item.url}
-                  class="cursor-pointer text-left font-medium transition-colors hover:text-accent">
-                  {item.label}
-                </a>
-              {/if}
-            </li>
-          {/each}
-        </ul>
+      <div class="grid grid-cols-2 gap-6 pt-2 md:col-span-5 md:pt-0">
+        <!-- Navigation Subcolumn -->
+        <div class="flex flex-col gap-2.5">
+          <h4 class="text-[11px] font-bold tracking-wider text-text-primary uppercase">
+            Navigation
+          </h4>
+          <ul class="flex flex-col gap-2">
+            {#each resolvedNavItems as item (item.url)}
+              <li>
+                {#if onNavClick}
+                  <button
+                    type="button"
+                    onclick={() => onNavClick(item.url)}
+                    class="cursor-pointer text-left text-xs font-semibold text-text-secondary transition-colors hover:text-accent">
+                    {item.label}
+                  </button>
+                {:else}
+                  <a
+                    href={item.url}
+                    class="cursor-pointer text-left text-xs font-semibold text-text-secondary transition-colors hover:text-accent">
+                    {item.label}
+                  </a>
+                {/if}
+              </li>
+            {/each}
+          </ul>
+        </div>
 
-        <div class="relative mt-6 pt-1">
-          <button
-            type="button"
-            onclick={() => (themeDropdownOpen = !themeDropdownOpen)}
-            class="inline-flex h-8 items-center gap-2 rounded-lg border border-border-subtle bg-surface-card px-3 text-xs font-medium text-text-secondary shadow-2xs transition-all hover:bg-surface-hover hover:text-text-primary focus-visible:outline-none"
-            aria-label="Change theme"
-            aria-haspopup="true"
-            aria-expanded={themeDropdownOpen}>
-            <i
-              class="bi {getThemeIcon()} text-xs text-text-secondary"
-              aria-hidden="true"></i>
-            <span>{getThemeLabel()}</span>
-            <span
-              class="inline-flex h-3.5 w-3.5 shrink-0 origin-center items-center justify-center text-text-muted transition-transform duration-200 ease-out {(
-                themeDropdownOpen
-              ) ?
-                'rotate-180'
-              : ''}">
-              <i
-                class="bi bi-chevron-down text-[9px] leading-none"
-                aria-hidden="true"></i>
-            </span>
-          </button>
-
-          {#if themeDropdownOpen}
+        <!-- Preferences Subcolumn (Integrated Theme Selector) -->
+        <div class="flex flex-col gap-2.5">
+          <h4 class="text-[11px] font-bold tracking-wider text-text-primary uppercase">
+            Preferences
+          </h4>
+          <div class="relative">
             <button
               type="button"
-              class="fixed inset-0 z-40 cursor-default"
-              onclick={() => (themeDropdownOpen = false)}
-              aria-label="Close theme menu"></button>
-            <div
-              class="absolute bottom-full left-0 z-50 mb-1.5 flex min-w-32 flex-col rounded-xl border border-border-subtle bg-surface-elevated p-1 shadow-xl backdrop-blur-md">
-              {#each ['auto', 'light', 'dark'] as const as option (option)}
-                <button
-                  type="button"
-                  onclick={() => {
-                    applyTheme(option);
-                    themeDropdownOpen = false;
-                  }}
-                  class="flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-left text-xs font-medium transition-colors {(
-                    theme === option
-                  ) ?
-                    'bg-accent/10 font-semibold text-accent'
-                  : 'text-text-primary hover:bg-surface-hover'}">
-                  <i
-                    class="bi {getThemeIcon(option)} text-xs {theme === option ? 'text-accent' : (
-                      'text-text-secondary'
-                    )}"
-                    aria-hidden="true"></i>
-                  <span>{getThemeLabel(option)}</span>
-                </button>
-              {/each}
-            </div>
-          {/if}
+              onclick={() => (themeDropdownOpen = !themeDropdownOpen)}
+              class="inline-flex h-8 items-center gap-2 rounded-lg border border-border-subtle bg-surface-card px-3 text-xs font-semibold text-text-secondary shadow-2xs transition-all hover:bg-surface-hover hover:text-text-primary focus-visible:outline-none"
+              aria-label="Change theme"
+              aria-haspopup="true"
+              aria-expanded={themeDropdownOpen}>
+              <i
+                class="bi {getThemeIcon()} text-xs text-text-secondary"
+                aria-hidden="true"></i>
+              <span>{getThemeLabel()}</span>
+              <span
+                class="inline-flex h-3.5 w-3.5 shrink-0 origin-center items-center justify-center text-text-muted transition-transform duration-200 ease-out {(
+                  themeDropdownOpen
+                ) ?
+                  'rotate-180'
+                : ''}">
+                <i
+                  class="bi bi-chevron-down text-[9px] leading-none"
+                  aria-hidden="true"></i>
+              </span>
+            </button>
+
+            {#if themeDropdownOpen}
+              <button
+                type="button"
+                class="fixed inset-0 z-40 cursor-default"
+                onclick={() => (themeDropdownOpen = false)}
+                aria-label="Close theme menu"></button>
+              <div
+                class="absolute bottom-full left-0 z-50 mb-1.5 flex min-w-32 flex-col rounded-xl border border-border-subtle bg-surface-elevated p-1 shadow-xl backdrop-blur-md">
+                {#each ['auto', 'light', 'dark'] as const as option (option)}
+                  <button
+                    type="button"
+                    onclick={() => {
+                      applyTheme(option);
+                      themeDropdownOpen = false;
+                    }}
+                    class="flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-left text-xs font-medium transition-colors {(
+                      theme === option
+                    ) ?
+                      'bg-accent/10 font-semibold text-accent'
+                    : 'text-text-primary hover:bg-surface-hover'}">
+                    <i
+                      class="bi {getThemeIcon(option)} text-xs {theme === option ? 'text-accent' : (
+                        'text-text-secondary'
+                      )}"
+                      aria-hidden="true"></i>
+                    <span>{getThemeLabel(option)}</span>
+                  </button>
+                {/each}
+              </div>
+            {/if}
+          </div>
         </div>
       </div>
     {/if}
   </div>
 
-  <!-- Footer Meta Section with Categorized Resources & Legal Columns -->
-  <div class="mt-6 border-t border-border-subtle/60 pt-6 select-none">
-    <div class="flex flex-wrap items-start justify-start gap-x-16 gap-y-6 text-left">
-      <!-- Resources Column -->
-      <div class="flex flex-col gap-2">
-        <h4 class="text-[11px] font-bold tracking-wider text-text-primary uppercase">Resources</h4>
-        <div class="flex flex-col gap-2">
-          <a
-            href="/atom.xml"
-            class="inline-flex items-center gap-1.5 text-xs font-semibold text-text-secondary transition-colors hover:text-[#f26522] focus-visible:text-[#f26522] focus-visible:outline-none">
-            <i
-              class="bi bi-rss-fill text-[11px] leading-none text-[#f26522]"
-              aria-hidden="true"></i>
-            <span>RSS feed</span>
-            <span
-              class="rounded bg-[#f26522]/15 px-1 py-0.5 font-mono text-[9px] leading-none font-bold text-[#f26522]"
-              >XML</span>
-          </a>
-          <a
-            href="/sitemap.xml"
-            class="text-xs font-semibold text-text-secondary transition-colors hover:text-accent focus-visible:text-accent focus-visible:outline-none">
-            Sitemap
-          </a>
-        </div>
-      </div>
-
-      <!-- Legal & Privacy Column -->
-      <div class="flex flex-col gap-2">
-        <h4 class="text-[11px] font-bold tracking-wider text-text-primary uppercase">Legal</h4>
-        <div class="flex flex-col gap-2">
-          <a
-            href="/privacy"
-            class="text-xs font-semibold text-text-secondary transition-colors hover:text-accent focus-visible:text-accent focus-visible:outline-none">
-            Privacy Policy
-          </a>
-          <button
-            type="button"
-            onclick={() => consentStore.openCustomizeModal()}
-            class="cursor-pointer text-left text-xs font-semibold text-text-secondary transition-colors hover:text-accent focus-visible:text-accent focus-visible:outline-none">
-            Cookie Settings
-          </button>
-        </div>
-      </div>
+  <!-- Layer 2: Utility / Legal Grouped Horizontal Row -->
+  <div class="border-t border-border-subtle/60 pt-6 select-none">
+    <div
+      class="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs font-semibold text-text-secondary">
+      <a
+        href="/atom.xml"
+        class="inline-flex items-center gap-1.5 whitespace-nowrap transition-colors hover:text-[#f26522] focus-visible:text-[#f26522] focus-visible:outline-none">
+        <i
+          class="bi bi-rss-fill text-[11px] leading-none text-[#f26522]"
+          aria-hidden="true"></i>
+        <span>RSS feed</span>
+        <span
+          class="rounded bg-[#f26522]/15 px-1 py-0.5 font-mono text-[9px] leading-none font-bold text-[#f26522]"
+          >XML</span>
+      </a>
+      <span
+        class="text-text-muted/40"
+        aria-hidden="true">&middot;</span>
+      <a
+        href="/sitemap.xml"
+        class="whitespace-nowrap transition-colors hover:text-accent focus-visible:text-accent focus-visible:outline-none">
+        Sitemap
+      </a>
+      <span
+        class="text-text-muted/40"
+        aria-hidden="true">&middot;</span>
+      <a
+        href="/privacy"
+        class="whitespace-nowrap transition-colors hover:text-accent focus-visible:text-accent focus-visible:outline-none">
+        Privacy Policy
+      </a>
+      <span
+        class="text-text-muted/40"
+        aria-hidden="true">&middot;</span>
+      <button
+        type="button"
+        onclick={() => consentStore.openCustomizeModal()}
+        class="cursor-pointer whitespace-nowrap transition-colors hover:text-accent focus-visible:text-accent focus-visible:outline-none">
+        Cookie Settings
+      </button>
     </div>
 
-    <!-- Restored Full Dynamic Copyright Notice -->
-    <div class="mt-6 border-t border-border-subtle/40 pt-4 text-center sm:text-left">
-      <p class="text-xs font-medium text-text-secondary/80">
+    <!-- Layer 3: Centered Copyright Closing Row -->
+    <div class="mt-5 border-t border-border-subtle/40 pt-4 text-center">
+      <p class="text-xs font-medium text-text-muted/80">
         &copy; {new Date().getFullYear()}
         {name}. All rights reserved.
       </p>
