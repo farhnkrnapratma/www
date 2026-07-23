@@ -965,7 +965,7 @@
       </div>
 
       <div
-        class="mt-8 flex flex-col items-center gap-5 rounded-2xl border border-border-subtle bg-surface-card/45 p-6 select-none sm:flex-row sm:items-start">
+        class="mt-8 flex w-full max-w-full flex-col items-center gap-5 overflow-hidden rounded-2xl border border-border-subtle bg-surface-card/45 p-5 shadow-xs backdrop-blur-lg select-none sm:flex-row sm:items-start sm:p-6">
         <div
           class="relative h-20 w-20 shrink-0 animate-pulse overflow-hidden rounded-full border border-border-subtle bg-surface-card/60">
           <img
@@ -978,17 +978,20 @@
               )}
             class="h-full w-full object-cover object-top" />
         </div>
-        <div class="min-w-0 flex-1 text-center sm:text-left">
-          <h4 class="text-base leading-snug font-bold text-text-primary">Farhan Kurnia Pratama</h4>
-          <p class="mt-0.5 text-xs font-semibold text-text-secondary">
+        <div class="w-full min-w-0 flex-1 text-center sm:text-left">
+          <h4 class="px-1 text-base leading-snug font-bold text-text-primary sm:px-0">
+            Farhan Kurnia Pratama
+          </h4>
+          <p class="mt-0.5 px-1 text-xs font-semibold text-text-secondary sm:px-0">
             Linux/Unix, AI, Open-Source Software, and Cybersecurity.
           </p>
-          <p class="mt-3 text-sm leading-relaxed text-text-secondary/90">
+          <p class="mt-3 px-1 text-sm leading-relaxed text-text-secondary/90 sm:px-0">
             Security-focused Software Engineer with expertise in Linux/Unix, AI, and Open-Source
             Software, dedicated to building reliable, maintainable, and privacy-centric systems.
           </p>
 
-          <div class="mt-4 flex items-center justify-center gap-4 sm:justify-start">
+          <div
+            class="mt-4 flex flex-wrap items-center justify-center gap-2.5 px-1 sm:justify-start sm:gap-4 sm:px-0">
             <a
               href="https://github.com/farhnkrnapratma"
               target="_blank"
@@ -1376,13 +1379,12 @@
 
               {#if comment.children && comment.children.length > 0}
                 <div
-                  class="replies-container relative"
-                  style="padding-left: clamp(16px, 5vw, 44px);">
+                  class="replies-container relative mt-3 space-y-4 border-l border-border-subtle/40 pl-4 sm:ml-4 sm:pl-6">
                   {#each comment.children as child, i (child.id)}
-                    <div class="child-wrapper relative mt-4">
+                    <div class="child-wrapper relative">
                       <div
-                        class="absolute z-0 border-b border-l border-text-muted/10"
-                        style="left: -28px; top: -16px; width: 28px; height: 32px; border-bottom-left-radius: 10px;">
+                        class="absolute top-3.5 -left-4 h-3.5 w-3.5 rounded-bl-lg border-b border-l border-border-subtle/60 sm:-left-6 sm:w-5"
+                        aria-hidden="true">
                       </div>
                       {@render commentNode(child, depth + 1, i === comment.children.length - 1)}
                     </div>
