@@ -86,9 +86,9 @@
     'relative z-10 mx-auto mt-auto w-full border-t border-border-subtle px-6 pt-10 pb-8 font-sans text-xs text-text-muted md:w-[80%] lg:w-[50%]',
     className,
   )}>
-  <!-- Layer 1: Upper Footer (Grid Alignment: Left Brand/Bio; Right 2x3 Nav Grid + Theme Switcher Aligned with Social Icons) -->
-  <div class="grid grid-cols-1 gap-x-8 gap-y-1.5 pb-6 md:grid-cols-12">
-    <!-- Header Row: Name on Left -->
+  <!-- Layer 1: Upper Footer (Left: Brand/Bio; Right: 2x3 Nav Grid; Shared Row 3 for Social Icons + Floated Right Theme Switcher) -->
+  <div class="grid grid-cols-1 gap-x-8 gap-y-2.5 pb-6 md:grid-cols-12">
+    <!-- Row 1: Name on Left -->
     <div class="md:col-span-7">
       <h3 class="text-base font-bold text-text-primary">{name}</h3>
     </div>
@@ -98,13 +98,44 @@
       <div class="hidden md:col-span-5 md:block"></div>
     {/if}
 
-    <!-- Left Column: Bio & Social Icons -->
-    <div class="flex flex-col gap-3.5 pt-0.5 md:col-span-7">
+    <!-- Row 2: Bio on Left; 2x3 Navigation Grid on Right -->
+    <div class="pt-0.5 md:col-span-7">
       <p class="max-w-md text-xs leading-relaxed text-text-secondary">
         {description}
       </p>
+    </div>
 
-      <div class="flex items-center gap-2.5 pt-0.5">
+    {#if resolvedNavItems.length > 0}
+      <div class="pt-0.5 md:col-span-5">
+        <nav aria-label="Footer navigation">
+          <ul class="grid grid-cols-2 gap-x-6 gap-y-0 text-xs font-normal text-text-secondary">
+            {#each resolvedNavItems as item (item.url)}
+              <li class="text-xs leading-relaxed">
+                {#if onNavClick}
+                  <button
+                    type="button"
+                    onclick={() => onNavClick(item.url)}
+                    class="cursor-pointer text-left text-xs leading-relaxed font-normal text-text-secondary transition-colors hover:text-accent focus-visible:text-accent focus-visible:outline-none">
+                    {item.label}
+                  </button>
+                {:else}
+                  <a
+                    href={item.url}
+                    class="cursor-pointer text-left text-xs leading-relaxed font-normal text-text-secondary transition-colors hover:text-accent focus-visible:text-accent focus-visible:outline-none">
+                    {item.label}
+                  </a>
+                {/if}
+              </li>
+            {/each}
+          </ul>
+        </nav>
+      </div>
+    {/if}
+
+    <!-- Row 3: Shared Horizontal Alignment Row (Social Media Buttons on Left + Theme Switcher Floated Right) -->
+    <div class="flex items-center justify-between pt-2 md:col-span-12">
+      <!-- Left: Social Media Buttons -->
+      <div class="flex items-center gap-2.5">
         <a
           href="https://github.com/farhnkrnapratma"
           target="_blank"
@@ -146,96 +177,66 @@
             aria-hidden="true"></i>
         </a>
       </div>
-    </div>
 
-    <!-- Right Column: 2x3 Nav Grid + Theme Switcher Floated Right (Aligned with Social Icons) -->
-    {#if resolvedNavItems.length > 0}
-      <div class="flex flex-col gap-3.5 pt-0.5 md:col-span-5">
-        <nav aria-label="Footer navigation">
-          <ul class="grid grid-cols-2 gap-x-6 gap-y-0 text-xs font-normal text-text-secondary">
-            {#each resolvedNavItems as item (item.url)}
-              <li class="text-xs leading-relaxed">
-                {#if onNavClick}
-                  <button
-                    type="button"
-                    onclick={() => onNavClick(item.url)}
-                    class="cursor-pointer text-left text-xs leading-relaxed font-normal text-text-secondary transition-colors hover:text-accent focus-visible:text-accent focus-visible:outline-none">
-                    {item.label}
-                  </button>
-                {:else}
-                  <a
-                    href={item.url}
-                    class="cursor-pointer text-left text-xs leading-relaxed font-normal text-text-secondary transition-colors hover:text-accent focus-visible:text-accent focus-visible:outline-none">
-                    {item.label}
-                  </a>
-                {/if}
-              </li>
-            {/each}
-          </ul>
-        </nav>
+      <!-- Right: Theme Switcher Button (Exact same horizontal row & baseline, floated right) -->
+      <div class="relative w-fit">
+        <button
+          type="button"
+          onclick={() => (themeDropdownOpen = !themeDropdownOpen)}
+          class="inline-flex h-8 w-fit min-w-[5.5rem] cursor-pointer items-center justify-between gap-2 rounded-lg border border-border-subtle bg-surface-card px-2.5 text-xs font-semibold text-text-secondary shadow-2xs transition-all hover:border-border-subtle/80 hover:bg-surface-hover hover:text-text-primary focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none"
+          aria-label="Change theme"
+          aria-haspopup="true"
+          aria-expanded={themeDropdownOpen}>
+          <span class="inline-flex items-center gap-1.5 whitespace-nowrap">
+            <i
+              class="bi {getThemeIcon()} text-xs text-text-secondary"
+              aria-hidden="true"></i>
+            <span>{getThemeLabel()}</span>
+          </span>
+          <span
+            class="inline-flex h-3.5 w-3.5 shrink-0 origin-center items-center justify-center text-text-muted transition-transform duration-200 ease-out {(
+              themeDropdownOpen
+            ) ?
+              'rotate-180'
+            : ''}">
+            <i
+              class="bi bi-chevron-down text-[9px] leading-none"
+              aria-hidden="true"></i>
+          </span>
+        </button>
 
-        <!-- Theme Switcher Button (Aligned with social media buttons on left, floated right) -->
-        <div class="flex items-center justify-end pt-0.5">
-          <div class="relative w-fit">
-            <button
-              type="button"
-              onclick={() => (themeDropdownOpen = !themeDropdownOpen)}
-              class="inline-flex h-8 w-fit min-w-[5.5rem] cursor-pointer items-center justify-between gap-2 rounded-lg border border-border-subtle bg-surface-card px-2.5 text-xs font-semibold text-text-secondary shadow-2xs transition-all hover:border-border-subtle/80 hover:bg-surface-hover hover:text-text-primary focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none"
-              aria-label="Change theme"
-              aria-haspopup="true"
-              aria-expanded={themeDropdownOpen}>
-              <span class="inline-flex items-center gap-1.5 whitespace-nowrap">
-                <i
-                  class="bi {getThemeIcon()} text-xs text-text-secondary"
-                  aria-hidden="true"></i>
-                <span>{getThemeLabel()}</span>
-              </span>
-              <span
-                class="inline-flex h-3.5 w-3.5 shrink-0 origin-center items-center justify-center text-text-muted transition-transform duration-200 ease-out {(
-                  themeDropdownOpen
-                ) ?
-                  'rotate-180'
-                : ''}">
-                <i
-                  class="bi bi-chevron-down text-[9px] leading-none"
-                  aria-hidden="true"></i>
-              </span>
-            </button>
-
-            {#if themeDropdownOpen}
+        {#if themeDropdownOpen}
+          <button
+            type="button"
+            class="fixed inset-0 z-40 cursor-default"
+            onclick={() => (themeDropdownOpen = false)}
+            aria-label="Close theme menu"></button>
+          <div
+            class="absolute right-0 bottom-full z-50 mb-1.5 flex min-w-[7rem] flex-col rounded-xl border border-border-subtle bg-surface-elevated p-1 shadow-xl backdrop-blur-md">
+            {#each ['auto', 'light', 'dark'] as const as option (option)}
               <button
                 type="button"
-                class="fixed inset-0 z-40 cursor-default"
-                onclick={() => (themeDropdownOpen = false)}
-                aria-label="Close theme menu"></button>
-              <div
-                class="absolute right-0 bottom-full z-50 mb-1.5 flex min-w-[7rem] flex-col rounded-xl border border-border-subtle bg-surface-elevated p-1 shadow-xl backdrop-blur-md">
-                {#each ['auto', 'light', 'dark'] as const as option (option)}
-                  <button
-                    type="button"
-                    onclick={() => {
-                      applyTheme(option);
-                      themeDropdownOpen = false;
-                    }}
-                    class="flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-left text-xs font-medium transition-colors {(
-                      theme === option
-                    ) ?
-                      'bg-accent/10 font-semibold text-accent'
-                    : 'text-text-primary hover:bg-surface-hover'}">
-                    <i
-                      class="bi {getThemeIcon(option)} text-xs {theme === option ? 'text-accent' : (
-                        'text-text-secondary'
-                      )}"
-                      aria-hidden="true"></i>
-                    <span>{getThemeLabel(option)}</span>
-                  </button>
-                {/each}
-              </div>
-            {/if}
+                onclick={() => {
+                  applyTheme(option);
+                  themeDropdownOpen = false;
+                }}
+                class="flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-left text-xs font-medium transition-colors {(
+                  theme === option
+                ) ?
+                  'bg-accent/10 font-semibold text-accent'
+                : 'text-text-primary hover:bg-surface-hover'}">
+                <i
+                  class="bi {getThemeIcon(option)} text-xs {theme === option ? 'text-accent' : (
+                    'text-text-secondary'
+                  )}"
+                  aria-hidden="true"></i>
+                <span>{getThemeLabel(option)}</span>
+              </button>
+            {/each}
           </div>
-        </div>
+        {/if}
       </div>
-    {/if}
+    </div>
   </div>
 
   <!-- Layer 2: Consolidated Single Bottom Meta Row (Copyright · RSS · Sitemap · Privacy · Manage cookies) -->
