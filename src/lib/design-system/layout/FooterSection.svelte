@@ -40,16 +40,24 @@
     'relative z-10 mx-auto mt-auto w-full border-t border-border-subtle px-6 pt-10 pb-8 font-sans text-xs text-text-muted md:w-[80%] lg:w-[50%]',
     className,
   )}>
-  <!-- Layer 1: Upper Footer (2-Zone Grid with Baseline Alignment & Matched Description Rhythm) -->
-  <div class="grid grid-cols-1 gap-8 pb-6 md:grid-cols-12">
-    <!-- Zone 1 (Left): Brand, Bio & Social Links -->
-    <div class="flex flex-col gap-3.5 md:col-span-7">
-      <div>
-        <h3 class="text-base font-bold text-text-primary">{name}</h3>
-        <p class="mt-1.5 max-w-md text-xs leading-relaxed text-text-secondary">
-          {description}
-        </p>
+  <!-- Layer 1: Upper Footer (Strict 12-Column Grid with CSS Baseline Alignment & Identical Line-Height Rhythm) -->
+  <div class="grid grid-cols-1 gap-x-8 gap-y-1.5 pb-6 md:grid-cols-12 md:items-baseline">
+    <!-- Row 1: Headings (Mathematically Aligned to Same CSS Text Baseline) -->
+    <div class="md:col-span-7">
+      <h3 class="text-base font-bold text-text-primary">{name}</h3>
+    </div>
+
+    {#if resolvedNavItems.length > 0}
+      <div class="pt-4 md:col-span-5 md:pt-0">
+        <h4 class="text-[11px] font-bold tracking-wider text-text-primary uppercase">Navigation</h4>
       </div>
+    {/if}
+
+    <!-- Row 2: Content Bodies (Left: Bio + Socials; Right: Nav Items matching Description Line-Height) -->
+    <div class="flex flex-col gap-3.5 pt-0.5 md:col-span-7">
+      <p class="max-w-md text-xs leading-relaxed text-text-secondary">
+        {description}
+      </p>
 
       <div class="flex items-center gap-2.5 pt-0.5">
         <a
@@ -95,16 +103,11 @@
       </div>
     </div>
 
-    <!-- Zone 2 (Right Zone): Navigation Column (Baseline Aligned with Name, Non-Bold Text Matched with Description) -->
     {#if resolvedNavItems.length > 0}
-      <div class="flex flex-col md:col-span-5">
-        <h4
-          class="pt-0.5 text-[11px] font-bold tracking-wider text-text-primary uppercase md:pt-[3px]">
-          Navigation
-        </h4>
-        <ul class="mt-1.5 flex flex-col gap-1">
+      <div class="pt-0.5 md:col-span-5">
+        <ul class="flex flex-col">
           {#each resolvedNavItems as item (item.url)}
-            <li>
+            <li class="text-xs leading-relaxed">
               {#if onNavClick}
                 <button
                   type="button"
