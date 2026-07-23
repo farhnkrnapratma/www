@@ -318,7 +318,6 @@
 
           if (headingPositions.length > 0 && scrollY < headingPositions[0].top - viewportOffset) {
             activeHeadingId = '';
-            indicatorOpacity = 0;
             return;
           }
 

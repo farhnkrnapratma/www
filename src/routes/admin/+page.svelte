@@ -437,6 +437,13 @@
     return comment.is_anonymous ? 'Anonymous' : comment.author_name;
   }
 
+  function estimateReadTimeFromText(excerpt?: string | null): string {
+    const text = excerpt || '';
+    const words = text.trim().split(/\s+/).filter(Boolean).length;
+    const minutes = Math.max(1, Math.ceil(words / 40));
+    return `${minutes} min${minutes > 1 ? 's' : ''} read`;
+  }
+
   function getCommentIcon(comment: AdminComment) {
     if (comment.author_name === 'Admin') return 'person_shield';
     return comment.is_anonymous ? 'domino_mask' : 'person';
