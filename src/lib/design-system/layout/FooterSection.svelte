@@ -83,7 +83,7 @@
 
 <footer
   class={cn(
-    'relative z-10 mx-auto mt-auto w-full px-6 pt-1 pb-20 font-sans text-xs text-text-muted md:w-[80%] md:pb-20 lg:w-[50%] lg:pb-6',
+    'relative z-10 mx-auto mt-auto w-full px-6 pt-0 pb-20 font-sans text-xs text-text-muted md:w-[80%] md:pb-20 lg:w-[50%] lg:pb-6',
     className,
   )}>
   <!-- Layer 1: Upper Footer Wrapped in Rounded Card Container -->
@@ -242,36 +242,36 @@
     </div>
   </div>
 
-  <!-- Layer 2: Consolidated Single Bottom Meta Row (Center Aligned) -->
-  <div class="pt-5 text-center select-none">
+  <!-- Layer 2: Consolidated Single Bottom Meta Row (Center Baseline Aligned with Centered RSS Icon) -->
+  <div class="pt-4 text-center select-none">
     <div
-      class="no-scrollbar flex max-w-full items-center justify-center gap-x-4 overflow-x-auto text-xs font-medium whitespace-nowrap text-text-muted">
-      <span class="shrink-0 text-text-muted/70">
+      class="no-scrollbar flex max-w-full items-center justify-center gap-x-4 overflow-x-auto text-xs leading-none font-medium whitespace-nowrap text-text-muted">
+      <span class="inline-flex shrink-0 items-center leading-none text-text-muted/70">
         &copy; {new Date().getFullYear()}
         {name}.
       </span>
       <a
         href="/atom.xml"
-        class="group inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap transition-colors hover:text-text-primary focus-visible:text-text-primary focus-visible:outline-none">
+        class="group inline-flex shrink-0 items-center justify-center gap-1.5 leading-none whitespace-nowrap transition-colors hover:text-text-primary focus-visible:text-text-primary focus-visible:outline-none">
         <i
           class="bi bi-rss-fill text-[11px] leading-none text-text-muted transition-colors group-hover:text-text-primary"
           aria-hidden="true"></i>
-        <span>RSS</span>
+        <span class="leading-none">RSS</span>
       </a>
       <a
         href="/sitemap.xml"
-        class="shrink-0 whitespace-nowrap transition-colors hover:text-text-primary focus-visible:text-text-primary focus-visible:outline-none">
+        class="inline-flex shrink-0 items-center leading-none whitespace-nowrap transition-colors hover:text-text-primary focus-visible:text-text-primary focus-visible:outline-none">
         Sitemap
       </a>
       <a
         href="/privacy"
-        class="shrink-0 whitespace-nowrap transition-colors hover:text-text-primary focus-visible:text-text-primary focus-visible:outline-none">
+        class="inline-flex shrink-0 items-center leading-none whitespace-nowrap transition-colors hover:text-text-primary focus-visible:text-text-primary focus-visible:outline-none">
         Privacy
       </a>
       <button
         type="button"
         onclick={() => consentStore.openCustomizeModal()}
-        class="shrink-0 cursor-pointer whitespace-nowrap transition-colors hover:text-text-primary focus-visible:text-text-primary focus-visible:outline-none">
+        class="inline-flex shrink-0 cursor-pointer items-center leading-none whitespace-nowrap transition-colors hover:text-text-primary focus-visible:text-text-primary focus-visible:outline-none">
         Manage cookies
       </button>
     </div>
