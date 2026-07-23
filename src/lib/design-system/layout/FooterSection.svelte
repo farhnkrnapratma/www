@@ -99,7 +99,7 @@
         <div class="hidden md:col-span-5 md:block"></div>
       {/if}
 
-      <!-- Row 2: Bio on Left; 2x3 Navigation Grid on Right with Centered Vertical Divider -->
+      <!-- Row 2: Bio on Left; 2x3 Navigation Grid on Right (Horizontal Divider on Mobile, Vertical Divider on Desktop) -->
       <div class="pt-0.5 md:col-span-7 md:pr-6">
         <p class="max-w-md text-xs leading-relaxed text-text-secondary">
           {description}
@@ -107,7 +107,8 @@
       </div>
 
       {#if resolvedNavItems.length > 0}
-        <div class="pt-0.5 md:col-span-5 md:border-l md:border-border-subtle/40 md:pl-6">
+        <div
+          class="mt-3 border-t border-border-subtle/40 pt-3 md:col-span-5 md:mt-0 md:border-t-0 md:border-l md:border-border-subtle/40 md:pt-0.5 md:pl-6">
           <nav aria-label="Footer navigation">
             <ul class="grid grid-cols-2 gap-x-6 gap-y-1.5 text-xs font-normal text-text-secondary">
               {#each resolvedNavItems as item, index (item.url)}
