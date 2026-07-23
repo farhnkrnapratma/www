@@ -170,15 +170,12 @@
   const comments = $derived([...data.comments, ...addedComments]);
   let isDark = $state(false);
 
-  let bannerPublicUrl = $state('');
-  $effect(() => {
-    if (data.post.banner_path) {
-      const { data: res } = supabase.storage.from('blog-posts').getPublicUrl(data.post.banner_path);
-      bannerPublicUrl = res.publicUrl;
-    } else {
-      bannerPublicUrl = '';
-    }
-  });
+  const bannerPublicUrl = $derived(
+    data.bannerPublicUrl ||
+      (data.post.banner_path ?
+        supabase.storage.from('blog-posts').getPublicUrl(data.post.banner_path).data.publicUrl
+      : ''),
+  );
 
   type Theme = 'auto' | 'dark' | 'light';
   let theme = $state<Theme>('auto');

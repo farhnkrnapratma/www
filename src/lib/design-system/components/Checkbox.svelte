@@ -30,7 +30,7 @@
     {id}
     {disabled}
     bind:checked
-    class="mt-0.5 h-4 w-4 cursor-pointer rounded border-border-default bg-surface text-accent accent-accent transition-colors focus:ring-2 focus:ring-accent/20 focus:ring-offset-0 focus:outline-none"
+    class="mt-0.5 h-3.5 w-3.5 cursor-pointer rounded border-border-default bg-surface text-accent accent-accent transition-colors focus:ring-2 focus:ring-accent/20 focus:ring-offset-0 focus:outline-none"
     {...restProps} />
   {#if label || description}
     <div class="flex flex-col">

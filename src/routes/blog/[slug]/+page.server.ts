@@ -137,11 +137,18 @@ export const load: PageServerLoad = async ({ params, fetch }) => {
     console.error('Database error fetching comments:', err);
   }
 
+  let bannerPublicUrl: string | null = null;
+  if (post.banner_path) {
+    const { data: bannerRes } = supabase.storage.from('blog-posts').getPublicUrl(post.banner_path);
+    bannerPublicUrl = bannerRes?.publicUrl || null;
+  }
+
   return {
     post: {
       ...post,
       read_time: readTime,
     },
+    bannerPublicUrl,
     html,
     headings,
     comments,

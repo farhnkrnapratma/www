@@ -196,6 +196,18 @@
         return a.title.localeCompare(b.title) * sortDir;
       } else if (sortField === 'status') {
         return (Number(a.published) - Number(b.published)) * sortDir;
+      } else if (sortField === 'views') {
+        const vA = postViewsMap.get(a.id) ?? 0;
+        const vB = postViewsMap.get(b.id) ?? 0;
+        return (vA - vB) * sortDir;
+      } else if (sortField === 'comments') {
+        const cA = getPostComments(a.id).length;
+        const cB = getPostComments(b.id).length;
+        return (cA - cB) * sortDir;
+      } else if (sortField === 'readingTime') {
+        const rA = (a.excerpt || '').length;
+        const rB = (b.excerpt || '').length;
+        return (rA - rB) * sortDir;
       } else {
         return (new Date(a.created_at).getTime() - new Date(b.created_at).getTime()) * sortDir;
       }
@@ -575,6 +587,9 @@
               <SortControl
                 fields={[
                   { value: 'date', label: 'Date' },
+                  { value: 'views', label: 'Views' },
+                  { value: 'comments', label: 'Comments' },
+                  { value: 'readingTime', label: 'Reading time' },
                   { value: 'title', label: 'Title' },
                   { value: 'status', label: 'Status' },
                 ]}
@@ -652,6 +667,8 @@
                   <div
                     class="flex flex-wrap items-center gap-1.5 text-xs font-medium text-text-muted select-none">
                     <span>{formatBlogDate(post.created_at)}</span>
+                    <span aria-hidden="true">&middot;</span>
+                    <span>{estimateReadTimeFromText(post.excerpt)}</span>
                     <span aria-hidden="true">&middot;</span>
                     <span>{formatViewCount(postViewsMap.get(post.id) ?? 0)}</span>
                     <span aria-hidden="true">&middot;</span>

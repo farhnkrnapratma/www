@@ -467,6 +467,10 @@
         return a.name.localeCompare(b.name) * sortDir;
       } else if (sortField === 'stars') {
         return ((a.stars || 0) - (b.stars || 0)) * sortDir;
+      } else if (sortField === 'license') {
+        const lA = a.licenseName || '';
+        const lB = b.licenseName || '';
+        return lA.localeCompare(lB) * sortDir;
       } else {
         return a.name.localeCompare(b.name) * sortDir;
       }
@@ -1444,7 +1448,7 @@
             {#snippet filterControlsSlot()}
               {#if allProjectTags.length > 0}
                 <FilterCheckboxGroup
-                  label="Tech/Tag"
+                  label="Topics"
                   options={allProjectTags.map(t => ({ value: t, label: t }))}
                   selectedValues={projectFilterStore.filters['tag'] || []}
                   onChange={val => projectFilterStore.toggleMultiFilter('tag', val)} />
@@ -1463,6 +1467,7 @@
                 fields={[
                   { value: 'name', label: 'Name' },
                   { value: 'stars', label: 'Stars' },
+                  { value: 'license', label: 'License' },
                 ]}
                 currentField={projectFilterStore.sort.field}
                 currentDirection={projectFilterStore.sort.direction}

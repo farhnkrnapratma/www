@@ -60,10 +60,6 @@
         role="group"
         aria-label="{label} filters"
         class="absolute top-[calc(100%+4px)] left-0 z-[60] flex min-w-48 flex-col rounded-xl border border-border-subtle bg-surface-elevated shadow-xl backdrop-blur-md">
-        <div
-          class="border-b border-border-subtle/40 px-3 py-2 text-[11px] font-semibold text-text-secondary">
-          Filter by {label}
-        </div>
         <div class="no-scrollbar flex max-h-52 flex-col overflow-y-auto p-1.5">
           {#each options as opt (opt.value)}
             <label

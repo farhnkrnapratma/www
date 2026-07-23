@@ -45,9 +45,7 @@
   const isDirty = $derived(
     title.trim() !== initialTitle.trim() ||
       excerpt.trim() !== initialExcerpt.trim() ||
-      markdownContent.trim() !== initialMarkdownContent.trim() ||
-      (bannerPath || '').trim() !== (initialBannerPath || '').trim() ||
-      bannerFile !== null,
+      markdownContent.trim() !== initialMarkdownContent.trim(),
   );
 
   let titleError = $state('');
@@ -606,7 +604,8 @@
     return new Promise(resolve => {
       const img = new Image();
       img.onload = () => {
-        const valid = img.width === 1280 && img.height === 640;
+        const ratio = img.width / img.height;
+        const valid = (img.width === 1280 && img.height === 640) || Math.abs(ratio - 2.0) < 0.05;
         resolve(valid);
       };
       img.onerror = () => {
@@ -622,15 +621,16 @@
     const file = input.files?.[0];
     if (!file) return;
 
-    if (file.type !== 'image/png') {
-      bannerError = 'Banner must be a PNG image.';
+    const validTypes = ['image/png', 'image/jpeg', 'image/jpg', 'image/webp'];
+    if (!validTypes.includes(file.type)) {
+      bannerError = 'Banner must be a PNG, JPG, or WebP image.';
       input.value = '';
       return;
     }
 
     const isValidDimensions = await validateImageDimensions(file);
     if (!isValidDimensions) {
-      bannerError = 'Banner dimensions must be exactly 1280x640 pixels.';
+      bannerError = 'Banner dimensions must have a 2:1 ratio (e.g. 1280x640 pixels).';
       input.value = '';
       return;
     }
@@ -942,13 +942,9 @@
               <input
                 type="file"
                 id="post-banner"
-                accept="image/png"
+                accept="image/png,image/jpeg,image/webp"
                 onchange={handleBannerChange}
                 class="mt-2 block w-full text-xs text-text-secondary file:mr-4 file:cursor-pointer file:rounded-lg file:border file:border-border-subtle file:bg-surface-card file:px-4 file:py-2 file:text-xs file:font-semibold file:text-text-primary hover:file:bg-surface-hover focus:outline-2 focus:outline-accent" />
-
-              <span class="text-[10px] leading-normal text-text-muted">
-                PNG, exactly 1280×640 pixels.
-              </span>
 
               {#if bannerError}
                 <div
@@ -1081,151 +1077,149 @@
                 {/if}
               </div>
 
-              {#if activeTab === 'editor'}
-                <div class="relative">
+              <div class="relative">
+                <button
+                  type="button"
+                  onclick={() => {
+                    indentModeDropdownOpen = !indentModeDropdownOpen;
+                    indentSizeDropdownOpen = false;
+                    wrapModeDropdownOpen = false;
+                  }}
+                  class="inline-flex h-8 cursor-pointer items-center justify-between gap-1.5 rounded-lg border border-border-subtle bg-surface-card px-3 text-xs font-medium text-text-primary shadow-2xs transition-all hover:border-border-subtle/80 hover:bg-surface-hover focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none"
+                  aria-haspopup="true"
+                  aria-expanded={indentModeDropdownOpen}>
+                  {indentMode === 'spaces' ? 'Spaces' : 'Tabs'}
+                  <span
+                    class="inline-flex h-3.5 w-3.5 shrink-0 origin-center items-center justify-center text-text-muted transition-transform duration-200 ease-out {(
+                      indentModeDropdownOpen
+                    ) ?
+                      'rotate-180'
+                    : ''}">
+                    <i class="bi bi-chevron-down text-[9px] leading-none"></i>
+                  </span>
+                </button>
+                {#if indentModeDropdownOpen}
                   <button
-                    type="button"
-                    onclick={() => {
-                      indentModeDropdownOpen = !indentModeDropdownOpen;
-                      indentSizeDropdownOpen = false;
-                      wrapModeDropdownOpen = false;
-                    }}
-                    class="flex h-7.5 cursor-pointer items-center gap-1.5 rounded-md border border-border-subtle bg-surface-card px-4 py-1.5 text-xs font-semibold text-text-secondary transition-colors hover:bg-surface-hover hover:text-text-primary"
-                    aria-haspopup="true"
-                    aria-expanded={indentModeDropdownOpen}>
-                    {indentMode === 'spaces' ? 'Spaces' : 'Tabs'}
-                    <span
-                      class="inline-flex h-3.5 w-3.5 shrink-0 origin-center items-center justify-center text-text-muted transition-transform duration-200 ease-out {(
-                        indentModeDropdownOpen
-                      ) ?
-                        'rotate-180'
-                      : ''}">
-                      <i class="bi bi-chevron-down text-[9px] leading-none"></i>
-                    </span>
-                  </button>
-                  {#if indentModeDropdownOpen}
-                    <button
-                      class="fixed inset-0 z-40 cursor-default"
-                      onclick={() => (indentModeDropdownOpen = false)}
-                      aria-label="Close menu"></button>
-                    <div
-                      role="menu"
-                      class="absolute top-8.5 right-0 z-50 flex min-w-[120px] flex-col rounded-lg border border-border-subtle bg-surface-elevated py-1 text-xs shadow-lg">
-                      {#each ['spaces', 'tabs'] as const as mode (mode)}
-                        <button
-                          type="button"
-                          role="menuitem"
-                          onclick={() => {
-                            indentMode = mode;
-                            indentModeDropdownOpen = false;
-                          }}
-                          class="flex w-full cursor-pointer items-center justify-between px-3 py-1.5 text-left text-xs text-text-primary transition-colors hover:bg-surface-hover">
-                          <span>{mode === 'spaces' ? 'Spaces' : 'Tabs'}</span>
-                          {#if indentMode === mode}
-                            <i class="bi bi-check text-accent"></i>
-                          {/if}
-                        </button>
-                      {/each}
-                    </div>
-                  {/if}
-                </div>
+                    class="fixed inset-0 z-40 cursor-default"
+                    onclick={() => (indentModeDropdownOpen = false)}
+                    aria-label="Close menu"></button>
+                  <div
+                    role="menu"
+                    class="absolute top-8.5 right-0 z-50 flex min-w-[120px] flex-col rounded-lg border border-border-subtle bg-surface-elevated py-1 text-xs shadow-lg">
+                    {#each ['spaces', 'tabs'] as const as mode (mode)}
+                      <button
+                        type="button"
+                        role="menuitem"
+                        onclick={() => {
+                          indentMode = mode;
+                          indentModeDropdownOpen = false;
+                        }}
+                        class="flex w-full cursor-pointer items-center justify-between px-3 py-1.5 text-left text-xs text-text-primary transition-colors hover:bg-surface-hover">
+                        <span>{mode === 'spaces' ? 'Spaces' : 'Tabs'}</span>
+                        {#if indentMode === mode}
+                          <i class="bi bi-check text-accent"></i>
+                        {/if}
+                      </button>
+                    {/each}
+                  </div>
+                {/if}
+              </div>
 
-                <div class="relative">
+              <div class="relative">
+                <button
+                  type="button"
+                  onclick={() => {
+                    indentSizeDropdownOpen = !indentSizeDropdownOpen;
+                    indentModeDropdownOpen = false;
+                    wrapModeDropdownOpen = false;
+                  }}
+                  class="inline-flex h-8 cursor-pointer items-center justify-between gap-1.5 rounded-lg border border-border-subtle bg-surface-card px-3 text-xs font-medium text-text-primary shadow-2xs transition-all hover:border-border-subtle/80 hover:bg-surface-hover focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none"
+                  aria-haspopup="true"
+                  aria-expanded={indentSizeDropdownOpen}>
+                  {indentSize}
+                  <span
+                    class="inline-flex h-3.5 w-3.5 shrink-0 origin-center items-center justify-center text-text-muted transition-transform duration-200 ease-out {(
+                      indentSizeDropdownOpen
+                    ) ?
+                      'rotate-180'
+                    : ''}">
+                    <i class="bi bi-chevron-down text-[9px] leading-none"></i>
+                  </span>
+                </button>
+                {#if indentSizeDropdownOpen}
                   <button
-                    type="button"
-                    onclick={() => {
-                      indentSizeDropdownOpen = !indentSizeDropdownOpen;
-                      indentModeDropdownOpen = false;
-                      wrapModeDropdownOpen = false;
-                    }}
-                    class="flex h-7.5 cursor-pointer items-center gap-1.5 rounded-md border border-border-subtle bg-surface-card px-4 py-1.5 text-xs font-semibold text-text-secondary transition-colors hover:bg-surface-hover hover:text-text-primary"
-                    aria-haspopup="true"
-                    aria-expanded={indentSizeDropdownOpen}>
-                    {indentSize}
-                    <span
-                      class="inline-flex h-3.5 w-3.5 shrink-0 origin-center items-center justify-center text-text-muted transition-transform duration-200 ease-out {(
-                        indentSizeDropdownOpen
-                      ) ?
-                        'rotate-180'
-                      : ''}">
-                      <i class="bi bi-chevron-down text-[9px] leading-none"></i>
-                    </span>
-                  </button>
-                  {#if indentSizeDropdownOpen}
-                    <button
-                      class="fixed inset-0 z-40 cursor-default"
-                      onclick={() => (indentSizeDropdownOpen = false)}
-                      aria-label="Close menu"></button>
-                    <div
-                      role="menu"
-                      class="absolute top-8.5 right-0 z-50 flex min-w-[80px] flex-col rounded-lg border border-border-subtle bg-surface-elevated py-1 text-xs shadow-lg">
-                      {#each [2, 4, 8] as size (size)}
-                        <button
-                          type="button"
-                          role="menuitem"
-                          onclick={() => {
-                            indentSize = size;
-                            indentSizeDropdownOpen = false;
-                          }}
-                          class="flex w-full cursor-pointer items-center justify-between px-3 py-1.5 text-left text-xs text-text-primary transition-colors hover:bg-surface-hover">
-                          <span>{size}</span>
-                          {#if indentSize === size}
-                            <i class="bi bi-check text-accent"></i>
-                          {/if}
-                        </button>
-                      {/each}
-                    </div>
-                  {/if}
-                </div>
+                    class="fixed inset-0 z-40 cursor-default"
+                    onclick={() => (indentSizeDropdownOpen = false)}
+                    aria-label="Close menu"></button>
+                  <div
+                    role="menu"
+                    class="absolute top-8.5 right-0 z-50 flex min-w-[80px] flex-col rounded-lg border border-border-subtle bg-surface-elevated py-1 text-xs shadow-lg">
+                    {#each [2, 4, 8] as size (size)}
+                      <button
+                        type="button"
+                        role="menuitem"
+                        onclick={() => {
+                          indentSize = size;
+                          indentSizeDropdownOpen = false;
+                        }}
+                        class="flex w-full cursor-pointer items-center justify-between px-3 py-1.5 text-left text-xs text-text-primary transition-colors hover:bg-surface-hover">
+                        <span>{size}</span>
+                        {#if indentSize === size}
+                          <i class="bi bi-check text-accent"></i>
+                        {/if}
+                      </button>
+                    {/each}
+                  </div>
+                {/if}
+              </div>
 
-                <div class="relative">
+              <div class="relative">
+                <button
+                  type="button"
+                  onclick={() => {
+                    wrapModeDropdownOpen = !wrapModeDropdownOpen;
+                    indentModeDropdownOpen = false;
+                    indentSizeDropdownOpen = false;
+                  }}
+                  class="inline-flex h-8 cursor-pointer items-center justify-between gap-1.5 rounded-lg border border-border-subtle bg-surface-card px-3 text-xs font-medium text-text-primary shadow-2xs transition-all hover:border-border-subtle/80 hover:bg-surface-hover focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none"
+                  aria-haspopup="true"
+                  aria-expanded={wrapModeDropdownOpen}>
+                  {lineWrapMode === 'soft' ? 'Soft wrap' : 'No wrap'}
+                  <span
+                    class="inline-flex h-3.5 w-3.5 shrink-0 origin-center items-center justify-center text-text-muted transition-transform duration-200 ease-out {(
+                      wrapModeDropdownOpen
+                    ) ?
+                      'rotate-180'
+                    : ''}">
+                    <i class="bi bi-chevron-down text-[9px] leading-none"></i>
+                  </span>
+                </button>
+                {#if wrapModeDropdownOpen}
                   <button
-                    type="button"
-                    onclick={() => {
-                      wrapModeDropdownOpen = !wrapModeDropdownOpen;
-                      indentModeDropdownOpen = false;
-                      indentSizeDropdownOpen = false;
-                    }}
-                    class="flex h-7.5 cursor-pointer items-center gap-1.5 rounded-md border border-border-subtle bg-surface-card px-4 py-1.5 text-xs font-semibold text-text-secondary transition-colors hover:bg-surface-hover hover:text-text-primary"
-                    aria-haspopup="true"
-                    aria-expanded={wrapModeDropdownOpen}>
-                    {lineWrapMode === 'soft' ? 'Soft wrap' : 'No wrap'}
-                    <span
-                      class="inline-flex h-3.5 w-3.5 shrink-0 origin-center items-center justify-center text-text-muted transition-transform duration-200 ease-out {(
-                        wrapModeDropdownOpen
-                      ) ?
-                        'rotate-180'
-                      : ''}">
-                      <i class="bi bi-chevron-down text-[9px] leading-none"></i>
-                    </span>
-                  </button>
-                  {#if wrapModeDropdownOpen}
-                    <button
-                      class="fixed inset-0 z-40 cursor-default"
-                      onclick={() => (wrapModeDropdownOpen = false)}
-                      aria-label="Close menu"></button>
-                    <div
-                      role="menu"
-                      class="absolute top-8.5 right-0 z-50 flex min-w-[120px] flex-col rounded-lg border border-border-subtle bg-surface-elevated py-1 text-xs shadow-lg">
-                      {#each ['soft', 'none'] as const as mode (mode)}
-                        <button
-                          type="button"
-                          role="menuitem"
-                          onclick={() => {
-                            lineWrapMode = mode;
-                            wrapModeDropdownOpen = false;
-                          }}
-                          class="flex w-full cursor-pointer items-center justify-between px-3 py-1.5 text-left text-xs text-text-primary transition-colors hover:bg-surface-hover">
-                          <span>{mode === 'soft' ? 'Soft wrap' : 'No wrap'}</span>
-                          {#if lineWrapMode === mode}
-                            <i class="bi bi-check text-accent"></i>
-                          {/if}
-                        </button>
-                      {/each}
-                    </div>
-                  {/if}
-                </div>
-              {/if}
+                    class="fixed inset-0 z-40 cursor-default"
+                    onclick={() => (wrapModeDropdownOpen = false)}
+                    aria-label="Close menu"></button>
+                  <div
+                    role="menu"
+                    class="absolute top-8.5 right-0 z-50 flex min-w-[120px] flex-col rounded-lg border border-border-subtle bg-surface-elevated py-1 text-xs shadow-lg">
+                    {#each ['soft', 'none'] as const as mode (mode)}
+                      <button
+                        type="button"
+                        role="menuitem"
+                        onclick={() => {
+                          lineWrapMode = mode;
+                          wrapModeDropdownOpen = false;
+                        }}
+                        class="flex w-full cursor-pointer items-center justify-between px-3 py-1.5 text-left text-xs text-text-primary transition-colors hover:bg-surface-hover">
+                        <span>{mode === 'soft' ? 'Soft wrap' : 'No wrap'}</span>
+                        {#if lineWrapMode === mode}
+                          <i class="bi bi-check text-accent"></i>
+                        {/if}
+                      </button>
+                    {/each}
+                  </div>
+                {/if}
+              </div>
             </div>
           </div>
 
