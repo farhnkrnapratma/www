@@ -1,3 +1,4 @@
+import { replaceState } from '$app/navigation';
 import { SvelteURL } from 'svelte/reactivity';
 
 export interface SortState {
@@ -158,7 +159,7 @@ export function createFilterSortStore(options: FilterSortOptions = {}) {
       }
     }
 
-    window.history.replaceState({}, '', url.toString());
+    replaceState(url.toString(), {});
   }
 
   function parseFromUrl(url: URL) {

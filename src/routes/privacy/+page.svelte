@@ -55,14 +55,12 @@
 <nav
   class="fixed top-0 z-40 flex h-15 w-full items-center justify-between border-b border-border-subtle bg-surface-card/60 px-3 font-sans shadow-xs backdrop-blur-lg transition-colors duration-300 sm:px-5"
   aria-label="Privacy page navigation">
-  <!-- Left side: Bordered Back to Home button without icon (Matching Sign out button styling) -->
   <a
     href="/"
     class="inline-flex h-9 items-center justify-center rounded-lg border border-border-subtle bg-surface-card px-4 text-xs font-semibold text-text-primary transition-colors hover:bg-surface-hover focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none">
     Back to Home
   </a>
 
-  <!-- Right side: Search bar (SpotlightSearch) + Theme selector -->
   <div class="flex items-center gap-2">
     <SpotlightSearch />
     <div class="relative">
@@ -127,7 +125,6 @@
   </div>
 
   <div class="space-y-6 text-sm leading-relaxed text-text-secondary">
-    <!-- Section 1: Overview & Scope -->
     <section
       class="rounded-2xl border border-border-subtle bg-surface-card/45 p-6 shadow-xs backdrop-blur-lg">
       <h2 class="text-base font-bold text-text-primary">1. Overview & Data Transparency</h2>
@@ -141,7 +138,6 @@
       </p>
     </section>
 
-    <!-- Section 2: Visitor Analytics & Consent Mode -->
     <section
       class="rounded-2xl border border-border-subtle bg-surface-card/45 p-6 shadow-xs backdrop-blur-lg">
       <h2 class="text-base font-bold text-text-primary">2. Google Analytics 4 & Consent Mode v2</h2>
@@ -175,7 +171,6 @@
       </ul>
     </section>
 
-    <!-- Section 3: Data Retention -->
     <section
       class="rounded-2xl border border-border-subtle bg-surface-card/45 p-6 shadow-xs backdrop-blur-lg">
       <h2 class="text-base font-bold text-text-primary">
@@ -194,7 +189,6 @@
       </p>
     </section>
 
-    <!-- Section 4: Public Comments & Interactive Features -->
     <section
       class="rounded-2xl border border-border-subtle bg-surface-card/45 p-6 shadow-xs backdrop-blur-lg">
       <h2 class="text-base font-bold text-text-primary">4. Public Comments & Feedback</h2>
@@ -211,7 +205,6 @@
       </ul>
     </section>
 
-    <!-- Section 5: Cookie Preferences & Controls -->
     <section
       class="rounded-2xl border border-border-subtle bg-surface-card/45 p-6 shadow-xs backdrop-blur-lg">
       <h2 class="text-base font-bold text-text-primary">5. Your Choices & Cookie Preferences</h2>
@@ -230,7 +223,6 @@
       </div>
     </section>
 
-    <!-- Section 6: Contact -->
     <section
       class="rounded-2xl border border-border-subtle bg-surface-card/45 p-6 shadow-xs backdrop-blur-lg">
       <h2 class="text-base font-bold text-text-primary">6. Contact Information</h2>

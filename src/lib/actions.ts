@@ -12,12 +12,10 @@ export function autoResize(node: HTMLTextAreaElement, value?: string) {
   node.addEventListener('input', adjustHeight);
   node.addEventListener('change', adjustHeight);
 
-  // Initial height calculation on next animation frame & post-render timers
   requestAnimationFrame(adjustHeight);
   const timer1 = setTimeout(adjustHeight, 0);
   const timer2 = setTimeout(adjustHeight, 100);
 
-  // Automatically recalculate height when element becomes visible in modals/dialogs
   const resizeObserver = new ResizeObserver(() => {
     adjustHeight();
   });

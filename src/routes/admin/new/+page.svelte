@@ -40,7 +40,6 @@
   let initialTitle = $state('');
   let initialExcerpt = $state('');
   let initialMarkdownContent = $state('');
-  let initialBannerPath = $state('');
 
   const isDirty = $derived(
     title.trim() !== initialTitle.trim() ||
@@ -188,7 +187,6 @@
       markdownContent = fileText;
 
       bannerPath = post.banner_path || null;
-      initialBannerPath = post.banner_path || '';
       if (post.banner_path) {
         const { data: publicUrl } = supabase.storage
           .from('blog-posts')

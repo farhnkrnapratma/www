@@ -21,6 +21,7 @@
     formatViewCount,
   } from '$lib';
   import Dialog from '$lib/design-system/components/Dialog.svelte';
+  import { pushState } from '$app/navigation';
   import { page } from '$app/state';
   import { supabase } from '$lib/supabase';
 
@@ -278,7 +279,7 @@
             const target = document.getElementById(el.id);
             if (target) {
               target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-              history.pushState(null, '', `#${el.id}`);
+              pushState(`#${el.id}`, {});
               activeHeadingId = el.id;
               updateIndicatorPos(el.id, false);
             }
@@ -286,10 +287,8 @@
           el.appendChild(anchor);
         });
 
-        if (elements[0]) {
-          const initialId = activeHeadingId || elements[0].id;
-          activeHeadingId = initialId;
-          updateIndicatorPos(initialId, false);
+        if (activeHeadingId) {
+          updateIndicatorPos(activeHeadingId, false);
         }
 
         const updateScrollspyPosition = () => {
@@ -317,8 +316,14 @@
             };
           });
 
+          if (headingPositions.length > 0 && scrollY < headingPositions[0].top - viewportOffset) {
+            activeHeadingId = '';
+            indicatorOpacity = 0;
+            return;
+          }
+
           let segmentIndex = 0;
-          for (let i = 0; i < headingPositions.length - 1; i++) {
+          for (let i = 0; i < headingPositions.length; i++) {
             if (scrollY >= headingPositions[i].top - viewportOffset) {
               segmentIndex = i;
             }
@@ -609,7 +614,7 @@
       .replace(/>/g, '&gt;')
       .replace(/"/g, '&quot;')
       .replace(/'/g, '&#x27;')
-      .replace(/\//g, '&#x2F;');
+      .replace(/\
   }
 
   function validate() {
@@ -861,7 +866,7 @@
                     const target = document.getElementById(heading.id);
                     if (target) {
                       target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                      history.pushState(null, '', `#${heading.id}`);
+                      pushState(`#${heading.id}`, {});
                       activeHeadingId = heading.id;
                     }
                   }}
@@ -1409,13 +1414,11 @@
           <p class="text-xs text-text-muted italic">No subheadings found.</p>
         {:else}
           <div class="relative pl-3">
-            <!-- Full continuous vertical track/rail spanning 100% container height with exact same width -->
             <div
               class="absolute top-0 bottom-0 left-0 w-1 rounded-full bg-border-subtle/40"
               aria-hidden="true">
             </div>
 
-            <!-- Single Rubber Band Stretching Line Indicator with Perfect Rounded-Full Caps -->
             {#if isIndicatorVisible}
               <div
                 class="absolute left-0 w-1 rounded-full bg-accent shadow-xs"
@@ -1444,7 +1447,7 @@
                       const target = document.getElementById(heading.id);
                       if (target) {
                         target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                        history.pushState(null, '', `#${heading.id}`);
+                        pushState(`#${heading.id}`, {});
                         activeHeadingId = heading.id;
                         updateIndicatorPos(heading.id, false);
                       }

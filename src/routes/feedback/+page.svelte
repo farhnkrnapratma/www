@@ -116,7 +116,7 @@
       .replace(/>/g, '&gt;')
       .replace(/"/g, '&quot;')
       .replace(/'/g, '&#x27;')
-      .replace(/\//g, '&#x2F;');
+      .replace(/\
   }
 
   function validateForm(e: Event) {
@@ -167,14 +167,12 @@
 <nav
   class="fixed top-0 z-40 flex h-15 w-full items-center justify-between border-b border-border-subtle bg-surface-card/60 px-3 font-sans shadow-xs backdrop-blur-lg transition-colors duration-300 sm:px-5"
   aria-label="Feedback page navigation">
-  <!-- Left side: Bordered Back to Home button without icon (Matching Sign out button styling) -->
   <a
     href="/"
     class="inline-flex h-8 items-center justify-center rounded-lg border border-border-subtle bg-surface-card px-4 text-xs font-semibold text-text-primary transition-colors hover:bg-surface-hover focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none">
     Back to Home
   </a>
 
-  <!-- Right side: Search bar (SpotlightSearch) + Theme selector -->
   <div class="flex items-center gap-2">
     <SpotlightSearch />
     <div class="relative">

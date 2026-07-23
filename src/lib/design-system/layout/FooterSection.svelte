@@ -86,10 +86,8 @@
     'relative z-10 mx-auto mt-auto w-full max-w-full overflow-hidden px-4 pt-0 pb-20 font-sans text-xs text-text-muted sm:px-6 md:w-[80%] md:pb-20 lg:w-[60%] lg:pb-6 xl:w-[50%]',
     className,
   )}>
-  <!-- Layer 1: Upper Footer Wrapped in Rounded Card Container -->
   <div class="rounded-2xl border border-border-subtle/80 bg-surface-card/60 p-4 shadow-2xs sm:p-6">
     <div class="grid grid-cols-1 gap-x-0 gap-y-1 md:grid-cols-12">
-      <!-- Row 1: Name with Headline stacked directly underneath on all screen sizes -->
       <div class="md:col-span-12">
         <div class="flex min-w-0 flex-col gap-0.5">
           <h3 class="text-base font-bold tracking-tight text-text-primary sm:text-lg">
@@ -101,7 +99,6 @@
         </div>
       </div>
 
-      <!-- Row 2: Bio on Left; 2x3 Navigation Grid on Right -->
       <div class="pt-1 md:col-span-7 md:pr-6">
         <p class="max-w-md text-xs leading-relaxed text-text-secondary">
           {description}
@@ -136,9 +133,7 @@
         </div>
       {/if}
 
-      <!-- Row 3: Shared Horizontal Alignment Row (Social Media Buttons + Theme Switcher) -->
       <div class="flex flex-wrap items-center justify-between gap-3 pt-4 md:col-span-12">
-        <!-- Left: Social Media Buttons -->
         <div class="flex flex-wrap items-center gap-2 sm:gap-2.5">
           <a
             href="https://github.com/farhnkrnapratma"
@@ -202,7 +197,6 @@
           </a>
         </div>
 
-        <!-- Right: Theme Switcher Button -->
         <div class="relative w-fit">
           <button
             type="button"
@@ -264,7 +258,6 @@
     </div>
   </div>
 
-  <!-- Layer 2: Consolidated Single Bottom Meta Row -->
   <div class="pt-4 text-center select-none">
     <div
       class="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-xs font-medium text-text-muted">
