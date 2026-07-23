@@ -159,24 +159,31 @@
   class="fixed top-0 right-0 left-0 z-40 border-b border-border-subtle bg-surface-card/80 backdrop-blur-md">
   <div
     class="mx-auto flex h-15 items-center justify-between px-6 font-sans md:w-[80%] md:max-w-none lg:w-[50%]">
+    <!-- Left side: Ghost Back to Home button -->
     <a
       href="/"
-      class="flex items-center gap-2.5 text-text-primary transition-opacity hover:opacity-85">
-      <img
-        src="/android-chrome-512x512.png"
-        alt="Farhan Kurnia Pratama"
-        class="h-6.5 w-6.5 rounded-full border border-accent/40 object-cover object-top" />
-      <span class="text-sm font-bold tracking-tight">{name}</span>
+      class="inline-flex items-center gap-1.5 text-xs font-semibold text-text-secondary transition-colors hover:text-text-primary focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none">
+      <i
+        class="bi bi-arrow-left text-sm"
+        aria-hidden="true"></i>
+      <span>Back to Home</span>
     </a>
 
-    <div class="flex items-center gap-3">
+    <!-- Right side: Text Name Identity Block + Theme Selector -->
+    <div class="flex items-center gap-4">
+      <a
+        href="/"
+        class="text-sm font-bold tracking-tight text-text-primary transition-opacity hover:opacity-85">
+        {name}
+      </a>
+
       <div class="relative">
         <button
           type="button"
           onclick={() => (themeDropdownOpen = !themeDropdownOpen)}
           aria-label="Select theme"
           aria-expanded={themeDropdownOpen}
-          class="flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg border border-border-subtle bg-surface-card text-text-secondary transition-colors hover:bg-surface-hover hover:text-text-primary">
+          class="flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg border border-border-subtle bg-surface-card text-text-secondary transition-colors hover:bg-surface-hover hover:text-text-primary focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none">
           <i
             class="bi {theme === 'dark' ? 'bi-moon-stars-fill'
             : theme === 'light' ? 'bi-sun-fill'
@@ -213,12 +220,6 @@
           </div>
         {/if}
       </div>
-
-      <a
-        href="/"
-        class="inline-flex h-9 items-center justify-center rounded-lg border border-border-subtle bg-surface-card px-3 text-xs font-semibold text-text-primary transition-colors hover:bg-surface-hover">
-        Back to Home
-      </a>
     </div>
   </div>
 </header>
