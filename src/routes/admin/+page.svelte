@@ -619,6 +619,8 @@
           aria-label="Blog posts list">
           {#each filteredPosts as post (post.id)}
             {@const postComments = getPostComments(post.id)}
+            {@const commentCount = postComments.length}
+            {@const commentWord = commentCount > 1 ? 'comments' : 'comment'}
             <div
               class="action-row group flex flex-col gap-5 p-5 text-left transition-all duration-200 hover:bg-surface-hover/40 sm:flex-row sm:items-start"
               role="listitem">
@@ -681,8 +683,6 @@
                     </button>
                   </a>
 
-                  {@const commentCount = postComments.length}
-                  {@const commentWord = commentCount > 1 ? 'comments' : 'comment'}
                   <button
                     type="button"
                     disabled={commentCount === 0}
