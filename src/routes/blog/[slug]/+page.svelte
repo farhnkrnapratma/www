@@ -786,11 +786,11 @@
         <div class="min-w-0 flex-1 text-center sm:text-left">
           <h4 class="text-base leading-snug font-bold text-text-primary">Farhan Kurnia Pratama</h4>
           <p class="mt-0.5 text-xs font-semibold text-text-secondary">
-            Linux/Unix, FOSS, and Cybersecurity
+            Linux/Unix, AI, Open-Source Software, and Cybersecurity.
           </p>
           <p class="mt-3 text-sm leading-relaxed text-text-secondary/90">
-            Security-focused Software Engineer with expertise in Linux/Unix and FOSS, dedicated to
-            building reliable, maintainable, and privacy-centric systems.
+            Security-focused Software Engineer with expertise in Linux/Unix, AI, and Open-Source
+            Software, dedicated to building reliable, maintainable, and privacy-centric systems.
           </p>
 
           <div class="mt-4 flex items-center justify-center gap-4 sm:justify-start">
