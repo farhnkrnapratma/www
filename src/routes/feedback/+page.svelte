@@ -1,9 +1,18 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { isNameReserved } from '$lib/nameValidator';
-  import { Card, FormField, Input, Textarea, Button, Dialog, SkipLink, FooterSection } from '$lib';
-  import SpotlightSearch from '$lib/components/SpotlightSearch.svelte';
-  import IconButton from '$lib/components/ui/IconButton.svelte';
+  import {
+    Card,
+    FormField,
+    Input,
+    Textarea,
+    Button,
+    Dialog,
+    SkipLink,
+    FooterSection,
+    SpotlightSearch,
+    IconButton,
+  } from '$lib';
 
   type Theme = 'auto' | 'dark' | 'light';
   let theme = $state<Theme>('auto');

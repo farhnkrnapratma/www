@@ -1,8 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { SkipLink, FooterSection } from '$lib';
-  import SpotlightSearch from '$lib/components/SpotlightSearch.svelte';
-  import IconButton from '$lib/components/ui/IconButton.svelte';
+  import { SkipLink, FooterSection, SpotlightSearch, IconButton } from '$lib';
   import { consentStore } from '$lib/stores/consentStore.svelte';
 
   const name = 'Farhan Kurnia Pratama';
