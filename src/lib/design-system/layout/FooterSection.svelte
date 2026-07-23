@@ -86,171 +86,169 @@
     'relative z-10 mx-auto mt-auto w-full border-t border-border-subtle px-6 pt-10 pb-8 font-sans text-xs text-text-muted md:w-[80%] lg:w-[50%]',
     className,
   )}>
-  <!-- Layer 1: Upper Footer (Left: Brand/Bio; Right: 2x3 Nav Grid with Centered Vertical Divider; Row 3 for Social Icons + Floated Right Theme Switcher) -->
-  <div class="grid grid-cols-1 gap-x-0 gap-y-1 pb-6 md:grid-cols-12">
-    <!-- Row 1: Name on Left -->
-    <div class="md:col-span-7 md:pr-6">
-      <h3 class="text-base font-bold text-text-primary">{name}</h3>
-    </div>
-
-    <!-- Empty Header Slot on Right to align navigation start with description baseline -->
-    {#if resolvedNavItems.length > 0}
-      <div class="hidden md:col-span-5 md:block md:border-l md:border-border-subtle/40 md:pl-6">
-      </div>
-    {/if}
-
-    <!-- Row 2: Bio on Left; 2x3 Navigation Grid on Right with Centered Vertical Divider -->
-    <div class="pt-0.5 md:col-span-7 md:pr-6">
-      <p class="max-w-md text-xs leading-relaxed text-text-secondary">
-        {description}
-      </p>
-    </div>
-
-    {#if resolvedNavItems.length > 0}
-      <div class="pt-0.5 md:col-span-5 md:border-l md:border-border-subtle/40 md:pl-6">
-        <nav aria-label="Footer navigation">
-          <ul class="grid grid-cols-2 gap-x-6 gap-y-1.5 text-xs font-normal text-text-secondary">
-            {#each resolvedNavItems as item (item.url)}
-              <li class="text-xs leading-[29px]">
-                {#if onNavClick}
-                  <button
-                    type="button"
-                    onclick={() => onNavClick(item.url)}
-                    class="cursor-pointer text-left text-xs leading-[29px] font-normal text-text-secondary transition-colors hover:text-accent focus-visible:text-accent focus-visible:outline-none">
-                    {item.label}
-                  </button>
-                {:else}
-                  <a
-                    href={item.url}
-                    class="cursor-pointer text-left text-xs leading-[29px] font-normal text-text-secondary transition-colors hover:text-accent focus-visible:text-accent focus-visible:outline-none">
-                    {item.label}
-                  </a>
-                {/if}
-              </li>
-            {/each}
-          </ul>
-        </nav>
-      </div>
-    {/if}
-
-    <!-- Row 3: Shared Horizontal Alignment Row (Social Media Buttons on Left + Theme Switcher Floated Right) -->
-    <div class="flex items-center justify-between pt-3 md:col-span-12">
-      <!-- Left: Social Media Buttons -->
-      <div class="flex items-center gap-2.5">
-        <a
-          href="https://github.com/farhnkrnapratma"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-border-subtle bg-surface text-text-secondary transition-colors hover:bg-surface-hover hover:text-accent focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none"
-          aria-label="GitHub profile (opens in a new tab)">
-          <i
-            class="bi bi-github text-base leading-none"
-            aria-hidden="true"></i>
-        </a>
-        <a
-          href="https://linkedin.com/in/farhnkrnapratma"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-border-subtle bg-surface text-text-secondary transition-colors hover:bg-surface-hover hover:text-accent focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none"
-          aria-label="LinkedIn profile (opens in a new tab)">
-          <i
-            class="bi bi-linkedin text-base leading-none"
-            aria-hidden="true"></i>
-        </a>
-        <a
-          href="https://x.com/farhnkrnapratma"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-border-subtle bg-surface text-text-secondary transition-colors hover:bg-surface-hover hover:text-accent focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none"
-          aria-label="X profile (opens in a new tab)">
-          <i
-            class="bi bi-twitter-x text-base leading-none"
-            aria-hidden="true"></i>
-        </a>
-        <a
-          href="https://instagram.com/farhnkrnapratma"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-border-subtle bg-surface text-text-secondary transition-colors hover:bg-surface-hover hover:text-accent focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none"
-          aria-label="Instagram profile (opens in a new tab)">
-          <i
-            class="bi bi-instagram text-base leading-none"
-            aria-hidden="true"></i>
-        </a>
+  <!-- Layer 1: Upper Footer Wrapped in Rounded Card Container -->
+  <div class="rounded-2xl border border-border-subtle/80 bg-surface-card/60 p-6 shadow-2xs">
+    <div class="grid grid-cols-1 gap-x-0 gap-y-1 md:grid-cols-12">
+      <!-- Row 1: Name on Left (NO vertical divider line beside name) -->
+      <div class="md:col-span-7 md:pr-6">
+        <h3 class="text-base font-bold text-text-primary">{name}</h3>
       </div>
 
-      <!-- Right: Theme Switcher Button (Exact same horizontal row & baseline, floated right) -->
-      <div class="relative w-fit">
-        <button
-          type="button"
-          onclick={() => (themeDropdownOpen = !themeDropdownOpen)}
-          class="inline-flex h-8 w-fit min-w-[5.5rem] cursor-pointer items-center justify-between gap-2 rounded-lg border border-border-subtle bg-surface-card px-2.5 text-xs font-semibold text-text-secondary shadow-2xs transition-all hover:border-border-subtle/80 hover:bg-surface-hover hover:text-text-primary focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none"
-          aria-label="Change theme"
-          aria-haspopup="true"
-          aria-expanded={themeDropdownOpen}>
-          <span class="inline-flex items-center gap-1.5 whitespace-nowrap">
+      <!-- Empty Header Slot on Right to align navigation start with description baseline -->
+      {#if resolvedNavItems.length > 0}
+        <div class="hidden md:col-span-5 md:block"></div>
+      {/if}
+
+      <!-- Row 2: Bio on Left; 2x3 Navigation Grid on Right with Centered Vertical Divider -->
+      <div class="pt-0.5 md:col-span-7 md:pr-6">
+        <p class="max-w-md text-xs leading-relaxed text-text-secondary">
+          {description}
+        </p>
+      </div>
+
+      {#if resolvedNavItems.length > 0}
+        <div class="pt-0.5 md:col-span-5 md:border-l md:border-border-subtle/40 md:pl-6">
+          <nav aria-label="Footer navigation">
+            <ul class="grid grid-cols-2 gap-x-6 gap-y-1.5 text-xs font-normal text-text-secondary">
+              {#each resolvedNavItems as item (item.url)}
+                <li class="text-xs leading-[29px]">
+                  {#if onNavClick}
+                    <button
+                      type="button"
+                      onclick={() => onNavClick(item.url)}
+                      class="cursor-pointer text-left text-xs leading-[29px] font-normal text-text-secondary transition-colors hover:text-accent focus-visible:text-accent focus-visible:outline-none">
+                      {item.label}
+                    </button>
+                  {:else}
+                    <a
+                      href={item.url}
+                      class="cursor-pointer text-left text-xs leading-[29px] font-normal text-text-secondary transition-colors hover:text-accent focus-visible:text-accent focus-visible:outline-none">
+                      {item.label}
+                    </a>
+                  {/if}
+                </li>
+              {/each}
+            </ul>
+          </nav>
+        </div>
+      {/if}
+
+      <!-- Row 3: Shared Horizontal Alignment Row (Social Media Buttons on Left + Theme Switcher Floated Right) -->
+      <div class="flex items-center justify-between pt-4 md:col-span-12">
+        <!-- Left: Social Media Buttons -->
+        <div class="flex items-center gap-2.5">
+          <a
+            href="https://github.com/farhnkrnapratma"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-border-subtle bg-surface text-text-secondary transition-colors hover:bg-surface-hover hover:text-accent focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none"
+            aria-label="GitHub profile (opens in a new tab)">
             <i
-              class="bi {getThemeIcon()} text-xs text-text-secondary"
+              class="bi bi-github text-base leading-none"
               aria-hidden="true"></i>
-            <span>{getThemeLabel()}</span>
-          </span>
-          <span
-            class="inline-flex h-3.5 w-3.5 shrink-0 origin-center items-center justify-center text-text-muted transition-transform duration-200 ease-out {(
-              themeDropdownOpen
-            ) ?
-              'rotate-180'
-            : ''}">
+          </a>
+          <a
+            href="https://linkedin.com/in/farhnkrnapratma"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-border-subtle bg-surface text-text-secondary transition-colors hover:bg-surface-hover hover:text-accent focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none"
+            aria-label="LinkedIn profile (opens in a new tab)">
             <i
-              class="bi bi-chevron-down text-[9px] leading-none"
+              class="bi bi-linkedin text-base leading-none"
               aria-hidden="true"></i>
-          </span>
-        </button>
+          </a>
+          <a
+            href="https://x.com/farhnkrnapratma"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-border-subtle bg-surface text-text-secondary transition-colors hover:bg-surface-hover hover:text-accent focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none"
+            aria-label="X profile (opens in a new tab)">
+            <i
+              class="bi bi-twitter-x text-base leading-none"
+              aria-hidden="true"></i>
+          </a>
+          <a
+            href="https://instagram.com/farhnkrnapratma"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-border-subtle bg-surface text-text-secondary transition-colors hover:bg-surface-hover hover:text-accent focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none"
+            aria-label="Instagram profile (opens in a new tab)">
+            <i
+              class="bi bi-instagram text-base leading-none"
+              aria-hidden="true"></i>
+          </a>
+        </div>
 
-        {#if themeDropdownOpen}
+        <!-- Right: Theme Switcher Button -->
+        <div class="relative w-fit">
           <button
             type="button"
-            class="fixed inset-0 z-40 cursor-default"
-            onclick={() => (themeDropdownOpen = false)}
-            aria-label="Close theme menu"></button>
-          <div
-            class="absolute right-0 bottom-full z-50 mb-1.5 flex min-w-[7rem] flex-col rounded-xl border border-border-subtle bg-surface-elevated p-1 shadow-xl backdrop-blur-md">
-            {#each ['auto', 'light', 'dark'] as const as option (option)}
-              <button
-                type="button"
-                onclick={() => {
-                  applyTheme(option);
-                  themeDropdownOpen = false;
-                }}
-                class="flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-left text-xs font-medium transition-colors {(
-                  theme === option
-                ) ?
-                  'bg-accent/10 font-semibold text-accent'
-                : 'text-text-primary hover:bg-surface-hover'}">
-                <i
-                  class="bi {getThemeIcon(option)} text-xs {theme === option ? 'text-accent' : (
-                    'text-text-secondary'
-                  )}"
-                  aria-hidden="true"></i>
-                <span>{getThemeLabel(option)}</span>
-              </button>
-            {/each}
-          </div>
-        {/if}
+            onclick={() => (themeDropdownOpen = !themeDropdownOpen)}
+            class="inline-flex h-8 w-fit min-w-[5.5rem] cursor-pointer items-center justify-between gap-2 rounded-lg border border-border-subtle bg-surface-card px-2.5 text-xs font-semibold text-text-secondary shadow-2xs transition-all hover:border-border-subtle/80 hover:bg-surface-hover hover:text-text-primary focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none"
+            aria-label="Change theme"
+            aria-haspopup="true"
+            aria-expanded={themeDropdownOpen}>
+            <span class="inline-flex items-center gap-1.5 whitespace-nowrap">
+              <i
+                class="bi {getThemeIcon()} text-xs text-text-secondary"
+                aria-hidden="true"></i>
+              <span>{getThemeLabel()}</span>
+            </span>
+            <span
+              class="inline-flex h-3.5 w-3.5 shrink-0 origin-center items-center justify-center text-text-muted transition-transform duration-200 ease-out {(
+                themeDropdownOpen
+              ) ?
+                'rotate-180'
+              : ''}">
+              <i
+                class="bi bi-chevron-down text-[9px] leading-none"
+                aria-hidden="true"></i>
+            </span>
+          </button>
+
+          {#if themeDropdownOpen}
+            <button
+              type="button"
+              class="fixed inset-0 z-40 cursor-default"
+              onclick={() => (themeDropdownOpen = false)}
+              aria-label="Close theme menu"></button>
+            <div
+              class="absolute right-0 bottom-full z-50 mb-1.5 flex min-w-[7rem] flex-col rounded-xl border border-border-subtle bg-surface-elevated p-1 shadow-xl backdrop-blur-md">
+              {#each ['auto', 'light', 'dark'] as const as option (option)}
+                <button
+                  type="button"
+                  onclick={() => {
+                    applyTheme(option);
+                    themeDropdownOpen = false;
+                  }}
+                  class="flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-left text-xs font-medium transition-colors {(
+                    theme === option
+                  ) ?
+                    'bg-accent/10 font-semibold text-accent'
+                  : 'text-text-primary hover:bg-surface-hover'}">
+                  <i
+                    class="bi {getThemeIcon(option)} text-xs {theme === option ? 'text-accent' : (
+                      'text-text-secondary'
+                    )}"
+                    aria-hidden="true"></i>
+                  <span>{getThemeLabel(option)}</span>
+                </button>
+              {/each}
+            </div>
+          {/if}
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- Layer 2: Consolidated Single Bottom Meta Row (Copyright · RSS · Sitemap · Privacy · Manage cookies) -->
-  <div class="border-t border-border-subtle/50 pt-4 select-none">
+  <!-- Layer 2: Consolidated Single Bottom Meta Row (NO interpunct &middot; dots) -->
+  <div class="pt-5 select-none">
     <div
-      class="no-scrollbar flex max-w-full items-center justify-start gap-x-3 overflow-x-auto text-xs font-medium whitespace-nowrap text-text-muted">
+      class="no-scrollbar flex max-w-full items-center justify-start gap-x-4 overflow-x-auto text-xs font-medium whitespace-nowrap text-text-muted">
       <span class="shrink-0 text-text-muted/70">
         &copy; {new Date().getFullYear()}
         {name}.
       </span>
-      <span
-        class="shrink-0 text-text-muted/30"
-        aria-hidden="true">&middot;</span>
       <a
         href="/atom.xml"
         class="group inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap transition-colors hover:text-text-primary focus-visible:text-text-primary focus-visible:outline-none">
@@ -259,25 +257,16 @@
           aria-hidden="true"></i>
         <span>RSS</span>
       </a>
-      <span
-        class="shrink-0 text-text-muted/30"
-        aria-hidden="true">&middot;</span>
       <a
         href="/sitemap.xml"
         class="shrink-0 whitespace-nowrap transition-colors hover:text-text-primary focus-visible:text-text-primary focus-visible:outline-none">
         Sitemap
       </a>
-      <span
-        class="shrink-0 text-text-muted/30"
-        aria-hidden="true">&middot;</span>
       <a
         href="/privacy"
         class="shrink-0 whitespace-nowrap transition-colors hover:text-text-primary focus-visible:text-text-primary focus-visible:outline-none">
         Privacy
       </a>
-      <span
-        class="shrink-0 text-text-muted/30"
-        aria-hidden="true">&middot;</span>
       <button
         type="button"
         onclick={() => consentStore.openCustomizeModal()}
