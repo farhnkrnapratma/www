@@ -313,6 +313,7 @@
 
           const currentHeading = headingPositions[activeIndex];
           const nextHeading = headingPositions[activeIndex + 1];
+          const prevHeading = headingPositions[activeIndex - 1];
 
           if (!currentHeading) return;
 
