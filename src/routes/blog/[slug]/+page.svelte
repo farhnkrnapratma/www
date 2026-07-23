@@ -202,6 +202,34 @@
 
   const headings = $derived(data.headings || []);
   let activeHeadingId = $state('');
+  let isStretching = $state(false);
+  let indicatorTop = $state(0);
+  let indicatorHeight = $state(0);
+  let isIndicatorVisible = $state(false);
+  let tocListEl = $state<HTMLElement | null>(null);
+
+  function updateIndicatorPos(
+    headingId: string,
+    stretch = false,
+    topOverride?: number,
+    heightOverride?: number,
+  ) {
+    if (!tocListEl) return;
+    const targetLink = tocListEl.querySelector<HTMLElement>(`a[href="#${headingId}"]`);
+    if (!targetLink) {
+      isIndicatorVisible = false;
+      return;
+    }
+    isIndicatorVisible = true;
+    isStretching = stretch;
+    if (topOverride !== undefined && heightOverride !== undefined) {
+      indicatorTop = topOverride;
+      indicatorHeight = heightOverride;
+    } else {
+      indicatorTop = targetLink.offsetTop;
+      indicatorHeight = targetLink.offsetHeight;
+    }
+  }
 
   let helpfulnessFeedback = $state<'yes' | 'no' | null>(null);
   let showYesFeedbackDialog = $state(false);
@@ -220,12 +248,13 @@
   $effect(() => {
     void html;
     let headingObserver: IntersectionObserver | null = null;
+    let scrollTimeout: ReturnType<typeof setTimeout> | null = null;
 
     tick().then(() => {
       const container = document.querySelector('.prose-custom');
       if (container) {
         setupCodeHeaderBars();
-        const elements = container.querySelectorAll('h2, h3');
+        const elements = Array.from(container.querySelectorAll('h2, h3')) as HTMLElement[];
         if (elements.length === 0) return;
 
         elements.forEach(el => {
@@ -249,16 +278,100 @@
               target.scrollIntoView({ behavior: 'smooth', block: 'start' });
               history.pushState(null, '', `#${el.id}`);
               activeHeadingId = el.id;
+              updateIndicatorPos(el.id, false);
             }
           };
           el.appendChild(anchor);
         });
+
+        if (elements[0]) {
+          const initialId = activeHeadingId || elements[0].id;
+          activeHeadingId = initialId;
+          updateIndicatorPos(initialId, false);
+        }
+
+        const handleScroll = () => {
+          if (!tocListEl) return;
+          const scrollY = window.scrollY;
+          const viewportOffset = 120;
+
+          const headingPositions = elements.map(el => {
+            const rect = el.getBoundingClientRect();
+            return {
+              id: el.id,
+              top: rect.top + window.scrollY,
+              height: rect.height,
+            };
+          });
+
+          let activeIndex = 0;
+          for (let i = 0; i < headingPositions.length; i++) {
+            if (scrollY >= headingPositions[i].top - viewportOffset) {
+              activeIndex = i;
+            }
+          }
+
+          const currentHeading = headingPositions[activeIndex];
+          const nextHeading = headingPositions[activeIndex + 1];
+
+          if (!currentHeading) return;
+
+          const currentLink = tocListEl.querySelector<HTMLElement>(
+            `a[href="#${currentHeading.id}"]`,
+          );
+          if (!currentLink) return;
+
+          const currentTop = currentLink.offsetTop;
+          const currentHeight = currentLink.offsetHeight;
+
+          let isCurrentlyStretching = false;
+          let calcTop = currentTop;
+          let calcHeight = currentHeight;
+
+          if (nextHeading) {
+            const nextLink = tocListEl.querySelector<HTMLElement>(`a[href="#${nextHeading.id}"]`);
+            if (nextLink) {
+              const nextTop = nextLink.offsetTop;
+              const nextHeight = nextLink.offsetHeight;
+              const distance = nextHeading.top - currentHeading.top;
+              if (distance > 0) {
+                const progress = Math.max(
+                  0,
+                  Math.min(1, (scrollY - (currentHeading.top - viewportOffset)) / distance),
+                );
+                if (progress > 0.05 && progress < 0.95) {
+                  isCurrentlyStretching = true;
+                  calcTop = currentTop;
+                  calcHeight =
+                    (nextTop + nextHeight - currentTop) * progress + currentHeight * (1 - progress);
+                }
+              }
+            }
+          }
+
+          activeHeadingId = currentHeading.id;
+          if (isCurrentlyStretching) {
+            updateIndicatorPos(currentHeading.id, true, calcTop, calcHeight);
+          } else {
+            updateIndicatorPos(currentHeading.id, false);
+          }
+
+          if (scrollTimeout) clearTimeout(scrollTimeout);
+          scrollTimeout = setTimeout(() => {
+            if (activeHeadingId) {
+              updateIndicatorPos(activeHeadingId, false);
+            }
+          }, 150);
+        };
+
+        window.addEventListener('scroll', handleScroll, { passive: true });
 
         headingObserver = new IntersectionObserver(
           entries => {
             entries.forEach(entry => {
               if (entry.isIntersecting) {
                 activeHeadingId = entry.target.id;
+                updateIndicatorPos(entry.target.id, false);
               }
             });
           },
@@ -270,6 +383,12 @@
         );
 
         elements.forEach(el => headingObserver?.observe(el));
+
+        return () => {
+          window.removeEventListener('scroll', handleScroll);
+          if (scrollTimeout) clearTimeout(scrollTimeout);
+          if (headingObserver) headingObserver.disconnect();
+        };
       }
     });
 
@@ -1219,13 +1338,28 @@
           <p class="text-xs text-text-muted italic">No subheadings found.</p>
         {:else}
           <div class="relative pl-3">
+            <!-- Full continuous vertical track/rail from top to bottom -->
             <div
               class="absolute top-1 bottom-1 left-0 w-0.5 rounded-full bg-border-subtle/80"
               aria-hidden="true">
             </div>
 
+            <!-- Single Rubber Band Stretching Line Indicator -->
+            {#if isIndicatorVisible}
+              <div
+                class="absolute left-0 w-1 rounded-full bg-accent shadow-xs"
+                style="top: {indicatorTop}px; height: {indicatorHeight}px; transition: {(
+                  isStretching
+                ) ?
+                  'none'
+                : 'top 0.45s cubic-bezier(0.34, 1.56, 0.64, 1), height 0.45s cubic-bezier(0.34, 1.56, 0.64, 1)'};"
+                aria-hidden="true">
+              </div>
+            {/if}
+
             <ul
-              class="flex flex-col gap-1"
+              bind:this={tocListEl}
+              class="relative flex flex-col gap-1"
               role="list">
               {#each headings as heading, index (heading.id + '-' + index)}
                 {@const isActive = activeHeadingId === heading.id}
@@ -1241,19 +1375,15 @@
                         target.scrollIntoView({ behavior: 'smooth', block: 'start' });
                         history.pushState(null, '', `#${heading.id}`);
                         activeHeadingId = heading.id;
+                        updateIndicatorPos(heading.id, false);
                       }
                     }}
                     aria-current={isActive ? 'true' : undefined}
-                    class="group relative block rounded-md py-1 pr-2 leading-relaxed transition-all duration-300 ease-in-out hover:text-accent {(
+                    class="group relative block rounded-md py-1 pr-2 leading-relaxed transition-colors duration-300 ease-in-out hover:text-accent {(
                       isActive
                     ) ?
                       'font-medium text-accent'
                     : 'font-normal text-text-secondary'}">
-                    {#if isActive}
-                      <span
-                        class="absolute top-0 bottom-0 -left-3 w-1 rounded-full bg-accent shadow-xs transition-all duration-300 ease-in-out"
-                        aria-hidden="true"></span>
-                    {/if}
                     <span class="transition-colors duration-300 ease-in-out">{heading.text}</span>
                   </a>
                 </li>
