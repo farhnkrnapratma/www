@@ -141,7 +141,7 @@
       </div>
     </div>
 
-    <!-- Zone 2 (Right Zone): Navigation & Proportional Preferences -->
+    <!-- Zone 2 (Right Zone): Navigation & Preferences (Theme Selector + Cookie Settings) -->
     {#if resolvedNavItems.length > 0}
       <div class="flex flex-row items-start justify-between gap-8 pt-1 md:col-span-5 md:pt-0">
         <!-- Navigation Column -->
@@ -171,8 +171,8 @@
           </ul>
         </div>
 
-        <!-- Preferences Column (Compact w-fit Width, No Truncation, Proportional Density) -->
-        <div class="flex shrink-0 flex-col gap-2">
+        <!-- Preferences Column (Theme Selector + Cookie Settings Control) -->
+        <div class="flex shrink-0 flex-col gap-2.5">
           <h4 class="text-[11px] font-bold tracking-wider text-text-primary uppercase">
             Preferences
           </h4>
@@ -233,16 +233,32 @@
               </div>
             {/if}
           </div>
+
+          <button
+            type="button"
+            onclick={() => consentStore.openCustomizeModal()}
+            class="inline-flex cursor-pointer items-center gap-1.5 text-xs font-semibold text-text-secondary transition-colors hover:text-accent focus-visible:text-accent focus-visible:outline-none">
+            <i
+              class="bi bi-sliders text-[11px]"
+              aria-hidden="true"></i>
+            <span>Cookie Settings</span>
+          </button>
         </div>
       </div>
     {/if}
   </div>
 
-  <!-- Layer 2 & 3: Unified Left-Aligned Supporting Meta Section (Single Border Divider) -->
-  <div class="flex flex-col gap-3 border-t border-border-subtle/50 pt-5 text-left select-none">
-    <!-- Utility / Legal Grouped Horizontal Row (Left-Aligned) -->
+  <!-- Layer 2: Consolidated Single Bottom Meta Row (Copyright + RSS, Sitemap, Privacy Policy) -->
+  <div class="border-t border-border-subtle/50 pt-4 select-none">
     <div
-      class="flex flex-wrap items-center justify-start gap-x-4 gap-y-1.5 text-xs font-medium text-text-muted">
+      class="flex flex-wrap items-center justify-start gap-x-3 gap-y-1.5 text-xs font-medium text-text-muted">
+      <p class="text-text-muted/70">
+        &copy; {new Date().getFullYear()}
+        {name}. All rights reserved.
+      </p>
+      <span
+        class="text-text-muted/30"
+        aria-hidden="true">&middot;</span>
       <a
         href="/atom.xml"
         class="inline-flex items-center gap-1.5 whitespace-nowrap transition-colors hover:text-text-primary focus-visible:text-text-primary focus-visible:outline-none">
@@ -250,9 +266,6 @@
           class="bi bi-rss-fill text-[11px] leading-none text-accent"
           aria-hidden="true"></i>
         <span>RSS feed</span>
-        <span
-          class="rounded bg-accent/10 px-1 py-0.5 font-mono text-[9px] leading-none font-bold text-accent"
-          >XML</span>
       </a>
       <span
         class="text-text-muted/30"
@@ -270,21 +283,6 @@
         class="whitespace-nowrap transition-colors hover:text-text-primary focus-visible:text-text-primary focus-visible:outline-none">
         Privacy Policy
       </a>
-      <span
-        class="text-text-muted/30"
-        aria-hidden="true">&middot;</span>
-      <button
-        type="button"
-        onclick={() => consentStore.openCustomizeModal()}
-        class="cursor-pointer whitespace-nowrap transition-colors hover:text-text-primary focus-visible:text-text-primary focus-visible:outline-none">
-        Cookie Settings
-      </button>
     </div>
-
-    <!-- Copyright Row (Left-Aligned, Quiet & Passive Closing Line) -->
-    <p class="text-xs font-medium text-text-muted/70">
-      &copy; {new Date().getFullYear()}
-      {name}. All rights reserved.
-    </p>
   </div>
 </footer>
