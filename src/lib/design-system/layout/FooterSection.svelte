@@ -83,27 +83,27 @@
 
 <footer
   class={cn(
-    'relative z-10 mx-auto mt-auto w-full border-t border-border-subtle px-6 pt-12 pb-8 font-sans text-xs text-text-muted md:w-[80%] lg:w-[50%]',
+    'relative z-10 mx-auto mt-auto w-full border-t border-border-subtle px-6 pt-10 pb-8 font-sans text-xs text-text-muted md:w-[80%] lg:w-[50%]',
     className,
   )}>
-  <!-- Layer 1: Upper Footer (2-Zone Layout: Left Brand/Bio/Socials, Right Nav/Preferences Subgrid) -->
-  <div class="grid grid-cols-1 gap-8 pb-8 md:grid-cols-12">
+  <!-- Layer 1: Upper Footer (Unified Left-Aligned 2-Zone Layout) -->
+  <div class="grid grid-cols-1 gap-8 pb-6 md:grid-cols-12">
     <!-- Zone 1 (Left): Brand, Bio & Social Links -->
-    <div class="flex flex-col gap-4 md:col-span-7">
+    <div class="flex flex-col gap-3.5 md:col-span-7">
       <div>
         <h3 class="text-base font-bold text-text-primary">{name}</h3>
-        <p class="mt-2 max-w-md text-xs leading-relaxed text-text-secondary">
+        <p class="mt-1.5 max-w-md text-xs leading-relaxed text-text-secondary">
           {description}
         </p>
       </div>
 
-      <div class="flex items-center gap-2.5">
+      <div class="flex items-center gap-2.5 pt-0.5">
         <a
           href="https://github.com/farhnkrnapratma"
           target="_blank"
           rel="noopener noreferrer"
-          class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-border-subtle bg-surface text-text-secondary transition-colors hover:bg-surface-hover hover:text-accent"
-          aria-label="GitHub (opens in a new tab)">
+          class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-border-subtle bg-surface text-text-secondary transition-colors hover:bg-surface-hover hover:text-accent focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none"
+          aria-label="GitHub profile (opens in a new tab)">
           <i
             class="bi bi-github text-base leading-none"
             aria-hidden="true"></i>
@@ -112,8 +112,8 @@
           href="https://linkedin.com/in/farhnkrnapratma"
           target="_blank"
           rel="noopener noreferrer"
-          class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-border-subtle bg-surface text-text-secondary transition-colors hover:bg-surface-hover hover:text-accent"
-          aria-label="LinkedIn (opens in a new tab)">
+          class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-border-subtle bg-surface text-text-secondary transition-colors hover:bg-surface-hover hover:text-accent focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none"
+          aria-label="LinkedIn profile (opens in a new tab)">
           <i
             class="bi bi-linkedin text-base leading-none"
             aria-hidden="true"></i>
@@ -122,8 +122,8 @@
           href="https://x.com/farhnkrnapratma"
           target="_blank"
           rel="noopener noreferrer"
-          class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-border-subtle bg-surface text-text-secondary transition-colors hover:bg-surface-hover hover:text-accent"
-          aria-label="X (opens in a new tab)">
+          class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-border-subtle bg-surface text-text-secondary transition-colors hover:bg-surface-hover hover:text-accent focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none"
+          aria-label="X profile (opens in a new tab)">
           <i
             class="bi bi-twitter-x text-base leading-none"
             aria-hidden="true"></i>
@@ -132,8 +132,8 @@
           href="https://instagram.com/farhnkrnapratma"
           target="_blank"
           rel="noopener noreferrer"
-          class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-border-subtle bg-surface text-text-secondary transition-colors hover:bg-surface-hover hover:text-accent"
-          aria-label="Instagram (opens in a new tab)">
+          class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-border-subtle bg-surface text-text-secondary transition-colors hover:bg-surface-hover hover:text-accent focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none"
+          aria-label="Instagram profile (opens in a new tab)">
           <i
             class="bi bi-instagram text-base leading-none"
             aria-hidden="true"></i>
@@ -143,26 +143,26 @@
 
     <!-- Zone 2 (Right Subgrid): Navigation & Preferences Columns -->
     {#if resolvedNavItems.length > 0}
-      <div class="grid grid-cols-2 gap-6 pt-2 md:col-span-5 md:pt-0">
-        <!-- Navigation Subcolumn -->
-        <div class="flex flex-col gap-2.5">
+      <div class="grid grid-cols-5 gap-4 pt-1 md:col-span-5 md:pt-0">
+        <!-- Navigation Subcolumn (3 cols) -->
+        <div class="col-span-3 flex flex-col gap-2">
           <h4 class="text-[11px] font-bold tracking-wider text-text-primary uppercase">
             Navigation
           </h4>
-          <ul class="flex flex-col gap-2">
+          <ul class="flex flex-col gap-1.5">
             {#each resolvedNavItems as item (item.url)}
               <li>
                 {#if onNavClick}
                   <button
                     type="button"
                     onclick={() => onNavClick(item.url)}
-                    class="cursor-pointer text-left text-xs font-semibold text-text-secondary transition-colors hover:text-accent">
+                    class="cursor-pointer text-left text-xs font-semibold text-text-secondary transition-colors hover:text-accent focus-visible:text-accent focus-visible:outline-none">
                     {item.label}
                   </button>
                 {:else}
                   <a
                     href={item.url}
-                    class="cursor-pointer text-left text-xs font-semibold text-text-secondary transition-colors hover:text-accent">
+                    class="cursor-pointer text-left text-xs font-semibold text-text-secondary transition-colors hover:text-accent focus-visible:text-accent focus-visible:outline-none">
                     {item.label}
                   </a>
                 {/if}
@@ -171,8 +171,8 @@
           </ul>
         </div>
 
-        <!-- Preferences Subcolumn (UI Preferences Only: Theme Selector) -->
-        <div class="flex flex-col gap-2.5">
+        <!-- Preferences Subcolumn (2 cols - UI Preferences Only) -->
+        <div class="col-span-2 flex flex-col gap-2">
           <h4 class="text-[11px] font-bold tracking-wider text-text-primary uppercase">
             Preferences
           </h4>
@@ -180,15 +180,15 @@
             <button
               type="button"
               onclick={() => (themeDropdownOpen = !themeDropdownOpen)}
-              class="inline-flex h-8 w-full items-center justify-between gap-2 rounded-lg border border-border-subtle bg-surface-card px-3 text-xs font-semibold text-text-secondary shadow-2xs transition-all hover:bg-surface-hover hover:text-text-primary focus-visible:outline-none"
+              class="inline-flex h-8 w-full cursor-pointer items-center justify-between gap-1.5 rounded-lg border border-border-subtle bg-surface-card px-2.5 text-xs font-semibold text-text-secondary shadow-2xs transition-all hover:border-border-subtle/80 hover:bg-surface-hover hover:text-text-primary focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none"
               aria-label="Change theme"
               aria-haspopup="true"
               aria-expanded={themeDropdownOpen}>
-              <span class="inline-flex items-center gap-2">
+              <span class="inline-flex items-center gap-1.5 truncate">
                 <i
                   class="bi {getThemeIcon()} text-xs text-text-secondary"
                   aria-hidden="true"></i>
-                <span>{getThemeLabel()}</span>
+                <span class="truncate">{getThemeLabel()}</span>
               </span>
               <span
                 class="inline-flex h-3.5 w-3.5 shrink-0 origin-center items-center justify-center text-text-muted transition-transform duration-200 ease-out {(
@@ -209,7 +209,7 @@
                 onclick={() => (themeDropdownOpen = false)}
                 aria-label="Close theme menu"></button>
               <div
-                class="absolute bottom-full left-0 z-50 mb-1.5 flex w-full min-w-32 flex-col rounded-xl border border-border-subtle bg-surface-elevated p-1 shadow-xl backdrop-blur-md">
+                class="absolute bottom-full left-0 z-50 mb-1.5 flex w-full min-w-28 flex-col rounded-xl border border-border-subtle bg-surface-elevated p-1 shadow-xl backdrop-blur-md">
                 {#each ['auto', 'light', 'dark'] as const as option (option)}
                   <button
                     type="button"
@@ -238,19 +238,20 @@
     {/if}
   </div>
 
-  <!-- Layer 2: Utility / Legal Grouped Horizontal Row (Single Location for Cookie Settings) -->
-  <div class="border-t border-border-subtle/60 pt-5 select-none">
+  <!-- Layer 2 & 3: Unified Left-Aligned Supporting Meta Section (Single Border Divider) -->
+  <div class="flex flex-col gap-3 border-t border-border-subtle/50 pt-5 text-left select-none">
+    <!-- Utility / Legal Grouped Horizontal Row (Left-Aligned) -->
     <div
-      class="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-xs font-medium text-text-muted">
+      class="flex flex-wrap items-center justify-start gap-x-4 gap-y-1.5 text-xs font-medium text-text-muted">
       <a
         href="/atom.xml"
-        class="inline-flex items-center gap-1.5 whitespace-nowrap transition-colors hover:text-[#f26522] focus-visible:text-[#f26522] focus-visible:outline-none">
+        class="inline-flex items-center gap-1.5 whitespace-nowrap transition-colors hover:text-text-primary focus-visible:text-text-primary focus-visible:outline-none">
         <i
-          class="bi bi-rss-fill text-[11px] leading-none text-[#f26522]"
+          class="bi bi-rss-fill text-[11px] leading-none text-accent"
           aria-hidden="true"></i>
         <span>RSS feed</span>
         <span
-          class="rounded bg-[#f26522]/15 px-1 py-0.5 font-mono text-[9px] leading-none font-bold text-[#f26522]"
+          class="rounded bg-accent/10 px-1 py-0.5 font-mono text-[9px] leading-none font-bold text-accent"
           >XML</span>
       </a>
       <span
@@ -280,12 +281,10 @@
       </button>
     </div>
 
-    <!-- Layer 3: Centered Copyright Closing Row -->
-    <div class="mt-4 border-t border-border-subtle/40 pt-4 text-center">
-      <p class="text-xs font-medium text-text-muted/70">
-        &copy; {new Date().getFullYear()}
-        {name}. All rights reserved.
-      </p>
-    </div>
+    <!-- Copyright Row (Left-Aligned, Quiet & Passive Closing Line) -->
+    <p class="text-xs font-medium text-text-muted/70">
+      &copy; {new Date().getFullYear()}
+      {name}. All rights reserved.
+    </p>
   </div>
 </footer>
