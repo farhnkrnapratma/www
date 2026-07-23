@@ -512,7 +512,7 @@
     content={desc} />
   <meta
     name="robots"
-    content="noindex, nofollow" />
+    content="index, follow" />
   <link
     rel="canonical"
     href={siteUrl} />

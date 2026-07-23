@@ -1363,7 +1363,7 @@
     </article>
 
     <aside
-      class="sticky top-24 hidden h-fit select-none xl:col-span-3 xl:col-start-10 xl:block"
+      class="sticky top-24 hidden h-fit self-start select-none xl:col-span-3 xl:col-start-10 xl:block"
       aria-label="Table of contents">
       <div
         class="overflow-hidden rounded-2xl border border-border-subtle bg-surface-card/45 p-5 shadow-xs backdrop-blur-lg">
