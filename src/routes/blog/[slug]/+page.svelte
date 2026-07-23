@@ -328,6 +328,7 @@
           let calcTop = currentTop;
           let calcHeight = currentHeight;
 
+          // Stretch towards NEXT heading when scrolling down
           if (nextHeading) {
             const nextLink = tocListEl.querySelector<HTMLElement>(`a[href="#${nextHeading.id}"]`);
             if (nextLink) {
@@ -335,15 +336,30 @@
               const nextHeight = nextLink.offsetHeight;
               const distance = nextHeading.top - currentHeading.top;
               if (distance > 0) {
-                const progress = Math.max(
-                  0,
-                  Math.min(1, (scrollY - (currentHeading.top - viewportOffset)) / distance),
-                );
-                if (progress > 0.05 && progress < 0.95) {
+                const rawProgress = (scrollY - (currentHeading.top - viewportOffset)) / distance;
+                if (rawProgress > 0.02 && rawProgress < 0.98) {
                   isCurrentlyStretching = true;
                   calcTop = currentTop;
                   calcHeight =
-                    (nextTop + nextHeight - currentTop) * progress + currentHeight * (1 - progress);
+                    (nextTop + nextHeight - currentTop) * rawProgress +
+                    currentHeight * (1 - rawProgress);
+                }
+              }
+            }
+          }
+
+          // Stretch towards PREVIOUS heading when scrolling up
+          if (!isCurrentlyStretching && prevHeading) {
+            const prevLink = tocListEl.querySelector<HTMLElement>(`a[href="#${prevHeading.id}"]`);
+            if (prevLink) {
+              const prevTop = prevLink.offsetTop;
+              const distance = currentHeading.top - prevHeading.top;
+              if (distance > 0) {
+                const rawProgress = (currentHeading.top - viewportOffset - scrollY) / distance;
+                if (rawProgress > 0.02 && rawProgress < 0.98) {
+                  isCurrentlyStretching = true;
+                  calcTop = currentTop - (currentTop - prevTop) * rawProgress;
+                  calcHeight = currentTop + currentHeight - calcTop;
                 }
               }
             }
@@ -1338,9 +1354,9 @@
           <p class="text-xs text-text-muted italic">No subheadings found.</p>
         {:else}
           <div class="relative pl-3">
-            <!-- Full continuous vertical track/rail from top to bottom -->
+            <!-- Full continuous vertical track/rail with exact same width as indicator -->
             <div
-              class="absolute top-1 bottom-1 left-0 w-0.5 rounded-full bg-border-subtle/80"
+              class="absolute top-1 bottom-1 left-0 w-1 rounded-full bg-border-subtle/40"
               aria-hidden="true">
             </div>
 
@@ -1352,7 +1368,7 @@
                   isStretching
                 ) ?
                   'none'
-                : 'top 0.45s cubic-bezier(0.34, 1.56, 0.64, 1), height 0.45s cubic-bezier(0.34, 1.56, 0.64, 1)'};"
+                : 'top 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), height 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)'};"
                 aria-hidden="true">
               </div>
             {/if}
