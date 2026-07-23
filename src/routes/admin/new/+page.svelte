@@ -969,7 +969,10 @@
               {#if slug}
                 <div
                   class="flex items-center gap-1 font-sans text-xs leading-none text-text-secondary select-none">
-                  <i class="bi bi-link-45deg text-sm text-accent"></i>
+                  <span
+                    class="material-symbols-rounded text-base leading-none text-accent select-none"
+                    style="font-variation-settings: 'wght' 200, 'opsz' 20;"
+                    aria-hidden="true">link_2</span>
                   <span>fkp.my.id/blog/</span><span class="font-bold text-accent">{slug}</span>
                 </div>
               {/if}

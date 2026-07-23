@@ -240,7 +240,8 @@
           anchor.href = `#${el.id}`;
           anchor.className =
             'anchor-link opacity-0 group-hover:opacity-100 transition-opacity ml-2 text-accent text-sm leading-none';
-          anchor.innerHTML = '<i class="bi bi-link-45deg" aria-hidden="true"></i>';
+          anchor.innerHTML =
+            '<span class="material-symbols-rounded text-base leading-none select-none" style="font-variation-settings: \'wght\' 200, \'opsz\' 20;" aria-hidden="true">link_2</span>';
           anchor.onclick = e => {
             e.preventDefault();
             const target = document.getElementById(el.id);
@@ -734,9 +735,16 @@
             onclick={copyToClipboard}
             class="inline-flex h-9 cursor-pointer items-center justify-center gap-2 rounded-lg border border-border-subtle bg-surface-card px-4 text-xs font-semibold text-text-primary transition-colors select-none hover:bg-surface-hover hover:text-accent"
             aria-label="Copy link to clipboard">
-            <i
-              class="bi {showCopySuccess ? 'bi-check2 text-success' : 'bi-link-45deg'}"
-              aria-hidden="true"></i>
+            {#if showCopySuccess}
+              <i
+                class="bi bi-check2 text-success"
+                aria-hidden="true"></i>
+            {:else}
+              <span
+                class="material-symbols-rounded text-base leading-none select-none"
+                style="font-variation-settings: 'wght' 200, 'opsz' 20;"
+                aria-hidden="true">link_2</span>
+            {/if}
             <span class="hidden sm:inline">{showCopySuccess ? 'Copied!' : 'Copy link'}</span>
           </button>
           {#each [{ href: `https://twitter.com/intent/tweet?url=${encodeURIComponent(page.url.href)}&text=${encodeURIComponent(post.title)}`, icon: 'bi-twitter-x', label: 'Share on X (opens in a new tab)', text: 'X' }, { href: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(page.url.href)}`, icon: 'bi-facebook', label: 'Share on Facebook (opens in a new tab)', text: 'Facebook' }, { href: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(page.url.href)}`, icon: 'bi-linkedin', label: 'Share on LinkedIn (opens in a new tab)', text: 'LinkedIn' }, { href: `mailto:?subject=${encodeURIComponent(post.title)}&body=${encodeURIComponent(page.url.href)}`, icon: 'bi-envelope', label: 'Share via email', text: 'Email' }] as item (item.text)}
@@ -1197,7 +1205,7 @@
       aria-label="Table of contents">
       <div
         class="overflow-hidden rounded-2xl border border-border-subtle bg-surface-card/45 p-5 shadow-xs backdrop-blur-lg">
-        <h3 class="mb-3 text-xs font-bold tracking-wider text-text-secondary uppercase select-none">
+        <h3 class="titlecase mb-3 text-xs font-bold tracking-wider text-text-secondary select-none">
           In this article
         </h3>
 
@@ -1281,9 +1289,16 @@
         showYesFeedbackDialog = false;
       }}
       class="col-span-2 flex h-9.5 cursor-pointer items-center justify-center gap-2 rounded-lg border border-border-subtle bg-surface-card px-3 text-xs font-semibold text-text-primary transition-colors hover:bg-surface-hover hover:text-accent">
-      <i
-        class="bi {showCopySuccess ? 'bi-check2 text-success' : 'bi-link-45deg'} text-sm"
-        aria-hidden="true"></i>
+      {#if showCopySuccess}
+        <i
+          class="bi bi-check2 text-sm text-success"
+          aria-hidden="true"></i>
+      {:else}
+        <span
+          class="material-symbols-rounded text-base leading-none select-none"
+          style="font-variation-settings: 'wght' 200, 'opsz' 20;"
+          aria-hidden="true">link_2</span>
+      {/if}
       <span>{showCopySuccess ? 'Copied!' : 'Copy link'}</span>
     </button>
     {#each [{ href: `https://twitter.com/intent/tweet?url=${encodeURIComponent(page.url.href)}&text=${encodeURIComponent(post.title)}`, icon: 'bi-twitter-x', text: 'X' }, { href: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(page.url.href)}`, icon: 'bi-linkedin', text: 'LinkedIn' }, { href: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(page.url.href)}`, icon: 'bi-facebook', text: 'Facebook' }, { href: `mailto:?subject=${encodeURIComponent(post.title)}&body=${encodeURIComponent(page.url.href)}`, icon: 'bi-envelope', text: 'Email' }] as item (item.text)}

@@ -339,12 +339,12 @@
                     {/if}
                   </div>
                   <span
-                    class="material-symbols-rounded shrink-0 text-sm leading-none text-text-muted/0 transition-colors select-none group-hover:text-text-muted {(
+                    class="material-symbols-rounded shrink-0 text-xs leading-none text-text-muted/0 transition-colors select-none group-hover:text-text-muted {(
                       activeIndex === globalIdx
                     ) ?
                       'text-text-muted'
                     : ''}"
-                    style="font-variation-settings: 'wght' 400, 'opsz' 20;"
+                    style="font-variation-settings: 'wght' 200, 'opsz' 20;"
                     aria-hidden="true">arrow_forward</span>
                 </li>
               {/each}

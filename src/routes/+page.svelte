@@ -853,8 +853,8 @@
                       class="flex items-center gap-1.5 text-xs font-bold text-text-secondary transition-colors group-hover:text-accent">
                       <span>View repository</span>
                       <span
-                        class="material-symbols-rounded text-sm leading-none transition-transform group-hover:translate-x-0.5"
-                        style="font-variation-settings: 'wght' 400, 'opsz' 20;"
+                        class="material-symbols-rounded text-xs leading-none transition-transform group-hover:translate-x-0.5"
+                        style="font-variation-settings: 'wght' 200, 'opsz' 20;"
                         aria-hidden="true">open_in_new</span>
                     </div>
                   </div>
@@ -870,8 +870,8 @@
               class="group inline-flex cursor-pointer items-center gap-1.5 text-xs font-bold text-accent hover:underline">
               <span class="leading-none">View all projects</span>
               <span
-                class="material-symbols-rounded text-sm leading-none transition-transform select-none group-hover:translate-x-0.5"
-                style="font-variation-settings: 'wght' 400, 'opsz' 20;"
+                class="material-symbols-rounded text-xs leading-none transition-transform select-none group-hover:translate-x-0.5"
+                style="font-variation-settings: 'wght' 200, 'opsz' 20;"
                 aria-hidden="true">arrow_forward</span>
             </button>
           </div>
@@ -943,8 +943,8 @@
                     <div class="mt-1 flex items-center gap-1.5 text-xs font-bold text-accent">
                       <span class="leading-none">Read article</span>
                       <span
-                        class="material-symbols-rounded text-sm leading-none transition-transform select-none group-hover:translate-x-0.5"
-                        style="font-variation-settings: 'wght' 400, 'opsz' 20;"
+                        class="material-symbols-rounded text-xs leading-none transition-transform select-none group-hover:translate-x-0.5"
+                        style="font-variation-settings: 'wght' 200, 'opsz' 20;"
                         aria-hidden="true">arrow_forward</span>
                     </div>
                   </div>
@@ -960,8 +960,8 @@
               class="group inline-flex cursor-pointer items-center gap-1.5 text-xs font-bold text-accent hover:underline">
               <span class="leading-none">View all posts</span>
               <span
-                class="material-symbols-rounded text-sm leading-none transition-transform select-none group-hover:translate-x-0.5"
-                style="font-variation-settings: 'wght' 400, 'opsz' 20;"
+                class="material-symbols-rounded text-xs leading-none transition-transform select-none group-hover:translate-x-0.5"
+                style="font-variation-settings: 'wght' 200, 'opsz' 20;"
                 aria-hidden="true">arrow_forward</span>
             </button>
           </div>
@@ -1010,8 +1010,8 @@
             aria-label="View full CV including education and experience">
             <span class="leading-none">View full CV</span>
             <span
-              class="material-symbols-rounded text-sm leading-none transition-transform select-none group-hover:translate-x-0.5"
-              style="font-variation-settings: 'wght' 400, 'opsz' 20;"
+              class="material-symbols-rounded text-xs leading-none transition-transform select-none group-hover:translate-x-0.5"
+              style="font-variation-settings: 'wght' 200, 'opsz' 20;"
               aria-hidden="true">arrow_forward</span>
           </button>
         </div>
@@ -1404,8 +1404,8 @@
                   <div class="mt-1 flex items-center gap-1.5 text-xs font-bold text-accent">
                     <span class="leading-none">Read article</span>
                     <span
-                      class="material-symbols-rounded text-sm leading-none transition-transform select-none group-hover:translate-x-0.5"
-                      style="font-variation-settings: 'wght' 400, 'opsz' 20;"
+                      class="material-symbols-rounded text-xs leading-none transition-transform select-none group-hover:translate-x-0.5"
+                      style="font-variation-settings: 'wght' 200, 'opsz' 20;"
                       aria-hidden="true">arrow_forward</span>
                   </div>
                 </div>
@@ -1569,8 +1569,8 @@
                       class="flex items-center gap-1.5 text-xs font-bold text-text-secondary transition-colors group-hover:text-accent">
                       <span>View repository</span>
                       <span
-                        class="material-symbols-rounded text-sm leading-none transition-transform group-hover:translate-x-0.5"
-                        style="font-variation-settings: 'wght' 400, 'opsz' 20;"
+                        class="material-symbols-rounded text-xs leading-none transition-transform group-hover:translate-x-0.5"
+                        style="font-variation-settings: 'wght' 200, 'opsz' 20;"
                         aria-hidden="true">open_in_new</span>
                     </div>
                   </div>

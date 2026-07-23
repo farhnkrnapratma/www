@@ -50,7 +50,8 @@
     <div class="flex min-w-0 items-center justify-end gap-3">
       {@render children?.()}
       <span
-        class="material-symbols-rounded shrink-0 text-sm text-text-muted transition-colors select-none group-hover:text-accent"
+        class="material-symbols-rounded shrink-0 text-xs leading-none text-text-muted transition-colors select-none group-hover:text-accent"
+        style="font-variation-settings: 'wght' 200, 'opsz' 20;"
         aria-hidden="true">open_in_new</span>
     </div>
   </a>
