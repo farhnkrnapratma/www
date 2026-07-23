@@ -701,16 +701,22 @@
             <Button
               variant="secondary"
               size="sm"
-              leadingIcon="bi-hand-thumbs-up"
               onclick={() => handleHelpfulness('yes')}>
-              Yes
+              <span
+                class="material-symbols-rounded text-sm leading-none select-none"
+                style="font-variation-settings: 'wght' 200, 'opsz' 20;"
+                aria-hidden="true">thumb_up</span>
+              <span>Yes</span>
             </Button>
             <Button
               variant="secondary"
               size="sm"
-              leadingIcon="bi-hand-thumbs-down"
               onclick={() => handleHelpfulness('no')}>
-              No
+              <span
+                class="material-symbols-rounded text-sm leading-none select-none"
+                style="font-variation-settings: 'wght' 200, 'opsz' 20;"
+                aria-hidden="true">thumb_down</span>
+              <span>No</span>
             </Button>
           {:else if helpfulnessFeedback === 'yes'}
             <span class="flex animate-pulse items-center gap-1.5 text-xs font-bold text-accent">

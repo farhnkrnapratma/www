@@ -39,16 +39,22 @@
       <Button
         variant="secondary"
         size="sm"
-        leadingIcon="bi-hand-thumbs-up"
         onclick={() => handleVote(true)}>
-        Yes
+        <span
+          class="material-symbols-rounded text-sm leading-none select-none"
+          style="font-variation-settings: 'wght' 200, 'opsz' 20;"
+          aria-hidden="true">thumb_up</span>
+        <span>Yes</span>
       </Button>
       <Button
         variant="secondary"
         size="sm"
-        leadingIcon="bi-hand-thumbs-down"
         onclick={() => handleVote(false)}>
-        No
+        <span
+          class="material-symbols-rounded text-sm leading-none select-none"
+          style="font-variation-settings: 'wght' 200, 'opsz' 20;"
+          aria-hidden="true">thumb_down</span>
+        <span>No</span>
       </Button>
     </div>
   {/if}
