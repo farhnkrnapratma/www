@@ -86,42 +86,43 @@
     'relative z-10 mx-auto mt-auto w-full border-t border-border-subtle px-6 pt-10 pb-8 font-sans text-xs text-text-muted md:w-[80%] lg:w-[50%]',
     className,
   )}>
-  <!-- Layer 1: Upper Footer (Left: Brand/Bio; Right: 2x3 Nav Grid with Vertical Divider; Row 3 for Social Icons + Floated Right Theme Switcher) -->
-  <div class="grid grid-cols-1 gap-x-8 gap-y-2.5 pb-6 md:grid-cols-12">
+  <!-- Layer 1: Upper Footer (Left: Brand/Bio; Right: 2x3 Nav Grid with Centered Vertical Divider; Row 3 for Social Icons + Floated Right Theme Switcher) -->
+  <div class="grid grid-cols-1 gap-x-0 gap-y-1 pb-6 md:grid-cols-12">
     <!-- Row 1: Name on Left -->
-    <div class="md:col-span-7">
+    <div class="md:col-span-7 md:pr-6">
       <h3 class="text-base font-bold text-text-primary">{name}</h3>
     </div>
 
     <!-- Empty Header Slot on Right to align navigation start with description baseline -->
     {#if resolvedNavItems.length > 0}
-      <div class="hidden md:col-span-5 md:block"></div>
+      <div class="hidden md:col-span-5 md:block md:border-l md:border-border-subtle/40 md:pl-6">
+      </div>
     {/if}
 
-    <!-- Row 2: Bio on Left; 2x3 Navigation Grid on Right with Subtle Vertical Divider -->
-    <div class="pt-0.5 md:col-span-7 md:pr-4">
+    <!-- Row 2: Bio on Left; 2x3 Navigation Grid on Right with Centered Vertical Divider -->
+    <div class="pt-0.5 md:col-span-7 md:pr-6">
       <p class="max-w-md text-xs leading-relaxed text-text-secondary">
         {description}
       </p>
     </div>
 
     {#if resolvedNavItems.length > 0}
-      <div class="pt-0.5 md:col-span-5 md:border-l md:border-border-subtle/40 md:pl-5 lg:pl-6">
+      <div class="pt-0.5 md:col-span-5 md:border-l md:border-border-subtle/40 md:pl-6">
         <nav aria-label="Footer navigation">
-          <ul class="grid grid-cols-2 gap-x-6 gap-y-0 text-xs font-normal text-text-secondary">
+          <ul class="grid grid-cols-2 gap-x-6 gap-y-1.5 text-xs font-normal text-text-secondary">
             {#each resolvedNavItems as item (item.url)}
-              <li class="text-xs leading-relaxed">
+              <li class="text-xs leading-[29px]">
                 {#if onNavClick}
                   <button
                     type="button"
                     onclick={() => onNavClick(item.url)}
-                    class="cursor-pointer text-left text-xs leading-relaxed font-normal text-text-secondary transition-colors hover:text-accent focus-visible:text-accent focus-visible:outline-none">
+                    class="cursor-pointer text-left text-xs leading-[29px] font-normal text-text-secondary transition-colors hover:text-accent focus-visible:text-accent focus-visible:outline-none">
                     {item.label}
                   </button>
                 {:else}
                   <a
                     href={item.url}
-                    class="cursor-pointer text-left text-xs leading-relaxed font-normal text-text-secondary transition-colors hover:text-accent focus-visible:text-accent focus-visible:outline-none">
+                    class="cursor-pointer text-left text-xs leading-[29px] font-normal text-text-secondary transition-colors hover:text-accent focus-visible:text-accent focus-visible:outline-none">
                     {item.label}
                   </a>
                 {/if}
@@ -133,7 +134,7 @@
     {/if}
 
     <!-- Row 3: Shared Horizontal Alignment Row (Social Media Buttons on Left + Theme Switcher Floated Right) -->
-    <div class="flex items-center justify-between pt-2 md:col-span-12">
+    <div class="flex items-center justify-between pt-3 md:col-span-12">
       <!-- Left: Social Media Buttons -->
       <div class="flex items-center gap-2.5">
         <a
