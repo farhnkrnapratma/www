@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
   import { cn } from '../utils/cn';
   import { consentStore } from '../../stores/consentStore.svelte';
 
@@ -25,8 +24,6 @@
     { label: 'Contacts', url: '/#contacts' },
   ];
 
-  type Theme = 'auto' | 'dark' | 'light';
-
   let {
     name = 'Farhan Kurnia Pratama',
     description = 'Security-focused Software Engineer with expertise in Linux/Unix, AI, and Open-Source Software, dedicated to building reliable, maintainable, and privacy-centric systems.',
@@ -35,50 +32,7 @@
     class: className = '',
   }: Props = $props();
 
-  let theme = $state<Theme>('auto');
-  let themeDropdownOpen = $state(false);
-
   let resolvedNavItems = $derived(navItems.length > 0 ? navItems : defaultNavItems);
-
-  function applyTheme(newTheme: Theme) {
-    theme = newTheme;
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('theme', newTheme);
-      if (newTheme === 'dark') {
-        document.documentElement.classList.add('dark');
-      } else if (newTheme === 'light') {
-        document.documentElement.classList.remove('dark');
-      } else {
-        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        if (prefersDark) {
-          document.documentElement.classList.add('dark');
-        } else {
-          document.documentElement.classList.remove('dark');
-        }
-      }
-    }
-  }
-
-  function getThemeIcon(t: Theme = theme) {
-    if (t === 'dark') return 'bi-moon-stars-fill';
-    if (t === 'light') return 'bi-sun-fill';
-    return 'bi-circle-half';
-  }
-
-  function getThemeLabel(t: Theme = theme) {
-    if (t === 'dark') return 'Dark';
-    if (t === 'light') return 'Light';
-    return 'Auto';
-  }
-
-  onMount(() => {
-    if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('theme') as Theme;
-      if (saved) {
-        theme = saved;
-      }
-    }
-  });
 </script>
 
 <footer
@@ -86,7 +40,7 @@
     'relative z-10 mx-auto mt-auto w-full border-t border-border-subtle px-6 pt-10 pb-8 font-sans text-xs text-text-muted md:w-[80%] lg:w-[50%]',
     className,
   )}>
-  <!-- Layer 1: Upper Footer (Unified Left-Aligned 2-Zone Layout) -->
+  <!-- Layer 1: Upper Footer (2-Zone Grid with Matched Baseline, Gap, and Rhythm) -->
   <div class="grid grid-cols-1 gap-8 pb-6 md:grid-cols-12">
     <!-- Zone 1 (Left): Brand, Bio & Social Links -->
     <div class="flex flex-col gap-3.5 md:col-span-7">
@@ -141,111 +95,35 @@
       </div>
     </div>
 
-    <!-- Zone 2 (Right Zone): Navigation & Preferences -->
+    <!-- Zone 2 (Right Zone): Navigation Column (Baseline & Vertical Rhythm Matched with Left Zone) -->
     {#if resolvedNavItems.length > 0}
-      <div class="flex flex-row items-start justify-between gap-8 pt-1 md:col-span-5 md:pt-0">
-        <!-- Navigation Column -->
-        <div class="flex flex-col gap-2">
-          <h4 class="text-[11px] font-bold tracking-wider text-text-primary uppercase">
-            Navigation
-          </h4>
-          <ul class="flex flex-col gap-1.5">
-            {#each resolvedNavItems as item (item.url)}
-              <li>
-                {#if onNavClick}
-                  <button
-                    type="button"
-                    onclick={() => onNavClick(item.url)}
-                    class="cursor-pointer text-left text-xs font-semibold text-text-secondary transition-colors hover:text-accent focus-visible:text-accent focus-visible:outline-none">
-                    {item.label}
-                  </button>
-                {:else}
-                  <a
-                    href={item.url}
-                    class="cursor-pointer text-left text-xs font-semibold text-text-secondary transition-colors hover:text-accent focus-visible:text-accent focus-visible:outline-none">
-                    {item.label}
-                  </a>
-                {/if}
-              </li>
-            {/each}
-          </ul>
-        </div>
-
-        <!-- Preferences Column (Theme Selector + Plain Text Cookie Settings) -->
-        <div class="flex shrink-0 flex-col gap-2">
-          <h4 class="text-[11px] font-bold tracking-wider text-text-primary uppercase">
-            Preferences
-          </h4>
-          <div class="relative w-fit">
-            <button
-              type="button"
-              onclick={() => (themeDropdownOpen = !themeDropdownOpen)}
-              class="inline-flex h-8 w-fit min-w-[5.5rem] cursor-pointer items-center justify-between gap-2 rounded-lg border border-border-subtle bg-surface-card px-2.5 text-xs font-semibold text-text-secondary shadow-2xs transition-all hover:border-border-subtle/80 hover:bg-surface-hover hover:text-text-primary focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none"
-              aria-label="Change theme"
-              aria-haspopup="true"
-              aria-expanded={themeDropdownOpen}>
-              <span class="inline-flex items-center gap-1.5 whitespace-nowrap">
-                <i
-                  class="bi {getThemeIcon()} text-xs text-text-secondary"
-                  aria-hidden="true"></i>
-                <span>{getThemeLabel()}</span>
-              </span>
-              <span
-                class="inline-flex h-3.5 w-3.5 shrink-0 origin-center items-center justify-center text-text-muted transition-transform duration-200 ease-out {(
-                  themeDropdownOpen
-                ) ?
-                  'rotate-180'
-                : ''}">
-                <i
-                  class="bi bi-chevron-down text-[9px] leading-none"
-                  aria-hidden="true"></i>
-              </span>
-            </button>
-
-            {#if themeDropdownOpen}
-              <button
-                type="button"
-                class="fixed inset-0 z-40 cursor-default"
-                onclick={() => (themeDropdownOpen = false)}
-                aria-label="Close theme menu"></button>
-              <div
-                class="absolute right-0 bottom-full z-50 mb-1.5 flex min-w-[7rem] flex-col rounded-xl border border-border-subtle bg-surface-elevated p-1 shadow-xl backdrop-blur-md sm:right-auto sm:left-0">
-                {#each ['auto', 'light', 'dark'] as const as option (option)}
-                  <button
-                    type="button"
-                    onclick={() => {
-                      applyTheme(option);
-                      themeDropdownOpen = false;
-                    }}
-                    class="flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-left text-xs font-medium transition-colors {(
-                      theme === option
-                    ) ?
-                      'bg-accent/10 font-semibold text-accent'
-                    : 'text-text-primary hover:bg-surface-hover'}">
-                    <i
-                      class="bi {getThemeIcon(option)} text-xs {theme === option ? 'text-accent' : (
-                        'text-text-secondary'
-                      )}"
-                      aria-hidden="true"></i>
-                    <span>{getThemeLabel(option)}</span>
-                  </button>
-                {/each}
-              </div>
-            {/if}
-          </div>
-
-          <button
-            type="button"
-            onclick={() => consentStore.openCustomizeModal()}
-            class="cursor-pointer text-left text-xs font-semibold text-text-secondary transition-colors hover:text-accent focus-visible:text-accent focus-visible:outline-none">
-            Cookie Settings
-          </button>
-        </div>
+      <div class="flex flex-col md:col-span-5">
+        <h3 class="text-base font-bold text-text-primary">Navigation</h3>
+        <ul class="mt-1.5 flex flex-col gap-1">
+          {#each resolvedNavItems as item (item.url)}
+            <li>
+              {#if onNavClick}
+                <button
+                  type="button"
+                  onclick={() => onNavClick(item.url)}
+                  class="cursor-pointer text-left text-xs leading-relaxed font-semibold text-text-secondary transition-colors hover:text-accent focus-visible:text-accent focus-visible:outline-none">
+                  {item.label}
+                </button>
+              {:else}
+                <a
+                  href={item.url}
+                  class="cursor-pointer text-left text-xs leading-relaxed font-semibold text-text-secondary transition-colors hover:text-accent focus-visible:text-accent focus-visible:outline-none">
+                  {item.label}
+                </a>
+              {/if}
+            </li>
+          {/each}
+        </ul>
       </div>
     {/if}
   </div>
 
-  <!-- Layer 2: Strictly Forced Single-Line Bottom Meta Row (Copyright + 3 Utility Links) -->
+  <!-- Layer 2: Consolidated Single Bottom Meta Row (Copyright · RSS · Sitemap · Privacy · Manage cookies) -->
   <div class="border-t border-border-subtle/50 pt-4 select-none">
     <div
       class="no-scrollbar flex max-w-full items-center justify-start gap-x-3 overflow-x-auto text-xs font-medium whitespace-nowrap text-text-muted">
@@ -258,11 +136,11 @@
         aria-hidden="true">&middot;</span>
       <a
         href="/atom.xml"
-        class="inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap transition-colors hover:text-text-primary focus-visible:text-text-primary focus-visible:outline-none">
+        class="group inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap transition-colors hover:text-text-primary focus-visible:text-text-primary focus-visible:outline-none">
         <i
-          class="bi bi-rss-fill text-[11px] leading-none text-accent"
+          class="bi bi-rss-fill text-[11px] leading-none text-text-muted transition-colors group-hover:text-text-primary"
           aria-hidden="true"></i>
-        <span>RSS feed</span>
+        <span>RSS</span>
       </a>
       <span
         class="shrink-0 text-text-muted/30"
@@ -278,8 +156,17 @@
       <a
         href="/privacy"
         class="shrink-0 whitespace-nowrap transition-colors hover:text-text-primary focus-visible:text-text-primary focus-visible:outline-none">
-        Privacy Policy
+        Privacy
       </a>
+      <span
+        class="shrink-0 text-text-muted/30"
+        aria-hidden="true">&middot;</span>
+      <button
+        type="button"
+        onclick={() => consentStore.openCustomizeModal()}
+        class="shrink-0 cursor-pointer whitespace-nowrap transition-colors hover:text-text-primary focus-visible:text-text-primary focus-visible:outline-none">
+        Manage cookies
+      </button>
     </div>
   </div>
 </footer>
