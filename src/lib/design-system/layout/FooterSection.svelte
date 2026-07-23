@@ -141,11 +141,11 @@
       </div>
     </div>
 
-    <!-- Zone 2 (Right Subgrid): Navigation & Preferences Columns -->
+    <!-- Zone 2 (Right Zone): Navigation & Proportional Preferences -->
     {#if resolvedNavItems.length > 0}
-      <div class="grid grid-cols-5 gap-4 pt-1 md:col-span-5 md:pt-0">
-        <!-- Navigation Subcolumn (3 cols) -->
-        <div class="col-span-3 flex flex-col gap-2">
+      <div class="flex flex-row items-start justify-between gap-8 pt-1 md:col-span-5 md:pt-0">
+        <!-- Navigation Column -->
+        <div class="flex flex-col gap-2">
           <h4 class="text-[11px] font-bold tracking-wider text-text-primary uppercase">
             Navigation
           </h4>
@@ -171,24 +171,24 @@
           </ul>
         </div>
 
-        <!-- Preferences Subcolumn (2 cols - UI Preferences Only) -->
-        <div class="col-span-2 flex flex-col gap-2">
+        <!-- Preferences Column (Compact w-fit Width, No Truncation, Proportional Density) -->
+        <div class="flex shrink-0 flex-col gap-2">
           <h4 class="text-[11px] font-bold tracking-wider text-text-primary uppercase">
             Preferences
           </h4>
-          <div class="relative w-full">
+          <div class="relative w-fit">
             <button
               type="button"
               onclick={() => (themeDropdownOpen = !themeDropdownOpen)}
-              class="inline-flex h-8 w-full cursor-pointer items-center justify-between gap-1.5 rounded-lg border border-border-subtle bg-surface-card px-2.5 text-xs font-semibold text-text-secondary shadow-2xs transition-all hover:border-border-subtle/80 hover:bg-surface-hover hover:text-text-primary focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none"
+              class="inline-flex h-8 w-fit min-w-[5.5rem] cursor-pointer items-center justify-between gap-2 rounded-lg border border-border-subtle bg-surface-card px-2.5 text-xs font-semibold text-text-secondary shadow-2xs transition-all hover:border-border-subtle/80 hover:bg-surface-hover hover:text-text-primary focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none"
               aria-label="Change theme"
               aria-haspopup="true"
               aria-expanded={themeDropdownOpen}>
-              <span class="inline-flex items-center gap-1.5 truncate">
+              <span class="inline-flex items-center gap-1.5 whitespace-nowrap">
                 <i
                   class="bi {getThemeIcon()} text-xs text-text-secondary"
                   aria-hidden="true"></i>
-                <span class="truncate">{getThemeLabel()}</span>
+                <span>{getThemeLabel()}</span>
               </span>
               <span
                 class="inline-flex h-3.5 w-3.5 shrink-0 origin-center items-center justify-center text-text-muted transition-transform duration-200 ease-out {(
@@ -209,7 +209,7 @@
                 onclick={() => (themeDropdownOpen = false)}
                 aria-label="Close theme menu"></button>
               <div
-                class="absolute bottom-full left-0 z-50 mb-1.5 flex w-full min-w-28 flex-col rounded-xl border border-border-subtle bg-surface-elevated p-1 shadow-xl backdrop-blur-md">
+                class="absolute right-0 bottom-full z-50 mb-1.5 flex min-w-[7rem] flex-col rounded-xl border border-border-subtle bg-surface-elevated p-1 shadow-xl backdrop-blur-md sm:right-auto sm:left-0">
                 {#each ['auto', 'light', 'dark'] as const as option (option)}
                   <button
                     type="button"
