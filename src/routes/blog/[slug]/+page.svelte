@@ -596,11 +596,8 @@
   aria-label="Article navigation">
   <a
     href="/#blogs"
-    class="inline-flex items-center gap-1.5 text-xs font-semibold text-text-secondary transition-colors hover:text-text-primary focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none">
-    <i
-      class="bi bi-arrow-left text-sm"
-      aria-hidden="true"></i>
-    <span>Back to blog</span>
+    class="inline-flex h-8 items-center justify-center rounded-lg border border-border-subtle bg-surface-card px-4 text-xs font-semibold text-text-primary transition-colors hover:bg-surface-hover focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none">
+    Back to Blogs
   </a>
   <div class="flex items-center gap-2">
     <SpotlightSearch />

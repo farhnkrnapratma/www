@@ -170,7 +170,7 @@
   <!-- Left side: Bordered Back to Home button without icon (Matching Sign out button styling) -->
   <a
     href="/"
-    class="inline-flex h-9 items-center justify-center rounded-lg border border-border-subtle bg-surface-card px-4 text-xs font-semibold text-text-primary transition-colors hover:bg-surface-hover focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none">
+    class="inline-flex h-8 items-center justify-center rounded-lg border border-border-subtle bg-surface-card px-4 text-xs font-semibold text-text-primary transition-colors hover:bg-surface-hover focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none">
     Back to Home
   </a>
 
@@ -233,7 +233,8 @@
 <main
   id="main-content"
   class="flex min-h-[calc(100vh-3.75rem)] flex-col pt-15 font-sans">
-  <section class="relative z-10 mx-auto flex w-full max-w-2xl flex-col gap-8 px-6 py-12">
+  <section
+    class="relative z-10 mx-auto flex w-full flex-col gap-8 px-6 py-12 md:w-[80%] lg:w-[50%]">
     <div
       class="pointer-events-none absolute top-12.5 left-[50%] z-0 h-80 w-[320px] translate-x-[-50%] rounded-full bg-accent/10 blur-[80px]">
     </div>

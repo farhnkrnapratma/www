@@ -172,6 +172,16 @@ export function createFilterSortStore(options: FilterSortOptions = {}) {
     const newFilters: Record<string, string[]> = {};
     for (const [key, val] of url.searchParams.entries()) {
       if (key === 'q' || key === 'sort' || key === 'dir' || key === 'id') continue;
+      if (
+        key.startsWith('_') ||
+        key.startsWith('utm_') ||
+        key === 'gclid' ||
+        key === 'fbclid' ||
+        key === 'ref' ||
+        key === 'source' ||
+        key === 'via'
+      )
+        continue;
       if (val) {
         newFilters[key] = val.split(',').filter(Boolean);
       }
