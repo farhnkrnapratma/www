@@ -181,7 +181,7 @@
       <p class="mt-2">
         In accordance with Google Analytics 4 data retention capabilities and privacy best
         practices, user-level and event-level data (such as pageview events, session duration, and
-        browser metrics) is strictly retained for a maximum duration of <strong
+        browser metrics) is retained for a maximum of <strong
           class="font-semibold text-text-primary">14 months</strong> from the date of collection.
       </p>
       <p class="mt-2">
@@ -202,9 +202,7 @@
           The name (or "Anonymous") and comment message you submit are stored securely in our
           database and displayed publicly on the post.
         </li>
-        <li>
-          We process comments through automated spam detection filter algorithms to prevent abuse.
-        </li>
+        <li>We process comments through automated spam-detection filters to prevent abuse.</li>
         <li>You may request the deletion of your published comments at any time.</li>
       </ul>
     </section>
@@ -214,7 +212,8 @@
       <h2 class="text-base font-bold text-text-primary">5. Your Choices & Cookie Preferences</h2>
       <p class="mt-2">
         You retain full control over your cookie preferences at all times. You can modify or revoke
-        your consent decisions whenever you choose:
+        your consent decisions at any time via the Cookie Settings link in the footer or by clicking
+        the button below:
       </p>
       <div class="mt-3">
         <button
