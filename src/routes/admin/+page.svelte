@@ -43,7 +43,6 @@
   let isLoading = $state(true);
   let posts = $state<AdminPost[]>([]);
   let isLoggingOut = $state(false);
-  let openActionMenuId = $state<string | null>(null);
 
   const filterStore = createFilterSortStore({
     defaultSortField: 'date',
@@ -227,7 +226,7 @@
     };
   });
 
-  let postViewsMap = $state<SvelteMap<string, number>>(new SvelteMap());
+  let postViewsMap = new SvelteMap<string, number>();
 
   async function fetchPosts() {
     const { data, error } = await supabase
@@ -240,12 +239,10 @@
       try {
         const { data: viewsData } = await supabase.from('post_views').select('post_id');
         if (viewsData) {
-          const map = new Map<string, number>();
-          for (const row of viewsData) {
-            map.set(row.post_id, (map.get(row.post_id) ?? 0) + 1);
-          }
           const sMap = new SvelteMap<string, number>();
-          map.forEach((val, key) => sMap.set(key, val));
+          for (const row of viewsData) {
+            sMap.set(row.post_id, (sMap.get(row.post_id) ?? 0) + 1);
+          }
           postViewsMap = sMap;
         }
       } catch (err) {
@@ -331,14 +328,6 @@
     } else {
       alert('Failed to delete comment. Please try again.');
     }
-  }
-
-  function formatDate(dateStr: string) {
-    return new Date(dateStr).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-    });
   }
 
   function getPostComments(postId: string) {
@@ -628,9 +617,8 @@
           class="boxed-list relative z-0 overflow-visible! text-left"
           role="list"
           aria-label="Blog posts list">
-          {#each filteredPosts as post, index (post.id)}
+          {#each filteredPosts as post (post.id)}
             {@const postComments = getPostComments(post.id)}
-            {@const isLastItem = index >= filteredPosts.length - 2 && filteredPosts.length > 2}
             <div
               class="action-row group flex flex-col gap-5 p-5 text-left transition-all duration-200 hover:bg-surface-hover/40 sm:flex-row sm:items-start"
               role="listitem">
