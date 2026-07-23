@@ -1052,8 +1052,9 @@
                           Replying to {getCommentAuthor(comment)}
                         </p>
                         <Button
-                          variant="secondary"
+                          variant="ghost"
                           size="sm"
+                          showEscHint
                           onclick={cancelReply}>Cancel</Button>
                       </div>
 
@@ -1292,6 +1293,7 @@
     <Button
       variant="secondary"
       size="md"
+      showEscHint
       onclick={() => {
         showYesFeedbackDialog = false;
         helpfulnessFeedback = null;
@@ -1311,6 +1313,7 @@
     <Button
       variant="secondary"
       size="md"
+      showEscHint
       onclick={() => {
         showNoFeedbackDialog = false;
         helpfulnessFeedback = null;

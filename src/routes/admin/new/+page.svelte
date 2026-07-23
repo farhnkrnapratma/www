@@ -1431,6 +1431,7 @@
     <Button
       variant="secondary"
       size="md"
+      showEscHint
       onclick={() => (showCancelDialog = false)}>Keep editing</Button>
     <Button
       variant="destructive"
@@ -1448,6 +1449,7 @@
     <Button
       variant="secondary"
       size="md"
+      showEscHint
       onclick={() => (showPublishDialog = false)}>Cancel</Button>
     <Button
       variant="primary"
@@ -1465,6 +1467,7 @@
     <Button
       variant="secondary"
       size="md"
+      showEscHint
       onclick={() => (showSaveDraftDialog = false)}>Cancel</Button>
     <Button
       variant="primary"

@@ -800,6 +800,7 @@
                                 <Button
                                   variant="ghost"
                                   size="sm"
+                                  showEscHint
                                   onclick={() => {
                                     replyTo = null;
                                     commentContent = '';
@@ -881,6 +882,7 @@
     <Button
       variant="secondary"
       size="md"
+      showEscHint
       onclick={() => (showDeletePostDialog = false)}>
       Cancel
     </Button>
@@ -902,6 +904,7 @@
     <Button
       variant="secondary"
       size="md"
+      showEscHint
       onclick={() => (showDeleteCommentDialog = false)}>
       Cancel
     </Button>

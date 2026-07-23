@@ -436,6 +436,7 @@
     <Button
       variant="secondary"
       size="md"
+      showEscHint
       onclick={() => (showSubmitDialog = false)}>
       Cancel
     </Button>

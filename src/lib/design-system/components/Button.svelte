@@ -10,6 +10,7 @@
     fullWidth?: boolean;
     leadingIcon?: string;
     trailingIcon?: string;
+    showEscHint?: boolean;
     children?: Snippet;
   }
 
@@ -21,6 +22,7 @@
     fullWidth = false,
     leadingIcon = '',
     trailingIcon = '',
+    showEscHint = false,
     class: className = '',
     children,
     type = 'button',
@@ -91,5 +93,12 @@
     <i
       class="bi {trailingIcon} text-sm"
       aria-hidden="true"></i>
+  {/if}
+
+  {#if showEscHint && !isLoading}
+    <kbd
+      class="hidden items-center rounded border border-border-subtle/80 bg-surface-elevated/80 px-1 py-0.5 font-mono text-[9px] leading-none text-text-muted select-none sm:inline-flex">
+      Esc
+    </kbd>
   {/if}
 </button>

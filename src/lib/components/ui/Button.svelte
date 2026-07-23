@@ -6,6 +6,7 @@
     variant?: 'primary' | 'secondary' | 'ghost' | 'destructive';
     size?: 'sm' | 'md' | 'lg';
     isLoading?: boolean;
+    showEscHint?: boolean;
     children?: Snippet;
   }
 
@@ -13,6 +14,7 @@
     variant = 'primary',
     size = 'md',
     isLoading = false,
+    showEscHint = false,
     disabled = false,
     class: className = '',
     children,
@@ -64,5 +66,13 @@
       ></path>
     </svg>
   {/if}
+
   {@render children?.()}
+
+  {#if showEscHint && !isLoading}
+    <kbd
+      class="hidden items-center rounded border border-border-subtle/80 bg-surface-elevated/80 px-1 py-0.5 font-mono text-[9px] leading-none text-text-muted select-none sm:inline-flex">
+      Esc
+    </kbd>
+  {/if}
 </button>

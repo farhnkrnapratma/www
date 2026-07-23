@@ -1595,6 +1595,7 @@
     <Button
       variant="secondary"
       size="md"
+      showEscHint
       onclick={() => (showSendMessageDialog = false)}>Cancel</Button>
     <Button
       variant="primary"
