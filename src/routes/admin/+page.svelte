@@ -97,7 +97,7 @@
       .replace(/>/g, '&gt;')
       .replace(/"/g, '&quot;')
       .replace(/'/g, '&#x27;')
-      .replace(/\
+      .replace(/\//g, '&#x2F;');
   }
 
   async function handleAdminSubmit(e: SubmitEvent, parentId: string, postId: string) {
