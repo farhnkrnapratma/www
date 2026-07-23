@@ -546,11 +546,13 @@
         const lastRect = lastAvatar.getBoundingClientRect();
         const nodeRect = node.getBoundingClientRect();
 
+        const parentCenterX = parentRect.left + parentRect.width / 2 - nodeRect.left;
         const parentCenterY = parentRect.top + parentRect.height / 2 - nodeRect.top;
         const lastCenterY = lastRect.top + lastRect.height / 2 - nodeRect.top;
 
+        trunkLine.style.left = `${parentCenterX}px`;
         trunkLine.style.top = `${parentCenterY}px`;
-        trunkLine.style.height = `${lastCenterY - parentCenterY - 8}px`;
+        trunkLine.style.height = `${Math.max(0, lastCenterY - parentCenterY)}px`;
       }
     }
 
@@ -1377,12 +1379,11 @@
               </div>
 
               {#if comment.children && comment.children.length > 0}
-                <div
-                  class="replies-container relative mt-3 space-y-4 border-l border-border-subtle/40 pl-4 sm:ml-4 sm:pl-6">
+                <div class="replies-container relative mt-3 space-y-4 pl-6 sm:pl-8">
                   {#each comment.children as child, i (child.id)}
                     <div class="child-wrapper relative">
                       <div
-                        class="absolute top-3.5 -left-4 h-3.5 w-3.5 rounded-bl-lg border-b border-l border-border-subtle/60 sm:-left-6 sm:w-5"
+                        class="pointer-events-none absolute top-4 -left-4 h-4 w-4 rounded-bl-xl border-b border-l border-border-subtle/50 sm:-left-6 sm:w-6"
                         aria-hidden="true">
                       </div>
                       {@render commentNode(child, depth + 1, i === comment.children.length - 1)}
