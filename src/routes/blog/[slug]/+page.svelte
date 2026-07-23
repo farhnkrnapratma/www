@@ -1195,7 +1195,8 @@
     <aside
       class="sticky top-24 hidden h-fit select-none xl:col-span-3 xl:col-start-10 xl:block"
       aria-label="Table of contents">
-      <div class="boxed-list border border-border-subtle bg-surface-card/45 p-5 backdrop-blur-lg">
+      <div
+        class="overflow-hidden rounded-2xl border border-border-subtle bg-surface-card/45 p-5 shadow-xs backdrop-blur-lg">
         <h3 class="mb-3 text-xs font-bold tracking-wider text-text-secondary uppercase select-none">
           In this article
         </h3>
@@ -1236,7 +1237,7 @@
                     : 'font-normal text-text-secondary'}">
                     {#if isActive}
                       <span
-                        class="absolute top-1/2 -left-3 h-4 w-1 -translate-y-1/2 rounded-full bg-accent shadow-xs transition-all duration-300 ease-in-out"
+                        class="absolute top-0 bottom-0 -left-3 w-1 rounded-full bg-accent shadow-xs transition-all duration-300 ease-in-out"
                         aria-hidden="true"></span>
                     {/if}
                     <span class="transition-colors duration-300 ease-in-out">{heading.text}</span>
