@@ -40,16 +40,23 @@
     'relative z-10 mx-auto mt-auto w-full border-t border-border-subtle px-6 pt-10 pb-8 font-sans text-xs text-text-muted md:w-[80%] lg:w-[50%]',
     className,
   )}>
-  <!-- Layer 1: Upper Footer (Left: Brand/Bio/Socials; Right: Compact Grouped Navigation Row) -->
-  <div class="grid grid-cols-1 gap-8 pb-6 md:grid-cols-12 md:items-start">
-    <!-- Zone 1 (Left): Brand, Bio & Social Links -->
-    <div class="flex flex-col gap-3.5 md:col-span-7">
-      <div>
-        <h3 class="text-base font-bold text-text-primary">{name}</h3>
-        <p class="mt-1.5 max-w-md text-xs leading-relaxed text-text-secondary">
-          {description}
-        </p>
-      </div>
+  <!-- Layer 1: Upper Footer (Grid Alignment: Left Brand/Bio; Right 2x3 Navigation Grid Aligned with Description) -->
+  <div class="grid grid-cols-1 gap-x-8 gap-y-1.5 pb-6 md:grid-cols-12">
+    <!-- Header Row: Name on Left -->
+    <div class="md:col-span-7">
+      <h3 class="text-base font-bold text-text-primary">{name}</h3>
+    </div>
+
+    <!-- Empty Header Slot on Right to aligned navigation start with description baseline -->
+    {#if resolvedNavItems.length > 0}
+      <div class="hidden md:col-span-5 md:block"></div>
+    {/if}
+
+    <!-- Content Row: Bio & Socials on Left; 2x3 Navigation Grid on Right -->
+    <div class="flex flex-col gap-3.5 pt-0.5 md:col-span-7">
+      <p class="max-w-md text-xs leading-relaxed text-text-secondary">
+        {description}
+      </p>
 
       <div class="flex items-center gap-2.5 pt-0.5">
         <a
@@ -95,14 +102,12 @@
       </div>
     </div>
 
-    <!-- Zone 2 (Right Zone): Compact Grouped Navigation Links (No Section Heading, No Empty Void) -->
     {#if resolvedNavItems.length > 0}
-      <div class="pt-0.5 md:col-span-5 md:pt-1">
+      <div class="pt-0.5 md:col-span-5">
         <nav aria-label="Footer navigation">
-          <ul
-            class="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs font-normal text-text-secondary">
+          <ul class="grid grid-cols-2 gap-x-6 gap-y-0 text-xs font-normal text-text-secondary">
             {#each resolvedNavItems as item (item.url)}
-              <li>
+              <li class="text-xs leading-relaxed">
                 {#if onNavClick}
                   <button
                     type="button"
