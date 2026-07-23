@@ -276,10 +276,10 @@
         href="/atom.xml"
         class="group inline-flex shrink-0 items-center justify-center gap-1.5 transition-colors hover:text-text-primary focus-visible:text-text-primary focus-visible:outline-none">
         <span
-          class="material-symbols-rounded text-sm leading-none text-text-muted transition-colors select-none group-hover:text-text-primary"
-          style="font-variation-settings: 'wght' 300, 'opsz' 20;"
+          class="material-symbols-rounded text-xs text-text-muted transition-colors select-none group-hover:text-text-primary"
+          style="font-variation-settings: 'wght' 400, 'opsz' 20;"
           aria-hidden="true">rss_feed</span>
-        <span class="leading-none">RSS</span>
+        <span class="text-xs">RSS</span>
       </a>
       <a
         href="/sitemap.xml"
