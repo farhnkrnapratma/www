@@ -5,13 +5,20 @@
 @layer base {
   html {
     @apply scroll-pt-[4.25rem] scroll-pb-[5.25rem] scroll-smooth text-[122%];
+    overflow-x: hidden;
+    max-width: 100vw;
   }
 
   body {
     @apply m-0 overflow-x-hidden bg-adwaita-bg p-0 font-sans text-adwaita-text transition-colors duration-300;
+    max-width: 100vw;
+    width: 100%;
   }
 
-  * {
+  *,
+  ::before,
+  ::after {
+    box-sizing: border-box;
     -ms-overflow-style: none;
     scrollbar-width: none;
   }

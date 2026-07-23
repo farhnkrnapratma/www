@@ -87,7 +87,7 @@
 {#if showScrollTop}
   <button
     transition:fade={{ duration: 150 }}
-    class="fixed right-6 bottom-6 z-50 inline-flex h-10 w-10 cursor-pointer items-center justify-center gap-2 rounded-lg border border-border-subtle bg-surface-card px-0 text-xs font-semibold text-text-primary shadow-lg transition-all select-none hover:bg-surface-hover hover:text-accent sm:w-auto sm:px-4 sm:text-sm"
+    class="fixed right-4 bottom-4 z-50 inline-flex h-10 w-10 cursor-pointer items-center justify-center gap-2 rounded-lg border border-border-subtle bg-surface-card px-0 text-xs font-semibold text-text-primary shadow-lg transition-all select-none hover:bg-surface-hover hover:text-accent sm:right-6 sm:bottom-6 sm:w-auto sm:px-4 sm:text-sm"
     onclick={scrollToTop}
     title="Scroll to top"
     aria-label="Scroll to top">
@@ -102,7 +102,7 @@
 {#if isPageWithFeedback}
   <a
     href="/feedback"
-    class="fixed bottom-6 left-6 z-50 inline-flex h-10 w-10 cursor-pointer items-center justify-center gap-2 rounded-lg border border-border-subtle bg-surface-card px-0 text-xs font-semibold text-text-primary shadow-lg transition-all select-none hover:bg-surface-hover hover:text-accent sm:w-auto sm:px-4 sm:text-sm"
+    class="fixed bottom-4 left-4 z-50 inline-flex h-10 w-10 cursor-pointer items-center justify-center gap-2 rounded-lg border border-border-subtle bg-surface-card px-0 text-xs font-semibold text-text-primary shadow-lg transition-all select-none hover:bg-surface-hover hover:text-accent sm:bottom-6 sm:left-6 sm:w-auto sm:px-4 sm:text-sm"
     title="Report an issue or give feedback">
     <span
       class="material-symbols-rounded text-sm"
