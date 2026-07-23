@@ -706,12 +706,19 @@
   <meta
     property="og:description"
     content={post.excerpt || 'Read this article on my blog.'} />
-  {#if bannerPublicUrl}
-    <meta
-      property="og:image"
-      content={bannerPublicUrl} />
-  {/if}
+  <meta
+    property="og:image"
+    content={bannerPublicUrl || 'https://fkp.my.id/hero.png'} />
+  <meta
+    property="og:image:secure_url"
+    content={bannerPublicUrl || 'https://fkp.my.id/hero.png'} />
+  <meta
+    property="og:image:alt"
+    content={post.title} />
 
+  <meta
+    name="twitter:card"
+    content="summary_large_image" />
   <meta
     property="twitter:card"
     content="summary_large_image" />
@@ -724,11 +731,12 @@
   <meta
     property="twitter:description"
     content={post.excerpt || 'Read this article on my blog.'} />
-  {#if bannerPublicUrl}
-    <meta
-      property="twitter:image"
-      content={bannerPublicUrl} />
-  {/if}
+  <meta
+    name="twitter:image"
+    content={bannerPublicUrl || 'https://fkp.my.id/hero.png'} />
+  <meta
+    property="twitter:image"
+    content={bannerPublicUrl || 'https://fkp.my.id/hero.png'} />
 
   {#if isDark}
     <link
@@ -834,6 +842,40 @@
           {/if}
         </div>
       </header>
+
+      {#if headings.length > 0}
+        <div
+          class="mb-6 rounded-2xl border border-border-subtle bg-surface-card/45 p-5 shadow-xs backdrop-blur-lg select-none xl:hidden">
+          <h3
+            class="titlecase mb-3 text-xs font-bold tracking-wider text-text-secondary select-none">
+            In this article
+          </h3>
+          <ul
+            class="flex flex-col gap-1.5 border-l border-border-subtle/50 pl-3"
+            role="list">
+            {#each headings as heading, index (heading.id + '-' + index)}
+              <li
+                class="text-xs"
+                style="padding-left: {(heading.level - 2) * 12}px;">
+                <a
+                  href="#{heading.id}"
+                  onclick={e => {
+                    e.preventDefault();
+                    const target = document.getElementById(heading.id);
+                    if (target) {
+                      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                      history.pushState(null, '', `#${heading.id}`);
+                      activeHeadingId = heading.id;
+                    }
+                  }}
+                  class="block py-0.5 text-text-secondary transition-colors hover:text-accent">
+                  {heading.text}
+                </a>
+              </li>
+            {/each}
+          </ul>
+        </div>
+      {/if}
 
       <div class="prose-custom w-full">
         {@html html}

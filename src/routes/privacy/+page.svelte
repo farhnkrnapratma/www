@@ -126,9 +126,10 @@
     <p class="mt-2 text-xs text-text-muted">Last updated: July 22, 2026</p>
   </div>
 
-  <div class="space-y-8 text-sm leading-relaxed text-text-secondary">
+  <div class="space-y-6 text-sm leading-relaxed text-text-secondary">
     <!-- Section 1: Overview & Scope -->
-    <section>
+    <section
+      class="rounded-2xl border border-border-subtle bg-surface-card/45 p-6 shadow-xs backdrop-blur-lg">
       <h2 class="text-base font-bold text-text-primary">1. Overview & Data Transparency</h2>
       <p class="mt-2">
         Farhan Kurnia Pratama ("we", "our", or "us") is committed to respecting your privacy and
@@ -141,7 +142,8 @@
     </section>
 
     <!-- Section 2: Visitor Analytics & Consent Mode -->
-    <section>
+    <section
+      class="rounded-2xl border border-border-subtle bg-surface-card/45 p-6 shadow-xs backdrop-blur-lg">
       <h2 class="text-base font-bold text-text-primary">2. Google Analytics 4 & Consent Mode v2</h2>
       <p class="mt-2">
         We use Google Analytics 4 (GA4) solely to analyze aggregate site traffic, measure content
@@ -174,7 +176,8 @@
     </section>
 
     <!-- Section 3: Data Retention -->
-    <section>
+    <section
+      class="rounded-2xl border border-border-subtle bg-surface-card/45 p-6 shadow-xs backdrop-blur-lg">
       <h2 class="text-base font-bold text-text-primary">
         3. Data Retention Policy (14-Month Standard)
       </h2>
@@ -192,7 +195,8 @@
     </section>
 
     <!-- Section 4: Public Comments & Interactive Features -->
-    <section>
+    <section
+      class="rounded-2xl border border-border-subtle bg-surface-card/45 p-6 shadow-xs backdrop-blur-lg">
       <h2 class="text-base font-bold text-text-primary">4. Public Comments & Feedback</h2>
       <p class="mt-2">
         When you submit a comment on a blog post or send feedback via our feedback form:
@@ -208,7 +212,8 @@
     </section>
 
     <!-- Section 5: Cookie Preferences & Controls -->
-    <section>
+    <section
+      class="rounded-2xl border border-border-subtle bg-surface-card/45 p-6 shadow-xs backdrop-blur-lg">
       <h2 class="text-base font-bold text-text-primary">5. Your Choices & Cookie Preferences</h2>
       <p class="mt-2">
         You retain full control over your cookie preferences at all times. You can modify or revoke
@@ -226,7 +231,8 @@
     </section>
 
     <!-- Section 6: Contact -->
-    <section>
+    <section
+      class="rounded-2xl border border-border-subtle bg-surface-card/45 p-6 shadow-xs backdrop-blur-lg">
       <h2 class="text-base font-bold text-text-primary">6. Contact Information</h2>
       <p class="mt-2">
         If you have any questions or privacy inquiries regarding this policy or your data, please

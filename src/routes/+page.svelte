@@ -1373,7 +1373,7 @@
                   {/if}
                 </div>
 
-                <div class="flex flex-1 flex-col gap-2 font-sans">
+                <div class="flex flex-1 flex-col gap-1 font-sans">
                   <div
                     class="no-scrollbar flex w-full flex-wrap items-center gap-x-1.5 overflow-x-auto font-sans text-[11px] font-semibold whitespace-nowrap text-text-muted select-none">
                     <span>{formatBlogDate(post.created_at)}</span>
@@ -1386,9 +1386,9 @@
                       <span>{formatViewCount(post.views_count)}</span>
                     {/if}
                   </div>
-                  <div class="mt-1">
+                  <div>
                     <h2
-                      class="text-lg leading-snug font-bold text-text-primary transition-colors group-hover:text-text-primary hover:text-text-primary">
+                      class="text-xl leading-snug font-bold text-text-primary transition-colors group-hover:text-text-primary hover:text-text-primary">
                       <a
                         href="/blog/{post.slug}"
                         class="rounded-xs outline-none after:absolute after:inset-0 focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-surface-card">
