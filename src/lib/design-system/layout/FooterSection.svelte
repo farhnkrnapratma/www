@@ -89,18 +89,21 @@
   <!-- Layer 1: Upper Footer Wrapped in Rounded Card Container -->
   <div class="rounded-2xl border border-border-subtle/80 bg-surface-card/60 p-6 shadow-2xs">
     <div class="grid grid-cols-1 gap-x-0 gap-y-1 md:grid-cols-12">
-      <!-- Row 1: Name on Left (NO vertical divider line beside name) -->
-      <div class="md:col-span-7 md:pr-6">
-        <h3 class="text-base font-bold text-text-primary">{name}</h3>
+      <!-- Row 1: Name & Headline spanning full width to right edge -->
+      <div class="md:col-span-12">
+        <div class="flex flex-col gap-0.5 sm:flex-row sm:items-center sm:gap-2">
+          <h3 class="text-base font-bold text-text-primary">{name}</h3>
+          <span
+            class="hidden text-text-muted/60 select-none sm:inline"
+            aria-hidden="true">&middot;</span>
+          <p class="text-xs font-semibold text-text-secondary">
+            Linux/Unix, AI, Open-Source Software, and Cybersecurity.
+          </p>
+        </div>
       </div>
 
-      <!-- Empty Header Slot on Right to align navigation start with description baseline -->
-      {#if resolvedNavItems.length > 0}
-        <div class="hidden md:col-span-5 md:block"></div>
-      {/if}
-
-      <!-- Row 2: Bio on Left; 2x3 Navigation Grid on Right (Horizontal Divider on Mobile, Vertical Divider on Desktop) -->
-      <div class="pt-0.5 md:col-span-7 md:pr-6">
+      <!-- Row 2: Bio on Left; 2x3 Navigation Grid on Right -->
+      <div class="pt-1 md:col-span-7 md:pr-6">
         <p class="max-w-md text-xs leading-relaxed text-text-secondary">
           {description}
         </p>
