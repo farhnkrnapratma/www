@@ -753,7 +753,7 @@
           loading="lazy"
           class="relative z-10 mb-6 h-28 w-28 rounded-full border-2 border-accent object-cover object-top shadow-[0_0_20px_rgba(120,101,217,0.25)] transition-all duration-300 dark:shadow-[0_0_25px_rgba(120,101,217,0.35)]" />
         <h1
-          class="relative z-10 text-3xl font-bold tracking-tight whitespace-nowrap text-text-primary md:text-4xl lg:text-5xl">
+          class="relative z-10 px-2 text-2xl font-bold tracking-tight whitespace-nowrap text-text-primary sm:text-3xl md:text-4xl lg:text-5xl">
           {name}
         </h1>
         <p class="relative z-10 mt-3 mb-2 text-lg font-medium text-text-secondary">{headline}</p>
