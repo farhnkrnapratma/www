@@ -623,11 +623,11 @@
             {@const commentCount = postComments.length}
             {@const commentWord = commentCount > 1 ? 'comments' : 'comment'}
             <div
-              class="action-row group flex flex-col gap-4 p-5 text-left transition-all duration-200 hover:bg-surface-hover/40"
+              class="action-row group relative flex flex-col gap-4 overflow-hidden rounded-xl border border-border-subtle bg-surface-card p-5 text-left transition-all duration-200 hover:bg-surface-hover/40"
               role="listitem">
               <div class="flex flex-col gap-4 sm:flex-row sm:items-start">
                 <div
-                  class="relative aspect-video w-full shrink-0 animate-pulse overflow-hidden rounded-lg border border-border-subtle bg-surface-card/60 select-none sm:w-40 md:w-48">
+                  class="relative aspect-video w-full shrink-0 animate-pulse overflow-hidden rounded-lg border border-border-subtle bg-surface-subtle/50 select-none sm:w-44 md:w-48">
                   {#if post.banner_path}
                     <img
                       src={getBannerUrl(post.banner_path)}
@@ -637,12 +637,12 @@
                         (
                           e.currentTarget.closest('.animate-pulse') as HTMLElement | null
                         )?.classList.remove('animate-pulse')}
-                      class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-103" />
+                      class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105" />
                   {:else}
                     <div
-                      class="to-palette-purple/15 flex h-full w-full items-center justify-center bg-linear-to-br from-accent/15 select-none">
+                      class="flex h-full w-full items-center justify-center bg-linear-to-br from-surface-subtle to-surface-card select-none">
                       <i
-                        class="bi bi-journal-text text-xl text-accent/50"
+                        class="bi bi-file-earmark-text text-2xl text-text-muted/50"
                         aria-hidden="true"></i>
                     </div>
                   {/if}
@@ -650,85 +650,97 @@
 
                 <div class="flex min-w-0 flex-1 flex-col gap-2 font-sans">
                   <div
-                    class="flex flex-wrap items-center gap-1.5 text-xs font-semibold text-text-muted select-none">
+                    class="flex flex-wrap items-center gap-1.5 text-xs font-medium text-text-muted select-none">
                     <span>{formatBlogDate(post.created_at)}</span>
                     <span aria-hidden="true">&middot;</span>
                     <span>{formatViewCount(postViewsMap.get(post.id) ?? 0)}</span>
                     <span aria-hidden="true">&middot;</span>
                     {#if post.published}
-                      <span class="font-bold text-success select-none">Published</span>
+                      <span
+                        class="inline-flex items-center gap-1.5 text-xs font-semibold text-text-secondary select-none">
+                        <span class="h-1.5 w-1.5 rounded-full bg-success"></span>
+                        Published
+                      </span>
                     {:else}
-                      <span class="font-bold text-warning select-none">Draft</span>
+                      <span
+                        class="inline-flex items-center gap-1.5 text-xs font-semibold text-text-muted select-none">
+                        <span class="h-1.5 w-1.5 rounded-full bg-warning"></span>
+                        Draft
+                      </span>
                     {/if}
                   </div>
 
                   <div class="mt-0.5">
                     <h2
-                      class="text-base font-bold text-text-primary transition-colors group-hover:text-accent">
+                      class="text-base leading-snug font-bold text-text-primary transition-colors group-hover:text-accent sm:text-lg">
                       {post.title}
                     </h2>
                     {#if post.excerpt}
-                      <p class="mt-1 line-clamp-2 text-xs text-text-muted">
+                      <p class="mt-1 line-clamp-2 text-xs leading-relaxed text-text-muted">
                         {post.excerpt}
                       </p>
                     {/if}
                   </div>
-
-                  <div
-                    class="no-scrollbar mt-2 flex flex-wrap items-center gap-2 overflow-x-auto whitespace-nowrap sm:flex-nowrap">
-                    <a
-                      href="/blog/{post.slug}"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      class="shrink-0"
-                      aria-label="Read article: {post.title}">
-                      <button
-                        type="button"
-                        class="inline-flex h-8 shrink-0 cursor-pointer items-center justify-center rounded-lg border border-border-subtle bg-surface-card px-3 text-xs font-semibold whitespace-nowrap text-text-primary transition-colors hover:bg-surface-hover focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none">
-                        Read article
-                      </button>
-                    </a>
-
-                    <a
-                      href="/admin/new?id={post.id}"
-                      class="shrink-0"
-                      aria-label="Edit post: {post.title}">
-                      <button
-                        type="button"
-                        class="inline-flex h-8 shrink-0 cursor-pointer items-center justify-center rounded-lg border border-border-subtle bg-surface-card px-3 text-xs font-semibold whitespace-nowrap text-text-primary transition-colors hover:bg-surface-hover focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none">
-                        Edit
-                      </button>
-                    </a>
-
-                    <button
-                      type="button"
-                      disabled={commentCount === 0}
-                      onclick={() => toggleComments(post.id)}
-                      aria-expanded={expandedPostIds.has(post.id)}
-                      aria-controls="comments-{post.id}"
-                      class="inline-flex h-8 shrink-0 items-center justify-center rounded-lg border border-border-subtle bg-surface-card px-3 text-xs font-semibold whitespace-nowrap text-text-primary transition-colors hover:bg-surface-hover focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none disabled:cursor-not-allowed disabled:border-border-subtle/40 disabled:bg-surface-subtle/20 disabled:text-text-muted/50 disabled:opacity-50">
-                      {expandedPostIds.has(post.id) ? 'Hide' : 'Show'}
-                      {commentWord} ({commentCount})
-                    </button>
-
-                    <button
-                      type="button"
-                      onclick={() => togglePublish(post)}
-                      class="inline-flex h-8 shrink-0 cursor-pointer items-center justify-center rounded-lg border border-border-subtle bg-surface-card px-3 text-xs font-semibold whitespace-nowrap text-text-primary transition-colors hover:bg-surface-hover focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none">
-                      {post.published ? 'Unpublish' : 'Publish'}
-                    </button>
-
-                    <button
-                      type="button"
-                      onclick={() => confirmDeletePost(post)}
-                      class="inline-flex h-8 shrink-0 cursor-pointer items-center justify-center rounded-lg border border-[#FE4C25]/40 bg-[#FE4C25]/10 px-3 text-xs font-semibold whitespace-nowrap text-[#FE4C25] transition-colors hover:bg-[#FE4C25] hover:text-white focus-visible:ring-2 focus-visible:ring-[#FE4C25] focus-visible:outline-none">
-                      Delete
-                    </button>
-                  </div>
                 </div>
               </div>
 
-              {#if postComments.length > 0 && expandedPostIds.has(post.id)}
+              <div
+                class="no-scrollbar mt-1 flex w-full flex-wrap items-center justify-between gap-2 overflow-x-auto border-t border-border-subtle/40 pt-3.5 whitespace-nowrap">
+                <div class="flex flex-wrap items-center gap-2">
+                  <a
+                    href="/blog/{post.slug}"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="shrink-0"
+                    aria-label="Read article: {post.title}">
+                    <button
+                      type="button"
+                      class="inline-flex h-8 shrink-0 cursor-pointer items-center justify-center rounded-lg bg-accent px-3.5 text-xs font-bold whitespace-nowrap text-text-on-accent shadow-xs transition-colors hover:bg-accent-hover focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none">
+                      Read article
+                    </button>
+                  </a>
+
+                  <a
+                    href="/admin/new?id={post.id}"
+                    class="shrink-0"
+                    aria-label="Edit post: {post.title}">
+                    <button
+                      type="button"
+                      class="inline-flex h-8 shrink-0 cursor-pointer items-center justify-center rounded-lg border border-border-subtle bg-surface-card px-3 text-xs font-semibold whitespace-nowrap text-text-primary transition-colors hover:bg-surface-hover focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none">
+                      Edit
+                    </button>
+                  </a>
+
+                  <button
+                    type="button"
+                    onclick={() => toggleComments(post.id)}
+                    aria-expanded={expandedPostIds.has(post.id)}
+                    aria-controls="comments-{post.id}"
+                    class="inline-flex h-8 shrink-0 cursor-pointer items-center justify-center rounded-lg border border-border-subtle bg-surface-card px-3 text-xs font-semibold whitespace-nowrap text-text-primary transition-colors hover:bg-surface-hover focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none">
+                    {expandedPostIds.has(post.id) ? 'Hide' : 'Show'}
+                    {commentWord} ({commentCount})
+                  </button>
+
+                  <button
+                    type="button"
+                    onclick={() => togglePublish(post)}
+                    class="inline-flex h-8 shrink-0 cursor-pointer items-center justify-center rounded-lg border border-border-subtle bg-surface-card px-3 text-xs font-semibold whitespace-nowrap text-text-primary transition-colors hover:bg-surface-hover focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none">
+                    {post.published ? 'Unpublish' : 'Publish'}
+                  </button>
+                </div>
+
+                <button
+                  type="button"
+                  onclick={() => confirmDeletePost(post)}
+                  class="ml-auto inline-flex h-8 shrink-0 cursor-pointer items-center justify-center gap-1.5 rounded-lg border border-[#FE4C25]/40 bg-[#FE4C25]/10 px-3 text-xs font-semibold whitespace-nowrap text-[#FE4C25] transition-colors hover:bg-[#FE4C25] hover:text-white focus-visible:ring-2 focus-visible:ring-[#FE4C25] focus-visible:outline-none">
+                  <i
+                    class="bi bi-trash3 text-xs"
+                    aria-hidden="true"></i>
+                  <span>Delete</span>
+                </button>
+              </div>
+
+              {#if expandedPostIds.has(post.id)}
                 <div
                   id="comments-{post.id}"
                   class="mt-2 flex w-full flex-col gap-6 border-t border-border-subtle/50 pt-4">
@@ -879,9 +891,16 @@
                     </div>
                   {/snippet}
 
-                  {#each buildCommentTree(postComments) as rootComment (rootComment.id)}
-                    {@render commentNode(rootComment, 0, false)}
-                  {/each}
+                  {#if postComments.length > 0}
+                    {#each buildCommentTree(postComments) as rootComment (rootComment.id)}
+                      {@render commentNode(rootComment, 0, false)}
+                    {/each}
+                  {:else}
+                    <p
+                      class="py-3 text-center text-xs font-medium text-text-muted italic select-none">
+                      No comments yet for this post.
+                    </p>
+                  {/if}
                 </div>
               {/if}
             </div>
