@@ -1196,17 +1196,19 @@
       class="sticky top-24 hidden h-fit select-none xl:col-span-3 xl:col-start-10 xl:block"
       aria-label="Table of contents">
       <div class="boxed-list border border-border-subtle bg-surface-card/45 p-5 backdrop-blur-lg">
-        <h3 class="mb-3 text-xs font-bold tracking-wider text-text-secondary uppercase">
+        <h3
+          class="mb-3 px-2 text-xs font-bold tracking-wider text-text-secondary uppercase select-none">
           In this article
         </h3>
 
         {#if headings.length === 0}
-          <p class="text-xs text-text-muted italic">No subheadings found.</p>
+          <p class="px-2 text-xs text-text-muted italic">No subheadings found.</p>
         {:else}
           <ul
-            class="flex flex-col gap-2"
+            class="flex flex-col gap-1"
             role="list">
             {#each headings as heading, index (heading.id + '-' + index)}
+              {@const isActive = activeHeadingId === heading.id}
               <li
                 class="text-xs"
                 style="padding-left: {(heading.level - 2) * 12}px;">
@@ -1221,13 +1223,18 @@
                       activeHeadingId = heading.id;
                     }
                   }}
-                  aria-current={activeHeadingId === heading.id ? 'true' : undefined}
-                  class="block py-0.5 leading-normal transition-colors hover:text-accent {(
-                    activeHeadingId === heading.id
+                  aria-current={isActive ? 'true' : undefined}
+                  class="group relative block rounded-md px-2 py-1 leading-relaxed transition-all duration-300 ease-in-out hover:text-accent {(
+                    isActive
                   ) ?
-                    'border-l-2 border-accent pl-2 font-bold text-accent'
-                  : 'pl-2 text-text-secondary'}">
-                  {heading.text}
+                    'font-medium text-accent'
+                  : 'font-normal text-text-secondary'}">
+                  {#if isActive}
+                    <span
+                      class="absolute top-1/2 left-0 h-3.5 w-1 -translate-y-1/2 rounded-full bg-accent transition-all duration-300 ease-in-out"
+                      aria-hidden="true"></span>
+                  {/if}
+                  <span class="transition-colors duration-300 ease-in-out">{heading.text}</span>
                 </a>
               </li>
             {/each}

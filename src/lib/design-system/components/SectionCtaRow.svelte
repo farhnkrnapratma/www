@@ -20,8 +20,9 @@
     {href}
     class="group inline-flex items-center gap-1.5 rounded-sm text-xs font-semibold text-text-secondary transition-colors hover:text-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus-ring">
     <span>{label}</span>
-    <i
-      class="bi {icon} text-xs transition-transform group-hover:translate-x-1"
-      aria-hidden="true"></i>
+    <span
+      class="material-symbols-rounded text-sm leading-none transition-transform select-none group-hover:translate-x-1"
+      style="font-variation-settings: 'wght' 400, 'opsz' 20;"
+      aria-hidden="true">arrow_forward</span>
   </a>
 </div>

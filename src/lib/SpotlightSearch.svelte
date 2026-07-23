@@ -338,13 +338,14 @@
                       <p class="mt-0.5 truncate text-xs text-text-secondary">{result.subtitle}</p>
                     {/if}
                   </div>
-                  <i
-                    class="bi bi-arrow-right shrink-0 text-xs text-text-muted/0 transition-colors group-hover:text-text-muted {(
+                  <span
+                    class="material-symbols-rounded shrink-0 text-sm leading-none text-text-muted/0 transition-colors select-none group-hover:text-text-muted {(
                       activeIndex === globalIdx
                     ) ?
                       'text-text-muted'
                     : ''}"
-                    aria-hidden="true"></i>
+                    style="font-variation-settings: 'wght' 400, 'opsz' 20;"
+                    aria-hidden="true">arrow_forward</span>
                 </li>
               {/each}
             {/if}

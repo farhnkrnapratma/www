@@ -869,9 +869,10 @@
               onclick={() => navigate('projects')}
               class="group inline-flex cursor-pointer items-center gap-1.5 text-xs font-bold text-accent hover:underline">
               <span class="leading-none">View all projects</span>
-              <i
-                class="bi bi-arrow-right inline-flex items-center justify-center text-xs leading-none transition-transform group-hover:translate-x-0.5"
-                aria-hidden="true"></i>
+              <span
+                class="material-symbols-rounded text-sm leading-none transition-transform select-none group-hover:translate-x-0.5"
+                style="font-variation-settings: 'wght' 400, 'opsz' 20;"
+                aria-hidden="true">arrow_forward</span>
             </button>
           </div>
         {/if}
@@ -941,9 +942,10 @@
                     {/if}
                     <div class="mt-1 flex items-center gap-1.5 text-xs font-bold text-accent">
                       <span class="leading-none">Read article</span>
-                      <i
-                        class="bi bi-arrow-right inline-flex items-center justify-center text-xs leading-none transition-transform group-hover:translate-x-0.5"
-                      ></i>
+                      <span
+                        class="material-symbols-rounded text-sm leading-none transition-transform select-none group-hover:translate-x-0.5"
+                        style="font-variation-settings: 'wght' 400, 'opsz' 20;"
+                        aria-hidden="true">arrow_forward</span>
                     </div>
                   </div>
                 </li>
@@ -957,9 +959,10 @@
               onclick={() => navigate('blogs')}
               class="group inline-flex cursor-pointer items-center gap-1.5 text-xs font-bold text-accent hover:underline">
               <span class="leading-none">View all posts</span>
-              <i
-                class="bi bi-arrow-right inline-flex items-center justify-center text-xs leading-none transition-transform group-hover:translate-x-0.5"
-                aria-hidden="true"></i>
+              <span
+                class="material-symbols-rounded text-sm leading-none transition-transform select-none group-hover:translate-x-0.5"
+                style="font-variation-settings: 'wght' 400, 'opsz' 20;"
+                aria-hidden="true">arrow_forward</span>
             </button>
           </div>
         {/if}
@@ -1006,9 +1009,10 @@
             class="group inline-flex cursor-pointer items-center gap-1.5 text-xs font-bold text-accent hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
             aria-label="View full CV including education and experience">
             <span class="leading-none">View full CV</span>
-            <i
-              class="bi bi-arrow-right inline-flex items-center justify-center text-xs leading-none transition-transform group-hover:translate-x-0.5"
-              aria-hidden="true"></i>
+            <span
+              class="material-symbols-rounded text-sm leading-none transition-transform select-none group-hover:translate-x-0.5"
+              style="font-variation-settings: 'wght' 400, 'opsz' 20;"
+              aria-hidden="true">arrow_forward</span>
           </button>
         </div>
       </div>
@@ -1399,9 +1403,10 @@
                   {/if}
                   <div class="mt-1 flex items-center gap-1.5 text-xs font-bold text-accent">
                     <span class="leading-none">Read article</span>
-                    <i
-                      class="bi bi-arrow-right inline-flex items-center justify-center text-xs leading-none transition-transform group-hover:translate-x-0.5"
-                    ></i>
+                    <span
+                      class="material-symbols-rounded text-sm leading-none transition-transform select-none group-hover:translate-x-0.5"
+                      style="font-variation-settings: 'wght' 400, 'opsz' 20;"
+                      aria-hidden="true">arrow_forward</span>
                   </div>
                 </div>
               </li>
