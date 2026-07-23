@@ -253,6 +253,7 @@
     let headingObserver: IntersectionObserver | null = null;
     let scrollTimeout: ReturnType<typeof setTimeout> | null = null;
     let rafId: number | null = null;
+    let lastScrollY = 0;
 
     tick().then(() => {
       const container = document.querySelector('.prose-custom');
@@ -295,9 +296,11 @@
         }
 
         const updateScrollspyPosition = () => {
-          if (!tocListEl) return;
+          if (!tocListEl || elements.length === 0) return;
           const scrollY = window.scrollY;
           const viewportOffset = 120;
+          const isScrollingDown = scrollY >= lastScrollY;
+          lastScrollY = scrollY;
 
           const headingPositions = elements.map(el => {
             const rect = el.getBoundingClientRect();
@@ -308,86 +311,78 @@
             };
           });
 
-          let activeIndex = 0;
-          for (let i = 0; i < headingPositions.length; i++) {
+          const tocLinks = headingPositions.map(h => {
+            const link = tocListEl?.querySelector<HTMLElement>(`a[href="#${h.id}"]`);
+            return {
+              id: h.id,
+              top: link?.offsetTop ?? 0,
+              height: link ? link.getBoundingClientRect().height || link.offsetHeight : 0,
+            };
+          });
+
+          let segmentIndex = 0;
+          for (let i = 0; i < headingPositions.length - 1; i++) {
             if (scrollY >= headingPositions[i].top - viewportOffset) {
-              activeIndex = i;
+              segmentIndex = i;
             }
           }
 
-          const currentHeading = headingPositions[activeIndex];
-          if (!currentHeading) return;
+          const hCurrent = headingPositions[segmentIndex];
+          const hNext = headingPositions[segmentIndex + 1];
 
-          const currentLink = tocListEl.querySelector<HTMLElement>(
-            `a[href="#${currentHeading.id}"]`,
-          );
-          if (!currentLink) return;
+          const lCurrent = tocLinks[segmentIndex];
+          const lNext = tocLinks[segmentIndex + 1];
 
-          const currentTop = currentLink.offsetTop;
-          const currentHeight =
-            currentLink.getBoundingClientRect().height || currentLink.offsetHeight;
+          if (!hCurrent || !lCurrent) return;
 
-          const nextHeading = headingPositions[activeIndex + 1];
-          const prevHeading = headingPositions[activeIndex - 1];
-
-          let isCurrentlyStretching = false;
-          let calcTop = currentTop;
-          let calcHeight = currentHeight;
-
-          // Stretch towards NEXT heading when scrolling down
-          if (nextHeading) {
-            const nextLink = tocListEl.querySelector<HTMLElement>(`a[href="#${nextHeading.id}"]`);
-            if (nextLink) {
-              const nextTop = nextLink.offsetTop;
-              const nextHeight = nextLink.getBoundingClientRect().height || nextLink.offsetHeight;
-              const scrollDistance = nextHeading.top - currentHeading.top;
-              if (scrollDistance > 0) {
-                const progress = Math.max(
-                  0,
-                  Math.min(1, (scrollY - (currentHeading.top - viewportOffset)) / scrollDistance),
-                );
-                if (progress > 0.08 && progress < 0.92) {
-                  isCurrentlyStretching = true;
-                  calcTop = currentTop;
-                  calcHeight =
-                    currentHeight +
-                    (nextTop + nextHeight - (currentTop + currentHeight)) * progress;
-                }
-              }
-            }
+          if (!hNext || !lNext) {
+            activeHeadingId = hCurrent.id;
+            updateIndicatorPos(hCurrent.id, false, lCurrent.top, lCurrent.height);
+            return;
           }
 
-          // Stretch towards PREVIOUS heading when scrolling up
-          if (!isCurrentlyStretching && prevHeading && activeIndex > 0) {
-            const prevLink = tocListEl.querySelector<HTMLElement>(`a[href="#${prevHeading.id}"]`);
-            if (prevLink) {
-              const prevTop = prevLink.offsetTop;
-              const scrollDistance = currentHeading.top - prevHeading.top;
-              if (scrollDistance > 0) {
-                const progress = Math.max(
-                  0,
-                  Math.min(1, (currentHeading.top - viewportOffset - scrollY) / scrollDistance),
-                );
-                if (progress > 0.08 && progress < 0.92) {
-                  isCurrentlyStretching = true;
-                  calcTop = currentTop - (currentTop - prevTop) * progress;
-                  calcHeight = currentTop + currentHeight - calcTop;
-                }
-              }
-            }
+          const segDistance = hNext.top - hCurrent.top;
+          if (segDistance <= 0) {
+            activeHeadingId = hCurrent.id;
+            updateIndicatorPos(hCurrent.id, false, lCurrent.top, lCurrent.height);
+            return;
           }
 
-          activeHeadingId = currentHeading.id;
-          if (isCurrentlyStretching) {
-            updateIndicatorPos(currentHeading.id, true, calcTop, calcHeight);
+          const rawProgress = (scrollY - (hCurrent.top - viewportOffset)) / segDistance;
+          const progress = Math.max(0, Math.min(1, rawProgress));
+
+          activeHeadingId = progress >= 0.5 ? hNext.id : hCurrent.id;
+
+          if (progress > 0.08 && progress < 0.92) {
+            const stretchRatio = (progress - 0.08) / 0.84;
+
+            if (isScrollingDown) {
+              const calcTop = lCurrent.top;
+              const currentBottom = lCurrent.top + lCurrent.height;
+              const targetBottom = lNext.top + lNext.height;
+              const calcBottom = currentBottom + (targetBottom - currentBottom) * stretchRatio;
+              const calcHeight = calcBottom - calcTop;
+              updateIndicatorPos(activeHeadingId, true, calcTop, calcHeight);
+            } else {
+              const calcBottom = lNext.top + lNext.height;
+              const currentTop = lNext.top;
+              const targetTop = lCurrent.top;
+              const calcTop = currentTop - (currentTop - targetTop) * (1 - stretchRatio);
+              const calcHeight = calcBottom - calcTop;
+              updateIndicatorPos(activeHeadingId, true, calcTop, calcHeight);
+            }
           } else {
-            updateIndicatorPos(currentHeading.id, false);
+            const targetLink = progress >= 0.5 ? lNext : lCurrent;
+            updateIndicatorPos(activeHeadingId, false, targetLink.top, targetLink.height);
           }
 
           if (scrollTimeout) clearTimeout(scrollTimeout);
           scrollTimeout = setTimeout(() => {
             if (activeHeadingId) {
-              updateIndicatorPos(activeHeadingId, false);
+              const activeLink = tocLinks.find(l => l.id === activeHeadingId);
+              if (activeLink) {
+                updateIndicatorPos(activeHeadingId, false, activeLink.top, activeLink.height);
+              }
             }
           }, 150);
         };
@@ -813,7 +808,7 @@
 <main
   id="main-content"
   class="flex min-h-[calc(100vh-3.75rem)] flex-col pt-15 font-sans">
-  <div class="relative mx-auto w-full max-w-7xl px-6 pt-10 pb-16 xl:grid xl:grid-cols-12 xl:gap-8">
+  <div class="relative mx-auto w-full max-w-7xl px-6 pt-9 pb-16 xl:grid xl:grid-cols-12 xl:gap-8">
     <article
       class="mx-auto flex w-full flex-col pt-4 md:w-[80%] lg:w-[50%] xl:col-span-6 xl:col-start-4 xl:mx-0 xl:w-auto">
       <header class="mb-8 border-b border-border-subtle pb-6">
