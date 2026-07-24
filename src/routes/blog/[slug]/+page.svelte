@@ -704,21 +704,21 @@
   <link
     rel="canonical"
     href={'https://fkp.my.id/blog/' + post.slug} />
-  {@html `<script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "BlogPosting",
-    "headline": ${JSON.stringify(post.title)},
-    "description": ${JSON.stringify(post.excerpt || '')},
-    "url": ${JSON.stringify('https://fkp.my.id/blog/' + post.slug)},
-    "datePublished": ${JSON.stringify(post.created_at)},
-    "author": {
-      "@type": "Person",
-      "name": "Farhan Kurnia Pratama",
-      "url": "https://fkp.my.id"
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BlogPosting",
+      "headline": "{post.title}",
+      "description": "{post.excerpt || ''}",
+      "url": "https://fkp.my.id/blog/{post.slug}",
+      "datePublished": "{post.created_at}",
+      "author": {
+        "@type": "Person",
+        "name": "Farhan Kurnia Pratama",
+        "url": "https://fkp.my.id"
+      }
     }
-  }
-  </script>`}
+  </script>
 
   <meta
     property="og:type"
