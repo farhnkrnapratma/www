@@ -584,6 +584,17 @@
   <meta
     name="twitter:image"
     content="{siteUrl}hero.png" />
+  {@html `<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Farhan Kurnia Pratama",
+    "url": "https://fkp.my.id",
+    "sameAs": ["https://github.com/farhnkrnapratma"],
+    "jobTitle": "Software Developer",
+    "description": "Linux/Unix, AI, Open-Source Software"
+  }
+  </script>`}
 </svelte:head>
 
 {#if menuOpen}

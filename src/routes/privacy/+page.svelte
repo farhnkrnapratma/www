@@ -35,6 +35,9 @@
   <meta
     name="description"
     content="Privacy policy and data collection transparency statement for {siteUrl}" />
+  <link
+    rel="canonical"
+    href="{siteUrl}privacy" />
   <meta
     property="og:title"
     content="Privacy Policy — {name}" />
@@ -47,6 +50,21 @@
   <meta
     property="og:type"
     content="website" />
+  <meta
+    property="og:image"
+    content="{siteUrl}hero.png" />
+  <meta
+    name="twitter:card"
+    content="summary_large_image" />
+  <meta
+    name="twitter:title"
+    content="Privacy Policy — {name}" />
+  <meta
+    name="twitter:description"
+    content="Privacy policy and data collection transparency statement for {siteUrl}" />
+  <meta
+    name="twitter:image"
+    content="{siteUrl}hero.png" />
 </svelte:head>
 
 <SkipLink />

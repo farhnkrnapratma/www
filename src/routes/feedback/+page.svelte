@@ -161,6 +161,43 @@
   }
 </script>
 
+<svelte:head>
+  <title>Feedback — Farhan Kurnia Pratama</title>
+  <meta
+    name="description"
+    content="Send feedback, suggestions, or comments directly to Farhan Kurnia Pratama." />
+  <link
+    rel="canonical"
+    href="https://fkp.my.id/feedback" />
+  <meta
+    property="og:title"
+    content="Feedback — Farhan Kurnia Pratama" />
+  <meta
+    property="og:description"
+    content="Send feedback, suggestions, or comments directly to Farhan Kurnia Pratama." />
+  <meta
+    property="og:type"
+    content="website" />
+  <meta
+    property="og:url"
+    content="https://fkp.my.id/feedback" />
+  <meta
+    property="og:image"
+    content="https://fkp.my.id/hero.png" />
+  <meta
+    name="twitter:card"
+    content="summary_large_image" />
+  <meta
+    name="twitter:title"
+    content="Feedback — Farhan Kurnia Pratama" />
+  <meta
+    name="twitter:description"
+    content="Send feedback, suggestions, or comments directly to Farhan Kurnia Pratama." />
+  <meta
+    name="twitter:image"
+    content="https://fkp.my.id/hero.png" />
+</svelte:head>
+
 <SkipLink />
 
 <nav

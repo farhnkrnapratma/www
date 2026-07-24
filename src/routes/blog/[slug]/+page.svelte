@@ -280,9 +280,9 @@
           const anchor = document.createElement('a');
           anchor.href = `#${el.id}`;
           anchor.className =
-            'anchor-link transition-colors ml-1.5 inline-flex items-center text-text-secondary hover:text-accent no-underline select-none';
+            'anchor-link transition-opacity ml-1.5 inline-flex items-center text-inherit opacity-70 hover:opacity-100 !no-underline select-none';
           anchor.innerHTML =
-            '<span class="material-symbols-rounded text-[0.85em] leading-none inline-block align-middle select-none no-underline" style="font-variation-settings: \'wght\' 400, \'opsz\' 20;" aria-hidden="true">link_2</span>';
+            '<span class="material-symbols-rounded text-[0.85em] leading-none inline-block align-middle select-none !no-underline" style="font-variation-settings: \'wght\' 400, \'opsz\' 20;" aria-hidden="true">link_2</span>';
 
           el.onclick = async e => {
             e.preventDefault();
@@ -701,6 +701,24 @@
   <meta
     name="description"
     content={post.excerpt || 'Read this article on my blog.'} />
+  <link
+    rel="canonical"
+    href={'https://fkp.my.id/blog/' + post.slug} />
+  {@html `<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": ${JSON.stringify(post.title)},
+    "description": ${JSON.stringify(post.excerpt || '')},
+    "url": ${JSON.stringify('https://fkp.my.id/blog/' + post.slug)},
+    "datePublished": ${JSON.stringify(post.created_at)},
+    "author": {
+      "@type": "Person",
+      "name": "Farhan Kurnia Pratama",
+      "url": "https://fkp.my.id"
+    }
+  }
+  </script>`}
 
   <meta
     property="og:type"

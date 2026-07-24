@@ -18,19 +18,13 @@ export const GET: RequestHandler = async () => {
       changefreq: 'weekly',
     },
     {
-      url: `${SITE_URL}/#blogs`,
-      lastmod: new Date().toISOString().split('T')[0],
-      priority: '0.9',
-      changefreq: 'daily',
-    },
-    {
-      url: `${SITE_URL}/#projects`,
-      lastmod: new Date().toISOString().split('T')[0],
-      priority: '0.8',
-      changefreq: 'weekly',
-    },
-    {
       url: `${SITE_URL}/feedback`,
+      lastmod: new Date().toISOString().split('T')[0],
+      priority: '0.5',
+      changefreq: 'monthly',
+    },
+    {
+      url: `${SITE_URL}/privacy`,
       lastmod: new Date().toISOString().split('T')[0],
       priority: '0.5',
       changefreq: 'monthly',
