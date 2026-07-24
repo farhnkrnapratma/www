@@ -270,7 +270,7 @@
           const headingText = el.querySelector('.heading-text');
           if (!headingText) {
             const span = document.createElement('span');
-            span.className = 'heading-text group-hover:underline underline-offset-4';
+            span.className = 'heading-text';
             while (el.firstChild) {
               span.appendChild(el.firstChild);
             }

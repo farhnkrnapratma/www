@@ -274,22 +274,88 @@
   @apply text-[var(--color-link-hover)];
 }
 
+.prose-custom .heading-text {
+  display: inline !important;
+  transition:
+    color 0.2s ease-in-out,
+    text-decoration-color 0.2s ease-in-out !important;
+}
+
 .prose-custom a.anchor-link {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  vertical-align: middle !important;
+  white-space: nowrap !important;
+  margin-left: 0.35rem !important;
+  line-height: 1 !important;
   color: #232925 !important;
   text-decoration: none !important;
+  transition: color 0.2s ease-in-out !important;
 }
 
 :root.dark .prose-custom a.anchor-link {
   color: #b6bfb8 !important;
 }
 
+.prose-custom a.anchor-link .material-symbols-rounded {
+  display: inline-block !important;
+  vertical-align: middle !important;
+  line-height: 1 !important;
+  font-size: 0.85em !important;
+  color: inherit !important;
+  text-decoration: none !important;
+}
+
+/* Hover: Subheading text turns primary green AND underlines */
+.prose-custom h1:hover .heading-text,
+.prose-custom h2:hover .heading-text,
+.prose-custom h3:hover .heading-text,
+.prose-custom h4:hover .heading-text,
+.prose-custom h5:hover .heading-text,
+.prose-custom h6:hover .heading-text,
+.prose-custom .heading-text:hover,
+:root.dark .prose-custom h1:hover .heading-text,
+:root.dark .prose-custom h2:hover .heading-text,
+:root.dark .prose-custom h3:hover .heading-text,
+:root.dark .prose-custom h4:hover .heading-text,
+:root.dark .prose-custom h5:hover .heading-text,
+:root.dark .prose-custom h6:hover .heading-text,
+:root.dark .prose-custom .heading-text:hover {
+  color: var(--color-accent, #0fbf3e) !important;
+  text-decoration: underline !important;
+  text-underline-offset: 4px !important;
+}
+
+/* Hover: Link icon turns primary green WITHOUT underline (Overriding dark mode specificity) */
 .prose-custom h1:hover a.anchor-link,
 .prose-custom h2:hover a.anchor-link,
 .prose-custom h3:hover a.anchor-link,
 .prose-custom h4:hover a.anchor-link,
 .prose-custom h5:hover a.anchor-link,
 .prose-custom h6:hover a.anchor-link,
-.prose-custom a.anchor-link:hover {
+.prose-custom a.anchor-link:hover,
+:root.dark .prose-custom h1:hover a.anchor-link,
+:root.dark .prose-custom h2:hover a.anchor-link,
+:root.dark .prose-custom h3:hover a.anchor-link,
+:root.dark .prose-custom h4:hover a.anchor-link,
+:root.dark .prose-custom h5:hover a.anchor-link,
+:root.dark .prose-custom h6:hover a.anchor-link,
+:root.dark .prose-custom a.anchor-link:hover,
+.prose-custom h1:hover a.anchor-link .material-symbols-rounded,
+.prose-custom h2:hover a.anchor-link .material-symbols-rounded,
+.prose-custom h3:hover a.anchor-link .material-symbols-rounded,
+.prose-custom h4:hover a.anchor-link .material-symbols-rounded,
+.prose-custom h5:hover a.anchor-link .material-symbols-rounded,
+.prose-custom h6:hover a.anchor-link .material-symbols-rounded,
+.prose-custom a.anchor-link:hover .material-symbols-rounded,
+:root.dark .prose-custom h1:hover a.anchor-link .material-symbols-rounded,
+:root.dark .prose-custom h2:hover a.anchor-link .material-symbols-rounded,
+:root.dark .prose-custom h3:hover a.anchor-link .material-symbols-rounded,
+:root.dark .prose-custom h4:hover a.anchor-link .material-symbols-rounded,
+:root.dark .prose-custom h5:hover a.anchor-link .material-symbols-rounded,
+:root.dark .prose-custom h6:hover a.anchor-link .material-symbols-rounded,
+:root.dark .prose-custom a.anchor-link:hover .material-symbols-rounded {
   color: var(--color-accent, #0fbf3e) !important;
   text-decoration: none !important;
 }
