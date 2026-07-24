@@ -274,6 +274,26 @@
   @apply text-[var(--color-link-hover)];
 }
 
+.prose-custom a.anchor-link {
+  color: #232925 !important;
+  text-decoration: none !important;
+}
+
+:root.dark .prose-custom a.anchor-link {
+  color: #b6bfb8 !important;
+}
+
+.prose-custom h1:hover a.anchor-link,
+.prose-custom h2:hover a.anchor-link,
+.prose-custom h3:hover a.anchor-link,
+.prose-custom h4:hover a.anchor-link,
+.prose-custom h5:hover a.anchor-link,
+.prose-custom h6:hover a.anchor-link,
+.prose-custom a.anchor-link:hover {
+  color: var(--color-accent, #0fbf3e) !important;
+  text-decoration: none !important;
+}
+
 .shiny-text {
   @apply inline-block bg-clip-text text-transparent;
   background-image: linear-gradient(
