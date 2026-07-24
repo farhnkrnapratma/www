@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount, tick } from 'svelte';
-  import { SvelteMap } from 'svelte/reactivity';
+  import { SvelteMap, SvelteSet } from 'svelte/reactivity';
   import type { PageProps } from './$types';
   import type { BlogComment } from './+page.server';
   import hljs from 'highlight.js';
@@ -281,7 +281,9 @@
             try {
               await navigator.clipboard.writeText(url);
               triggerToast('Subheading link copied to clipboard');
-            } catch {}
+            } catch (err) {
+              void err;
+            }
             const target = document.getElementById(el.id);
             if (target) {
               target.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -490,14 +492,14 @@
   const commentTree = $derived(buildCommentTree(comments));
 
   function buildCommentTree(items: BlogComment[]): FlatComment[] {
-    const itemMap = new Map<string, BlogComment>();
+    const itemMap = new SvelteMap<string, BlogComment>();
     for (const item of items) {
       itemMap.set(item.id, item);
     }
 
     function getRootParentId(id: string): string {
       let current = itemMap.get(id);
-      const visited = new Set<string>();
+      const visited = new SvelteSet<string>();
       while (current && current.parent_id && itemMap.has(current.parent_id)) {
         if (visited.has(current.id)) break;
         visited.add(current.id);
@@ -506,7 +508,7 @@
       return current ? current.id : id;
     }
 
-    const rootsMap = new Map<string, FlatComment>();
+    const rootsMap = new SvelteMap<string, FlatComment>();
     const rootsOrder: string[] = [];
 
     for (const item of items) {
@@ -1187,7 +1189,11 @@
             title="No comments yet"
             description="Be the first to share your thoughts on this article." />
         {:else}
-          {#snippet commentNode(comment: FlatComment, depth: number, isLastChildOfParent: boolean)}
+          {#snippet commentNode(
+            comment: FlatComment,
+            _depth: number,
+            _isLastChildOfParent: boolean,
+          )}
             <div class="relative flex flex-col gap-2">
               <div class="comment-row-wrapper relative flex items-start gap-2.5">
                 <div
