@@ -727,13 +727,12 @@
                     depth: number,
                     isLastChildOfParent: boolean,
                   )}
-                    <div
-                      class="relative flex flex-col gap-2.5"
-                      use:trunkAction>
+                    <div class="relative flex flex-col gap-2.5">
                       {#if comment.children && comment.children.length > 0}
+                        <!-- Vertical rail starting directly under parent avatar center (X=16px, Y=32px) -->
                         <div
-                          class="trunk-line-single absolute z-0 border-l border-border-subtle"
-                          style="left: 16px; width: 0px;">
+                          class="pointer-events-none absolute top-[32px] bottom-[16px] left-[16px] z-0 w-[2px] bg-text-muted/60"
+                          aria-hidden="true">
                         </div>
                       {/if}
 
@@ -847,24 +846,18 @@
                       </div>
 
                       {#if comment.children && comment.children.length > 0}
-                        <div
-                          class="replies-container relative"
-                          style="padding-left: 44px;">
+                        <div class="replies-container relative mt-3.5 flex flex-col gap-3.5 pl-10">
                           {#each comment.children as child, i (child.id)}
                             {@const isLast = i === comment.children.length - 1}
-                            <div class="child-wrapper relative mt-4">
+                            <div class="child-wrapper relative">
                               {#if !isLast}
                                 <div
-                                  class="pointer-events-none absolute -top-4 bottom-0 -left-[28px] w-[2px] bg-text-muted/60"
-                                  aria-hidden="true">
-                                </div>
-                                <div
-                                  class="pointer-events-none absolute top-4 -left-[28px] h-[2px] w-[28px] bg-text-muted/60"
+                                  class="pointer-events-none absolute top-[16px] -left-[24px] h-[2px] w-[24px] bg-text-muted/60"
                                   aria-hidden="true">
                                 </div>
                               {:else}
                                 <div
-                                  class="pointer-events-none absolute -top-4 -left-[28px] h-8 w-[28px] rounded-bl-xl border-b-2 border-l-2 border-text-muted/60"
+                                  class="pointer-events-none absolute top-0 -left-[24px] h-[17px] w-[24px] rounded-bl-xl border-b-2 border-l-2 border-text-muted/60"
                                   aria-hidden="true">
                                 </div>
                               {/if}

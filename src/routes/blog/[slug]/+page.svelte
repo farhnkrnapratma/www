@@ -1172,6 +1172,14 @@
         {:else}
           {#snippet commentNode(comment: FlatComment)}
             <div class="relative flex flex-col gap-2">
+              {#if comment.children && comment.children.length > 0}
+                <!-- Vertical rail starting directly under parent avatar center (X=15px, Y=30px) -->
+                <div
+                  class="pointer-events-none absolute top-[30px] bottom-[16px] left-[15px] z-0 w-[2px] bg-text-muted/60"
+                  aria-hidden="true">
+                </div>
+              {/if}
+
               <div class="comment-row-wrapper relative flex items-start gap-2.5">
                 <div
                   class="z-10 flex h-7.5 w-7.5 shrink-0 items-center justify-center rounded-full border border-border-subtle bg-surface-card text-text-secondary select-none">
@@ -1345,22 +1353,18 @@
               </div>
 
               {#if comment.children && comment.children.length > 0}
-                <div class="replies-container relative mt-2 flex flex-col gap-2.5 pl-6 sm:pl-7">
+                <div class="replies-container relative mt-3 flex flex-col gap-3.5 pl-9 sm:pl-9">
                   {#each comment.children as child, i (child.id)}
                     {@const isLast = i === comment.children.length - 1}
                     <div class="child-wrapper relative">
                       {#if !isLast}
                         <div
-                          class="pointer-events-none absolute -top-2.5 bottom-0 -left-6 w-[2px] bg-text-muted/60 sm:-left-7"
-                          aria-hidden="true">
-                        </div>
-                        <div
-                          class="pointer-events-none absolute top-3.5 -left-6 h-[2px] w-6 bg-text-muted/60 sm:-left-7 sm:w-7"
+                          class="pointer-events-none absolute top-[15px] -left-[21px] h-[2px] w-[21px] bg-text-muted/60"
                           aria-hidden="true">
                         </div>
                       {:else}
                         <div
-                          class="pointer-events-none absolute -top-2.5 -left-6 h-6 w-6 rounded-bl-xl border-b-2 border-l-2 border-text-muted/60 sm:-left-7 sm:w-7"
+                          class="pointer-events-none absolute top-0 -left-[21px] h-[16px] w-[21px] rounded-bl-xl border-b-2 border-l-2 border-text-muted/60"
                           aria-hidden="true">
                         </div>
                       {/if}
