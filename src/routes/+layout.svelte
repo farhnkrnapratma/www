@@ -1,4 +1,5 @@
 <script lang="ts">
+  import 'bootstrap-icons/font/bootstrap-icons.css';
   import './layout.css';
   import { onMount } from 'svelte';
   import { fade } from 'svelte/transition';
