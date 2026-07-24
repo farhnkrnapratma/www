@@ -530,6 +530,44 @@
     errors = { authorName: '', commentContent: '' };
   }
 
+  function trunkAction(node: HTMLElement) {
+    if (typeof window === 'undefined') return;
+
+    function update() {
+      const parentAvatar = node.querySelector(
+        ':scope > .comment-row-wrapper .parent-avatar',
+      ) as HTMLElement;
+      const lastAvatar = node.querySelector(
+        ':scope > .replies-container > .child-wrapper:last-child > div > .comment-row-wrapper .last-reply-avatar',
+      ) as HTMLElement;
+      const trunkLine = node.querySelector(':scope > .trunk-line-single') as HTMLElement;
+      if (parentAvatar && lastAvatar && trunkLine) {
+        const parentRect = parentAvatar.getBoundingClientRect();
+        const lastRect = lastAvatar.getBoundingClientRect();
+        const nodeRect = node.getBoundingClientRect();
+
+        const parentCenterY = parentRect.top + parentRect.height / 2 - nodeRect.top;
+        const lastCenterY = lastRect.top + lastRect.height / 2 - nodeRect.top;
+
+        trunkLine.style.top = `${parentCenterY}px`;
+        trunkLine.style.height = `${lastCenterY - parentCenterY - 8}px`;
+      }
+    }
+
+    setTimeout(update, 0);
+
+    const observer = new ResizeObserver(() => {
+      update();
+    });
+    observer.observe(node);
+
+    return {
+      destroy() {
+        observer.disconnect();
+      },
+    };
+  }
+
   let errors = $state({ authorName: '', commentContent: '' });
   let valid = $state({ authorName: false, commentContent: false });
 
@@ -1155,7 +1193,15 @@
             description="Be the first to share your thoughts on this article." />
         {:else}
           {#snippet commentNode(comment: FlatComment, depth: number, isLastChildOfParent: boolean)}
-            <div class="relative flex flex-col gap-2.5">
+            <div
+              class="relative flex flex-col gap-2.5"
+              use:trunkAction>
+              {#if comment.children && comment.children.length > 0}
+                <div
+                  class="trunk-line-single absolute z-0 border-l border-text-muted/10"
+                  style="left: 16px; width: 0px;">
+                </div>
+              {/if}
               <div class="comment-row-wrapper relative flex items-start gap-3">
                 <div
                   class="z-10 flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-border-subtle bg-surface-card text-text-secondary"
@@ -1328,23 +1374,17 @@
                   {/if}
                 </div>
               </div>
-
               {#if comment.children && comment.children.length > 0}
-                <div class="replies-container relative mt-3 space-y-4 pl-4.5 sm:pl-6">
+                <div
+                  class="replies-container relative"
+                  style="padding-left: clamp(16px, 5vw, 44px);">
                   {#each comment.children as child, i (child.id)}
-                    {@const isLast = i === comment.children.length - 1}
-                    <div class="child-wrapper relative">
+                    <div class="child-wrapper relative mt-4">
                       <div
-                        class="pointer-events-none absolute top-0 -left-4.5 border-l border-border-subtle/50 sm:-left-6"
-                        class:bottom-0={!isLast}
-                        class:h-4={isLast}
-                        aria-hidden="true">
+                        class="absolute z-0 border-b border-l border-text-muted/10"
+                        style="left: -28px; top: -16px; width: 28px; height: 32px; border-bottom-left-radius: 10px;">
                       </div>
-                      <div
-                        class="pointer-events-none absolute top-0 -left-4.5 h-4 w-4.5 rounded-bl-xl border-b border-l border-border-subtle/50 sm:-left-6 sm:w-6"
-                        aria-hidden="true">
-                      </div>
-                      {@render commentNode(child, depth + 1, isLast)}
+                      {@render commentNode(child, depth + 1, i === comment.children.length - 1)}
                     </div>
                   {/each}
                 </div>
