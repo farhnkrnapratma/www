@@ -20,6 +20,7 @@
     FilterEmptyState,
     createFilterSortStore,
     FooterSection,
+    ThemeSelect,
     formatBlogDate,
     formatReadTime,
     formatCommentCount,
@@ -681,45 +682,10 @@
       {/each}
     </ul>
 
-    <div class="relative">
-      <button
-        onclick={() => (themeDropdownOpen = !themeDropdownOpen)}
-        class="hidden h-10 w-10 cursor-pointer items-center justify-center rounded-full text-lg text-text-primary transition-colors hover:bg-surface-hover md:flex"
-        aria-label="Change theme"
-        aria-haspopup="true"
-        aria-expanded={themeDropdownOpen}>
-        <i
-          class="bi {getThemeIcon()}"
-          aria-hidden="true"></i>
-      </button>
-
-      {#if themeDropdownOpen}
-        <button
-          class="fixed inset-0 z-40 hidden cursor-default md:block"
-          onclick={() => (themeDropdownOpen = false)}
-          aria-label="Close theme menu"></button>
-        <div
-          class="absolute top-12 right-0 z-50 hidden min-w-31 flex-col rounded-xl border border-border-subtle bg-surface-elevated py-1.5 shadow-lg md:flex">
-          {#each [['auto', 'bi-circle-half', 'Auto'], ['light', 'bi-sun-fill', 'Light'], ['dark', 'bi-moon-stars-fill', 'Dark']] as const as [val, icon, label] (val)}
-            <button
-              onclick={() => {
-                applyTheme(val);
-                themeDropdownOpen = false;
-              }}
-              class="flex w-full cursor-pointer items-center gap-3 px-4 py-2.5 text-left text-xs font-bold transition-colors hover:bg-surface-hover {(
-                theme === val
-              ) ?
-                'text-accent'
-              : 'text-text-primary'}">
-              <i
-                class="bi {icon} text-sm"
-                aria-hidden="true"></i>
-              {label}
-            </button>
-          {/each}
-        </div>
-      {/if}
-    </div>
+    <ThemeSelect
+      {theme}
+      onThemeChange={applyTheme}
+      class="hidden md:inline-flex" />
 
     <SpotlightSearch projects={data.projects} />
 

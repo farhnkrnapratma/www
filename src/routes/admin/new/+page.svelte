@@ -8,10 +8,10 @@
     LoadingState,
     StatusBanner,
     Button,
-    IconButton,
     FormField,
     Input,
     Textarea,
+    ThemeSelect,
   } from '$lib';
   import Dialog from '$lib/design-system/components/Dialog.svelte';
 
@@ -59,7 +59,6 @@
 
   type Theme = 'auto' | 'dark' | 'light';
   let theme = $state<Theme>('auto');
-  let themeDropdownOpen = $state(false);
 
   function applyTheme(newTheme: Theme) {
     theme = newTheme;
@@ -824,55 +823,9 @@
   </button>
 
   <div class="flex items-center gap-2">
-    <div class="relative">
-      <IconButton
-        ariaLabel="Change theme"
-        variant="default"
-        size="md"
-        onclick={() => (themeDropdownOpen = !themeDropdownOpen)}
-        aria-haspopup="true"
-        aria-expanded={themeDropdownOpen}>
-        {#if theme === 'auto'}
-          <i
-            class="bi bi-circle-half"
-            aria-hidden="true"></i>
-        {:else}
-          <i
-            class="bi {theme === 'dark' ? 'bi-moon-stars-fill' : 'bi-sun-fill'}"
-            aria-hidden="true"></i>
-        {/if}
-      </IconButton>
-
-      {#if themeDropdownOpen}
-        <button
-          class="fixed inset-0 z-40 cursor-default"
-          onclick={() => (themeDropdownOpen = false)}
-          aria-label="Close theme menu"></button>
-        <div
-          role="menu"
-          class="absolute top-11 right-0 z-50 flex min-w-31 flex-col rounded-xl border border-border-subtle bg-surface-elevated py-1.5 shadow-lg">
-          {#each [['auto', 'bi-circle-half', 'Auto'], ['light', 'bi-sun-fill', 'Light'], ['dark', 'bi-moon-stars-fill', 'Dark']] as const as [val, icon, label] (val)}
-            <button
-              type="button"
-              role="menuitem"
-              onclick={() => {
-                applyTheme(val);
-                themeDropdownOpen = false;
-              }}
-              class="flex w-full cursor-pointer items-center gap-3 px-4 py-2.5 text-left text-xs font-bold transition-colors hover:bg-surface-hover {(
-                theme === val
-              ) ?
-                'text-accent'
-              : 'text-text-primary'}">
-              <i
-                class="bi {icon} text-sm"
-                aria-hidden="true"></i>
-              {label}
-            </button>
-          {/each}
-        </div>
-      {/if}
-    </div>
+    <ThemeSelect
+      {theme}
+      onThemeChange={applyTheme} />
   </div>
 </nav>
 

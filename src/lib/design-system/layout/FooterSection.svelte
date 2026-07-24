@@ -2,6 +2,7 @@
   import { onMount } from 'svelte';
   import { cn } from '../utils/cn';
   import { consentStore } from '../../stores/consentStore.svelte';
+  import ThemeSelect from '../components/filter/ThemeSelect.svelte';
 
   interface NavItem {
     label: string;
@@ -36,7 +37,6 @@
   }: Props = $props();
 
   let theme = $state<Theme>('auto');
-  let themeDropdownOpen = $state(false);
 
   let resolvedNavItems = $derived(navItems.length > 0 ? navItems : defaultNavItems);
 
@@ -57,18 +57,6 @@
         }
       }
     }
-  }
-
-  function getThemeIcon(t: Theme = theme) {
-    if (t === 'dark') return 'bi-moon-stars-fill';
-    if (t === 'light') return 'bi-sun-fill';
-    return 'bi-circle-half';
-  }
-
-  function getThemeLabel(t: Theme = theme) {
-    if (t === 'dark') return 'Dark';
-    if (t === 'light') return 'Light';
-    return 'Auto';
   }
 
   onMount(() => {
@@ -198,61 +186,10 @@
         </div>
 
         <div class="relative w-fit">
-          <button
-            type="button"
-            onclick={() => (themeDropdownOpen = !themeDropdownOpen)}
-            class="inline-flex h-8 w-fit min-w-[5.5rem] cursor-pointer items-center justify-between gap-2 rounded-lg border border-border-subtle bg-surface-card px-2.5 text-xs font-semibold text-text-secondary shadow-2xs transition-all hover:border-border-subtle/80 hover:bg-surface-hover hover:text-text-primary focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none"
-            aria-label="Change theme"
-            aria-haspopup="true"
-            aria-expanded={themeDropdownOpen}>
-            <span class="inline-flex items-center gap-1.5 whitespace-nowrap">
-              <i
-                class="bi {getThemeIcon()} text-xs text-text-secondary"
-                aria-hidden="true"></i>
-              <span>{getThemeLabel()}</span>
-            </span>
-            <span
-              class="inline-flex h-3.5 w-3.5 shrink-0 origin-center items-center justify-center text-text-muted transition-transform duration-200 ease-out {(
-                themeDropdownOpen
-              ) ?
-                'rotate-180'
-              : ''}">
-              <i
-                class="bi bi-chevron-down text-[9px] leading-none"
-                aria-hidden="true"></i>
-            </span>
-          </button>
-
-          {#if themeDropdownOpen}
-            <button
-              type="button"
-              class="fixed inset-0 z-40 cursor-default"
-              onclick={() => (themeDropdownOpen = false)}
-              aria-label="Close theme menu"></button>
-            <div
-              class="absolute right-0 bottom-full z-50 mb-1.5 flex min-w-[7rem] flex-col rounded-xl border border-border-subtle bg-surface-elevated p-1 shadow-xl backdrop-blur-md">
-              {#each ['auto', 'light', 'dark'] as const as option (option)}
-                <button
-                  type="button"
-                  onclick={() => {
-                    applyTheme(option);
-                    themeDropdownOpen = false;
-                  }}
-                  class="flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-left text-xs font-medium transition-colors {(
-                    theme === option
-                  ) ?
-                    'bg-accent/10 font-semibold text-accent'
-                  : 'text-text-primary hover:bg-surface-hover'}">
-                  <i
-                    class="bi {getThemeIcon(option)} text-xs {theme === option ? 'text-accent' : (
-                      'text-text-secondary'
-                    )}"
-                    aria-hidden="true"></i>
-                  <span>{getThemeLabel(option)}</span>
-                </button>
-              {/each}
-            </div>
-          {/if}
+          <ThemeSelect
+            {theme}
+            onThemeChange={applyTheme}
+            dropdownDirection="up" />
         </div>
       </div>
     </div>
