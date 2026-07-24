@@ -261,7 +261,7 @@
         if (elements.length === 0) return;
 
         elements.forEach(el => {
-          el.classList.add('group', 'flex', 'items-center', 'scroll-mt-20');
+          el.classList.add('group', 'scroll-mt-20');
 
           const existingAnchor = el.querySelector('.anchor-link');
           if (existingAnchor) {
@@ -271,11 +271,17 @@
           const anchor = document.createElement('a');
           anchor.href = `#${el.id}`;
           anchor.className =
-            'anchor-link opacity-0 group-hover:opacity-100 transition-opacity ml-2 text-accent text-sm leading-none';
+            'anchor-link opacity-0 group-hover:opacity-100 transition-opacity ml-1.5 inline-inline-flex items-center text-current hover:text-accent cursor-pointer';
           anchor.innerHTML =
-            '<span class="material-symbols-rounded text-base leading-none select-none" style="font-variation-settings: \'wght\' 200, \'opsz\' 20;" aria-hidden="true">link_2</span>';
-          anchor.onclick = e => {
+            '<span class="material-symbols-rounded text-[0.85em] leading-none inline-block align-middle select-none" style="font-variation-settings: \'wght\' 400, \'opsz\' 20;" aria-hidden="true">link_2</span>';
+          anchor.onclick = async e => {
             e.preventDefault();
+            e.stopPropagation();
+            const url = `${window.location.origin}${window.location.pathname}#${el.id}`;
+            try {
+              await navigator.clipboard.writeText(url);
+              triggerToast('Subheading link copied to clipboard');
+            } catch {}
             const target = document.getElementById(el.id);
             if (target) {
               target.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -484,31 +490,58 @@
   const commentTree = $derived(buildCommentTree(comments));
 
   function buildCommentTree(items: BlogComment[]): FlatComment[] {
-    const commentMap = new SvelteMap<string, FlatComment>();
+    const itemMap = new Map<string, BlogComment>();
     for (const item of items) {
-      commentMap.set(item.id, { ...item, children: [] });
+      itemMap.set(item.id, item);
     }
 
-    const roots: FlatComment[] = [];
+    function getRootParentId(id: string): string {
+      let current = itemMap.get(id);
+      const visited = new Set<string>();
+      while (current && current.parent_id && itemMap.has(current.parent_id)) {
+        if (visited.has(current.id)) break;
+        visited.add(current.id);
+        current = itemMap.get(current.parent_id);
+      }
+      return current ? current.id : id;
+    }
+
+    const rootsMap = new Map<string, FlatComment>();
+    const rootsOrder: string[] = [];
 
     for (const item of items) {
-      const node = commentMap.get(item.id)!;
-      if (item.parent_id && commentMap.has(item.parent_id)) {
-        const parentNode = commentMap.get(item.parent_id)!;
-        node.reply_to_author = getCommentAuthor(parentNode);
-        parentNode.children.push(node);
-      } else {
-        roots.push(node);
+      if (!item.parent_id || !itemMap.has(item.parent_id)) {
+        if (!rootsMap.has(item.id)) {
+          rootsMap.set(item.id, { ...item, children: [] });
+          rootsOrder.push(item.id);
+        }
+      }
+    }
+
+    for (const item of items) {
+      if (item.parent_id && itemMap.has(item.parent_id)) {
+        const rootId = getRootParentId(item.id);
+        const rootNode = rootsMap.get(rootId);
+        if (rootNode && item.id !== rootId) {
+          const directParent = itemMap.get(item.parent_id);
+          const reply_to_author = directParent ? getCommentAuthor(directParent) : undefined;
+          rootNode.children.push({
+            ...item,
+            reply_to_author,
+            children: [],
+          });
+        }
       }
     }
 
     const sortFn = (a: FlatComment, b: FlatComment) =>
       new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
 
+    const roots = rootsOrder.map(id => rootsMap.get(id)!);
     roots.sort(sortFn);
 
-    for (const node of commentMap.values()) {
-      node.children.sort(sortFn);
+    for (const root of roots) {
+      root.children.sort(sortFn);
     }
 
     return roots;
@@ -528,44 +561,6 @@
     commentContent = '';
     feedbackMessage = null;
     errors = { authorName: '', commentContent: '' };
-  }
-
-  function trunkAction(node: HTMLElement) {
-    if (typeof window === 'undefined') return;
-
-    function update() {
-      const parentAvatar = node.querySelector(
-        ':scope > .comment-row-wrapper .parent-avatar',
-      ) as HTMLElement;
-      const lastAvatar = node.querySelector(
-        ':scope > .replies-container > .child-wrapper:last-child > div > .comment-row-wrapper .last-reply-avatar',
-      ) as HTMLElement;
-      const trunkLine = node.querySelector(':scope > .trunk-line-single') as HTMLElement;
-      if (parentAvatar && lastAvatar && trunkLine) {
-        const parentRect = parentAvatar.getBoundingClientRect();
-        const lastRect = lastAvatar.getBoundingClientRect();
-        const nodeRect = node.getBoundingClientRect();
-
-        const parentCenterY = parentRect.top + parentRect.height / 2 - nodeRect.top;
-        const lastCenterY = lastRect.top + lastRect.height / 2 - nodeRect.top;
-
-        trunkLine.style.top = `${parentCenterY}px`;
-        trunkLine.style.height = `${lastCenterY - parentCenterY - 8}px`;
-      }
-    }
-
-    setTimeout(update, 0);
-
-    const observer = new ResizeObserver(() => {
-      update();
-    });
-    observer.observe(node);
-
-    return {
-      destroy() {
-        observer.disconnect();
-      },
-    };
   }
 
   let errors = $state({ authorName: '', commentContent: '' });
@@ -1193,20 +1188,10 @@
             description="Be the first to share your thoughts on this article." />
         {:else}
           {#snippet commentNode(comment: FlatComment, depth: number, isLastChildOfParent: boolean)}
-            <div
-              class="relative flex flex-col gap-2.5"
-              use:trunkAction>
-              {#if comment.children && comment.children.length > 0}
+            <div class="relative flex flex-col gap-2">
+              <div class="comment-row-wrapper relative flex items-start gap-2.5">
                 <div
-                  class="trunk-line-single absolute z-0 border-l border-text-muted/10"
-                  style="left: 16px; width: 0px;">
-                </div>
-              {/if}
-              <div class="comment-row-wrapper relative flex items-start gap-3">
-                <div
-                  class="z-10 flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-border-subtle bg-surface-card text-text-secondary"
-                  class:parent-avatar={comment.children && comment.children.length > 0}
-                  class:last-reply-avatar={isLastChildOfParent}>
+                  class="z-10 flex h-7.5 w-7.5 shrink-0 items-center justify-center rounded-full border border-border-subtle bg-surface-card text-text-secondary select-none">
                   <span
                     class="material-symbols-rounded text-sm"
                     style="font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;"
@@ -1217,24 +1202,25 @@
 
                 <div class="min-w-0 flex-1">
                   <div
-                    class="inline-block max-w-full border border-border-subtle bg-surface-card/50 px-4 py-2 text-left"
-                    style="border-radius: 18px;">
+                    class="inline-block max-w-full border border-border-subtle bg-surface-card/60 px-3.5 py-1.5 text-left shadow-2xs"
+                    style="border-radius: 16px;">
                     <div class="text-xs font-bold text-text-primary/95">
                       {getCommentAuthor(comment)}
                     </div>
                     <div
-                      class="mt-0.5 flex flex-wrap items-center gap-1.5 text-sm leading-relaxed text-text-primary/90">
+                      class="mt-0.5 flex flex-wrap items-center gap-1.5 text-xs leading-relaxed text-text-primary/90 sm:text-sm">
                       {#if comment.reply_to_author}
                         <span
-                          class="inline-flex shrink-0 items-center rounded-full border border-border-subtle bg-border-subtle/30 px-2 py-0.5 text-xs leading-none font-semibold text-accent select-none">
-                          {comment.reply_to_author}
+                          class="me-1 inline-flex shrink-0 items-center rounded-md bg-accent/10 px-1.5 py-0.5 text-[11px] font-semibold text-accent select-none">
+                          @{comment.reply_to_author}
                         </span>
                       {/if}
                       <span class="whitespace-pre-line">{comment.content}</span>
                     </div>
                   </div>
 
-                  <div class="mt-1 ml-2 flex items-center gap-2 text-[10px] text-text-muted">
+                  <div
+                    class="mt-0.5 ml-1.5 flex items-center gap-2 text-[10px] text-text-muted select-none">
                     <time datetime={comment.created_at}>{formatBlogDate(comment.created_at)}</time>
                     <span aria-hidden="true">&middot;</span>
                     <button
@@ -1374,17 +1360,28 @@
                   {/if}
                 </div>
               </div>
+
               {#if comment.children && comment.children.length > 0}
-                <div
-                  class="replies-container relative"
-                  style="padding-left: clamp(16px, 5vw, 44px);">
+                <div class="replies-container relative mt-2 flex flex-col gap-2.5 pl-6 sm:pl-7">
                   {#each comment.children as child, i (child.id)}
-                    <div class="child-wrapper relative mt-4">
-                      <div
-                        class="absolute z-0 border-b border-l border-text-muted/10"
-                        style="left: -28px; top: -16px; width: 28px; height: 32px; border-bottom-left-radius: 10px;">
-                      </div>
-                      {@render commentNode(child, depth + 1, i === comment.children.length - 1)}
+                    {@const isLast = i === comment.children.length - 1}
+                    <div class="child-wrapper relative">
+                      {#if !isLast}
+                        <div
+                          class="pointer-events-none absolute top-0 bottom-0 -left-6 w-[2px] bg-border-subtle/80 sm:-left-7"
+                          aria-hidden="true">
+                        </div>
+                        <div
+                          class="pointer-events-none absolute top-3.5 -left-6 h-[2px] w-4 bg-border-subtle/80 sm:-left-7 sm:w-5"
+                          aria-hidden="true">
+                        </div>
+                      {:else}
+                        <div
+                          class="pointer-events-none absolute top-0 -left-6 h-4 w-4 rounded-bl-xl border-b-2 border-l-2 border-border-subtle/80 sm:-left-7 sm:w-5"
+                          aria-hidden="true">
+                        </div>
+                      {/if}
+                      {@render commentNode(child, 1, isLast)}
                     </div>
                   {/each}
                 </div>
