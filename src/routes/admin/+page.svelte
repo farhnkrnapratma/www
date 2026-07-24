@@ -346,44 +346,6 @@
     return comments.filter(comment => comment.post_id === postId);
   }
 
-  function trunkAction(node: HTMLElement) {
-    if (typeof window === 'undefined') return;
-
-    function update() {
-      const parentAvatar = node.querySelector(
-        ':scope > .comment-row-wrapper .parent-avatar',
-      ) as HTMLElement;
-      const lastAvatar = node.querySelector(
-        ':scope > .replies-container > .child-wrapper:last-child > div > .comment-row-wrapper .last-reply-avatar',
-      ) as HTMLElement;
-      const trunkLine = node.querySelector(':scope > .trunk-line-single') as HTMLElement;
-      if (parentAvatar && lastAvatar && trunkLine) {
-        const parentRect = parentAvatar.getBoundingClientRect();
-        const lastRect = lastAvatar.getBoundingClientRect();
-        const nodeRect = node.getBoundingClientRect();
-
-        const parentCenterY = parentRect.top + parentRect.height / 2 - nodeRect.top;
-        const lastCenterY = lastRect.top + lastRect.height / 2 - nodeRect.top;
-
-        trunkLine.style.top = `${parentCenterY}px`;
-        trunkLine.style.height = `${lastCenterY - parentCenterY - 8}px`;
-      }
-    }
-
-    setTimeout(update, 0);
-
-    const observer = new ResizeObserver(() => {
-      update();
-    });
-    observer.observe(node);
-
-    return {
-      destroy() {
-        observer.disconnect();
-      },
-    };
-  }
-
   function buildCommentTree(items: AdminComment[]): FlatAdminComment[] {
     const commentMap = new SvelteMap<string, FlatAdminComment>();
     for (const item of items) {
