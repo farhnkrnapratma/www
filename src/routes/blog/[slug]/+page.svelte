@@ -9,6 +9,7 @@
     SkipLink,
     SpotlightSearch,
     Button,
+    Checkbox,
     EmptyState,
     StatusBanner,
     FormField,
@@ -1058,17 +1059,11 @@
               novalidate
               onsubmit={e => handleSubmit(e)}
               class="flex flex-col gap-2.5">
-              <label
-                for="comment-anon"
-                class="flex cursor-pointer items-center gap-2 text-xs font-bold text-text-primary select-none">
-                <input
-                  type="checkbox"
-                  id="comment-anon"
-                  bind:checked={isAnonymous}
-                  aria-describedby="anon-help-main"
-                  class="h-3.5 w-3.5 cursor-pointer rounded border-border-subtle text-accent focus:ring-accent" />
-                Comment anonymously
-              </label>
+              <Checkbox
+                id="comment-anon"
+                label="Comment anonymously"
+                bind:checked={isAnonymous}
+                aria-describedby="anon-help-main" />
               <span
                 id="anon-help-main"
                 class="sr-only">
@@ -1243,17 +1238,11 @@
                       </div>
 
                       <div class="flex flex-col gap-4">
-                        <label
-                          for="reply-anon-{comment.id}"
-                          class="flex cursor-pointer items-center gap-2 text-xs font-bold text-text-primary select-none">
-                          <input
-                            type="checkbox"
-                            id="reply-anon-{comment.id}"
-                            bind:checked={isAnonymous}
-                            aria-describedby="anon-help-reply-{comment.id}"
-                            class="h-3.5 w-3.5 cursor-pointer rounded border-border-subtle text-accent focus:ring-accent" />
-                          Comment anonymously
-                        </label>
+                        <Checkbox
+                          id="reply-anon-{comment.id}"
+                          label="Comment anonymously"
+                          bind:checked={isAnonymous}
+                          aria-describedby="anon-help-reply-{comment.id}" />
                         <span
                           id="anon-help-reply-{comment.id}"
                           class="sr-only">
