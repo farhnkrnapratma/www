@@ -276,9 +276,7 @@
 
 .prose-custom .heading-text {
   display: inline !important;
-  transition:
-    color 0.2s ease-in-out,
-    text-decoration-color 0.2s ease-in-out !important;
+  transition: none !important;
 }
 
 .prose-custom a.anchor-link {
@@ -291,7 +289,7 @@
   line-height: 1 !important;
   color: #232925 !important;
   text-decoration: none !important;
-  transition: color 0.2s ease-in-out !important;
+  transition: none !important;
 }
 
 :root.dark .prose-custom a.anchor-link {

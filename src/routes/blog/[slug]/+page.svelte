@@ -279,8 +279,7 @@
 
           const anchor = document.createElement('a');
           anchor.href = `#${el.id}`;
-          anchor.className =
-            'anchor-link transition-colors ml-1.5 inline-flex items-center select-none';
+          anchor.className = 'anchor-link select-none';
           anchor.innerHTML =
             '<span class="material-symbols-rounded text-[0.85em] leading-none inline-block align-middle select-none" style="font-variation-settings: \'wght\' 400, \'opsz\' 20;" aria-hidden="true">link_2</span>';
 
