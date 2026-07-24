@@ -1351,16 +1351,16 @@
                     <div class="child-wrapper relative">
                       {#if !isLast}
                         <div
-                          class="pointer-events-none absolute top-0 bottom-0 -left-6 w-[2px] bg-border-subtle/80 sm:-left-7"
+                          class="pointer-events-none absolute -top-2.5 bottom-0 -left-6 w-[2px] bg-text-muted/60 sm:-left-7"
                           aria-hidden="true">
                         </div>
                         <div
-                          class="pointer-events-none absolute top-3.5 -left-6 h-[2px] w-4 bg-border-subtle/80 sm:-left-7 sm:w-5"
+                          class="pointer-events-none absolute top-3.5 -left-6 h-[2px] w-6 bg-text-muted/60 sm:-left-7 sm:w-7"
                           aria-hidden="true">
                         </div>
                       {:else}
                         <div
-                          class="pointer-events-none absolute top-0 -left-6 h-4 w-4 rounded-bl-xl border-b-2 border-l-2 border-border-subtle/80 sm:-left-7 sm:w-5"
+                          class="pointer-events-none absolute -top-2.5 -left-6 h-6 w-6 rounded-bl-xl border-b-2 border-l-2 border-text-muted/60 sm:-left-7 sm:w-7"
                           aria-hidden="true">
                         </div>
                       {/if}

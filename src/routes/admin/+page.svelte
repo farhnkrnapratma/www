@@ -851,17 +851,24 @@
                           class="replies-container relative"
                           style="padding-left: 44px;">
                           {#each comment.children as child, i (child.id)}
+                            {@const isLast = i === comment.children.length - 1}
                             <div class="child-wrapper relative mt-4">
-                              <div
-                                class="absolute z-0 border-b border-l border-border-subtle"
-                                style="left: -28px; top: -16px; width: 28px; height: 32px; border-bottom-left-radius: 10px;"
-                                aria-hidden="true">
-                              </div>
-                              {@render commentNode(
-                                child,
-                                depth + 1,
-                                i === comment.children.length - 1,
-                              )}
+                              {#if !isLast}
+                                <div
+                                  class="pointer-events-none absolute -top-4 bottom-0 -left-[28px] w-[2px] bg-text-muted/60"
+                                  aria-hidden="true">
+                                </div>
+                                <div
+                                  class="pointer-events-none absolute top-4 -left-[28px] h-[2px] w-[28px] bg-text-muted/60"
+                                  aria-hidden="true">
+                                </div>
+                              {:else}
+                                <div
+                                  class="pointer-events-none absolute -top-4 -left-[28px] h-8 w-[28px] rounded-bl-xl border-b-2 border-l-2 border-text-muted/60"
+                                  aria-hidden="true">
+                                </div>
+                              {/if}
+                              {@render commentNode(child, depth + 1, isLast)}
                             </div>
                           {/each}
                         </div>
