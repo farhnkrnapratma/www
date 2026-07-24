@@ -280,7 +280,7 @@
           const anchor = document.createElement('a');
           anchor.href = `#${el.id}`;
           anchor.className =
-            'anchor-link transition-opacity ml-1.5 inline-flex items-center text-inherit opacity-70 hover:opacity-100 !no-underline select-none';
+            'anchor-link transition-colors ml-1.5 inline-flex items-center text-[#232925] dark:text-[#B6BFB8] group-hover:text-accent hover:text-accent !no-underline select-none';
           anchor.innerHTML =
             '<span class="material-symbols-rounded text-[0.85em] leading-none inline-block align-middle select-none !no-underline" style="font-variation-settings: \'wght\' 400, \'opsz\' 20;" aria-hidden="true">link_2</span>';
 

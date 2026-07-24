@@ -5,6 +5,7 @@
   type Theme = 'auto' | 'dark' | 'light';
 
   interface Props {
+    label?: string;
     theme: Theme;
     onThemeChange: (newTheme: Theme) => void;
     class?: string;
@@ -12,6 +13,7 @@
   }
 
   let {
+    label,
     theme = 'auto',
     onThemeChange,
     class: className = '',
@@ -36,12 +38,16 @@
 
 <div
   class={cn(
-    'relative inline-flex items-center select-none',
+    'relative inline-flex items-center gap-2 select-none',
     isOpen ? 'z-[60]' : 'z-20',
     className,
   )}>
+  {#if label}
+    <span class="text-xs font-medium whitespace-nowrap text-text-secondary">{label}</span>
+  {/if}
+
   <DropdownTrigger
-    ariaLabel="Theme: {currentOption.label}"
+    ariaLabel="{label ? `${label}: ` : ''}{currentOption.label}"
     {isOpen}
     onclick={() => (isOpen = !isOpen)}>
     <span class="inline-flex items-center gap-1.5">
@@ -57,13 +63,13 @@
       type="button"
       class="fixed inset-0 z-[65] cursor-default"
       onclick={() => (isOpen = false)}
-      aria-label="Close theme selector"></button>
+      aria-label="Close {label ?? 'theme'} selector"></button>
 
     <div
       role="listbox"
-      aria-label="Theme options"
+      aria-label="{label ?? 'Theme'} options"
       class={cn(
-        'absolute right-0 z-[70] flex min-w-32 flex-col overflow-hidden rounded-xl border border-border-subtle bg-surface-elevated py-1 shadow-xl backdrop-blur-md',
+        'absolute right-0 z-[70] flex min-w-36 flex-col overflow-hidden rounded-xl border border-border-subtle bg-surface-elevated py-0 shadow-xl backdrop-blur-md',
         dropdownDirection === 'up' ? 'bottom-[calc(100%+4px)]' : 'top-[calc(100%+4px)]',
       )}>
       {#each themeOptions as option (option.value)}
@@ -73,17 +79,24 @@
           aria-selected={theme === option.value}
           onclick={() => selectTheme(option.value)}
           class={cn(
-            'flex cursor-pointer items-center gap-2.5 px-3 py-2 text-left text-xs font-medium transition-colors',
+            'flex cursor-pointer items-center justify-between gap-2 px-3 py-2 text-left text-xs font-medium transition-colors',
             theme === option.value ?
               'bg-accent/10 font-semibold text-accent'
             : 'text-text-primary hover:bg-surface-hover',
           )}>
-          <i
-            class="bi {option.icon} text-xs {theme === option.value ?
-              'text-accent'
-            : 'text-text-secondary'}"
-            aria-hidden="true"></i>
-          <span>{option.label}</span>
+          <span class="inline-flex items-center gap-2">
+            <i
+              class="bi {option.icon} text-xs {theme === option.value ?
+                'text-accent'
+              : 'text-text-secondary'}"
+              aria-hidden="true"></i>
+            <span>{option.label}</span>
+          </span>
+          {#if theme === option.value}
+            <i
+              class="bi bi-check2 shrink-0 text-accent"
+              aria-hidden="true"></i>
+          {/if}
         </button>
       {/each}
     </div>
