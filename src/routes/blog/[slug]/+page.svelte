@@ -1189,11 +1189,7 @@
             title="No comments yet"
             description="Be the first to share your thoughts on this article." />
         {:else}
-          {#snippet commentNode(
-            comment: FlatComment,
-            _depth: number,
-            _isLastChildOfParent: boolean,
-          )}
+          {#snippet commentNode(comment: FlatComment)}
             <div class="relative flex flex-col gap-2">
               <div class="comment-row-wrapper relative flex items-start gap-2.5">
                 <div
@@ -1387,7 +1383,7 @@
                           aria-hidden="true">
                         </div>
                       {/if}
-                      {@render commentNode(child, 1, isLast)}
+                      {@render commentNode(child)}
                     </div>
                   {/each}
                 </div>
@@ -1397,7 +1393,7 @@
 
           <div class="flex flex-col gap-6">
             {#each commentTree as rootComment (rootComment.id)}
-              {@render commentNode(rootComment, 0, false)}
+              {@render commentNode(rootComment)}
             {/each}
           </div>
         {/if}
