@@ -261,22 +261,32 @@
         if (elements.length === 0) return;
 
         elements.forEach(el => {
-          el.classList.add('group', 'scroll-mt-20');
+          el.classList.add('group', 'scroll-mt-20', 'cursor-pointer');
 
           const existingAnchor = el.querySelector('.anchor-link');
           if (existingAnchor) {
             existingAnchor.remove();
           }
 
+          const headingText = el.querySelector('.heading-text');
+          if (!headingText) {
+            const span = document.createElement('span');
+            span.className = 'heading-text group-hover:underline underline-offset-4';
+            while (el.firstChild) {
+              span.appendChild(el.firstChild);
+            }
+            el.appendChild(span);
+          }
+
           const anchor = document.createElement('a');
           anchor.href = `#${el.id}`;
           anchor.className =
-            'anchor-link opacity-0 group-hover:opacity-100 transition-opacity ml-1.5 inline-inline-flex items-center text-current hover:text-accent cursor-pointer';
+            'anchor-link transition-colors ml-1.5 inline-inline-flex items-center text-text-muted hover:text-accent no-underline select-none';
           anchor.innerHTML =
-            '<span class="material-symbols-rounded text-[0.85em] leading-none inline-block align-middle select-none" style="font-variation-settings: \'wght\' 400, \'opsz\' 20;" aria-hidden="true">link_2</span>';
-          anchor.onclick = async e => {
+            '<span class="material-symbols-rounded text-[0.85em] leading-none inline-block align-middle select-none no-underline" style="font-variation-settings: \'wght\' 400, \'opsz\' 20;" aria-hidden="true">link_2</span>';
+
+          el.onclick = async e => {
             e.preventDefault();
-            e.stopPropagation();
             const url = `${window.location.origin}${window.location.pathname}#${el.id}`;
             try {
               await navigator.clipboard.writeText(url);
@@ -326,6 +336,7 @@
 
           if (headingPositions.length > 0 && scrollY < headingPositions[0].top - viewportOffset) {
             activeHeadingId = '';
+            isIndicatorVisible = false;
             return;
           }
 
